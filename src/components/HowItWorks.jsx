@@ -1,255 +1,231 @@
 import React, { useState } from 'react';
-import { 
-  Compass, 
-  GitFork, 
-  BookOpen, 
-  Flame, 
-  ShieldCheck, 
-  Sparkles, 
-  TrendingUp, 
-  ArrowRight, 
-  CheckCircle2,
-  ChevronRight
-} from 'lucide-react';
-import { HOW_IT_WORKS_STEPS } from '../data/skillsetuData';
+import { HOW_IT_WORKS_STEPS } from '../data/stitchData';
 
-const stepIconMap = {
-  Compass,
-  GitFork,
-  BookOpen,
-  Flame,
-  ShieldCheck,
-  Sparkles,
-  TrendingUp
-};
-
-export const HowItWorks = ({ onOpenDemo }) => {
-  const [activeStepIndex, setActiveStepIndex] = useState(3); // Default on 04 Challenge
+export function HowItWorks({ onOpenReadinessModal }) {
+  const [activeStepIndex, setActiveStepIndex] = useState(0);
+  const currentStep = HOW_IT_WORKS_STEPS[activeStepIndex];
 
   return (
-    <section id="how-it-works" className="py-20 bg-white relative overflow-hidden border-b border-slate-200/80">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <section id="how-it-works" className="premium-section py-16 lg:py-24 bg-surface tech-grid relative overflow-hidden">
+      <div className="max-w-container-max mx-auto px-4 md:px-margin-desktop">
         
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-14">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold uppercase tracking-wider mb-3">
-            <span>The 7-Stage Competency Pipeline</span>
-          </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-            How SkillSetu Transforms <span className="text-emerald-800">Academic Potential.</span>
+        <div className="flex flex-col items-center text-center max-w-3xl mx-auto mb-16">
+          <span className="bg-secondary-fixed text-on-secondary-container px-4 py-1.5 rounded-full font-label-sm text-xs uppercase tracking-wider font-bold mb-4 inline-flex items-center gap-1.5">
+            <span className="material-symbols-outlined text-base">route</span>
+            The Four-Step Journey
+          </span>
+          <h2 className="font-display-lg text-3xl sm:text-4xl lg:text-5xl font-extrabold text-on-surface mb-4 tracking-tight">
+            How SkillSetu Works
           </h2>
-          <p className="mt-3 text-base sm:text-lg text-slate-600">
-            A seamless journey from initial clinical diagnostic assessment to verified industry placement and continuing education.
+          <p className="font-body-lg text-base sm:text-lg text-on-surface-variant max-w-2xl leading-relaxed">
+            A seamless four-step progression designed to assess, analyze, bridge, and match your Ayush skills to real-world clinical and industrial opportunities.
           </p>
-        </div>
 
-        {/* 7-Step Navigation Ribbon */}
-        <div className="flex items-center justify-start lg:justify-between gap-2 overflow-x-auto pb-4 mb-10 no-scrollbar">
-          {HOW_IT_WORKS_STEPS.map((stepItem, idx) => {
-            const Icon = stepIconMap[stepItem.icon] || Compass;
-            const isActive = activeStepIndex === idx;
-
-            return (
+          {/* Step Selector Tabs for Easy Navigation */}
+          <div className="mt-8 flex flex-wrap justify-center gap-2 p-1.5 bg-surface-container-low rounded-2xl border border-outline-variant/30">
+            {HOW_IT_WORKS_STEPS.map((s, idx) => (
               <button
-                key={stepItem.step}
+                key={s.step}
                 onClick={() => setActiveStepIndex(idx)}
-                className={`shrink-0 flex items-center gap-2.5 px-4 py-3 rounded-xl transition-all cursor-pointer border text-left ${
-                  isActive
-                    ? 'bg-emerald-800 text-white border-emerald-800 shadow-md ring-2 ring-emerald-600/20'
-                    : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border-slate-200 hover:border-slate-300'
+                className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-2 ${
+                  activeStepIndex === idx
+                    ? 'bg-primary text-on-primary shadow-soft scale-105'
+                    : 'text-on-surface-variant hover:bg-surface-container-high'
                 }`}
               >
-                <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold text-xs ${
-                  isActive ? 'bg-emerald-700 text-white' : 'bg-white text-slate-600 shadow-2xs'
-                }`}>
-                  {stepItem.step}
-                </div>
-                <div>
-                  <div className={`text-xs font-bold ${isActive ? 'text-white' : 'text-slate-900'}`}>
-                    {stepItem.title}
-                  </div>
-                  <div className={`text-[10px] font-medium ${isActive ? 'text-emerald-200' : 'text-slate-400'}`}>
-                    {stepItem.tag}
-                  </div>
-                </div>
+                <span className="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center text-[10px]">
+                  {s.step}
+                </span>
+                <span>{s.badge}</span>
               </button>
-            );
-          })}
+            ))}
+          </div>
         </div>
 
-        {/* Active Step Detailed Showcase Panel */}
-        <div className="bg-gradient-to-br from-slate-900 via-emerald-950 to-slate-900 rounded-3xl p-6 sm:p-10 text-white shadow-elevated border border-emerald-800/60 relative overflow-hidden">
-          {/* Subtle background glow */}
-          <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
+        {/* Dynamic Detailed Step Showcase */}
+        <div className="bg-surface-container-lowest border border-outline-variant/30 rounded-3xl p-6 sm:p-10 soft-shadow mb-16">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             
-            {/* Step Left Details */}
-            <div className="lg:col-span-7 space-y-4">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 text-xs font-bold">
-                <span>Stage {HOW_IT_WORKS_STEPS[activeStepIndex].step} of 07</span>
-                <span>·</span>
-                <span>{HOW_IT_WORKS_STEPS[activeStepIndex].tag}</span>
+            {/* Step Left Description */}
+            <div className="lg:col-span-7 space-y-6">
+              <div className="flex items-center gap-3">
+                <span className="text-4xl font-black text-primary/30 font-display-lg">
+                  STEP {currentStep.step}
+                </span>
+                <span className="bg-secondary-container text-tertiary px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
+                  {currentStep.badge}
+                </span>
               </div>
 
-              <h3 className="text-2xl sm:text-3xl font-extrabold text-white">
-                Step {HOW_IT_WORKS_STEPS[activeStepIndex].step} — {HOW_IT_WORKS_STEPS[activeStepIndex].title}
+              <h3 className="font-display-lg text-2xl sm:text-3xl font-extrabold text-on-surface">
+                {currentStep.title}
               </h3>
 
-              <p className="text-sm sm:text-base text-slate-300 leading-relaxed font-normal">
-                {HOW_IT_WORKS_STEPS[activeStepIndex].description}
+              <p className="font-body-lg text-base text-on-surface-variant leading-relaxed">
+                {currentStep.description}
               </p>
 
-              {/* Concrete Outcome Box */}
-              <div className="p-4 rounded-xl bg-emerald-900/60 border border-emerald-600/40 flex items-start gap-3">
-                <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
-                <div>
-                  <span className="text-xs font-bold uppercase tracking-wider text-emerald-300 block mb-0.5">
-                    Measurable Milestone / Deliverable
-                  </span>
-                  <p className="text-xs text-emerald-100 font-medium">
-                    {HOW_IT_WORKS_STEPS[activeStepIndex].outcome}
-                  </p>
-                </div>
+              {/* Highlights List */}
+              <div className="space-y-3 pt-2">
+                {currentStep.highlights.map((h, i) => (
+                  <div key={i} className="flex items-start gap-3">
+                    <span className="material-symbols-outlined text-primary text-xl mt-0.5">
+                      check_circle
+                    </span>
+                    <span className="text-sm sm:text-base text-on-surface font-medium">
+                      {h}
+                    </span>
+                  </div>
+                ))}
               </div>
 
-              {/* Quick Jump Buttons */}
-              <div className="flex items-center gap-3 pt-2">
-                <button
-                  disabled={activeStepIndex === 0}
-                  onClick={() => setActiveStepIndex(prev => Math.max(0, prev - 1))}
-                  className="px-3.5 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-xs font-semibold text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+              {/* Action */}
+              <div className="pt-4 flex flex-wrap gap-4 items-center">
+                <button 
+                  onClick={onOpenReadinessModal}
+                  className="bg-primary text-on-primary font-semibold text-sm px-6 py-3 rounded-xl hover:bg-primary/90 transition-all flex items-center gap-2 active:scale-95 shadow-soft"
                 >
-                  ← Previous Stage
+                  <span>Experience Step {currentStep.step} Demo</span>
+                  <span className="material-symbols-outlined text-lg">play_arrow</span>
                 </button>
-                <button
-                  disabled={activeStepIndex === HOW_IT_WORKS_STEPS.length - 1}
-                  onClick={() => setActiveStepIndex(prev => Math.min(HOW_IT_WORKS_STEPS.length - 1, prev + 1))}
-                  className="px-3.5 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-xs font-bold text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors inline-flex items-center gap-1"
-                >
-                  <span>Next Stage</span>
-                  <ChevronRight className="w-3.5 h-3.5" />
-                </button>
+
+                <div className="text-xs text-outline font-medium flex items-center gap-1.5">
+                  <span className="material-symbols-outlined text-base">timer</span>
+                  <span>{currentStep.demoMetric.label}: <strong>{currentStep.demoMetric.value}</strong></span>
+                </div>
               </div>
             </div>
 
-            {/* Step Right Interactive Visualization Card */}
+            {/* Step Right Visual Card Representation */}
             <div className="lg:col-span-5">
-              <div className="bg-slate-900/90 backdrop-blur-md rounded-2xl p-5 border border-emerald-700/50 shadow-lg space-y-4">
-                <div className="flex items-center justify-between pb-3 border-b border-slate-800">
-                  <div className="flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                    <span className="text-xs font-bold text-slate-200">Interactive Stage Simulation</span>
+              <div className="bg-surface-container-low border border-outline-variant/30 rounded-2xl p-6 relative overflow-hidden">
+                <div className="flex items-center justify-between border-b border-outline-variant/20 pb-4 mb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-primary text-on-primary flex items-center justify-center font-bold">
+                      <span className="material-symbols-outlined text-xl">{currentStep.icon}</span>
+                    </div>
+                    <div>
+                      <div className="text-xs font-bold text-outline uppercase tracking-wider">SkillSetu Module</div>
+                      <div className="text-sm font-bold text-on-surface">{currentStep.title}</div>
+                    </div>
                   </div>
-                  <span className="text-[10px] font-mono text-emerald-400">SIH26044.PIPE</span>
                 </div>
 
-                {/* Dynamic Content based on active step */}
+                {/* Step Specific Visual Components */}
                 {activeStepIndex === 0 && (
-                  <div className="space-y-2 text-xs">
-                    <div className="bg-slate-800/80 p-3 rounded-lg border border-slate-700">
-                      <span className="text-[10px] text-slate-400 block">Sample Diagnostic Item</span>
-                      <p className="font-semibold text-white mt-1">Schedule T GMP: Air handling unit (AHU) classification for sterile eye drop formulation.</p>
-                      <div className="grid grid-cols-2 gap-1.5 mt-2">
-                        <span className="p-1.5 bg-emerald-950 text-emerald-300 border border-emerald-700 rounded text-[10px]">Class 100 (Grade A)</span>
-                        <span className="p-1.5 bg-slate-800 text-slate-400 rounded text-[10px]">Class 10,000 (Grade C)</span>
-                      </div>
+                  <div className="space-y-3 py-2">
+                    <div className="p-3 bg-surface rounded-xl border border-outline-variant/20 flex justify-between items-center">
+                      <span className="text-xs font-semibold">Nadi Pariksha Scenario #4</span>
+                      <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">92% Accuracy</span>
+                    </div>
+                    <div className="p-3 bg-surface rounded-xl border border-outline-variant/20 flex justify-between items-center">
+                      <span className="text-xs font-semibold">Dravyaguna Herb Analysis</span>
+                      <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">88% Score</span>
+                    </div>
+                    <div className="p-3 bg-surface rounded-xl border border-outline-variant/20 flex justify-between items-center">
+                      <span className="text-xs font-semibold">Panchakarma Protocol</span>
+                      <span className="text-xs font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded">Verified</span>
                     </div>
                   </div>
                 )}
 
                 {activeStepIndex === 1 && (
-                  <div className="space-y-2 text-xs">
-                    <div className="bg-slate-800/80 p-3 rounded-lg border border-slate-700 space-y-2">
-                      <span className="text-[10px] text-slate-400 block">Skill-Gap Delta Analysis</span>
-                      <div className="flex justify-between text-slate-300 text-[11px]">
-                        <span>HPTLC Fingerprinting</span>
-                        <span className="text-amber-400 font-bold">-18% Deficit</span>
+                  <div className="space-y-3 py-2">
+                    <div className="text-xs font-bold text-on-surface mb-1">Competency Radar:</div>
+                    <div className="space-y-2">
+                      <div>
+                        <div className="flex justify-between text-xs font-semibold mb-1">
+                          <span>Clinical Diagnosis</span>
+                          <span className="text-primary font-bold">88%</span>
+                        </div>
+                        <div className="w-full bg-surface-container-high h-2 rounded-full overflow-hidden">
+                          <div className="bg-primary h-full rounded-full" style={{ width: '88%' }}></div>
+                        </div>
                       </div>
-                      <div className="w-full bg-slate-700 h-1.5 rounded-full">
-                        <div className="bg-amber-400 h-1.5 rounded-full" style={{ width: '62%' }}></div>
-                      </div>
-                      <div className="flex justify-between text-slate-300 text-[11px]">
-                        <span>Rasa Shastra Classical</span>
-                        <span className="text-emerald-400 font-bold">+12% Surplus</span>
-                      </div>
-                      <div className="w-full bg-slate-700 h-1.5 rounded-full">
-                        <div className="bg-emerald-400 h-1.5 rounded-full" style={{ width: '92%' }}></div>
+                      <div>
+                        <div className="flex justify-between text-xs font-semibold mb-1">
+                          <span>Herbology & Formulations</span>
+                          <span className="text-tertiary font-bold">76%</span>
+                        </div>
+                        <div className="w-full bg-surface-container-high h-2 rounded-full overflow-hidden">
+                          <div className="bg-tertiary h-full rounded-full" style={{ width: '76%' }}></div>
+                        </div>
                       </div>
                     </div>
                   </div>
                 )}
 
                 {activeStepIndex === 2 && (
-                  <div className="space-y-2 text-xs">
-                    <div className="bg-slate-800/80 p-3 rounded-lg border border-slate-700">
-                      <span className="text-[10px] text-slate-400 block">Recommended Bridge Pathway</span>
-                      <h4 className="font-bold text-white mt-1">Schedule T Compliance & NABL Audit Preparation</h4>
-                      <p className="text-[11px] text-slate-300 mt-1">Curated by NIA Jaipur × Dabur R&D Faculty Mentors</p>
-                      <span className="inline-block mt-2 px-2 py-0.5 rounded text-[10px] bg-emerald-900 text-emerald-200 border border-emerald-600">3 Modular Units · 4.5 Hours</span>
-                    </div>
-                  </div>
-                )}
-
-                {activeStepIndex === 3 && (
-                  <div className="space-y-2 text-xs">
-                    <div className="bg-slate-800/80 p-3 rounded-lg border border-slate-700">
-                      <span className="text-[10px] text-amber-400 font-bold block">Live Micro-Sprint</span>
-                      <h4 className="font-bold text-white mt-1">Triphala Extract HPTLC Standardization Protocol</h4>
-                      <p className="text-[11px] text-slate-300 mt-1">Real-world pharmaceutical batch anomaly resolution.</p>
-                      <div className="mt-2 text-[10px] text-emerald-300 font-mono bg-emerald-950/80 p-2 rounded border border-emerald-800">
-                        Status: Practical Submission Verified (Score 94%)
+                  <div className="space-y-3 py-2">
+                    <div className="p-3 bg-white rounded-xl border border-outline-variant/30">
+                      <div className="text-xs font-bold text-primary mb-1">Active Micro-Sprint</div>
+                      <div className="text-sm font-semibold">2-Week Panchakarma Clinical Case Study</div>
+                      <div className="text-xs text-outline mt-1">Mentor: Dr. R. K. Mishra (Senior Vaidya)</div>
+                      <div className="mt-2 bg-emerald-50 text-emerald-800 text-xs px-2.5 py-1 rounded font-semibold inline-block">
+                        Status: Day 8 of 14 Completed
                       </div>
                     </div>
                   </div>
                 )}
 
-                {activeStepIndex === 4 && (
-                  <div className="space-y-2 text-xs">
-                    <div className="bg-slate-800/80 p-3 rounded-lg border border-slate-700">
-                      <span className="text-[10px] text-slate-400 block">Cryptographic Credential</span>
-                      <h4 className="font-bold text-white mt-1">Tamper-Proof Dossier Verification</h4>
-                      <p className="text-[11px] font-mono text-emerald-400 break-all mt-1">HASH: 0x9F4CB28E...AYUSH2026</p>
-                      <span className="inline-block mt-2 px-2 py-0.5 rounded text-[10px] bg-emerald-900 text-emerald-200 border border-emerald-600">Digital Certificate Signed</span>
+                {activeStepIndex === 3 && (
+                  <div className="space-y-3 py-2 text-center">
+                    <div className="w-20 h-20 mx-auto bg-white p-2 rounded-xl border border-outline-variant/40 shadow-xs flex items-center justify-center">
+                      <span className="material-symbols-outlined text-4xl text-primary">qr_code_2</span>
+                    </div>
+                    <div className="text-xs font-bold text-on-surface">SkillSetu Verified Passport</div>
+                    <div className="text-[11px] text-outline">ID: SKILL-AYUSH-2026-88912</div>
+                    <div className="bg-emerald-500 text-white text-xs font-bold py-1.5 px-4 rounded-full inline-block shadow-xs">
+                      Verified & Placement Ready
                     </div>
                   </div>
                 )}
 
-                {activeStepIndex === 5 && (
-                  <div className="space-y-2 text-xs">
-                    <div className="bg-slate-800/80 p-3 rounded-lg border border-slate-700">
-                      <span className="text-[10px] text-slate-400 block">Recruiter Pipeline Match</span>
-                      <h4 className="font-bold text-white mt-1">Patanjali Research / Dabur R&D</h4>
-                      <p className="text-[11px] text-emerald-300 font-bold mt-1">94% Competency Match Score</p>
-                      <span className="inline-block mt-2 px-2 py-0.5 rounded text-[10px] bg-amber-900/60 text-amber-200 border border-amber-600">1-Click Fast-Track Application</span>
-                    </div>
-                  </div>
-                )}
-
-                {activeStepIndex === 6 && (
-                  <div className="space-y-2 text-xs">
-                    <div className="bg-slate-800/80 p-3 rounded-lg border border-slate-700">
-                      <span className="text-[10px] text-slate-400 block">Lifelong Trajectory</span>
-                      <h4 className="font-bold text-white mt-1">Continuing Ayush Medical Education (CME)</h4>
-                      <p className="text-[11px] text-slate-300 mt-1">Faculty research collaboration & Ayush startup incubation.</p>
-                      <span className="inline-block mt-2 px-2 py-0.5 rounded text-[10px] bg-emerald-900 text-emerald-200 border border-emerald-600">National Ayush Scholar Network</span>
-                    </div>
-                  </div>
-                )}
-
-                <button
-                  onClick={onOpenDemo}
-                  className="w-full py-2 bg-emerald-700 hover:bg-emerald-600 text-white rounded-lg text-xs font-bold transition-colors cursor-pointer text-center"
-                >
-                  Test Step in Live Sandbox
-                </button>
+                <div className="mt-4 pt-3 border-t border-outline-variant/20 text-center">
+                  <span className="text-[11px] text-outline font-semibold">
+                    Interactive Stitch Workflow Simulation
+                  </span>
+                </div>
               </div>
             </div>
 
           </div>
         </div>
 
+        {/* Four Timeline Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {HOW_IT_WORKS_STEPS.map((stepItem, idx) => (
+            <div
+              key={stepItem.step}
+              onClick={() => setActiveStepIndex(idx)}
+              className={`p-6 rounded-2xl border transition-all cursor-pointer ${
+                activeStepIndex === idx
+                  ? 'bg-surface-container-lowest border-primary shadow-soft ring-1 ring-primary/30 -translate-y-1'
+                    : 'bg-surface-bright border-outline-variant/30 hover:border-primary/30 hover:bg-surface-container-low hover:-translate-y-1 hover:shadow-soft'
+              }`}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-2xl font-black text-primary font-display-lg">
+                  {stepItem.step}
+                </span>
+                <div className="w-10 h-10 rounded-xl bg-secondary-container text-tertiary flex items-center justify-center">
+                  <span className="material-symbols-outlined text-xl">{stepItem.icon}</span>
+                </div>
+              </div>
+              <h4 className="font-headline-md text-lg font-bold text-on-surface mb-2">
+                {stepItem.title}
+              </h4>
+              <p className="text-xs text-on-surface-variant line-clamp-3">
+                {stepItem.subtitle}
+              </p>
+            </div>
+          ))}
+        </div>
+
       </div>
     </section>
   );
-};
+}
+
+export default HowItWorks;
