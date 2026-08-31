@@ -1,0 +1,31 @@
+{
+  "name": "skill-setu-p2",
+  "version": "1.0.0",
+  "description": "**Smart India Hackathon 2026 (SIH 2026) • Problem Statement ID: SIH26044**",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "bugs": {
+    "url": "https://github.com/ShubhamRawal26/Skill-Setu-P2/issues"
+  },
+  "homepage": "https://github.com/ShubhamRawal26/Skill-Setu-P2#readme",
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "framer-motion": "^13.1.1",
+    "lucide-react": "^1.38.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "tailwind-merge": "^3.6.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^6.1.1",
+    "autoprefixer": "^10.5.4",
+    "postcss": "^8.5.26",
+    "tailwindcss": "^3.4.19",
+    "vite": "^8.2.2"
+  }
+}
