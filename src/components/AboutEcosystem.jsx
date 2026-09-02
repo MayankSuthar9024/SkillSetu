@@ -1,19 +1,18 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React from 'react';
+import { motion } from 'framer-motion';
 import { AYUSH_DISCIPLINES, SAMPLE_STUDENTS } from '../data/stitchData';
 
-export function AboutEcosystem({ onOpenReadinessModal }) {
-  const [selectedDiscipline, setSelectedDiscipline] = useState(AYUSH_DISCIPLINES[0]);
+export function AboutEcosystem() {
   const featuredScholar = SAMPLE_STUDENTS[1]; // Kabir Mehta 78% score profile
 
   return (
     <section className="premium-section py-16 lg:py-24 bg-surface tech-grid border-b border-outline-variant/30 relative overflow-hidden">
       <div className="max-w-container-max mx-auto px-4 md:px-margin-desktop">
         
-        {/* Product Detail Section */}
+        {/* Profile Card & Narrative Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center mb-24">
           
-          {/* Left Column Visual: Profile Card with Motion Hover */}
+          {/* Left Column Visual: Profile Card */}
           <motion.div 
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -44,7 +43,7 @@ export function AboutEcosystem({ onOpenReadinessModal }) {
                   {featuredScholar.readinessScore}%
                 </div>
                 <div className="text-xs sm:text-sm font-semibold uppercase tracking-wide text-on-surface-variant">
-                  Industry Vector Match Score
+                  Clinical Competency Index
                 </div>
                 <div className="w-full h-3 bg-surface-container rounded-full mt-4 overflow-hidden p-0.5">
                   <motion.div 
@@ -60,16 +59,15 @@ export function AboutEcosystem({ onOpenReadinessModal }) {
               {/* Assessment Scores List */}
               <div className="space-y-3">
                 {featuredScholar.assessments.map((ast, idx) => (
-                  <motion.div 
+                  <div 
                     key={idx}
-                    whileHover={{ scale: 1.015, x: 2 }}
-                    className="flex justify-between items-center p-3 border border-outline-variant/20 rounded-xl bg-white/70 hover:bg-white hover:border-primary/40 transition-all shadow-2xs"
+                    className="flex justify-between items-center p-3 border border-outline-variant/20 rounded-xl bg-white/70 shadow-2xs"
                   >
                     <span className="text-on-surface text-sm font-medium">{ast.name}</span>
                     <span className="text-primary font-bold text-sm bg-primary-container/15 px-2.5 py-0.5 rounded-md border border-primary/20">
                       {ast.score}
                     </span>
-                  </motion.div>
+                  </div>
                 ))}
               </div>
 
@@ -79,7 +77,7 @@ export function AboutEcosystem({ onOpenReadinessModal }) {
             <div className="absolute inset-0 bg-primary-container/15 transform translate-x-4 translate-y-4 rounded-3xl border border-outline-variant/20 z-0 hidden sm:block"></div>
           </motion.div>
 
-          {/* Right Column Content with Stagger */}
+          {/* Right Column Content */}
           <motion.div 
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -89,52 +87,42 @@ export function AboutEcosystem({ onOpenReadinessModal }) {
           >
             <div className="inline-flex items-center gap-2 px-3.5 py-1 bg-surface-container-low border border-outline-variant/30 rounded-full text-xs font-semibold text-on-surface-variant shadow-2xs">
               <span className="material-symbols-outlined text-base text-primary">insights</span>
-              <span>Data-Driven Insights</span>
+              <span>Objective Clinical Benchmarks</span>
             </div>
 
             <h2 className="font-display-lg text-3xl sm:text-4xl lg:text-5xl font-extrabold text-on-surface leading-tight tracking-tight">
               A clearer view of <br />
               <span className="text-primary bg-gradient-to-r from-primary to-emerald-600 bg-clip-text text-transparent">
-                student clinical readiness.
+                candidate clinical readiness.
               </span>
             </h2>
 
             <p className="font-body-lg text-base sm:text-lg text-on-surface-variant leading-relaxed">
-              Go beyond traditional academic transcripts. SkillSetu provides a comprehensive profile that highlights practical competencies, industry-aligned skill scores, and verified achievements, making it easier for employers to find the right talent.
+              Moving beyond traditional marks sheets. SkillSetu provides a comprehensive profile highlighting practical competencies, standard clinical procedures, and verified achievements.
             </p>
 
             {/* Value Bullet Points */}
             <ul className="space-y-4 pt-2">
-              <motion.li whileHover={{ x: 3 }} className="flex items-start gap-3 transition-transform">
+              <li className="flex items-start gap-3">
                 <span className="material-symbols-outlined text-primary text-xl mt-0.5">check_circle</span>
                 <div>
-                  <h4 className="font-label-sm text-sm font-bold text-on-surface">Verified Identity Dossier</h4>
-                  <p className="text-xs sm:text-sm text-on-surface-variant leading-relaxed">Authenticated credentials and standardized assessment results backed by institutional and mentor signatures.</p>
+                  <h4 className="font-label-sm text-sm font-bold text-on-surface">Verified Credentials Dossier</h4>
+                  <p className="text-xs sm:text-sm text-on-surface-variant leading-relaxed">Authenticated credentials and standardized assessment results backed by institutional and mentor review.</p>
                 </div>
-              </motion.li>
-              <motion.li whileHover={{ x: 3 }} className="flex items-start gap-3 transition-transform">
+              </li>
+              <li className="flex items-start gap-3">
                 <span className="material-symbols-outlined text-primary text-xl mt-0.5">track_changes</span>
                 <div>
                   <h4 className="font-label-sm text-sm font-bold text-on-surface">Granular Competency Vectors</h4>
-                  <p className="text-xs sm:text-sm text-on-surface-variant leading-relaxed">Detailed breakdown of clinical, diagnostic, and herbal formulation competencies across 5 Ayush disciplines.</p>
+                  <p className="text-xs sm:text-sm text-on-surface-variant leading-relaxed">Detailed breakdown of clinical, diagnostic, and herbal formulation competencies across all 5 Ayush streams.</p>
                 </div>
-              </motion.li>
+              </li>
             </ul>
-
-            <div className="pt-4">
-              <button
-                onClick={onOpenReadinessModal}
-                className="shimmer-btn bg-primary text-on-primary font-semibold text-sm px-6 py-3.5 rounded-2xl hover:bg-primary/90 transition-all flex items-center gap-2 shadow-soft cursor-pointer group active:scale-95"
-              >
-                <span>Calculate Student Readiness</span>
-                <span className="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform">arrow_forward</span>
-              </button>
-            </div>
           </motion.div>
 
         </div>
 
-        {/* Ayush Disciplines Focus Section */}
+        {/* All 5 Ayush Systems Displayed Directly as Distinct Comprehensive Cards */}
         <div className="pt-12 border-t border-outline-variant/20">
           <div className="text-center max-w-2xl mx-auto mb-12">
             <span className="bg-secondary-container text-tertiary px-3.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider shadow-2xs">
@@ -144,63 +132,44 @@ export function AboutEcosystem({ onOpenReadinessModal }) {
               Covering All 5 Ayush Systems
             </h3>
             <p className="text-sm text-on-surface-variant">
-              SkillSetu maps skills across Ayurveda, Yoga & Naturopathy, Unani, Siddha, and Homeopathy medical qualifications.
+              Comprehensive competency mapping across Ayurveda, Yoga & Naturopathy, Unani, Siddha, and Homeopathy.
             </p>
           </div>
 
-          {/* Discipline Selector Grid with Apple Spring Morph */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 mb-8">
-            {AYUSH_DISCIPLINES.map((disp) => {
-              const isSelected = selectedDiscipline.id === disp.id;
-              return (
-                <button
-                  key={disp.id}
-                  onClick={() => setSelectedDiscipline(disp)}
-                  className={`relative p-4 rounded-2xl border text-center transition-all cursor-pointer ${
-                    isSelected
-                      ? 'bg-primary text-on-primary border-primary shadow-soft font-bold'
-                      : 'bg-surface-bright border-outline-variant/30 text-on-surface-variant hover:bg-surface-container-low font-semibold'
-                  }`}
-                >
-                  <span className="material-symbols-outlined text-2xl mb-1 block">{disp.icon}</span>
-                  <div className="text-sm leading-tight">{disp.name}</div>
-                  <div className={`text-[11px] mt-1 ${isSelected ? 'text-primary-fixed-dim' : 'text-outline'}`}>
-                    {disp.code}
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Selected Discipline Details with Motion AnimatePresence */}
-          <AnimatePresence mode="wait">
-            <motion.div 
-              key={selectedDiscipline.id}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.3 }}
-              className="bg-surface-container-lowest border border-outline-variant/30 rounded-3xl p-6 sm:p-8 soft-shadow"
-            >
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
-                
-                <div className="lg:col-span-7 space-y-3">
-                  <div className="flex items-center gap-3">
-                    <span className="text-xs font-extrabold bg-secondary-container text-tertiary px-3 py-1 rounded-md">
-                      {selectedDiscipline.code}
+          {/* 5 Distinct Cards Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {AYUSH_DISCIPLINES.map((disp, idx) => (
+              <motion.div
+                key={disp.id}
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.35, delay: idx * 0.07 }}
+                className="bg-surface-container-lowest border border-outline-variant/30 rounded-3xl p-6 soft-shadow flex flex-col justify-between hover:border-primary/40 transition-all shadow-xs"
+              >
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="w-12 h-12 rounded-2xl bg-secondary-container text-tertiary flex items-center justify-center font-bold shadow-2xs">
+                      <span className="material-symbols-outlined text-2xl">{disp.icon}</span>
+                    </div>
+                    <span className="text-xs font-bold bg-secondary-container text-tertiary px-3 py-1 rounded-lg border border-outline-variant/20">
+                      {disp.code}
                     </span>
-                    <h4 className="font-display-lg text-xl sm:text-2xl font-bold text-on-surface">
-                      {selectedDiscipline.name} Discipline
-                    </h4>
                   </div>
-                  <p className="text-sm text-on-surface-variant leading-relaxed">
-                    {selectedDiscipline.description}
+
+                  <h4 className="font-headline-md text-xl font-bold text-on-surface mb-2">
+                    {disp.name}
+                  </h4>
+
+                  <p className="text-xs text-on-surface-variant leading-relaxed mb-4">
+                    {disp.description}
                   </p>
-                  <div className="pt-2">
-                    <span className="text-xs font-bold text-outline uppercase tracking-wider block mb-2">Core Evaluated Skills:</span>
-                    <div className="flex flex-wrap gap-2">
-                      {selectedDiscipline.coreSkills.map((skill, idx) => (
-                        <span key={idx} className="bg-surface-container text-on-surface text-xs font-semibold px-3 py-1 rounded-lg border border-outline-variant/30 shadow-2xs">
+
+                  <div className="pt-2 border-t border-outline-variant/20">
+                    <span className="text-[11px] font-bold text-outline uppercase tracking-wider block mb-2">Core Evaluated Competencies:</span>
+                    <div className="flex flex-wrap gap-1.5">
+                      {disp.coreSkills.map((skill, sIdx) => (
+                        <span key={sIdx} className="bg-surface-container text-on-surface text-[11px] font-medium px-2.5 py-1 rounded-lg border border-outline-variant/30">
                           {skill}
                         </span>
                       ))}
@@ -208,19 +177,13 @@ export function AboutEcosystem({ onOpenReadinessModal }) {
                   </div>
                 </div>
 
-                <div className="lg:col-span-5 bg-surface-container-low p-5 rounded-2xl border border-outline-variant/20 text-center space-y-2">
-                  <div className="text-xs font-semibold text-outline uppercase tracking-wider">Active Students Nationwide</div>
-                  <div className="font-display-lg text-3xl font-extrabold text-primary">
-                    {selectedDiscipline.studentsCount}
-                  </div>
-                  <div className="text-xs text-on-surface-variant bg-white p-3 rounded-xl border border-outline-variant/20 font-medium shadow-2xs">
-                    Standardized NCISM & NCH mapped skill assessment modules available.
-                  </div>
+                <div className="mt-6 pt-4 border-t border-outline-variant/20 flex justify-between items-center text-xs">
+                  <span className="text-outline font-medium">Nationwide Learners</span>
+                  <span className="font-bold text-primary font-mono text-sm">{disp.studentsCount}</span>
                 </div>
-
-              </div>
-            </motion.div>
-          </AnimatePresence>
+              </motion.div>
+            ))}
+          </div>
 
         </div>
 

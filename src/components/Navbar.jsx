@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpenAuthModal }) {
+export function Navbar({ activePage, setActivePage, onOpenAuthModal }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navItems = [
@@ -17,7 +17,7 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
   };
 
   return (
-    <header className="site-nav bg-[#f7faf8]/70 backdrop-blur-xl fixed top-0 w-full z-50 border-b border-white/40 transition-all duration-200">
+    <header className="site-nav bg-[#f7faf8]/80 backdrop-blur-xl fixed top-0 w-full z-50 border-b border-white/60 transition-all duration-200">
       <div className="max-w-container-max mx-auto px-4 md:px-margin-desktop flex justify-between items-center h-[76px]">
         
         {/* Brand Logo */}
@@ -40,14 +40,14 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
         </div>
 
         {/* Desktop Navigation Links */}
-        <nav className="hidden md:flex items-center gap-1 rounded-2xl border border-white/70 bg-white/55 p-1 shadow-sm backdrop-blur-md h-12">
+        <nav className="hidden md:flex items-center gap-1 rounded-2xl border border-white/70 bg-white/60 p-1 shadow-sm backdrop-blur-md h-12">
           {navItems.map((item) => {
             const isActive = activePage === item.id;
             return (
               <button
                 key={item.id}
                 onClick={() => handleNavClick(item.id)}
-                className={`h-full flex items-center px-3.5 lg:px-4 rounded-xl font-body-md text-sm lg:text-[15px] transition-all duration-200 active:scale-95 ${
+                className={`h-full flex items-center px-4 rounded-xl font-body-md text-sm lg:text-[15px] transition-all duration-200 cursor-pointer active:scale-95 ${
                   isActive
                     ? 'text-primary font-bold bg-white shadow-sm ring-1 ring-primary/10'
                     : 'text-on-surface-variant hover:text-primary hover:bg-white/70'
@@ -59,21 +59,14 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
           })}
         </nav>
 
-        {/* Action CTAs */}
-        <div className="hidden md:flex gap-2 items-center">
+        {/* Single Focused Login Action CTA */}
+        <div className="hidden md:flex items-center">
           <button 
             onClick={() => onOpenAuthModal('login')}
-            className="text-on-surface-variant font-label-sm text-sm hover:text-primary py-2.5 px-3 rounded-xl active:scale-95 transition-all"
+            className="shimmer-btn bg-slate-900 hover:bg-slate-800 text-white font-label-sm text-sm py-2.5 px-5 rounded-xl active:scale-95 transition-all shadow-sm flex items-center gap-2 font-bold cursor-pointer"
           >
-            Log in
-          </button>
-          
-          <button 
-            onClick={() => onOpenAuthModal('signup')}
-            className="bg-gradient-to-r from-ayush-deep to-primary text-on-primary font-label-sm text-sm py-3 px-5 rounded-xl active:scale-95 hover:shadow-emerald-glow hover:-translate-y-0.5 transition-all shadow-soft flex items-center gap-1.5"
-          >
-            <span>Create account</span>
-            <span className="material-symbols-outlined text-base">arrow_outward</span>
+            <span className="material-symbols-outlined text-base text-emerald-400">login</span>
+            <span>Portal Sign In</span>
           </button>
         </div>
 
@@ -110,24 +103,16 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
             );
           })}
 
-          <div className="pt-4 border-t border-outline-variant/20 grid grid-cols-2 gap-2">
+          <div className="pt-4 border-t border-outline-variant/20">
             <button
               onClick={() => {
                 setMobileMenuOpen(false);
                 onOpenAuthModal('login');
               }}
-              className="w-full py-2.5 border border-outline-variant text-on-surface font-semibold rounded-xl text-sm"
+              className="w-full py-3 bg-slate-900 text-white font-bold rounded-xl text-sm flex items-center justify-center gap-2"
             >
-              Log in
-            </button>
-            <button
-              onClick={() => {
-                setMobileMenuOpen(false);
-                onOpenAuthModal('signup');
-              }}
-              className="w-full py-2.5 bg-primary text-on-primary font-semibold rounded-xl text-sm"
-            >
-              Sign up
+              <span className="material-symbols-outlined text-base text-emerald-400">login</span>
+              <span>Portal Sign In</span>
             </button>
           </div>
         </div>
