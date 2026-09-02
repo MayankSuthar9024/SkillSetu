@@ -203,7 +203,7 @@ export const StakeholderDashboard = ({
   };
 
   const navItems = [
-    { id: 'feed', label: 'Feed', icon: Flame },
+    { id: 'feed', label: 'Home', icon: Home },
     { id: 'messages', label: 'Messages', icon: MessageSquare },
     { id: 'jobs', label: 'Jobs', icon: Briefcase },
     { id: 'skills', label: 'Skill Hub', icon: Award },
@@ -287,10 +287,21 @@ export const StakeholderDashboard = ({
               </button>
 
               {notificationsOpen && (
-                <div className="absolute right-0 mt-2 w-72 sm:w-80 bg-white rounded-2xl shadow-2xl border border-slate-200 py-3 z-50 animate-in fade-in">
+                <div 
+                  onMouseLeave={() => setNotificationsOpen(false)}
+                  className="absolute right-0 mt-2 w-72 sm:w-80 bg-white rounded-2xl shadow-2xl border border-slate-200 py-3 z-50 animate-in fade-in"
+                >
                   <div className="px-4 pb-2 border-b border-slate-100 flex justify-between items-center">
-                    <span className="font-extrabold text-xs text-slate-900">Notifications</span>
-                    <span className="text-[10px] text-emerald-800 font-bold bg-emerald-50 px-2 py-0.5 rounded">2 New</span>
+                    <div className="flex items-center gap-2">
+                      <span className="font-extrabold text-xs text-slate-900">Notifications</span>
+                      <span className="text-[10px] text-emerald-800 font-bold bg-emerald-50 px-2 py-0.5 rounded">2 New</span>
+                    </div>
+                    <button
+                      onClick={() => setNotificationsOpen(false)}
+                      className="text-slate-400 hover:text-slate-600 p-1 rounded-lg text-xs cursor-pointer"
+                    >
+                      ✕
+                    </button>
                   </div>
                   <div className="divide-y divide-slate-100 max-h-64 overflow-y-auto">
                     {notifications.map((n) => (

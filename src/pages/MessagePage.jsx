@@ -4,14 +4,7 @@ import {
   Search, 
   Send, 
   Paperclip, 
-  MoreVertical, 
-  Phone, 
-  Video, 
-  User, 
   CheckCheck, 
-  Sparkles, 
-  Clock, 
-  Circle,
   ShieldCheck
 } from 'lucide-react';
 
@@ -232,47 +225,30 @@ export function MessagePage({ onNavigate, currentUser }) {
                   ← Back
                 </button>
 
-                <div className={`w-10 h-10 rounded-2xl ${activeChat.avatarBg} text-white font-extrabold text-xs flex items-center justify-center shadow-xs shrink-0`}>
-                  {activeChat.avatar}
-                </div>
-
-                <div className="min-w-0">
-                  <div className="flex items-center gap-1.5 min-w-0">
-                    <h3 className="font-extrabold text-sm text-slate-900 truncate">
-                      {activeChat.name}
-                    </h3>
-                    <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
-                  </div>
-                  <p className="text-[11px] text-slate-500 truncate font-medium">
-                    {activeChat.role} · {activeChat.online ? <span className="text-emerald-600 font-bold">Online</span> : 'Offline'}
-                  </p>
-                </div>
-              </div>
-
-              {/* Chat Header Actions */}
-              <div className="flex items-center gap-1 sm:gap-2 shrink-0">
-                <button
-                  onClick={() => alert(`Calling ${activeChat.name}...`)}
-                  className="p-2 rounded-xl text-slate-600 hover:bg-slate-100 transition-colors"
-                  title="Voice Call"
-                >
-                  <Phone className="w-4 h-4" />
-                </button>
-                <button
-                  onClick={() => alert(`Starting Video Call with ${activeChat.name}...`)}
-                  className="p-2 rounded-xl text-slate-600 hover:bg-slate-100 transition-colors"
-                  title="Video Call"
-                >
-                  <Video className="w-4 h-4" />
-                </button>
-                <button
+                <div 
                   onClick={() => onNavigate('profile')}
-                  className="hidden sm:flex items-center gap-1 text-xs font-bold text-emerald-800 bg-emerald-50 px-3 py-1.5 rounded-xl hover:bg-emerald-100 transition-colors"
+                  className="flex items-center gap-3 cursor-pointer group min-w-0"
+                  title={`View ${activeChat.name}'s Profile`}
                 >
-                  <User className="w-3.5 h-3.5" />
-                  <span>Profile</span>
-                </button>
+                  <div className={`w-10 h-10 rounded-2xl ${activeChat.avatarBg} text-white font-extrabold text-xs flex items-center justify-center shadow-xs shrink-0 group-hover:scale-105 transition-transform`}>
+                    {activeChat.avatar}
+                  </div>
+
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-1.5 min-w-0">
+                      <h3 className="font-extrabold text-sm text-slate-900 group-hover:text-emerald-800 group-hover:underline transition-colors truncate">
+                        {activeChat.name}
+                      </h3>
+                      <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
+                    </div>
+                    <p className="text-[11px] text-slate-500 truncate font-medium">
+                      {activeChat.role} · {activeChat.online ? <span className="text-emerald-600 font-bold">Online</span> : 'Offline'}
+                    </p>
+                  </div>
+                </div>
               </div>
+
+
             </div>
 
             {/* Chat Message History */}
