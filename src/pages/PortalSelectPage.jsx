@@ -176,7 +176,7 @@ export const PortalSelectPage = ({
           </span>
           <span className="text-slate-300 hidden sm:inline">•</span>
           <span className="font-semibold text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200/80">
-            ⚡ 1-Click Quick Demo Login available for all 5 roles
+            Unified Single Sign-On (SSO) & ABHA authentication enabled
           </span>
         </div>
 

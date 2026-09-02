@@ -32,7 +32,7 @@ export const StakeholderDashboard = ({
   const [roleDropdownOpen, setRoleDropdownOpen] = useState(false);
 
   const currentPortalConfig = PORTALS_DATA.find(p => p.id === activePortalId) || PORTALS_DATA[0];
-  const user = currentUser || currentPortalConfig.demoUser;
+  const user = currentUser || currentPortalConfig.profileUser || currentPortalConfig.demoUser;
 
   const renderActiveView = () => {
     switch (activePortalId) {

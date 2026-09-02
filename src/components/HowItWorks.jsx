@@ -86,8 +86,8 @@ export function HowItWorks({ onOpenReadinessModal }) {
                   onClick={onOpenReadinessModal}
                   className="bg-primary text-on-primary font-semibold text-sm px-6 py-3 rounded-xl hover:bg-primary/90 transition-all flex items-center gap-2 active:scale-95 shadow-soft"
                 >
-                  <span>Experience Step {currentStep.step} Demo</span>
-                  <span className="material-symbols-outlined text-lg">play_arrow</span>
+                  <span>Explore Step {currentStep.step} Workflow</span>
+                  <span className="material-symbols-outlined text-lg">arrow_forward</span>
                 </button>
 
                 <div className="text-xs text-outline font-medium flex items-center gap-1.5">

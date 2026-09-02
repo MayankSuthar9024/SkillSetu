@@ -148,7 +148,7 @@ export function Hero({ onGetStarted, onSeeHowItWorks, onOpenReadinessModal }) {
 
             {/* Student Switcher Buttons */}
             <div className="mt-6 pt-4 border-t border-outline-variant/20 flex items-center justify-between text-xs">
-              <span className="text-outline font-medium">Switch Demo Candidate:</span>
+              <span className="text-outline font-medium">Switch Candidate Profile:</span>
               <div className="flex gap-1.5">
                 {SAMPLE_STUDENTS.map((st, i) => (
                   <button
