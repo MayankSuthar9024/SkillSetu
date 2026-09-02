@@ -42,7 +42,7 @@ export function App() {
         if (role && PORTALS_DATA.some(p => p.id === role)) {
           setActivePortalId(role);
           const portalCfg = PORTALS_DATA.find(p => p.id === role);
-          setCurrentUser(portalCfg?.demoUser || null);
+          setCurrentUser(portalCfg?.profileUser || portalCfg?.demoUser || null);
         }
         setActivePage('dashboard');
       } else if (hash === 'features' || hash === 'about' || hash === 'opportunities' || hash === 'how-it-works') {
@@ -75,7 +75,7 @@ export function App() {
     if (newPortalId) {
       setActivePortalId(newPortalId);
       const portalCfg = PORTALS_DATA.find(p => p.id === newPortalId);
-      setCurrentUser(newUser || portalCfg?.demoUser || null);
+      setCurrentUser(newUser || portalCfg?.profileUser || portalCfg?.demoUser || null);
       window.location.hash = `dashboard-${newPortalId}`;
     } else {
       setActivePage('login');
@@ -176,14 +176,17 @@ export function App() {
         {/* HOW IT WORKS PAGE */}
         {activePage === 'how-it-works' && (
           <div className="animate-fadeIn">
-            <div className="bg-surface-container-low border-b border-outline-variant/30 py-8 px-4 text-center">
+            <div className="hero-grid-bg border-b border-outline-variant/30 py-12 px-4 text-center">
               <div className="max-w-container-max mx-auto">
-                <span className="text-xs font-bold uppercase tracking-wider text-primary bg-primary-container/20 px-3 py-1 rounded-full">
+                <span className="text-xs font-bold uppercase tracking-wider text-primary bg-white/90 border border-emerald-200/80 px-3.5 py-1.5 rounded-full shadow-2xs">
                   Step-by-Step Architecture
                 </span>
-                <h1 className="font-display-lg text-3xl sm:text-4xl font-extrabold text-on-surface mt-2">
+                <h1 className="font-display-lg text-3xl sm:text-5xl font-extrabold text-on-surface mt-4 tracking-tight">
                   How SkillSetu Connects Ayush Talent to Industry
                 </h1>
+                <p className="text-sm sm:text-base text-on-surface-variant max-w-2xl mx-auto mt-2">
+                  A standardized clinical competency journey backed by national academic benchmarks and healthcare employers.
+                </p>
               </div>
             </div>
             <HowItWorks onOpenReadinessModal={() => setIsReadinessModalOpen(true)} />
@@ -193,14 +196,17 @@ export function App() {
         {/* FEATURES PAGE */}
         {activePage === 'features' && (
           <div className="animate-fadeIn">
-            <div className="bg-surface-container-low border-b border-outline-variant/30 py-8 px-4 text-center">
+            <div className="hero-grid-bg border-b border-outline-variant/30 py-12 px-4 text-center">
               <div className="max-w-container-max mx-auto">
-                <span className="text-xs font-bold uppercase tracking-wider text-primary bg-primary-container/20 px-3 py-1 rounded-full">
+                <span className="text-xs font-bold uppercase tracking-wider text-primary bg-white/90 border border-emerald-200/80 px-3.5 py-1.5 rounded-full shadow-2xs">
                   Platform Capabilities
                 </span>
-                <h1 className="font-display-lg text-3xl sm:text-4xl font-extrabold text-on-surface mt-2">
+                <h1 className="font-display-lg text-3xl sm:text-5xl font-extrabold text-on-surface mt-4 tracking-tight">
                   All SkillSetu Features & Infrastructure
                 </h1>
+                <p className="text-sm sm:text-base text-on-surface-variant max-w-2xl mx-auto mt-2">
+                  Unified competency scoring, micro-sprints, and verifiable credentials for India's Ayush practitioners.
+                </p>
               </div>
             </div>
             <Features onOpenReadinessModal={() => setIsReadinessModalOpen(true)} />
@@ -210,14 +216,17 @@ export function App() {
         {/* ABOUT PAGE */}
         {activePage === 'about' && (
           <div className="animate-fadeIn">
-            <div className="bg-surface-container-low border-b border-outline-variant/30 py-8 px-4 text-center">
+            <div className="hero-grid-bg border-b border-outline-variant/30 py-12 px-4 text-center">
               <div className="max-w-container-max mx-auto">
-                <span className="text-xs font-bold uppercase tracking-wider text-primary bg-primary-container/20 px-3 py-1 rounded-full">
+                <span className="text-xs font-bold uppercase tracking-wider text-primary bg-white/90 border border-emerald-200/80 px-3.5 py-1.5 rounded-full shadow-2xs">
                   Ecosystem Overview
                 </span>
-                <h1 className="font-display-lg text-3xl sm:text-4xl font-extrabold text-on-surface mt-2">
+                <h1 className="font-display-lg text-3xl sm:text-5xl font-extrabold text-on-surface mt-4 tracking-tight">
                   About SkillSetu National Ayush Platform
                 </h1>
+                <p className="text-sm sm:text-base text-on-surface-variant max-w-2xl mx-auto mt-2">
+                  Connecting students, colleges, industry partners, and the Ministry under one standardized national framework.
+                </p>
               </div>
             </div>
             <AboutEcosystem onOpenReadinessModal={() => setIsReadinessModalOpen(true)} />
@@ -226,68 +235,72 @@ export function App() {
 
         {/* OPPORTUNITIES PAGE */}
         {activePage === 'opportunities' && (
-          <div className="animate-fadeIn py-12 px-4 max-w-container-max mx-auto">
-            <div className="text-center max-w-3xl mx-auto mb-12">
-              <span className="bg-secondary-container text-tertiary px-3.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
-                Active Career Board
-              </span>
-              <h1 className="font-display-lg text-3xl sm:text-4xl font-extrabold text-on-surface mt-3 mb-3">
-                Placement & Internship Opportunities
-              </h1>
-              <p className="text-base text-on-surface-variant">
-                Top Ayush hospitals, wellness clinics, and research labs recruiting verified candidates based on SkillSetu readiness scores.
-              </p>
+          <div className="animate-fadeIn">
+            <div className="hero-grid-bg border-b border-outline-variant/30 py-12 px-4 text-center">
+              <div className="max-w-container-max mx-auto">
+                <span className="text-xs font-bold uppercase tracking-wider text-primary bg-white/90 border border-emerald-200/80 px-3.5 py-1.5 rounded-full shadow-2xs">
+                  Active Career Board
+                </span>
+                <h1 className="font-display-lg text-3xl sm:text-5xl font-extrabold text-on-surface mt-4 tracking-tight">
+                  Placement & Internship Opportunities
+                </h1>
+                <p className="text-sm sm:text-base text-on-surface-variant max-w-2xl mx-auto mt-2">
+                  Top Ayush hospitals, research foundations, and pharmaceutical leaders recruiting verified clinical candidates.
+                </p>
+              </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-              {[
-                { title: 'Junior Ayurvedic Physician', hospital: 'AVP Research Foundation', location: 'Coimbatore', scoreReq: '80%+ Readiness', stipend: '₹45,000 / month', tag: 'BAMS' },
-                { title: 'Naturopathy Wellness Specialist', hospital: 'Soukya Holistic Health', location: 'Bengaluru', scoreReq: '75%+ Readiness', stipend: '₹50,000 / month', tag: 'BNYS' },
-                { title: 'Unani Clinical Officer', hospital: 'Central Council for Research in Unani', location: 'New Delhi', scoreReq: '82%+ Readiness', stipend: '₹55,000 / month', tag: 'BUMS' },
-                { title: 'Siddha Herbal Pharmacologist', hospital: 'National Institute of Siddha', location: 'Chennai', scoreReq: '78%+ Readiness', stipend: '₹42,000 / month', tag: 'BSMS' },
-                { title: 'Homoeopathic Clinical Research Fellow', hospital: 'NIH Kolkata', location: 'Kolkata', scoreReq: '85%+ Readiness', stipend: '₹60,000 / month', tag: 'BHMS' },
-                { title: 'Ayush Tele-Consultant Specialist', hospital: 'Patanjali Wellness Network', location: 'Haridwar / Remote', scoreReq: '75%+ Readiness', stipend: '₹40,000 / month', tag: 'BAMS / BHMS' },
-              ].map((opp, idx) => (
-                <div key={idx} className="opportunity-card group bg-surface-container-lowest border border-outline-variant/30 rounded-2xl p-6 soft-shadow flex flex-col justify-between">
-                  <div>
-                    <div className="flex justify-between items-start mb-3">
-                      <span className="bg-primary-container text-on-primary-container text-xs font-bold px-2.5 py-1 rounded-md">
-                        {opp.tag}
-                      </span>
-                      <span className="text-xs font-bold text-tertiary bg-secondary-container px-2.5 py-1 rounded-full">
-                        {opp.scoreReq}
-                      </span>
+            <div className="py-12 px-4 max-w-container-max mx-auto">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                {[
+                  { title: 'Junior Ayurvedic Physician', hospital: 'AVP Research Foundation', location: 'Coimbatore', scoreReq: '80%+ Readiness', stipend: '₹45,000 / month', tag: 'BAMS' },
+                  { title: 'Naturopathy Wellness Specialist', hospital: 'Soukya Holistic Health', location: 'Bengaluru', scoreReq: '75%+ Readiness', stipend: '₹50,000 / month', tag: 'BNYS' },
+                  { title: 'Unani Clinical Officer', hospital: 'Central Council for Research in Unani', location: 'New Delhi', scoreReq: '82%+ Readiness', stipend: '₹55,000 / month', tag: 'BUMS' },
+                  { title: 'Siddha Herbal Pharmacologist', hospital: 'National Institute of Siddha', location: 'Chennai', scoreReq: '78%+ Readiness', stipend: '₹42,000 / month', tag: 'BSMS' },
+                  { title: 'Homoeopathic Clinical Research Fellow', hospital: 'NIH Kolkata', location: 'Kolkata', scoreReq: '85%+ Readiness', stipend: '₹60,000 / month', tag: 'BHMS' },
+                  { title: 'Ayush Tele-Consultant Specialist', hospital: 'Patanjali Wellness Network', location: 'Haridwar / Remote', scoreReq: '75%+ Readiness', stipend: '₹40,000 / month', tag: 'BAMS / BHMS' },
+                ].map((opp, idx) => (
+                  <div key={idx} className="opportunity-card group bg-surface-container-lowest border border-outline-variant/30 rounded-3xl p-6 soft-shadow flex flex-col justify-between hover:border-primary/40 transition-all">
+                    <div>
+                      <div className="flex justify-between items-start mb-3">
+                        <span className="bg-primary-container text-on-primary-container text-xs font-bold px-3 py-1 rounded-lg">
+                          {opp.tag}
+                        </span>
+                        <span className="text-xs font-bold text-tertiary bg-secondary-container px-3 py-1 rounded-full border border-secondary-container/40">
+                          {opp.scoreReq}
+                        </span>
+                      </div>
+                      <h3 className="font-headline-md text-lg font-bold text-on-surface mb-1 group-hover:text-primary transition-colors">{opp.title}</h3>
+                      <div className="text-xs font-semibold text-outline mb-1">{opp.hospital}</div>
+                      <div className="text-xs text-on-surface-variant flex items-center gap-1 mb-4">
+                        <span className="material-symbols-outlined text-sm text-primary">location_on</span>
+                        <span>{opp.location}</span>
+                      </div>
                     </div>
-                    <h3 className="font-headline-md text-lg font-bold text-on-surface mb-1">{opp.title}</h3>
-                    <div className="text-xs font-semibold text-outline mb-1">{opp.hospital}</div>
-                    <div className="text-xs text-on-surface-variant flex items-center gap-1 mb-4">
-                      <span className="material-symbols-outlined text-sm">location_on</span>
-                      <span>{opp.location}</span>
+
+                    <div className="pt-4 border-t border-outline-variant/20 flex justify-between items-center">
+                      <span className="text-xs font-bold text-primary font-mono">{opp.stipend}</span>
+                      <button
+                        onClick={() => handleOpenAuth()}
+                        className="shimmer-btn bg-primary text-on-primary text-xs font-bold px-4 py-2 rounded-xl hover:bg-primary/90 transition-all cursor-pointer"
+                      >
+                        Apply with Score
+                      </button>
                     </div>
                   </div>
+                ))}
+              </div>
 
-                  <div className="pt-4 border-t border-outline-variant/20 flex justify-between items-center">
-                    <span className="text-xs font-bold text-primary">{opp.stipend}</span>
-                    <button
-                      onClick={() => handleOpenAuth()}
-                      className="opportunity-card-button bg-primary text-on-primary text-xs font-bold px-4 py-2 rounded-xl hover:bg-primary/90 transition-all cursor-pointer"
-                    >
-                      Apply with Score
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className="bg-surface-bright border border-outline-variant/30 rounded-2xl p-8 text-center max-w-xl mx-auto">
-              <h3 className="font-bold text-xl text-on-surface mb-2">Are you an Employer or Ayush Hospital?</h3>
-              <p className="text-xs text-on-surface-variant mb-4">Post opportunities and directly recruit candidates verified via SkillSetu assessment engine.</p>
-              <button
-                onClick={() => handleOpenAuth()}
-                className="bg-primary text-on-primary font-bold text-sm px-6 py-2.5 rounded-xl hover:bg-primary/90 transition-all cursor-pointer"
-              >
-                Register as Employer
-              </button>
+              <div className="bg-surface-bright border border-outline-variant/30 rounded-3xl p-8 text-center max-w-xl mx-auto shadow-xs">
+                <h3 className="font-bold text-xl text-on-surface mb-2">Are you an Employer or Ayush Hospital?</h3>
+                <p className="text-xs text-on-surface-variant mb-4 leading-relaxed">Post clinical opportunities and recruit verified candidates directly from the SkillSetu talent engine.</p>
+                <button
+                  onClick={() => handleOpenAuth()}
+                  className="shimmer-btn bg-primary text-on-primary font-bold text-sm px-6 py-2.5 rounded-xl hover:bg-primary/90 transition-all cursor-pointer shadow-soft"
+                >
+                  Register as Employer
+                </button>
+              </div>
             </div>
           </div>
         )}

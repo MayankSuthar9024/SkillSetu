@@ -34,16 +34,15 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
           {/* Brand Logo */}
           <div 
             onClick={() => handleNavClick('home')}
-            className="flex items-center gap-3 cursor-pointer group"
+            className="flex items-center gap-3 cursor-pointer group select-none"
           >
-            <div className="relative w-11 h-11 rounded-2xl bg-gradient-to-br from-ayush-deep via-primary to-ayush-emerald flex items-center justify-center text-on-primary font-bold shadow-emerald-glow group-hover:scale-105 transition-transform overflow-hidden">
-              <span className="absolute -right-2 -top-2 h-7 w-7 rounded-full bg-white/20" />
-              <span className="material-symbols-outlined text-[25px] relative">spa</span>
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-emerald-800 to-teal-950 flex items-center justify-center text-white shadow-md group-hover:scale-105 transition-transform duration-300">
+              <span className="material-symbols-outlined text-2xl">spa</span>
             </div>
-            <div>
-              <div className="font-display-lg text-[23px] font-extrabold text-ayush-deep tracking-[-0.04em] leading-none">
-                Skill<span className="text-emerald-700">Setu</span>
-              </div>
+            <div className="text-left">
+              <span className="font-title-lg font-black text-xl text-slate-900 tracking-tight block leading-none">
+                Skill<span className="text-primary">Setu</span>
+              </span>
             </div>
           </div>
 
@@ -186,42 +185,33 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
               );
             })}
 
-            <div className="pt-4 border-t border-outline-variant/20 grid grid-cols-2 gap-2">
+            <div className="pt-4 border-t border-outline-variant/20">
               <button
                 onClick={() => {
                   setMobileMenuOpen(false);
                   onOpenAuthModal('login');
                 }}
-                className="w-full py-2.5 border border-outline-variant text-on-surface font-semibold rounded-xl text-sm"
+                className="w-full py-3 bg-slate-900 text-white font-bold rounded-xl text-sm flex items-center justify-center gap-2"
               >
-                Role Portals
-              </button>
-              <button
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  handleNavClick('feed');
-                }}
-                className="w-full py-2.5 bg-primary text-on-primary font-semibold rounded-xl text-sm flex items-center justify-center gap-1"
-              >
-                <Flame className="w-4 h-4 text-rose-400" />
-                <span>Feed</span>
+                <span className="material-symbols-outlined text-base text-emerald-400">login</span>
+                <span>Portal Sign In</span>
               </button>
             </div>
           </div>
         )}
       </header>
 
-      {/* Fixed Mobile Bottom Navigation Bar matching user image screenshot */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-xl border-t border-slate-200/90 shadow-2xl px-4 py-2.5 flex items-center justify-between rounded-t-3xl">
+      {/* Mobile App Bottom Footer Navigation Bar */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-xl border-t border-slate-200 shadow-2xl px-4 py-2.5 flex items-center justify-between rounded-t-3xl">
         
         {/* 1. Home */}
         <button
-          onClick={() => handleNavClick('home')}
+          onClick={() => handleNavClick('feed')}
           className={`flex flex-col items-center justify-center py-1 px-2 text-xs transition-all cursor-pointer ${
-            activePage === 'home' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-semibold'
+            activePage === 'feed' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-semibold'
           }`}
         >
-          <Home className={`w-5 h-5 shrink-0 ${activePage === 'home' ? 'text-emerald-700' : 'text-slate-500'}`} />
+          <Home className={`w-5 h-5 shrink-0 ${activePage === 'feed' ? 'text-emerald-700' : 'text-slate-500'}`} />
           <span className="text-[10px] mt-1 font-bold">Home</span>
         </button>
 

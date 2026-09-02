@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   X, 
   GraduationCap, 
@@ -6,29 +6,34 @@ import {
   UserCheck, 
   Landmark, 
   ShieldCheck, 
-  KeyRound, 
   Mail, 
   ArrowRight, 
-  Sparkles, 
   Lock, 
-  CheckCircle2,
-  Smartphone,
-  Eye,
-  EyeOff
+  Eye, 
+  EyeOff, 
+  Check 
 } from 'lucide-react';
 import { PLATFORM_METADATA } from '../data/portalData';
 
 export const RoleLoginModal = ({ isOpen, onClose, portal, onLoginSuccess }) => {
   if (!isOpen || !portal) return null;
 
-  const [authMode, setAuthMode] = useState('password'); // 'password' | 'otp'
-  const [identifier, setIdentifier] = useState('');
-  const [password, setPassword] = useState('');
-  const [otpCode, setOtpCode] = useState('');
-  const [otpSent, setOtpSent] = useState(false);
+  const [identifier, setIdentifier] = useState(portal?.defaultCredentials?.identifier || '');
+  const [password, setPassword] = useState(portal?.defaultCredentials?.password || '');
   const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+
+  // Automatically load official email & password whenever portal changes or modal opens
+  useEffect(() => {
+    if (portal) {
+      setIdentifier(portal.defaultCredentials?.identifier || '');
+      setPassword(portal.defaultCredentials?.password || '');
+      setErrorMsg('');
+      setIsLoading(false);
+    }
+  }, [portal, isOpen]);
 
   const getPortalIcon = () => {
     switch (portal.id) {
@@ -41,19 +46,10 @@ export const RoleLoginModal = ({ isOpen, onClose, portal, onLoginSuccess }) => {
     }
   };
 
-  const handleQuickDemoLogin = () => {
-    setIsLoading(true);
-    setErrorMsg('');
-    setTimeout(() => {
-      setIsLoading(false);
-      onLoginSuccess(portal.id, portal.demoUser);
-    }, 450);
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!identifier) {
-      setErrorMsg('Please enter your stakeholder identifier.');
+      setErrorMsg('Please enter your email or stakeholder ID.');
       return;
     }
 
@@ -62,17 +58,17 @@ export const RoleLoginModal = ({ isOpen, onClose, portal, onLoginSuccess }) => {
     setTimeout(() => {
       setIsLoading(false);
       const authenticatedUser = {
-        ...portal.demoUser,
-        name: identifier.includes('@') ? identifier.split('@')[0] : portal.demoUser.name,
-        email: identifier.includes('@') ? identifier : portal.demoUser.email,
+        ...(portal.profileUser || portal.demoUser),
+        name: identifier.includes('@') ? (portal.profileUser?.name || identifier.split('@')[0]) : (portal.profileUser?.name || identifier),
+        email: identifier.includes('@') ? identifier : (portal.profileUser?.email || identifier),
       };
       onLoginSuccess(portal.id, authenticatedUser);
-    }, 600);
+    }, 400);
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6 animate-in fade-in duration-200">
-      <div className="bg-white rounded-3xl max-w-lg w-full shadow-2xl border border-slate-200 overflow-hidden flex flex-col">
+    <div className="fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6 animate-in fade-in duration-200">
+      <div className="bg-white rounded-3xl max-w-md w-full shadow-2xl border border-slate-200 overflow-hidden flex flex-col">
         
         {/* Header */}
         <div className="p-6 border-b border-slate-100 flex items-start justify-between bg-slate-50/70">
@@ -104,73 +100,9 @@ export const RoleLoginModal = ({ isOpen, onClose, portal, onLoginSuccess }) => {
           </button>
         </div>
 
-        {/* Modal Body */}
+        {/* Modal Body - Strictly Email and Password Sign In */}
         <div className="p-6 sm:p-8 space-y-5">
           
-          {/* 1-Click Quick Demo Login Button for Hackathon Evaluation */}
-          <div className="p-4 bg-gradient-to-r from-emerald-50 to-teal-50 rounded-2xl border border-emerald-200/90 flex flex-col gap-2">
-            <div className="flex items-center justify-between">
-              <span className="text-[11px] font-bold text-emerald-950 flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5 text-emerald-700" />
-                SIH 2026 Jury Demonstration Mode
-              </span>
-              <span className="text-[10px] uppercase font-bold text-emerald-800 bg-white/80 px-2 py-0.5 rounded border border-emerald-300">
-                1-Click Fast Pass
-              </span>
-            </div>
-            <p className="text-xs text-emerald-900">
-              Instant login as verified demo user: <strong className="font-bold text-emerald-950">{portal.demoUser.name}</strong> ({portal.demoUser.institution})
-            </p>
-            <button
-              onClick={handleQuickDemoLogin}
-              disabled={isLoading}
-              className="w-full mt-1 py-2.5 px-4 bg-emerald-800 hover:bg-emerald-900 text-white rounded-xl text-xs font-bold transition-all shadow-xs flex items-center justify-center gap-2 cursor-pointer"
-            >
-              {isLoading ? (
-                <span>Authenticating Credentials...</span>
-              ) : (
-                <>
-                  <span>⚡ 1-Click Quick Demo Login as {portal.title}</span>
-                  <ArrowRight className="w-4 h-4" />
-                </>
-              )}
-            </button>
-          </div>
-
-          {/* Divider */}
-          <div className="relative flex py-1 items-center">
-            <div className="flex-grow border-t border-slate-200"></div>
-            <span className="flex-shrink mx-3 text-[11px] font-semibold text-slate-400 uppercase">
-              Or Sign In with Credentials
-            </span>
-            <div className="flex-grow border-t border-slate-200"></div>
-          </div>
-
-          {/* Auth Mode Toggle */}
-          <div className="grid grid-cols-2 p-1 bg-slate-100 rounded-xl">
-            <button
-              onClick={() => setAuthMode('password')}
-              className={`py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
-                authMode === 'password'
-                  ? 'bg-white text-slate-900 shadow-xs'
-                  : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              Password / Key
-            </button>
-            <button
-              onClick={() => setAuthMode('otp')}
-              className={`py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
-                authMode === 'otp'
-                  ? 'bg-white text-slate-900 shadow-xs'
-                  : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              OTP / DigiLocker / Parichay
-            </button>
-          </div>
-
-          {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-4">
             {errorMsg && (
               <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-900 font-semibold">
@@ -178,10 +110,16 @@ export const RoleLoginModal = ({ isOpen, onClose, portal, onLoginSuccess }) => {
               </div>
             )}
 
+            {/* Email / ID Field */}
             <div>
-              <label className="text-xs font-bold text-slate-700 block mb-1">
-                {portal.authFields.idLabel}
-              </label>
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="text-xs font-bold text-slate-700">
+                  {portal.authFields.idLabel}
+                </label>
+                <span className="text-[10px] text-emerald-700 font-semibold flex items-center gap-0.5">
+                  <Check className="w-3 h-3" /> Saved Account
+                </span>
+              </div>
               <div className="relative">
                 <Mail className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
                 <input
@@ -189,73 +127,71 @@ export const RoleLoginModal = ({ isOpen, onClose, portal, onLoginSuccess }) => {
                   placeholder={portal.authFields.idPlaceholder}
                   value={identifier}
                   onChange={(e) => setIdentifier(e.target.value)}
-                  className="w-full pl-9 pr-4 py-2.5 text-xs bg-slate-50 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-700 text-slate-900 font-medium"
+                  className="w-full pl-9 pr-4 py-2.5 text-xs bg-slate-50/90 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-700 text-slate-900 font-medium transition-all"
+                  required
                 />
               </div>
             </div>
 
-            {authMode === 'password' ? (
-              <div>
-                <label className="text-xs font-bold text-slate-700 block mb-1">
+            {/* Password Field */}
+            <div>
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="text-xs font-bold text-slate-700">
                   {portal.authFields.secretLabel}
                 </label>
-                <div className="relative">
-                  <Lock className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
-                  <input
-                    type={showPassword ? 'text' : 'password'}
-                    placeholder={portal.authFields.secretPlaceholder}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="w-full pl-9 pr-10 py-2.5 text-xs bg-slate-50 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-700 text-slate-900 font-medium"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
-                  >
-                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                  </button>
-                </div>
+                <a href="#forgot" onClick={(e) => e.preventDefault()} className="text-[10px] text-emerald-800 font-semibold hover:underline">
+                  Forgot Password?
+                </a>
               </div>
-            ) : (
-              <div>
-                <label className="text-xs font-bold text-slate-700 block mb-1">
-                  6-Digit OTP / Security Token
-                </label>
-                <div className="flex gap-2">
-                  <div className="relative flex-1">
-                    <Smartphone className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
-                    <input
-                      type="text"
-                      placeholder="Enter OTP (e.g. 529182)"
-                      value={otpCode}
-                      onChange={(e) => setOtpCode(e.target.value)}
-                      maxLength={6}
-                      className="w-full pl-9 pr-4 py-2.5 text-xs bg-slate-50 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-700 text-slate-900 font-medium"
-                    />
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => setOtpSent(true)}
-                    className="px-3 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-colors cursor-pointer whitespace-nowrap"
-                  >
-                    {otpSent ? 'Resend (45s)' : 'Get OTP'}
-                  </button>
-                </div>
-                {otpSent && (
-                  <p className="text-[11px] text-emerald-700 font-semibold mt-1">
-                    ✓ OTP dispatched to registered mobile / ABHA handle
-                  </p>
-                )}
+              <div className="relative">
+                <Lock className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder={portal.authFields.secretPlaceholder}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full pl-9 pr-10 py-2.5 text-xs bg-slate-50/90 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-700 text-slate-900 font-medium transition-all"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer p-1"
+                  aria-label="Toggle password visibility"
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
               </div>
-            )}
+            </div>
 
+            {/* Remember Me / SSL */}
+            <div className="flex items-center justify-between text-xs pt-1">
+              <label className="flex items-center gap-2 cursor-pointer text-slate-600 font-medium">
+                <input
+                  type="checkbox"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                  className="rounded text-emerald-700 focus:ring-emerald-700 border-slate-300 cursor-pointer"
+                />
+                <span>Remember this workstation</span>
+              </label>
+              <span className="text-[11px] text-slate-400 font-medium">256-Bit SSL</span>
+            </div>
+
+            {/* Submit Button */}
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full py-3 px-4 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold transition-colors shadow-xs flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full mt-2 py-3 px-4 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold transition-all shadow-sm active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
             >
-              {isLoading ? <span>Verifying...</span> : <span>Sign In to {portal.title} Portal</span>}
+              {isLoading ? (
+                <span>Authenticating with National Ayush Gateway...</span>
+              ) : (
+                <>
+                  <span>Sign In to {portal.title} Portal</span>
+                  <ArrowRight className="w-4 h-4" />
+                </>
+              )}
             </button>
           </form>
 

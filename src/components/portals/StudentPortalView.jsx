@@ -229,7 +229,7 @@ export const StudentPortalView = ({ user }) => {
             <div className="p-4 bg-emerald-50 rounded-2xl border border-emerald-200/80 text-xs text-emerald-900 flex items-start gap-3">
               <Sparkles className="w-5 h-5 text-emerald-700 shrink-0 mt-0.5" />
               <div>
-                <strong className="block font-bold">AI Skill Gap Recommendation:</strong>
+                <strong className="block font-bold">Competency Enhancement Roadmap:</strong>
                 Complete the <em>Ayush Regulatory & IP Filing</em> 30-minute sprint to elevate your Industry Readiness from 88% to 94%!
               </div>
             </div>
