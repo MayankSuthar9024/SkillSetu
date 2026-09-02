@@ -108,7 +108,7 @@ export function HowItWorks() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.05 }}
-            className="font-display-lg text-3xl sm:text-4xl lg:text-5xl font-extrabold text-on-surface mb-4 tracking-tight"
+            className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-on-surface mb-4 tracking-tight"
           >
             How SkillSetu Works
           </motion.h2>
@@ -147,7 +147,7 @@ export function HowItWorks() {
                     </span>
                   </div>
 
-                  <h3 className="font-display-lg text-2xl font-bold text-on-surface">
+                  <h3 className="font-serif text-2xl sm:text-3xl font-bold text-on-surface">
                     {stepItem.title}
                   </h3>
 

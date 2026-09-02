@@ -7,7 +7,7 @@ export function Footer({ onNavigate, onSeeHowItWorks }) {
       {/* Final CTA Banner Replicating Stitch Landing CTA */}
       <div className="py-16 bg-surface hero-grid-bg border-b border-outline-variant/30 text-center relative overflow-hidden">
         <div className="max-w-3xl mx-auto px-4 text-center relative z-10 space-y-6">
-          <h2 className="font-display-lg text-2xl sm:text-3xl lg:text-4xl font-extrabold text-on-surface tracking-tight">
+          <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-on-surface tracking-tight">
             Designed to strengthen the Ayush talent pipeline.
           </h2>
           <p className="font-body-lg text-base text-on-surface-variant max-w-xl mx-auto">
@@ -39,8 +39,8 @@ export function Footer({ onNavigate, onSeeHowItWorks }) {
             <div className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center text-on-primary font-bold shadow-soft">
               <span className="material-symbols-outlined text-xl">spa</span>
             </div>
-            <div className="font-display-lg text-2xl font-extrabold text-primary tracking-tight">
-              SkillSetu
+            <div className="text-2xl font-extrabold text-slate-900 tracking-tight">
+              Skill<span className="text-primary font-accent font-normal text-3xl ml-0.5">Setu</span>
             </div>
           </div>
           <p className="font-body-md text-xs sm:text-sm text-on-surface-variant leading-relaxed max-w-sm">

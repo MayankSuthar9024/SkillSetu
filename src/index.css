@@ -9,10 +9,37 @@ html, body {
 
 body {
   margin: 0;
-  font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+  font-family: 'Caacupe One', cursive, system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   background-color: #f7faf8;
   color: #191c1d;
+}
+
+/* Single Global Font: Caacupe One */
+.font-sans,
+.font-serif,
+.font-heading,
+.font-accent,
+.font-ui,
+.font-body,
+.font-display {
+  font-family: 'Caacupe One', cursive, system-ui, sans-serif;
+}
+
+/* Decrease Font Weight Globally & Remove Browser Faux-Bold */
+body,
+h1, h2, h3, h4, h5, h6,
+button, a, input, textarea, select,
+strong, b,
+.font-bold, .font-extrabold, .font-black, .font-semibold, .font-medium {
+  font-weight: 400 !important;
+  letter-spacing: 0.015em;
+}
+
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 button,

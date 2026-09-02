@@ -95,7 +95,7 @@ export const PortalSelectPage = ({
         
         {/* Page Headings */}
         <div className="text-center max-w-3xl mx-auto space-y-3 mb-12 sm:mb-16">
-          <h1 className="text-3xl sm:text-4xl md:text-[44px] font-extrabold text-slate-900 tracking-tight leading-tight">
+          <h1 className="font-serif text-4xl sm:text-5xl font-bold text-slate-900 tracking-tight leading-tight">
             Select Your Portal
           </h1>
 

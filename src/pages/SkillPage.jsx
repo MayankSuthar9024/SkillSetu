@@ -55,7 +55,7 @@ export function SkillPage({ onNavigate, onOpenReadinessModal }) {
               <Zap className="w-3.5 h-3.5" />
               National Ayush Skill Hub
             </span>
-            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
+            <h1 className="font-serif text-3xl sm:text-4xl font-bold tracking-tight">
               Skill Mapping & Readiness Engine
             </h1>
             <p className="text-emerald-100 text-xs sm:text-sm max-w-2xl mt-1.5">

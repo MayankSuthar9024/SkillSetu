@@ -24,7 +24,7 @@ export function AboutEcosystem() {
               
               <div className="flex justify-between items-start mb-6">
                 <div>
-                  <h3 className="font-headline-md text-xl sm:text-2xl font-bold text-on-surface mb-1">
+                  <h3 className="font-serif text-2xl font-bold text-on-surface mb-1">
                     {featuredScholar.name}
                   </h3>
                   <p className="text-sm text-on-surface-variant font-medium">
@@ -90,7 +90,7 @@ export function AboutEcosystem() {
               <span>Objective Clinical Benchmarks</span>
             </div>
 
-            <h2 className="font-display-lg text-3xl sm:text-4xl lg:text-5xl font-extrabold text-on-surface leading-tight tracking-tight">
+            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-on-surface leading-tight tracking-tight">
               A clearer view of <br />
               <span className="text-primary bg-gradient-to-r from-primary to-emerald-600 bg-clip-text text-transparent">
                 candidate clinical readiness.
@@ -128,7 +128,7 @@ export function AboutEcosystem() {
             <span className="bg-secondary-container text-tertiary px-3.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider shadow-2xs">
               National Ayush Scope
             </span>
-            <h3 className="font-display-lg text-2xl sm:text-3xl font-extrabold text-on-surface mt-3 mb-2">
+            <h3 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold text-on-surface mt-3 mb-2">
               Covering All 5 Ayush Systems
             </h3>
             <p className="text-sm text-on-surface-variant">
@@ -157,7 +157,7 @@ export function AboutEcosystem() {
                     </span>
                   </div>
 
-                  <h4 className="font-headline-md text-xl font-bold text-on-surface mb-2">
+                  <h4 className="font-serif text-xl font-bold text-on-surface mb-2">
                     {disp.name}
                   </h4>
 

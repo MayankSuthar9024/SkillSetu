@@ -19,7 +19,7 @@ export function FaqSection({ onOpenReadinessModal, onOpenAuthModal }) {
             <span>Got Questions? We've Got Answers</span>
           </div>
 
-          <h2 className="font-display-lg text-3xl sm:text-4xl lg:text-5xl font-extrabold text-on-surface mb-4 tracking-tight">
+          <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-on-surface mb-4 tracking-tight">
             Frequently Asked Questions
           </h2>
 

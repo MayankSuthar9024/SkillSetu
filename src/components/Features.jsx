@@ -32,7 +32,7 @@ export function Features() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.05 }}
-            className="font-display-lg text-3xl sm:text-4xl lg:text-5xl font-extrabold text-on-surface mb-4 tracking-tight"
+            className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-on-surface mb-4 tracking-tight"
           >
             Designed for the Ayush Ecosystem
           </motion.h2>

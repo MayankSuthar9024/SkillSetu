@@ -85,10 +85,18 @@ export function Hero({ onGetStarted }) {
           className="space-y-6 lg:space-y-8 text-center lg:text-left"
         >
 
+          {/* Eyebrow Accent Badge */}
+          <motion.div variants={itemVariants} className="flex justify-center lg:justify-start">
+            <span className="inline-flex items-center gap-2 px-3.5 py-1 bg-emerald-50/90 border border-emerald-200/90 rounded-full text-xs font-semibold text-emerald-900 shadow-2xs">
+              <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span>
+              <span className="font-accent tracking-wider text-xs">Ayush Academia-Industry Bridge</span>
+            </span>
+          </motion.div>
+
           {/* Heading */}
           <motion.h1 
             variants={itemVariants}
-            className="hero-title font-display-lg text-4xl sm:text-5xl lg:text-6xl font-extrabold text-on-surface leading-[1.08] tracking-[-0.045em]"
+            className="hero-title font-serif text-5xl sm:text-6xl lg:text-7xl font-bold text-on-surface leading-[1.04] tracking-tight"
           >
             Build the skills. <br />
             <span className="text-primary bg-gradient-to-r from-primary via-emerald-700 to-amber-700 bg-clip-text text-transparent">
@@ -175,7 +183,7 @@ export function Hero({ onGetStarted }) {
                   />
                 </div>
                 <div>
-                  <h3 className="font-headline-md text-lg font-bold text-on-surface flex items-center gap-2">
+                  <h3 className="font-serif text-xl font-bold text-on-surface flex items-center gap-2">
                     {currentStudent.name}
                   </h3>
                   <p className="text-xs sm:text-sm text-on-surface-variant font-medium">
