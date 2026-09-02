@@ -168,7 +168,7 @@ export const SAMPLE_STUDENTS = [
     institution: 'National Institute of Ayurveda, Jaipur',
     readinessScore: 85,
     verifiedStatus: 'Verified Profile',
-    avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=300',
+    avatar: '/images/priya_avatar.jpg',
     assessments: [
       { name: 'Clinical Assessment', score: 'Passed (Advanced)', icon: 'psychiatry', status: 'Completed' },
       { name: 'Pharmacology (Dravyaguna)', score: '88/100', icon: 'local_pharmacy', status: 'Passed' },
@@ -176,13 +176,13 @@ export const SAMPLE_STUDENTS = [
     ]
   },
   {
-    id: 'john',
-    name: 'John Doe',
-    degree: 'BAMS Final Year Student',
+    id: 'kabir',
+    name: 'Kabir Mehta',
+    degree: 'BAMS Final Year Scholar',
     institution: 'Government Ayurveda College, Trivandrum',
     readinessScore: 78,
     verifiedStatus: 'Verified Profile',
-    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=300',
+    avatar: '/images/kabir_avatar.jpg',
     assessments: [
       { name: 'Diagnostic Skills', score: '85/100', icon: 'insights', status: 'Completed' },
       { name: 'Treatment Protocols', score: '72/100', icon: 'medical_services', status: 'In Progress' }
@@ -195,7 +195,7 @@ export const SAMPLE_STUDENTS = [
     institution: 'Nehru Homoeopathic Medical College, Delhi',
     readinessScore: 92,
     verifiedStatus: 'Top 5% Candidate',
-    avatar: 'https://images.unsplash.com/photo-1594824813566-7885a6a16089?auto=format&fit=crop&q=80&w=300',
+    avatar: '/images/ananya_avatar.jpg',
     assessments: [
       { name: 'Repertory Analysis', score: '96/100', icon: 'science', status: 'Completed' },
       { name: 'Constitutional Case Taking', score: '90/100', icon: 'clinical_notes', status: 'Passed' }

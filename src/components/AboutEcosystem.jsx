@@ -4,7 +4,7 @@ import { AYUSH_DISCIPLINES, SAMPLE_STUDENTS } from '../data/stitchData';
 
 export function AboutEcosystem({ onOpenReadinessModal }) {
   const [selectedDiscipline, setSelectedDiscipline] = useState(AYUSH_DISCIPLINES[0]);
-  const johnStudent = SAMPLE_STUDENTS[1]; // John Doe 78% score profile
+  const featuredScholar = SAMPLE_STUDENTS[1]; // Kabir Mehta 78% score profile
 
   return (
     <section className="premium-section py-16 lg:py-24 bg-surface tech-grid border-b border-outline-variant/30 relative overflow-hidden">
@@ -26,12 +26,12 @@ export function AboutEcosystem({ onOpenReadinessModal }) {
               <div className="flex justify-between items-start mb-6">
                 <div>
                   <h3 className="font-headline-md text-xl sm:text-2xl font-bold text-on-surface mb-1">
-                    {johnStudent.name}
+                    {featuredScholar.name}
                   </h3>
                   <p className="text-sm text-on-surface-variant font-medium">
-                    {johnStudent.degree}
+                    {featuredScholar.degree}
                   </p>
-                  <p className="text-xs text-outline">{johnStudent.institution}</p>
+                  <p className="text-xs text-outline">{featuredScholar.institution}</p>
                 </div>
                 <div className="bg-secondary-container text-tertiary px-3.5 py-1 rounded-full text-xs font-bold flex items-center gap-1 shadow-2xs">
                   <span className="material-symbols-outlined text-sm">verified</span> Verified Profile
@@ -41,7 +41,7 @@ export function AboutEcosystem({ onOpenReadinessModal }) {
               {/* Match Score Display */}
               <div className="bg-surface-container-lowest border border-outline-variant/30 rounded-2xl p-6 mb-6 text-center shadow-xs">
                 <div className="font-display-lg text-4xl sm:text-5xl font-extrabold text-primary mb-1">
-                  {johnStudent.readinessScore}%
+                  {featuredScholar.readinessScore}%
                 </div>
                 <div className="text-xs sm:text-sm font-semibold uppercase tracking-wide text-on-surface-variant">
                   Industry Vector Match Score
@@ -49,7 +49,7 @@ export function AboutEcosystem({ onOpenReadinessModal }) {
                 <div className="w-full h-3 bg-surface-container rounded-full mt-4 overflow-hidden p-0.5">
                   <motion.div 
                     initial={{ width: 0 }}
-                    whileInView={{ width: `${johnStudent.readinessScore}%` }}
+                    whileInView={{ width: `${featuredScholar.readinessScore}%` }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
                     className="bg-gradient-to-r from-primary via-emerald-600 to-amber-500 h-full rounded-full" 
@@ -59,7 +59,7 @@ export function AboutEcosystem({ onOpenReadinessModal }) {
 
               {/* Assessment Scores List */}
               <div className="space-y-3">
-                {johnStudent.assessments.map((ast, idx) => (
+                {featuredScholar.assessments.map((ast, idx) => (
                   <motion.div 
                     key={idx}
                     whileHover={{ scale: 1.015, x: 2 }}

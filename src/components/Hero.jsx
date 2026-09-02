@@ -170,26 +170,6 @@ export function Hero({ onGetStarted, onSeeHowItWorks, onOpenReadinessModal }) {
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
         >
-          {/* Floating Motion Graphics Chip 1 (Top-Right) */}
-          <motion.div 
-            animate={{ y: [0, -8, 0] }}
-            transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
-            className="absolute -top-4 -right-2 sm:-right-4 z-30 bg-white/95 backdrop-blur-md px-3.5 py-2 rounded-2xl border border-emerald-200/90 shadow-lg text-xs font-bold text-emerald-900 flex items-center gap-2 pointer-events-none"
-          >
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
-            <span>⚡ 94% Vector Match</span>
-          </motion.div>
-
-          {/* Floating Motion Graphics Chip 2 (Bottom-Left) */}
-          <motion.div 
-            animate={{ y: [0, 8, 0] }}
-            transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
-            className="absolute -bottom-4 -left-2 sm:-left-4 z-30 bg-white/95 backdrop-blur-md px-3.5 py-2 rounded-2xl border border-amber-200/90 shadow-lg text-xs font-bold text-amber-950 flex items-center gap-2 pointer-events-none"
-          >
-            <span className="material-symbols-outlined text-base text-amber-600">verified</span>
-            <span>Schedule T GMP Verified</span>
-          </motion.div>
-
           {/* Main Card with Spring 3D Tilt */}
           <motion.div 
             style={{ rotateX, rotateY }}
@@ -198,18 +178,14 @@ export function Hero({ onGetStarted, onSeeHowItWorks, onOpenReadinessModal }) {
             {/* Editorial image layer */}
             <div className="relative h-44 sm:h-52 -mx-6 sm:-mx-8 -mt-6 sm:-mt-8 mb-6 overflow-hidden rounded-t-[28px] group">
               <img
-                src="https://images.unsplash.com/photo-1505577058444-a3dab90d4253?auto=format&fit=crop&q=85&w=1200"
-                alt="Ayurvedic herbs and clinical practice"
+                src="/images/ayush_hero_banner.jpg"
+                alt="Ayurvedic clinical research and botanical extraction laboratory"
                 className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-ayush-darker/80 via-ayush-darker/15 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-ayush-darker/80 via-ayush-darker/20 to-transparent" />
               <div className="hero-image-copy absolute left-5 bottom-5 text-white">
                 <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-ayush-lightEmerald">The SkillSetu standard</p>
                 <p className="mt-1 text-lg font-bold">Learn with purpose. Practice with confidence.</p>
-              </div>
-              <div className="absolute right-4 top-4 rounded-full bg-white/95 px-3 py-1.5 text-[11px] font-bold text-primary shadow-md backdrop-blur-md flex items-center gap-1.5">
-                <span className="h-2 w-2 rounded-full bg-ayush-emerald animate-pulse" />
-                <span>Live verified dossier</span>
               </div>
             </div>
             
