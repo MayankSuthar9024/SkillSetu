@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import HowItWorks from './components/HowItWorks';
@@ -6,22 +6,95 @@ import Features from './components/Features';
 import AboutEcosystem from './components/AboutEcosystem';
 import FaqSection from './components/FaqSection';
 import ReadinessModal from './components/ReadinessModal';
-import AuthModal from './components/AuthModal';
 import Footer from './components/Footer';
 import ScrollReveal from './components/ScrollReveal';
-import { AYUSH_DISCIPLINES, SAMPLE_STUDENTS } from './data/stitchData';
+import { PortalSelectPage } from './pages/PortalSelectPage';
+import { StakeholderDashboard } from './pages/StakeholderDashboard';
+import { PORTALS_DATA } from './data/portalData';
 
 export function App() {
-  const [activePage, setActivePage] = useState('home'); // 'home' | 'features' | 'about' | 'opportunities'
+  const [activePage, setActivePage] = useState('home'); // 'home' | 'features' | 'about' | 'opportunities' | 'login' | 'portals' | 'dashboard'
   const [isReadinessModalOpen, setIsReadinessModalOpen] = useState(false);
-  const [authModalState, setAuthModalState] = useState({ isOpen: false, mode: 'login' });
+  const [activePortalId, setActivePortalId] = useState('student');
+  const [currentUser, setCurrentUser] = useState(null);
+  const [contrastMode, setContrastMode] = useState('standard');
 
-  const handleOpenAuth = (mode = 'login') => {
-    setAuthModalState({ isOpen: true, mode });
+  const handleToggleContrast = () => {
+    setContrastMode(prev => (prev === 'standard' ? 'high' : 'standard'));
   };
 
-  const handleCloseAuth = () => {
-    setAuthModalState({ isOpen: false, mode: 'login' });
+  useEffect(() => {
+    if (contrastMode === 'high') {
+      document.documentElement.setAttribute('data-contrast', 'high');
+    } else {
+      document.documentElement.removeAttribute('data-contrast');
+    }
+  }, [contrastMode]);
+
+  // Sync hash routing for seamless back/forward navigation
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash.replace('#', '');
+      if (hash === 'login' || hash === 'portals' || hash === 'portal-select') {
+        setActivePage('login');
+      } else if (hash.startsWith('dashboard')) {
+        const role = hash.split('-')[1];
+        if (role && PORTALS_DATA.some(p => p.id === role)) {
+          setActivePortalId(role);
+          const portalCfg = PORTALS_DATA.find(p => p.id === role);
+          setCurrentUser(portalCfg?.demoUser || null);
+        }
+        setActivePage('dashboard');
+      } else if (hash === 'features' || hash === 'about' || hash === 'opportunities' || hash === 'how-it-works') {
+        setActivePage(hash);
+      } else if (!hash) {
+        setActivePage('home');
+      }
+    };
+
+    handleHashChange();
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
+
+  const handleOpenAuth = () => {
+    setActivePage('login');
+    window.location.hash = 'login';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleLoginSuccess = (portalId, user) => {
+    setActivePortalId(portalId);
+    setCurrentUser(user);
+    setActivePage('dashboard');
+    window.location.hash = `dashboard-${portalId}`;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleSwitchPortal = (newPortalId, newUser) => {
+    if (newPortalId) {
+      setActivePortalId(newPortalId);
+      const portalCfg = PORTALS_DATA.find(p => p.id === newPortalId);
+      setCurrentUser(newUser || portalCfg?.demoUser || null);
+      window.location.hash = `dashboard-${newPortalId}`;
+    } else {
+      setActivePage('login');
+      window.location.hash = 'login';
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleLogout = () => {
+    setCurrentUser(null);
+    setActivePage('login');
+    window.location.hash = 'login';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleBackToHome = () => {
+    setActivePage('home');
+    window.location.hash = '';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleSeeHowItWorks = () => {
@@ -37,13 +110,44 @@ export function App() {
     }
   };
 
+  // 1. DEDICATED PORTAL SELECTION / LOGIN PAGE
+  if (activePage === 'login' || activePage === 'portals') {
+    return (
+      <PortalSelectPage
+        onBackToHome={handleBackToHome}
+        onLoginSuccess={handleLoginSuccess}
+        contrastMode={contrastMode}
+        onToggleContrast={handleToggleContrast}
+      />
+    );
+  }
+
+  // 2. AUTHENTICATED STAKEHOLDER DASHBOARD
+  if (activePage === 'dashboard') {
+    return (
+      <StakeholderDashboard
+        activePortalId={activePortalId}
+        currentUser={currentUser}
+        onSwitchPortal={handleSwitchPortal}
+        onLogout={handleLogout}
+        onBackToHome={handleBackToHome}
+        contrastMode={contrastMode}
+        onToggleContrast={handleToggleContrast}
+      />
+    );
+  }
+
+  // 3. MAIN LANDING PAGES (Home, Features, About, Opportunities)
   return (
     <div className="min-h-screen bg-surface text-on-surface font-sans flex flex-col antialiased">
       
-      {/* Shared Navbar */}
+      {/* Shared Sticky Navbar */}
       <Navbar
         activePage={activePage}
-        setActivePage={setActivePage}
+        setActivePage={(page) => {
+          setActivePage(page);
+          window.location.hash = page === 'home' ? '' : page;
+        }}
         onOpenReadinessModal={() => setIsReadinessModalOpen(true)}
         onOpenAuthModal={handleOpenAuth}
       />
@@ -55,7 +159,7 @@ export function App() {
         {activePage === 'home' && (
           <div className="animate-fadeIn">
             <Hero
-              onGetStarted={() => setIsReadinessModalOpen(true)}
+              onGetStarted={() => handleOpenAuth()}
               onSeeHowItWorks={handleSeeHowItWorks}
               onOpenReadinessModal={() => setIsReadinessModalOpen(true)}
             />
@@ -165,8 +269,8 @@ export function App() {
                   <div className="pt-4 border-t border-outline-variant/20 flex justify-between items-center">
                     <span className="text-xs font-bold text-primary">{opp.stipend}</span>
                     <button
-                      onClick={() => setIsReadinessModalOpen(true)}
-                      className="opportunity-card-button bg-primary text-on-primary text-xs font-bold px-4 py-2 rounded-xl hover:bg-primary/90 transition-all"
+                      onClick={() => handleOpenAuth()}
+                      className="opportunity-card-button bg-primary text-on-primary text-xs font-bold px-4 py-2 rounded-xl hover:bg-primary/90 transition-all cursor-pointer"
                     >
                       Apply with Score
                     </button>
@@ -179,8 +283,8 @@ export function App() {
               <h3 className="font-bold text-xl text-on-surface mb-2">Are you an Employer or Ayush Hospital?</h3>
               <p className="text-xs text-on-surface-variant mb-4">Post opportunities and directly recruit candidates verified via SkillSetu assessment engine.</p>
               <button
-                onClick={() => handleOpenAuth('signup')}
-                className="bg-primary text-on-primary font-bold text-sm px-6 py-2.5 rounded-xl hover:bg-primary/90 transition-all"
+                onClick={() => handleOpenAuth()}
+                className="bg-primary text-on-primary font-bold text-sm px-6 py-2.5 rounded-xl hover:bg-primary/90 transition-all cursor-pointer"
               >
                 Register as Employer
               </button>
@@ -190,24 +294,22 @@ export function App() {
 
       </main>
 
-      {/* Global Modals */}
+      {/* Global Readiness Diagnostic Modal */}
       <ReadinessModal
         isOpen={isReadinessModalOpen}
         onClose={() => setIsReadinessModalOpen(false)}
       />
 
-      <AuthModal
-        isOpen={authModalState.isOpen}
-        mode={authModalState.mode}
-        onClose={handleCloseAuth}
-        onSwitchMode={(mode) => setAuthModalState({ isOpen: true, mode })}
-      />
-
       {/* Shared Footer */}
       <Footer 
         onNavigate={(page) => {
-          setActivePage(page);
-          window.scrollTo({ top: 0, behavior: 'smooth' });
+          if (page === 'login') {
+            handleOpenAuth();
+          } else {
+            setActivePage(page);
+            window.location.hash = page === 'home' ? '' : page;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }
         }}
         onSeeHowItWorks={handleSeeHowItWorks}
       />
