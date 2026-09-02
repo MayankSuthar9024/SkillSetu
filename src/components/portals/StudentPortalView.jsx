@@ -13,7 +13,9 @@ import {
   TrendingUp,
   Download,
   Clock,
-  ChevronRight
+  ChevronRight,
+  User,
+  LayoutGrid
 } from 'lucide-react';
 import { HERO_STATS, PLATFORM_METADATA } from '../../data/portalData';
 
@@ -103,20 +105,20 @@ export const StudentPortalView = ({ user }) => {
   return (
     <div className="space-y-6">
       {/* Student Profile & Verification Banner */}
-      <div className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-soft flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-        <div className="flex items-center gap-4">
-          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-800 to-emerald-950 text-white font-extrabold text-2xl flex items-center justify-center shadow-md border-2 border-emerald-400/40">
+      <div className="bg-white rounded-3xl p-5 sm:p-6 border border-slate-200/80 shadow-soft flex flex-col md:flex-row items-start md:items-center justify-between gap-6 min-w-0 max-w-full">
+        <div className="flex items-center gap-4 min-w-0 max-w-full">
+          <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br from-emerald-800 to-emerald-950 text-white font-extrabold text-xl sm:text-2xl flex items-center justify-center shadow-md border-2 border-emerald-400/40 shrink-0">
             {user.avatar || 'AS'}
           </div>
-          <div>
-            <div className="flex flex-wrap items-center gap-2">
-              <h2 className="text-xl font-extrabold text-slate-900">{user.name}</h2>
-              <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-200 flex items-center gap-1">
-                <ShieldCheck className="w-3.5 h-3.5" />
-                ABHA & DigiLocker Verified
+          <div className="min-w-0 flex-1">
+            <div className="flex flex-wrap items-center gap-2 min-w-0">
+              <h2 className="text-lg sm:text-xl font-extrabold text-slate-900 truncate">{user.name}</h2>
+              <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-200 flex items-center gap-1 shrink-0">
+                <ShieldCheck className="w-3.5 h-3.5 shrink-0" />
+                ABHA Verified
               </span>
             </div>
-            <p className="text-xs text-slate-500 mt-1">
+            <p className="text-xs text-slate-500 mt-1 break-words">
               {user.degree} · {user.institution} · Roll: <span className="font-mono font-semibold text-slate-700">{user.id}</span>
             </p>
           </div>
@@ -190,6 +192,8 @@ export const StudentPortalView = ({ user }) => {
         </button>
       </div>
 
+
+
       {/* TAB 1: Diagnostic Radar & Skill Assessment */}
       {activeTab === 'assessment' && (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -225,7 +229,7 @@ export const StudentPortalView = ({ user }) => {
             <div className="p-4 bg-emerald-50 rounded-2xl border border-emerald-200/80 text-xs text-emerald-900 flex items-start gap-3">
               <Sparkles className="w-5 h-5 text-emerald-700 shrink-0 mt-0.5" />
               <div>
-                <strong className="block font-bold">AI Skill Gap Recommendation:</strong>
+                <strong className="block font-bold">Competency Enhancement Roadmap:</strong>
                 Complete the <em>Ayush Regulatory & IP Filing</em> 30-minute sprint to elevate your Industry Readiness from 88% to 94%!
               </div>
             </div>

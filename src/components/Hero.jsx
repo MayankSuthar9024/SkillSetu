@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion, useMotionValue, useTransform, useSpring } from 'framer-motion';
 import { SAMPLE_STUDENTS, TRUST_METRICS } from '../data/stitchData';
 
-export function Hero({ onGetStarted, onSeeHowItWorks, onOpenReadinessModal }) {
+export function Hero({ onGetStarted }) {
   const [selectedStudentIndex, setSelectedStudentIndex] = useState(0);
   const currentStudent = SAMPLE_STUDENTS[selectedStudentIndex];
 
@@ -10,8 +10,8 @@ export function Hero({ onGetStarted, onSeeHowItWorks, onOpenReadinessModal }) {
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
-  const rotateX = useSpring(useTransform(mouseY, [-200, 200], [4, -4]), { damping: 25, stiffness: 180 });
-  const rotateY = useSpring(useTransform(mouseX, [-200, 200], [-4, 4]), { damping: 25, stiffness: 180 });
+  const rotateX = useSpring(useTransform(mouseY, [-200, 200], [3, -3]), { damping: 25, stiffness: 180 });
+  const rotateY = useSpring(useTransform(mouseX, [-200, 200], [-3, 3]), { damping: 25, stiffness: 180 });
 
   const handleMouseMove = (e) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -45,7 +45,7 @@ export function Hero({ onGetStarted, onSeeHowItWorks, onOpenReadinessModal }) {
       y: 0,
       transition: {
         duration: 0.65,
-        ease: [0.16, 1, 0.3, 1] // Apple fluid deceleration curve
+        ease: [0.16, 1, 0.3, 1]
       }
     }
   };
@@ -84,20 +84,7 @@ export function Hero({ onGetStarted, onSeeHowItWorks, onOpenReadinessModal }) {
           animate="visible"
           className="space-y-6 lg:space-y-8 text-center lg:text-left"
         >
-          
-          {/* Tag Pill with Subtle Pulse */}
-          <motion.div variants={itemVariants} className="inline-block">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-white/90 text-primary border border-white/90 rounded-full text-xs sm:text-sm font-bold tracking-wide shadow-xs backdrop-blur-md hover:scale-[1.02] transition-transform cursor-default">
-              <span className="flex h-2 w-2 relative">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-600"></span>
-              </span>
-              <span className="material-symbols-outlined text-base">workspace_premium</span>
-              <span>SIH 2026 National Ayush Talent Engine</span>
-            </div>
-          </motion.div>
 
-<<<<<<< HEAD
           {/* Heading */}
           <motion.h1 
             variants={itemVariants}
@@ -106,12 +93,6 @@ export function Hero({ onGetStarted, onSeeHowItWorks, onOpenReadinessModal }) {
             Build the skills. <br />
             <span className="text-primary bg-gradient-to-r from-primary via-emerald-600 to-amber-600 bg-clip-text text-transparent">
               Prove your readiness.
-=======
-          <h1 className="hero-title font-display-lg text-4xl sm:text-5xl lg:text-6xl font-extrabold text-on-surface leading-[1.08] tracking-[-0.045em]">
-            Build skills. <br />
-            <span className="text-primary bg-gradient-to-r from-primary via-primary-container to-tertiary bg-clip-text text-transparent">
-              Prove your skills.
->>>>>>> 48c98bc1f3f510f88600107d5a179522291ffab3
             </span> <br />
             Find your next opportunity.
           </motion.h1>
@@ -121,10 +102,10 @@ export function Hero({ onGetStarted, onSeeHowItWorks, onOpenReadinessModal }) {
             variants={itemVariants}
             className="hero-copy font-body-lg text-base sm:text-lg text-on-surface-variant max-w-xl mx-auto lg:mx-0 leading-relaxed"
           >
-            SkillSetu connects Ayush students, institutional curriculum, practical competency assessments, and career opportunities in one unified platform. Bridging academic learning with clinical enterprise demands.
+            SkillSetu connects Ayush students, institutional curriculum, practical competency assessments, and career opportunities in one unified platform. Bridging academic learning with clinical healthcare demands.
           </motion.p>
 
-          {/* Action CTAs with Micro-Spring Interactions */}
+          {/* Single Focused Login CTA */}
           <motion.div 
             variants={itemVariants}
             className="flex flex-col sm:flex-row flex-wrap justify-center lg:justify-start gap-4 pt-2"
@@ -133,30 +114,21 @@ export function Hero({ onGetStarted, onSeeHowItWorks, onOpenReadinessModal }) {
               whileHover={{ scale: 1.025, y: -1 }}
               whileTap={{ scale: 0.975 }}
               onClick={onGetStarted}
-              className="shimmer-btn bg-primary text-on-primary font-label-sm text-base py-4 px-8 rounded-2xl hover:bg-primary/95 transition-all shadow-medium flex items-center justify-center gap-2 font-semibold cursor-pointer group"
+              className="shimmer-btn bg-slate-900 hover:bg-slate-800 text-white font-label-sm text-base py-4 px-8 rounded-2xl transition-all shadow-medium flex items-center justify-center gap-2.5 font-bold cursor-pointer group"
             >
-              <span>Get Started Free</span>
+              <span className="material-symbols-outlined text-xl text-emerald-400">login</span>
+              <span>Sign In to Stakeholder Portal</span>
               <span className="material-symbols-outlined text-xl group-hover:translate-x-1 transition-transform">arrow_forward</span>
-            </motion.button>
-
-            <motion.button 
-              whileHover={{ scale: 1.02, y: -1 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={onSeeHowItWorks}
-              className="bg-white/80 hover:bg-white text-tertiary font-label-sm text-base py-4 px-8 rounded-2xl border border-outline-variant/60 shadow-xs hover:shadow-sm transition-all flex items-center justify-center gap-2 font-semibold cursor-pointer backdrop-blur-sm"
-            >
-              <span className="material-symbols-outlined text-xl text-primary">play_circle</span>
-              <span>See How It Works</span>
             </motion.button>
           </motion.div>
 
-          {/* Quick Discipline Tags */}
+          {/* Specializations Tags */}
           <motion.div 
             variants={itemVariants}
             className="pt-2 flex flex-wrap justify-center lg:justify-start items-center gap-2 text-xs font-semibold text-on-surface-variant"
           >
-            <span className="text-outline uppercase tracking-wider text-[11px]">Disciplines:</span>
-            {['Ayurveda (BAMS)', 'Yoga (BNYS)', 'Unani (BUMS)', 'Siddha (BSMS)', 'Homeopathy (BHMS)'].map((disc, idx) => (
+            <span className="text-outline uppercase tracking-wider text-[11px]">Specializations:</span>
+            {['Ayurveda (BAMS)', 'Yoga & Naturopathy (BNYS)', 'Unani (BUMS)', 'Siddha (BSMS)', 'Homeopathy (BHMS)'].map((disc, idx) => (
               <span 
                 key={idx} 
                 className="bg-white/80 border border-slate-200/80 px-2.5 py-1 rounded-lg text-slate-700 hover:border-emerald-400/80 transition-colors shadow-2xs"
@@ -182,18 +154,14 @@ export function Hero({ onGetStarted, onSeeHowItWorks, onOpenReadinessModal }) {
             style={{ rotateX, rotateY }}
             className="bg-white/95 border border-white/90 rounded-[28px] p-6 sm:p-8 soft-shadow-elevated relative z-20 backdrop-blur-md transition-shadow hover:shadow-2xl"
           >
-            {/* Editorial image layer */}
+            {/* Editorial image layer (Clean, no text overlay) */}
             <div className="relative h-44 sm:h-52 -mx-6 sm:-mx-8 -mt-6 sm:-mt-8 mb-6 overflow-hidden rounded-t-[28px] group">
               <img
                 src="/images/ayush_hero_banner.jpg"
                 alt="Ayurvedic clinical research and botanical extraction laboratory"
                 className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-ayush-darker/80 via-ayush-darker/20 to-transparent" />
-              <div className="hero-image-copy absolute left-5 bottom-5 text-white">
-                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-ayush-lightEmerald">The SkillSetu standard</p>
-                <p className="mt-1 text-lg font-bold">Learn with purpose. Practice with confidence.</p>
-              </div>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
             </div>
             
             {/* Header & Student Switcher */}
@@ -272,7 +240,7 @@ export function Hero({ onGetStarted, onSeeHowItWorks, onOpenReadinessModal }) {
               ))}
             </div>
 
-            {/* Student Switcher Buttons */}
+            {/* Candidate Profile Switcher */}
             <div className="mt-6 pt-4 border-t border-outline-variant/20 flex items-center justify-between text-xs">
               <span className="text-outline font-medium">Switch Candidate Profile:</span>
               <div className="flex gap-1.5">
@@ -290,17 +258,6 @@ export function Hero({ onGetStarted, onSeeHowItWorks, onOpenReadinessModal }) {
                   </button>
                 ))}
               </div>
-            </div>
-
-            {/* Interactive Readiness Trigger */}
-            <div className="mt-4 pt-2 text-center">
-              <button
-                onClick={onOpenReadinessModal}
-                className="w-full text-center text-xs font-bold text-primary hover:underline flex items-center justify-center gap-1 py-1 cursor-pointer"
-              >
-                <span>Calculate your clinical readiness score</span>
-                <span className="material-symbols-outlined text-sm">open_in_new</span>
-              </button>
             </div>
 
           </motion.div>

@@ -178,7 +178,7 @@ export const FacultyPortalView = ({ user }) => {
                   <h4 className="text-sm font-bold text-slate-900">{sub.task}</h4>
                   <p className="text-xs text-slate-500 mt-0.5">Submitted by: <strong className="text-slate-800">{sub.student}</strong> · {sub.submittedAt}</p>
                   <span className="text-xs font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-md inline-block mt-1">
-                    AI Pre-Check Score: {sub.accuracy}
+                    Diagnostic Score: {sub.accuracy}
                   </span>
                 </div>
 

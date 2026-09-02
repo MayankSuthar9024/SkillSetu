@@ -49,114 +49,114 @@ export const AYUSH_DISCIPLINES = [
 export const HOW_IT_WORKS_STEPS = [
   {
     step: '01',
-    title: 'Skill Assessment & Tests',
-    subtitle: 'Test your clinical and theoretical skills with standard Ayush assessments.',
+    title: 'Standardized Clinical Assessments',
+    subtitle: 'Evaluate practical and clinical competencies against national Ayush benchmarks.',
     icon: 'assignment',
-    badge: 'Baseline Evaluation',
+    badge: 'Baseline Assessment',
     color: 'emerald',
-    description: 'Students complete adaptive micro-evaluations tailored to their specific discipline (BAMS, BNYS, BUMS, BSMS, BHMS). Benchmark your practical skills against national clinical standards.',
+    description: 'Students complete structured micro-evaluations tailored to their specific medical stream (BAMS, BNYS, BUMS, BSMS, BHMS) benchmarking diagnostic skills against clinical standards.',
     highlights: [
-      'NCISM & NCH curriculum alignment',
+      'National NCISM & NCH curriculum alignment',
       'Clinical scenario & case-taking simulations',
-      'Real-time automated diagnostic feedback'
+      'Instant diagnostic score computation'
     ],
-    demoMetric: { label: 'Avg Assessment Duration', value: '25 Mins' }
+    demoMetric: { label: 'Evaluation Format', value: '25 Min Modules' }
   },
   {
     step: '02',
-    title: 'AI Skill Analysis',
-    subtitle: 'See your strengths, weaknesses, and what skills you need to improve.',
+    title: 'Competency Gap Analysis',
+    subtitle: 'Detailed breakdown of diagnostic strengths and priority learning areas.',
     icon: 'insights',
-    badge: 'Intelligent Insights',
+    badge: 'Gap Analysis',
     color: 'teal',
-    description: 'Our proprietary AI algorithm compares your performance with current Ayush hospital and industry hiring benchmarks, recommending targeted micro-sprints to bridge gaps.',
+    description: 'Our diagnostic benchmarking engine analyzes student performance against industry criteria, highlighting specific clinical competencies that require advancement.',
     highlights: [
       'Competency radar across 12+ clinical dimensions',
-      'Instant readiness percentage calculation',
-      'Customized learning sprint recommendations'
+      'Objective clinical readiness score (0-100%)',
+      'Targeted skill enhancement roadmap'
     ],
-    demoMetric: { label: 'Gap Precision Score', value: '94.8%' }
+    demoMetric: { label: 'Benchmark Precision', value: '94.8%' }
   },
   {
     step: '03',
-    title: 'Practical Projects & Mentorship',
-    subtitle: 'Build real-world skills through short projects with expert guidance.',
+    title: 'Practical Micro-Sprints',
+    subtitle: 'Hands-on practical modules mentored by senior practitioners.',
     icon: 'biotech',
     badge: 'Hands-on Sprint',
     color: 'amber',
-    description: 'Engage in 1 to 2-week hands-on learning sprints led by senior practitioners and industry partners. Practice case analysis, herbal formulation compliance, or wellness clinic management.',
+    description: 'Participate in structured 1 to 2-week practical sprints. Practice case analysis, herbal formulation compliance, and modern clinic protocols with senior practitioner guidance.',
     highlights: [
-      '1-on-1 feedback from verified Ayush experts',
-      'Real clinical case study submissions',
-      'Peer collaboration and practitioner networking'
+      'Standardized review from verified senior practitioners',
+      'Real clinical case analysis submissions',
+      'Hands-on formulation and protocol practice'
     ],
-    demoMetric: { label: 'Micro-Sprint Modules', value: '120+' }
+    demoMetric: { label: 'Active Modules', value: '120+' }
   },
   {
     step: '04',
-    title: 'Verified Profile & Job Matching',
-    subtitle: 'Show your verified skills and connect with Ayush employers and research centers.',
+    title: 'Verified Digital Dossier',
+    subtitle: 'Connect with healthcare employers using authenticated credentials.',
     icon: 'verified',
-    badge: 'Career Placement',
+    badge: 'Employer Matching',
     color: 'emerald',
-    description: 'Earn a blockchain-verifiable SkillSetu Digital Passport. Employers can filter and recruit job-ready candidates based on proven competency scores rather than just marks.',
+    description: 'Generate an authenticated SkillSetu digital dossier. Ayush hospitals, pharmaceutical labs, and wellness centers review verified practical competency scores for placements.',
     highlights: [
-      'Direct interview invites from 200+ partner clinics & hospitals',
-      'Tamper-proof verifiable QR code profile',
-      'Smart job matching based on readiness score'
+      'Standardized verification for hospital and industry partners',
+      'Verifiable QR credentials for clinical portfolios',
+      'Direct candidate shortlisting by readiness index'
     ],
-    demoMetric: { label: 'Employer Match Rate', value: '3.4x Faster' }
+    demoMetric: { label: 'Verification Speed', value: 'Real-Time' }
   }
 ];
 
 export const PLATFORM_FEATURES = [
   {
     id: 'verified-passport',
-    title: 'Verified Digital Passport',
+    title: 'Verified Digital Dossier',
     icon: 'verified_user',
-    description: 'Blockchain-backed digital skill credential summarizing verified clinical competencies, assessment scores, and micro-sprint badges.',
+    description: 'Cryptographically verifiable digital credential summarizing authenticated clinical competencies, assessment scores, and sprint achievements.',
     category: 'Credibility',
-    badge: 'Tamper-Proof'
+    badge: 'Verifiable'
   },
   {
-    id: 'ai-gap-mapping',
-    title: 'AI Competency Gap Mapping',
+    id: 'competency-gap-mapping',
+    title: 'Competency Gap Mapping',
     icon: 'analytics',
-    description: 'Real-time diagnostic algorithms that compare student performance against current industry demands in Ayurveda, Yoga, Unani, Siddha, and Homeopathy.',
+    description: 'Real-time diagnostic algorithms that benchmark candidate performance against current clinical demands across all 5 Ayush streams.',
     category: 'Intelligence',
-    badge: 'Real-Time'
+    badge: 'Standardized'
   },
   {
     id: 'micro-sprints',
     title: 'Clinical Micro-Sprints',
     icon: 'sprint',
-    description: 'Short, practical 2-week modules co-created with top Ayush wellness centers, research labs, and pharmaceutical firms.',
+    description: 'Structured 2-week practical modules aligned with Ayush wellness centers, research laboratories, and pharmaceutical facilities.',
     category: 'Practical Skills',
     badge: 'Hands-On'
   },
   {
     id: 'employer-connect',
-    title: 'Direct Industry Placement',
+    title: 'Direct Industry Matching',
     icon: 'handshake',
-    description: 'Seamless bridge connecting top-scoring students with Ayush hospital networks, wellness resorts, research bodies, and telemedicine startups.',
+    description: 'Direct pipeline connecting qualified candidates with Ayush hospital networks, wellness centers, and research foundations.',
     category: 'Career Growth',
-    badge: 'Zero Friction'
+    badge: 'Direct Match'
   },
   {
     id: 'institutional-dashboard',
-    title: 'Institutional Analytics Engine',
+    title: 'Institutional Analytics Desk',
     icon: 'domain',
-    description: 'Comprehensive dashboard for college deans and faculty to monitor batch performance, accreditations readiness, and curriculum alignment.',
+    description: 'Comprehensive workspace for college deans and faculty to monitor batch competency curves and curriculum alignment.',
     category: 'Academia',
-    badge: 'Faculty Tool'
+    badge: 'Institutional'
   },
   {
     id: 'expert-mentorship',
     title: 'Senior Practitioner Network',
     icon: 'clinical_notes',
-    description: 'Access to 1-on-1 mentorship sessions with experienced Vaidyas, Hakeems, Doctors, and Naturopaths across India.',
+    description: 'Structured clinical feedback from experienced Vaidyas, Hakeems, Doctors, and Naturopaths across India.',
     category: 'Mentorship',
-    badge: '1-on-1 Guidance'
+    badge: 'Clinical Guidance'
   }
 ];
 
@@ -204,42 +204,41 @@ export const SAMPLE_STUDENTS = [
 ];
 
 export const TRUST_METRICS = [
-  { label: 'Active Ayush Learners', value: '1,000+', icon: 'group' },
-  { label: 'Standardized Skill Assessments', value: '50+', icon: 'assignment' },
-  { label: 'Partner Healthcare Organizations', value: '20+', icon: 'handshake' },
-  { label: 'Average Readiness Growth', value: '+34%', icon: 'trending_up' }
+  { label: 'Registered Candidates', value: '1,000+', icon: 'group' },
+  { label: 'Standardized Competencies', value: '50+', icon: 'assignment' },
+  { label: 'Partner Healthcare Networks', value: '20+', icon: 'handshake' },
+  { label: 'Average Competency Growth', value: '+34%', icon: 'trending_up' }
 ];
 
 export const FAQ_ITEMS = [
   {
     id: 'faq-1',
     question: 'What is SkillSetu and how does it benefit Ayush students?',
-    answer: 'SkillSetu is a national academia-industry skill mapping and placement ecosystem built for Ayush candidates (Ayurveda, Yoga & Naturopathy, Unani, Siddha, and Homeopathy). It allows students to benchmark their clinical competencies, bridge skill gaps through guided micro-sprints, earn tamper-proof digital passports, and directly connect with healthcare employers.'
+    answer: 'SkillSetu is a national skill benchmarking and placement ecosystem built for Ayush candidates (Ayurveda, Yoga & Naturopathy, Unani, Siddha, and Homeopathy). It allows students to benchmark their practical competencies, bridge skill gaps through guided micro-sprints, earn digital dossiers, and connect with healthcare employers.'
   },
   {
     id: 'faq-2',
     question: 'How is the Skill Readiness Score calculated?',
-    answer: 'Our proprietary evaluation engine uses adaptive micro-assessments aligned with NCISM & NCH national curricula. It measures diagnostic skills, classical herbology/pharmacology, treatment protocols, and case-taking accuracy to compute an objective 0–100% readiness score.'
+    answer: 'Our standardized evaluation engine uses adaptive micro-assessments aligned with NCISM & NCH national curricula. It measures diagnostic skills, classical herbology/pharmacology, treatment protocols, and case-taking accuracy to compute an objective 0–100% readiness score.'
   },
   {
     id: 'faq-3',
-    question: 'What is a Verified Digital Passport?',
-    answer: 'The SkillSetu Digital Passport is a tamper-proof credential containing your authenticated competency scores, micro-sprint badges, and verified clinical achievements. Employers can scan your unique QR code to instantly verify your clinical readiness.'
+    question: 'What is a Verified Digital Dossier?',
+    answer: 'The SkillSetu Digital Dossier is an authenticated credential containing your verified competency scores, micro-sprint records, and practical clinical evaluations. Healthcare employers can review this dossier to evaluate candidate suitability.'
   },
   {
     id: 'faq-4',
     question: 'How do practical Micro-Sprints work?',
-    answer: 'Micro-sprints are short, intensive 1 to 2-week practical projects co-created with leading Ayush hospitals, research institutes, and pharmaceutical labs. They provide hands-on experience in real-world clinical scenarios with 1-on-1 feedback from senior Vaidyas and doctors.'
+    answer: 'Micro-sprints are short, intensive 1 to 2-week practical modules aligned with Ayush hospitals, research institutes, and pharmaceutical laboratories. They provide hands-on experience in real-world clinical and formulation scenarios.'
   },
   {
     id: 'faq-5',
-    question: 'How can Ayush colleges and institutes participate?',
-    answer: 'Ayush medical colleges receive access to an Institutional Analytics Dashboard. Faculty and Deans can track batch performance, evaluate curriculum alignment with industry demands, and streamline clinical internship placements for their students.'
+    question: 'How can Ayush colleges participate?',
+    answer: 'Ayush medical colleges receive access to an Institutional Analytics Dashboard. Faculty and Deans can track batch performance, evaluate curriculum alignment with industry demands, and support student placement readiness.'
   },
   {
     id: 'faq-6',
-    question: 'Is SkillSetu free for students?',
-    answer: 'Yes! Core diagnostic assessments, skill gap mapping, digital passport generation, and basic micro-sprint participation are 100% free for verified Ayush undergraduate and postgraduate students.'
+    question: 'How do stakeholders access their workspaces?',
+    answer: 'Students, Companies, Faculty, Colleges, and Ministry Administrators can log in through their dedicated stakeholder portals using official credentials.'
   }
 ];
-

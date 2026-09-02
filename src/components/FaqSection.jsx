@@ -79,15 +79,15 @@ export function FaqSection({ onOpenReadinessModal, onOpenAuthModal }) {
 
         {/* FAQ Bottom Support Callout */}
         <div className="mt-12 max-w-xl mx-auto p-6 bg-surface-container-low border border-outline-variant/30 rounded-2xl text-center space-y-3">
-          <h4 className="font-bold text-base text-on-surface">Still have questions about your Ayush discipline?</h4>
-          <p className="text-xs text-on-surface-variant">Our team and academic coordinators are here to assist candidates, colleges, and healthcare partners.</p>
+          <h4 className="font-bold text-base text-on-surface">Ready to access your Ayush workspace?</h4>
+          <p className="text-xs text-on-surface-variant">Sign in directly with your stakeholder credentials as a Student, Company, Faculty, College, or Ministry Admin.</p>
           <div className="flex justify-center pt-2">
             <button 
-              onClick={() => onOpenAuthModal('signup')}
-              className="bg-primary text-on-primary font-bold text-sm px-8 py-3 rounded-full hover:bg-primary/90 transition-all shadow-soft active:scale-95 flex items-center justify-center gap-2"
+              onClick={() => onOpenAuthModal('login')}
+              className="shimmer-btn bg-slate-900 text-white font-bold text-sm px-8 py-3 rounded-xl hover:bg-slate-800 transition-all shadow-soft active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
             >
-              <span>Contact Support</span>
-              <span className="material-symbols-outlined text-lg">arrow_forward</span>
+              <span className="material-symbols-outlined text-base text-emerald-400">login</span>
+              <span>Sign In to Portal</span>
             </button>
           </div>
         </div>

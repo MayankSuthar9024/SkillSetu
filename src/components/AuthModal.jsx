@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
+import { PORTALS_DATA } from '../data/portalData';
 
-export function AuthModal({ isOpen, mode, onClose, onSwitchMode }) {
-  const [role, setRole] = useState('student'); // 'student', 'institution', 'employer'
+export function AuthModal({ isOpen, mode, onClose, onSwitchMode, onLoginSuccess }) {
+  const [role, setRole] = useState('student'); // 'student', 'company', 'faculty', 'college', 'admin'
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -15,10 +16,21 @@ export function AuthModal({ isOpen, mode, onClose, onSwitchMode }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     setSubmitted(true);
+
+    const targetPortal = PORTALS_DATA.find(p => p.id === (role === 'employer' ? 'company' : role === 'institution' ? 'college' : role)) || PORTALS_DATA[0];
+    const loggedUser = {
+      ...targetPortal.demoUser,
+      name: formData.name || targetPortal.demoUser.name,
+      email: formData.email || targetPortal.demoUser.email,
+    };
+
     setTimeout(() => {
       setSubmitted(false);
       onClose();
-    }, 1500);
+      if (onLoginSuccess) {
+        onLoginSuccess(targetPortal.id, loggedUser);
+      }
+    }, 1000);
   };
 
   return (
@@ -34,9 +46,9 @@ export function AuthModal({ isOpen, mode, onClose, onSwitchMode }) {
             </div>
             <div>
               <h3 className="font-headline-md text-xl font-bold text-on-surface">
-                {mode === 'login' ? 'Welcome Back' : 'Create SkillSetu Account'}
+                {mode === 'login' ? 'Welcome Back to SkillSetu' : 'Create SkillSetu Account'}
               </h3>
-              <p className="text-xs text-on-surface-variant">SIH 2026 Ayush Talent Ecosystem</p>
+              <p className="text-xs text-on-surface-variant">National Ayush Professional Ecosystem · SIH 2026</p>
             </div>
           </div>
 
@@ -54,9 +66,9 @@ export function AuthModal({ isOpen, mode, onClose, onSwitchMode }) {
               <span className="material-symbols-outlined text-3xl">check</span>
             </div>
             <h4 className="font-bold text-lg text-on-surface">
-              {mode === 'login' ? 'Logged in successfully!' : 'Account created successfully!'}
+              {mode === 'login' ? 'Authenticated successfully!' : 'Account created successfully!'}
             </h4>
-            <p className="text-xs text-on-surface-variant">Redirecting to your SkillSetu dashboard...</p>
+            <p className="text-xs text-on-surface-variant">Redirecting to your LinkedIn-style Ayush Professional Workspace...</p>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -64,13 +76,13 @@ export function AuthModal({ isOpen, mode, onClose, onSwitchMode }) {
             {/* Role Picker */}
             <div>
               <label className="block text-xs font-bold text-outline uppercase tracking-wider mb-2">
-                I am a:
+                Select Your Role:
               </label>
               <div className="grid grid-cols-3 gap-2">
                 {[
-                  { id: 'student', label: 'Student / Doctor' },
-                  { id: 'institution', label: 'College / Institute' },
-                  { id: 'employer', label: 'Employer / Hospital' }
+                  { id: 'student', label: 'Scholar / Doctor' },
+                  { id: 'company', label: 'Company / R&D' },
+                  { id: 'faculty', label: 'Faculty / Preceptor' }
                 ].map((r) => (
                   <button
                     type="button"
@@ -78,7 +90,7 @@ export function AuthModal({ isOpen, mode, onClose, onSwitchMode }) {
                     onClick={() => setRole(r.id)}
                     className={`py-2 px-2 rounded-xl text-xs font-bold text-center border transition-all ${
                       role === r.id
-                        ? 'bg-primary text-on-primary border-primary shadow-xs'
+                        ? 'bg-emerald-800 text-white border-emerald-900 shadow-xs'
                         : 'bg-surface-bright text-on-surface-variant border-outline-variant/30 hover:bg-surface-container-low'
                     }`}
                   >
@@ -103,7 +115,7 @@ export function AuthModal({ isOpen, mode, onClose, onSwitchMode }) {
             )}
 
             <div>
-              <label className="block text-xs font-semibold text-on-surface mb-1">Email Address</label>
+              <label className="block text-xs font-semibold text-on-surface mb-1">Email Address / ID</label>
               <input
                 type="email"
                 required
@@ -128,9 +140,9 @@ export function AuthModal({ isOpen, mode, onClose, onSwitchMode }) {
 
             <button
               type="submit"
-              className="w-full bg-primary text-on-primary font-bold py-3 px-6 rounded-xl hover:bg-primary/90 transition-all shadow-soft active:scale-95 text-sm mt-2"
+              className="w-full bg-emerald-800 text-white font-bold py-3 px-6 rounded-xl hover:bg-emerald-900 transition-all shadow-soft active:scale-95 text-sm mt-2 cursor-pointer"
             >
-              {mode === 'login' ? 'Log In to Dashboard' : 'Create Verified Account'}
+              {mode === 'login' ? 'Log In to Ayush Platform' : 'Create Verified Account'}
             </button>
 
             <div className="text-center pt-2">

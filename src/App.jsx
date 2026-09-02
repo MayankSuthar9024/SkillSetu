@@ -140,7 +140,7 @@ export function App() {
   // 3. MAIN LANDING PAGES (Home, Features, About, Opportunities)
   return (
     <div className="min-h-screen bg-surface text-on-surface font-sans flex flex-col antialiased">
-      
+
       {/* Shared Sticky Navbar */}
       <Navbar
         activePage={activePage}
@@ -154,7 +154,7 @@ export function App() {
 
       {/* Main Content Area Based on Active Page */}
       <main className="flex-grow pt-20">
-        
+
         {/* HOME PAGE */}
         {activePage === 'home' && (
           <div className="animate-fadeIn">
@@ -314,7 +314,7 @@ export function App() {
       />
 
       {/* Shared Footer */}
-      <Footer 
+      <Footer
         onNavigate={(page) => {
           if (page === 'login') {
             handleOpenAuth();
