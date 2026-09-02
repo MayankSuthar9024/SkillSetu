@@ -18,9 +18,9 @@ export function Hero({ onGetStarted, onSeeHowItWorks, onOpenReadinessModal }) {
           </div>
 
           <h1 className="hero-title font-display-lg text-4xl sm:text-5xl lg:text-6xl font-extrabold text-on-surface leading-[1.08] tracking-[-0.045em]">
-            Build the skills. <br />
+            Build skills. <br />
             <span className="text-primary bg-gradient-to-r from-primary via-primary-container to-tertiary bg-clip-text text-transparent">
-              Prove your readiness.
+              Prove your skills.
             </span> <br />
             Find your next opportunity.
           </h1>

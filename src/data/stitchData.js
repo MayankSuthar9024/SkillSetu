@@ -49,8 +49,8 @@ export const AYUSH_DISCIPLINES = [
 export const HOW_IT_WORKS_STEPS = [
   {
     step: '01',
-    title: 'Skill Assessment & Diagnostic Tests',
-    subtitle: 'Evaluate your clinical and theoretical competencies with standardized Ayush modules.',
+    title: 'Skill Assessment & Tests',
+    subtitle: 'Test your clinical and theoretical skills with standard Ayush assessments.',
     icon: 'assignment',
     badge: 'Baseline Evaluation',
     color: 'emerald',
@@ -64,8 +64,8 @@ export const HOW_IT_WORKS_STEPS = [
   },
   {
     step: '02',
-    title: 'AI Gap Analysis & Personalized Path',
-    subtitle: 'Receive a granular breakdown of skill strengths and target improvement areas.',
+    title: 'AI Skill Analysis',
+    subtitle: 'See your strengths, weaknesses, and what skills you need to improve.',
     icon: 'insights',
     badge: 'Intelligent Insights',
     color: 'teal',
@@ -79,8 +79,8 @@ export const HOW_IT_WORKS_STEPS = [
   },
   {
     step: '03',
-    title: 'Practical Micro-Sprints & Mentorship',
-    subtitle: 'Complete short, industry-backed practical projects with expert guidance.',
+    title: 'Practical Projects & Mentorship',
+    subtitle: 'Build real-world skills through short projects with expert guidance.',
     icon: 'biotech',
     badge: 'Hands-on Sprint',
     color: 'amber',
@@ -94,8 +94,8 @@ export const HOW_IT_WORKS_STEPS = [
   },
   {
     step: '04',
-    title: 'Verified Digital Passport & Job Matching',
-    subtitle: 'Showcase tamper-proof credentials directly to top Ayush employers and research centers.',
+    title: 'Verified Profile & Job Matching',
+    subtitle: 'Show your verified skills and connect with Ayush employers and research centers.',
     icon: 'verified',
     badge: 'Career Placement',
     color: 'emerald',
