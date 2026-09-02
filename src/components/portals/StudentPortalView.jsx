@@ -22,6 +22,7 @@ import { HERO_STATS, PLATFORM_METADATA } from '../../data/portalData';
 export const StudentPortalView = ({ user }) => {
   const [activeTab, setActiveTab] = useState('assessment');
   const [selectedAssessmentOption, setSelectedAssessmentOption] = useState(null);
+  const [hasAwardedBonus, setHasAwardedBonus] = useState(false);
   const [assessmentScore, setAssessmentScore] = useState(88);
   const [appliedJobs, setAppliedJobs] = useState({});
   const [enrolledCourse, setEnrolledCourse] = useState(null);
@@ -262,8 +263,9 @@ export const StudentPortalView = ({ user }) => {
                   key={opt.id}
                   onClick={() => {
                     setSelectedAssessmentOption(opt.id);
-                    if (opt.isCorrect && selectedAssessmentOption !== opt.id) {
+                    if (opt.isCorrect && !hasAwardedBonus) {
                       setAssessmentScore(prev => Math.min(100, prev + 2));
+                      setHasAwardedBonus(true);
                     }
                   }}
                   className={`w-full text-left p-3.5 rounded-xl text-xs font-medium transition-all cursor-pointer border flex items-center justify-between ${

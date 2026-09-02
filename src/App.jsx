@@ -11,9 +11,14 @@ import ScrollReveal from './components/ScrollReveal';
 import { PortalSelectPage } from './pages/PortalSelectPage';
 import { StakeholderDashboard } from './pages/StakeholderDashboard';
 import { PORTALS_DATA } from './data/portalData';
+import { SkillPage } from './pages/SkillPage';
+import { IndustryPage } from './pages/IndustryPage';
+import { FeedPage } from './pages/FeedPage';
+import { ProfilePage } from './pages/ProfilePage';
+import { MessagePage } from './pages/MessagePage';
 
 export function App() {
-  const [activePage, setActivePage] = useState('home'); // 'home' | 'features' | 'about' | 'opportunities' | 'login' | 'portals' | 'dashboard'
+  const [activePage, setActivePage] = useState('home'); // 'home' | 'features' | 'about' | 'opportunities' | 'skill' | 'industry' | 'feed' | 'profile' | 'messages' | 'login' | 'portals' | 'dashboard'
   const [isReadinessModalOpen, setIsReadinessModalOpen] = useState(false);
   const [activePortalId, setActivePortalId] = useState('student');
   const [currentUser, setCurrentUser] = useState(null);
@@ -45,7 +50,7 @@ export function App() {
           setCurrentUser(portalCfg?.profileUser || portalCfg?.demoUser || null);
         }
         setActivePage('dashboard');
-      } else if (hash === 'features' || hash === 'about' || hash === 'opportunities' || hash === 'how-it-works') {
+      } else if (['features', 'about', 'opportunities', 'how-it-works', 'skill', 'industry', 'feed', 'profile', 'messages'].includes(hash)) {
         setActivePage(hash);
       } else if (!hash) {
         setActivePage('home');
@@ -97,6 +102,22 @@ export function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const handleNavigate = (page) => {
+    if (page === 'login' || page === 'portals') {
+      handleOpenAuth();
+    } else if (page === 'dashboard') {
+      setActivePage('dashboard');
+      window.location.hash = `dashboard-${activePortalId}`;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      setActivePage(page);
+      window.location.hash = page === 'home' ? '' : page;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
+  const activeUser = currentUser || PORTALS_DATA[0].profileUser;
+
   const handleSeeHowItWorks = () => {
     if (activePage !== 'home') {
       setActivePage('home');
@@ -144,12 +165,10 @@ export function App() {
       {/* Shared Sticky Navbar */}
       <Navbar
         activePage={activePage}
-        setActivePage={(page) => {
-          setActivePage(page);
-          window.location.hash = page === 'home' ? '' : page;
-        }}
+        setActivePage={handleNavigate}
         onOpenReadinessModal={() => setIsReadinessModalOpen(true)}
         onOpenAuthModal={handleOpenAuth}
+        currentUser={activeUser}
       />
 
       {/* Main Content Area Based on Active Page */}
@@ -305,6 +324,56 @@ export function App() {
           </div>
         )}
 
+        {/* SKILL HUB PAGE */}
+        {activePage === 'skill' && (
+          <div className="animate-fadeIn">
+            <SkillPage
+              onNavigate={handleNavigate}
+              onOpenReadinessModal={() => setIsReadinessModalOpen(true)}
+            />
+          </div>
+        )}
+
+        {/* INDUSTRY PAGE */}
+        {activePage === 'industry' && (
+          <div className="animate-fadeIn">
+            <IndustryPage
+              onNavigate={handleNavigate}
+              onOpenAuthModal={handleOpenAuth}
+            />
+          </div>
+        )}
+
+        {/* COMMUNITY FEED PAGE */}
+        {activePage === 'feed' && (
+          <div className="animate-fadeIn py-6 px-4 max-w-7xl mx-auto">
+            <FeedPage
+              onNavigate={handleNavigate}
+              currentUser={activeUser}
+            />
+          </div>
+        )}
+
+        {/* PROFILE PAGE */}
+        {activePage === 'profile' && (
+          <div className="animate-fadeIn py-6 px-4 max-w-7xl mx-auto">
+            <ProfilePage
+              onNavigate={handleNavigate}
+              currentUser={activeUser}
+            />
+          </div>
+        )}
+
+        {/* MESSAGES PAGE */}
+        {activePage === 'messages' && (
+          <div className="animate-fadeIn py-6 px-4 max-w-7xl mx-auto">
+            <MessagePage
+              onNavigate={handleNavigate}
+              currentUser={activeUser}
+            />
+          </div>
+        )}
+
       </main>
 
       {/* Global Readiness Diagnostic Modal */}
@@ -319,9 +388,7 @@ export function App() {
           if (page === 'login') {
             handleOpenAuth();
           } else {
-            setActivePage(page);
-            window.location.hash = page === 'home' ? '' : page;
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            handleNavigate(page);
           }
         }}
         onSeeHowItWorks={handleSeeHowItWorks}

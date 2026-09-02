@@ -78,8 +78,12 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
                 className="flex items-center gap-2.5 bg-white hover:bg-emerald-50/80 border border-slate-200/80 rounded-2xl p-1.5 pr-3.5 shadow-xs transition-all cursor-pointer group active:scale-95"
                 title="Click to view your Profile Page"
               >
-                <div className="relative w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-700 to-teal-900 text-white font-extrabold text-xs flex items-center justify-center shadow-xs border-2 border-emerald-100 group-hover:scale-105 transition-transform shrink-0">
-                  {userAvatar}
+                <div className="relative w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-700 to-teal-900 text-white font-extrabold text-xs flex items-center justify-center shadow-xs border-2 border-emerald-100 group-hover:scale-105 transition-transform shrink-0 overflow-hidden">
+                  {currentUser?.avatarImage ? (
+                    <img src={currentUser.avatarImage} alt={userName} className="w-full h-full object-cover" />
+                  ) : (
+                    <span>{userAvatar}</span>
+                  )}
                   <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-white"></span>
                 </div>
 
@@ -146,10 +150,14 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
           <div className="md:hidden flex items-center gap-2">
             <button
               onClick={() => handleNavClick('profile')}
-              className="w-9 h-9 rounded-xl bg-emerald-800 text-white font-extrabold text-xs flex items-center justify-center border-2 border-white shadow-xs shrink-0"
+              className="w-9 h-9 rounded-xl bg-emerald-800 text-white font-extrabold text-xs flex items-center justify-center border-2 border-white shadow-xs shrink-0 overflow-hidden"
               title="Profile"
             >
-              {userAvatar}
+              {currentUser?.avatarImage ? (
+                <img src={currentUser.avatarImage} alt={userName} className="w-full h-full object-cover" />
+              ) : (
+                <span>{userAvatar}</span>
+              )}
             </button>
 
             <button 
@@ -206,12 +214,12 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
         
         {/* 1. Home */}
         <button
-          onClick={() => handleNavClick('feed')}
+          onClick={() => handleNavClick('home')}
           className={`flex flex-col items-center justify-center py-1 px-2 text-xs transition-all cursor-pointer ${
-            activePage === 'feed' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-semibold'
+            activePage === 'home' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-semibold'
           }`}
         >
-          <Home className={`w-5 h-5 shrink-0 ${activePage === 'feed' ? 'text-emerald-700' : 'text-slate-500'}`} />
+          <Home className={`w-5 h-5 shrink-0 ${activePage === 'home' ? 'text-emerald-700' : 'text-slate-500'}`} />
           <span className="text-[10px] mt-1 font-bold">Home</span>
         </button>
 
@@ -241,7 +249,7 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
 
         {/* 4. Messages */}
         <button
-          onClick={() => handleNavClick('dashboard')}
+          onClick={() => handleNavClick('messages')}
           className={`flex flex-col items-center justify-center py-1 px-2 text-xs transition-all cursor-pointer ${
             activePage === 'messages' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-semibold'
           }`}
