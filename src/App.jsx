@@ -42,7 +42,7 @@ export function App() {
         if (role && PORTALS_DATA.some(p => p.id === role)) {
           setActivePortalId(role);
           const portalCfg = PORTALS_DATA.find(p => p.id === role);
-          setCurrentUser(portalCfg?.demoUser || null);
+          setCurrentUser(portalCfg?.profileUser || portalCfg?.demoUser || null);
         }
         setActivePage('dashboard');
       } else if (hash === 'features' || hash === 'about' || hash === 'opportunities' || hash === 'how-it-works') {
@@ -75,7 +75,7 @@ export function App() {
     if (newPortalId) {
       setActivePortalId(newPortalId);
       const portalCfg = PORTALS_DATA.find(p => p.id === newPortalId);
-      setCurrentUser(newUser || portalCfg?.demoUser || null);
+      setCurrentUser(newUser || portalCfg?.profileUser || portalCfg?.demoUser || null);
       window.location.hash = `dashboard-${newPortalId}`;
     } else {
       setActivePage('login');

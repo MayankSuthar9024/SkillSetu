@@ -6,37 +6,30 @@ import {
   UserCheck, 
   Landmark, 
   ShieldCheck, 
-  KeyRound, 
   Mail, 
   ArrowRight, 
   Lock, 
-  CheckCircle2,
-  Smartphone,
-  Eye,
-  EyeOff,
-  Check
+  Eye, 
+  EyeOff, 
+  Check 
 } from 'lucide-react';
 import { PLATFORM_METADATA } from '../data/portalData';
 
 export const RoleLoginModal = ({ isOpen, onClose, portal, onLoginSuccess }) => {
   if (!isOpen || !portal) return null;
 
-  const [authMode, setAuthMode] = useState('password'); // 'password' | 'otp'
   const [identifier, setIdentifier] = useState(portal?.defaultCredentials?.identifier || '');
   const [password, setPassword] = useState(portal?.defaultCredentials?.password || '');
-  const [otpCode, setOtpCode] = useState(portal?.defaultCredentials?.otp || '529182');
-  const [otpSent, setOtpSent] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
-  // Automatically load official credentials whenever portal changes or modal opens
+  // Automatically load official email & password whenever portal changes or modal opens
   useEffect(() => {
     if (portal) {
       setIdentifier(portal.defaultCredentials?.identifier || '');
       setPassword(portal.defaultCredentials?.password || '');
-      setOtpCode(portal.defaultCredentials?.otp || '529182');
       setErrorMsg('');
       setIsLoading(false);
     }
@@ -56,7 +49,7 @@ export const RoleLoginModal = ({ isOpen, onClose, portal, onLoginSuccess }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!identifier) {
-      setErrorMsg('Please enter your stakeholder identifier.');
+      setErrorMsg('Please enter your email or stakeholder ID.');
       return;
     }
 
@@ -70,7 +63,7 @@ export const RoleLoginModal = ({ isOpen, onClose, portal, onLoginSuccess }) => {
         email: identifier.includes('@') ? identifier : (portal.profileUser?.email || identifier),
       };
       onLoginSuccess(portal.id, authenticatedUser);
-    }, 450);
+    }, 400);
   };
 
   return (
@@ -107,34 +100,9 @@ export const RoleLoginModal = ({ isOpen, onClose, portal, onLoginSuccess }) => {
           </button>
         </div>
 
-        {/* Modal Body */}
+        {/* Modal Body - Strictly Email and Password Sign In */}
         <div className="p-6 sm:p-8 space-y-5">
           
-          {/* Auth Mode Toggle */}
-          <div className="grid grid-cols-2 p-1 bg-slate-100 rounded-xl">
-            <button
-              onClick={() => setAuthMode('password')}
-              className={`py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
-                authMode === 'password'
-                  ? 'bg-white text-slate-900 shadow-xs'
-                  : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              Password / Key
-            </button>
-            <button
-              onClick={() => setAuthMode('otp')}
-              className={`py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
-                authMode === 'otp'
-                  ? 'bg-white text-slate-900 shadow-xs'
-                  : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              OTP / DigiLocker / Parichay
-            </button>
-          </div>
-
-          {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-4">
             {errorMsg && (
               <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-900 font-semibold">
@@ -142,8 +110,9 @@ export const RoleLoginModal = ({ isOpen, onClose, portal, onLoginSuccess }) => {
               </div>
             )}
 
+            {/* Email / ID Field */}
             <div>
-              <div className="flex items-center justify-between mb-1">
+              <div className="flex items-center justify-between mb-1.5">
                 <label className="text-xs font-bold text-slate-700">
                   {portal.authFields.idLabel}
                 </label>
@@ -158,85 +127,62 @@ export const RoleLoginModal = ({ isOpen, onClose, portal, onLoginSuccess }) => {
                   placeholder={portal.authFields.idPlaceholder}
                   value={identifier}
                   onChange={(e) => setIdentifier(e.target.value)}
-                  className="w-full pl-9 pr-4 py-2.5 text-xs bg-slate-50/80 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-700 text-slate-900 font-medium"
+                  className="w-full pl-9 pr-4 py-2.5 text-xs bg-slate-50/90 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-700 text-slate-900 font-medium transition-all"
+                  required
                 />
               </div>
             </div>
 
-            {authMode === 'password' ? (
-              <div>
-                <label className="text-xs font-bold text-slate-700 block mb-1">
+            {/* Password Field */}
+            <div>
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="text-xs font-bold text-slate-700">
                   {portal.authFields.secretLabel}
                 </label>
-                <div className="relative">
-                  <Lock className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
-                  <input
-                    type={showPassword ? 'text' : 'password'}
-                    placeholder={portal.authFields.secretPlaceholder}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="w-full pl-9 pr-10 py-2.5 text-xs bg-slate-50/80 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-700 text-slate-900 font-medium"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
-                  >
-                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                  </button>
-                </div>
+                <a href="#forgot" onClick={(e) => e.preventDefault()} className="text-[10px] text-emerald-800 font-semibold hover:underline">
+                  Forgot Password?
+                </a>
               </div>
-            ) : (
-              <div>
-                <label className="text-xs font-bold text-slate-700 block mb-1">
-                  6-Digit OTP / Security Token
-                </label>
-                <div className="flex gap-2">
-                  <div className="relative flex-1">
-                    <Smartphone className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
-                    <input
-                      type="text"
-                      placeholder="Enter OTP"
-                      value={otpCode}
-                      onChange={(e) => setOtpCode(e.target.value)}
-                      maxLength={6}
-                      className="w-full pl-9 pr-4 py-2.5 text-xs bg-slate-50/80 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-700 text-slate-900 font-medium font-mono"
-                    />
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => setOtpSent(true)}
-                    className="px-3 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-colors cursor-pointer whitespace-nowrap"
-                  >
-                    {otpSent ? 'Resend' : 'Get OTP'}
-                  </button>
-                </div>
-                {otpSent && (
-                  <p className="text-[11px] text-emerald-700 font-semibold mt-1">
-                    ✓ OTP synchronized with registered credential profile
-                  </p>
-                )}
+              <div className="relative">
+                <Lock className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder={portal.authFields.secretPlaceholder}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full pl-9 pr-10 py-2.5 text-xs bg-slate-50/90 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-700 text-slate-900 font-medium transition-all"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer p-1"
+                  aria-label="Toggle password visibility"
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
               </div>
-            )}
+            </div>
 
-            {/* Remember Me / Security */}
+            {/* Remember Me / SSL */}
             <div className="flex items-center justify-between text-xs pt-1">
               <label className="flex items-center gap-2 cursor-pointer text-slate-600 font-medium">
                 <input
                   type="checkbox"
                   checked={rememberMe}
                   onChange={(e) => setRememberMe(e.target.checked)}
-                  className="rounded text-emerald-700 focus:ring-emerald-700 border-slate-300"
+                  className="rounded text-emerald-700 focus:ring-emerald-700 border-slate-300 cursor-pointer"
                 />
                 <span>Remember this workstation</span>
               </label>
-              <span className="text-slate-400">256-Bit SSL</span>
+              <span className="text-[11px] text-slate-400 font-medium">256-Bit SSL</span>
             </div>
 
+            {/* Submit Button */}
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full py-3 px-4 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold transition-all shadow-sm active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full mt-2 py-3 px-4 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold transition-all shadow-sm active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
             >
               {isLoading ? (
                 <span>Authenticating with National Ayush Gateway...</span>

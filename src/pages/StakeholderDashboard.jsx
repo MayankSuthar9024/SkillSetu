@@ -128,7 +128,7 @@ export const StakeholderDashboard = ({
                       key={p.id}
                       onClick={() => {
                         setRoleDropdownOpen(false);
-                        onSwitchPortal(p.id, p.demoUser);
+                        onSwitchPortal(p.id, p.profileUser || p.demoUser);
                       }}
                       className={`w-full text-left px-3 py-2 text-xs flex items-center justify-between transition-colors ${
                         activePortalId === p.id 
