@@ -239,10 +239,10 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
           <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center shadow-lg border border-slate-100 p-1">
             <button
               onClick={() => onOpenAuthModal('login')}
-              className="w-14 h-14 rounded-full bg-gradient-to-br from-emerald-500 via-teal-600 to-emerald-800 hover:from-emerald-400 hover:to-teal-700 active:scale-95 text-white flex items-center justify-center shadow-[0_8px_20px_rgba(16,185,129,0.4)] transition-all cursor-pointer group"
-              title="Create Post / Access Platform"
+              className="w-14 h-14 rounded-full bg-gradient-to-br from-emerald-800 to-teal-900 hover:from-emerald-900 hover:to-teal-950 active:scale-95 text-white flex items-center justify-center shadow-md hover:shadow-lg transition-all cursor-pointer group"
+              title="Access Platform"
             >
-              <Plus className="w-7 h-7 stroke-[2.8] group-hover:rotate-90 transition-transform duration-300" />
+              <Plus className="w-7 h-7 stroke-[2.5] group-hover:rotate-90 transition-transform duration-300" />
             </button>
           </div>
         </div>

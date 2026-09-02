@@ -15,7 +15,8 @@ import {
   Clock,
   ChevronRight,
   User,
-  LayoutGrid
+  LayoutGrid,
+  X
 } from 'lucide-react';
 import { HERO_STATS, PLATFORM_METADATA } from '../../data/portalData';
 
@@ -76,7 +77,7 @@ export const StudentPortalView = ({ user }) => {
       duration: '45 Mins',
       sponsor: 'Apex Ayush Pharmacopoeia',
       status: 'Ready to Solve',
-      badge: 'Tamper-Proof Badge'
+      badge: 'Cryptographic Badge'
     },
     {
       id: 'bm-2',
@@ -143,53 +144,53 @@ export const StudentPortalView = ({ user }) => {
       </div>
 
       {/* Portal Navigation Tabs */}
-      <div className="flex flex-wrap items-center gap-2 border-b border-slate-200 pb-2">
+      <div className="flex items-center gap-2 border-b border-slate-200 pb-2 overflow-x-auto no-scrollbar py-1">
         <button
           onClick={() => setActiveTab('assessment')}
-          className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 ${
+          className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 shrink-0 ${
             activeTab === 'assessment'
               ? 'bg-emerald-800 text-white shadow-xs'
               : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
           }`}
         >
           <Compass className="w-4 h-4" />
-          <span>01 · Diagnostic Radar & Skill Assessment</span>
+          <span>Competency Diagnostics</span>
         </button>
 
         <button
           onClick={() => setActiveTab('jobs')}
-          className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 ${
+          className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 shrink-0 ${
             activeTab === 'jobs'
               ? 'bg-emerald-800 text-white shadow-xs'
               : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
           }`}
         >
           <Briefcase className="w-4 h-4" />
-          <span>02 · 1-Click Verified Job Matches ({jobsList.length})</span>
+          <span>Verified Positions ({jobsList.length})</span>
         </button>
 
         <button
           onClick={() => setActiveTab('bridge')}
-          className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 ${
+          className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 shrink-0 ${
             activeTab === 'bridge'
               ? 'bg-emerald-800 text-white shadow-xs'
               : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
           }`}
         >
           <BookOpen className="w-4 h-4" />
-          <span>03 · Micro-Bridge Courses & Sprints</span>
+          <span>Skill Bridge Sprints</span>
         </button>
 
         <button
           onClick={() => setActiveTab('dossier')}
-          className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 ${
+          className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 shrink-0 ${
             activeTab === 'dossier'
               ? 'bg-emerald-800 text-white shadow-xs'
               : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
           }`}
         >
           <Award className="w-4 h-4" />
-          <span>04 · Cryptographic Digital Portfolio</span>
+          <span>Verified Digital Dossier</span>
         </button>
       </div>
 
@@ -245,7 +246,7 @@ export const StudentPortalView = ({ user }) => {
                 </span>
                 <span className="text-xs text-slate-400">Schedule T GMP</span>
               </div>
-              <span className="text-xs font-mono font-bold text-emerald-700">+10 Vector Weight</span>
+              <span className="text-xs font-semibold text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded-md">Competency Weight: +10 pts</span>
             </div>
 
             <p className="text-sm font-bold text-slate-900 leading-relaxed">
@@ -278,8 +279,18 @@ export const StudentPortalView = ({ user }) => {
                 >
                   <span>{opt.text}</span>
                   {selectedAssessmentOption === opt.id && (
-                    <span className={`text-xs font-bold ${opt.isCorrect ? 'text-emerald-700' : 'text-red-600'}`}>
-                      {opt.isCorrect ? '✓ Correct Benchmark (+2%)' : '✕ Gap Identified'}
+                    <span className={`text-xs font-bold flex items-center gap-1 shrink-0 ${opt.isCorrect ? 'text-emerald-700' : 'text-red-600'}`}>
+                      {opt.isCorrect ? (
+                        <>
+                          <CheckCircle2 className="w-3.5 h-3.5" />
+                          <span>Correct Benchmark (+2%)</span>
+                        </>
+                      ) : (
+                        <>
+                          <X className="w-3.5 h-3.5" />
+                          <span>Skill Gap Identified</span>
+                        </>
+                      )}
                     </span>
                   )}
                 </button>
@@ -346,11 +357,11 @@ export const StudentPortalView = ({ user }) => {
                   {appliedJobs[job.id] ? (
                     <>
                       <CheckCircle2 className="w-4 h-4 text-emerald-300" />
-                      <span>Applied (Dossier Sent)</span>
+                      <span>Application Submitted</span>
                     </>
                   ) : (
                     <>
-                      <span>1-Click Apply with Dossier</span>
+                      <span>Apply with Verified Dossier</span>
                       <ArrowRight className="w-3.5 h-3.5" />
                     </>
                   )}
@@ -381,7 +392,14 @@ export const StudentPortalView = ({ user }) => {
                 onClick={() => setEnrolledCourse(mod.id)}
                 className="w-full py-2 px-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition-colors cursor-pointer"
               >
-                {enrolledCourse === mod.id ? '✓ Module Active in Lab' : 'Start Micro-Sprint →'}
+                {enrolledCourse === mod.id ? (
+                  <span className="flex items-center justify-center gap-1.5">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>Module Active in Lab</span>
+                  </span>
+                ) : (
+                  'Start Micro-Sprint'
+                )}
               </button>
             </div>
           ))}

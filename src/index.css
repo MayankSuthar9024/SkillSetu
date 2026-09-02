@@ -305,17 +305,6 @@ a {
   }
 }
 
-@keyframes pulseGlow {
-  0%, 100% {
-    opacity: 0.6;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.04);
-  }
-}
-
 @keyframes floatGentle {
   0%, 100% {
     transform: translateY(0px) rotate(0deg);
@@ -349,10 +338,6 @@ a {
 
 .animate-float-reverse {
   animation: floatGentleReverse 7.5s ease-in-out infinite;
-}
-
-.animate-pulse-glow {
-  animation: pulseGlow 4s ease-in-out infinite;
 }
 
 .animate-radar-sweep {

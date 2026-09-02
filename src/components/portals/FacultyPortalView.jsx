@@ -192,7 +192,14 @@ export const FacultyPortalView = ({ user }) => {
                         : 'bg-emerald-800 hover:bg-emerald-900 text-white shadow-xs'
                     }`}
                   >
-                    {sub.status.includes('Digitally Signed') ? '✓ Cryptographically Signed' : 'Sign & Verify Dossier'}
+                    {sub.status.includes('Digitally Signed') ? (
+                      <span className="flex items-center gap-1.5">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700" />
+                        <span>Signed & Verified</span>
+                      </span>
+                    ) : (
+                      'Sign & Verify Dossier'
+                    )}
                   </button>
                 </div>
               </div>

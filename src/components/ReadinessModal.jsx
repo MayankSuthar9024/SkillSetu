@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { AYUSH_DISCIPLINES } from '../data/stitchData';
+import { CheckCircle2, Sparkles, BookOpen } from 'lucide-react';
 
 export function ReadinessModal({ isOpen, onClose }) {
   const [selectedDiscipline, setSelectedDiscipline] = useState('ayurveda');
@@ -137,18 +138,21 @@ export function ReadinessModal({ isOpen, onClose }) {
               {calculatedScore}%
             </div>
             
-            <div className="text-xs font-semibold text-on-surface-variant mb-4">
+            <div className="text-xs font-semibold text-on-surface-variant mb-4 flex justify-center">
               {calculatedScore >= 80 ? (
-                <span className="text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
-                  🎉 Excellent! Eligible for Direct Hospital Micro-Sprints & Placements
+                <span className="inline-flex items-center gap-1.5 text-emerald-800 bg-emerald-50 px-3.5 py-1.5 rounded-full border border-emerald-200">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-700" />
+                  <span>Verified: Eligible for Clinical Fellowships & Direct Placements</span>
                 </span>
               ) : calculatedScore >= 60 ? (
-                <span className="text-amber-700 bg-amber-50 px-3 py-1 rounded-full border border-amber-200">
-                  ⚡ Good Progress! Recommend Step 03 Micro-Sprint in Formulations
+                <span className="inline-flex items-center gap-1.5 text-amber-800 bg-amber-50 px-3.5 py-1.5 rounded-full border border-amber-200">
+                  <Sparkles className="w-4 h-4 text-amber-700" />
+                  <span>Advancing: Recommended Formulations Micro-Sprint</span>
                 </span>
               ) : (
-                <span className="text-blue-700 bg-blue-50 px-3 py-1 rounded-full border border-blue-200">
-                  📚 Recommended: Baseline Clinical Diagnostic Modules
+                <span className="inline-flex items-center gap-1.5 text-blue-800 bg-blue-50 px-3.5 py-1.5 rounded-full border border-blue-200">
+                  <BookOpen className="w-4 h-4 text-blue-700" />
+                  <span>Foundational: Baseline Clinical Diagnostic Modules Recommended</span>
                 </span>
               )}
             </div>

@@ -14,7 +14,8 @@ import {
   Home,
   BarChart3,
   Plus,
-  MessageSquare
+  MessageSquare,
+  X
 } from 'lucide-react';
 import { PORTALS_DATA, PLATFORM_METADATA } from '../data/portalData';
 
@@ -105,7 +106,7 @@ export const StakeholderDashboard = ({
             <div className="bg-gradient-to-r from-emerald-900 to-teal-900 text-white p-6 sm:p-8 rounded-3xl shadow-md">
               <div className="max-w-3xl">
                 <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 text-xs font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">
-                  LinkedIn-Style Ayush Career Desk
+                  Verified Ayush Clinical Career Desk
                 </span>
                 <h1 className="text-2xl sm:text-3xl font-extrabold mt-3">
                   Verified Opportunities & Clinical Fellowships
@@ -143,7 +144,7 @@ export const StakeholderDashboard = ({
             <div className="bg-white p-5 sm:p-6 rounded-3xl border border-slate-200 shadow-soft flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
               <div>
                 <span className="text-xs font-bold uppercase tracking-wider text-emerald-800 bg-emerald-50 px-3 py-1 rounded-full">
-                  Stakeholder Console View
+                  Operations & Management Console
                 </span>
                 <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 mt-2">
                   {currentPortalConfig.title} Operational Dashboard
@@ -166,7 +167,7 @@ export const StakeholderDashboard = ({
                 {roleDropdownOpen && (
                   <div className="absolute right-0 mt-2 w-64 bg-white rounded-2xl shadow-2xl border border-slate-200 py-2 z-50 animate-in fade-in">
                     <div className="px-3 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                      Select Stakeholder Role
+                      Switch Role
                     </div>
                     {PORTALS_DATA.map((p) => (
                       <button
@@ -263,7 +264,7 @@ export const StakeholderDashboard = ({
               {roleDropdownOpen && (
                 <div className="absolute left-0 mt-1.5 w-60 bg-white rounded-2xl shadow-elevated border border-slate-200 py-2 z-50 animate-in fade-in zoom-in-95">
                   <div className="px-3 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                    Select Stakeholder Portal
+                    Switch Portal
                   </div>
                   {PORTALS_DATA.map((p) => (
                     <button
@@ -338,8 +339,9 @@ export const StakeholderDashboard = ({
                     <button
                       onClick={() => setNotificationsOpen(false)}
                       className="text-slate-400 hover:text-slate-600 p-1 rounded-lg text-xs cursor-pointer"
+                      title="Close notifications"
                     >
-                      ✕
+                      <X className="w-4 h-4" />
                     </button>
                   </div>
                   <div className="divide-y divide-slate-100 max-h-64 overflow-y-auto">
@@ -404,7 +406,7 @@ export const StakeholderDashboard = ({
                     className="w-full text-left px-4 py-2 text-xs font-bold text-slate-800 hover:bg-emerald-50 hover:text-emerald-900 flex items-center gap-2"
                   >
                     <Layers className="w-4 h-4 text-teal-700" />
-                    <span>Stakeholder Console ({currentPortalConfig.title})</span>
+                    <span>Operational Console ({currentPortalConfig.title})</span>
                   </button>
 
                   <div className="pt-1 mt-1 border-t border-slate-100">
@@ -475,10 +477,10 @@ export const StakeholderDashboard = ({
           <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center shadow-lg border border-slate-100 p-1">
             <button
               onClick={handleOpenCreatePost}
-              className="w-14 h-14 rounded-full bg-gradient-to-br from-emerald-500 via-teal-600 to-emerald-800 hover:from-emerald-400 hover:to-teal-700 active:scale-95 text-white flex items-center justify-center shadow-[0_8px_20px_rgba(16,185,129,0.4)] transition-all cursor-pointer group"
-              title="Create Post / Share Insight"
+              className="w-14 h-14 rounded-full bg-gradient-to-br from-emerald-800 to-teal-900 hover:from-emerald-900 hover:to-teal-950 active:scale-95 text-white flex items-center justify-center shadow-md hover:shadow-lg transition-all cursor-pointer group"
+              title="Create Post"
             >
-              <Plus className="w-7 h-7 stroke-[2.8] group-hover:rotate-90 transition-transform duration-300" />
+              <Plus className="w-7 h-7 stroke-[2.5] group-hover:rotate-90 transition-transform duration-300" />
             </button>
           </div>
         </div>

@@ -56,23 +56,23 @@ export function Hero({ onGetStarted }) {
       {/* Dynamic Animated Motion Graphics Mesh Orbs in Background */}
       <motion.div 
         animate={{ 
-          scale: [1, 1.12, 1],
-          opacity: [0.35, 0.5, 0.35],
-          x: [0, 15, 0],
-          y: [0, -15, 0]
+          scale: [1, 1.08, 1],
+          opacity: [0.15, 0.25, 0.15],
+          x: [0, 10, 0],
+          y: [0, -10, 0]
         }}
         transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
-        className="absolute top-10 right-10 w-96 h-96 bg-gradient-to-br from-emerald-300/30 via-teal-200/20 to-transparent rounded-full blur-3xl pointer-events-none -z-10"
+        className="absolute top-10 right-10 w-96 h-96 bg-gradient-to-br from-emerald-200/20 via-teal-100/15 to-transparent rounded-full blur-3xl pointer-events-none -z-10"
       />
       <motion.div 
         animate={{ 
-          scale: [1, 1.15, 1],
-          opacity: [0.25, 0.45, 0.25],
-          x: [0, -20, 0],
-          y: [0, 20, 0]
+          scale: [1, 1.08, 1],
+          opacity: [0.12, 0.2, 0.12],
+          x: [0, -12, 0],
+          y: [0, 12, 0]
         }}
         transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
-        className="absolute bottom-10 left-10 w-[420px] h-[420px] bg-gradient-to-tr from-amber-200/25 via-emerald-100/30 to-transparent rounded-full blur-3xl pointer-events-none -z-10"
+        className="absolute bottom-10 left-10 w-[420px] h-[420px] bg-gradient-to-tr from-amber-100/15 via-emerald-100/15 to-transparent rounded-full blur-3xl pointer-events-none -z-10"
       />
 
       <div className="max-w-container-max mx-auto px-4 md:px-margin-desktop grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center relative z-10">
@@ -91,7 +91,7 @@ export function Hero({ onGetStarted }) {
             className="hero-title font-display-lg text-4xl sm:text-5xl lg:text-6xl font-extrabold text-on-surface leading-[1.08] tracking-[-0.045em]"
           >
             Build the skills. <br />
-            <span className="text-primary bg-gradient-to-r from-primary via-emerald-600 to-amber-600 bg-clip-text text-transparent">
+            <span className="text-primary bg-gradient-to-r from-primary via-emerald-700 to-amber-700 bg-clip-text text-transparent">
               Prove your readiness.
             </span> <br />
             Find your next opportunity.
@@ -111,13 +111,13 @@ export function Hero({ onGetStarted }) {
             className="flex flex-col sm:flex-row flex-wrap justify-center lg:justify-start gap-4 pt-2"
           >
             <motion.button 
-              whileHover={{ scale: 1.025, y: -1 }}
-              whileTap={{ scale: 0.975 }}
+              whileHover={{ scale: 1.02, y: -1 }}
+              whileTap={{ scale: 0.98 }}
               onClick={onGetStarted}
-              className="shimmer-btn bg-slate-900 hover:bg-slate-800 text-white font-label-sm text-base py-4 px-8 rounded-2xl transition-all shadow-medium flex items-center justify-center gap-2.5 font-bold cursor-pointer group"
+              className="bg-slate-900 hover:bg-slate-800 text-white font-label-sm text-base py-4 px-8 rounded-2xl transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2.5 font-bold cursor-pointer group"
             >
               <span className="material-symbols-outlined text-xl text-emerald-400">login</span>
-              <span>Sign In to Stakeholder Portal</span>
+              <span>Access Role Portals</span>
               <span className="material-symbols-outlined text-xl group-hover:translate-x-1 transition-transform">arrow_forward</span>
             </motion.button>
           </motion.div>

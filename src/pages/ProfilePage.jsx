@@ -145,7 +145,7 @@ export function ProfilePage({ onNavigate, currentUser }) {
             title="Drag & Drop or Change Cover Banner"
           >
             <Camera className="w-3.5 h-3.5 text-emerald-400" />
-            <span>Edit Banner</span>
+            <span>Change Cover Photo</span>
           </button>
 
           <button
@@ -172,7 +172,7 @@ export function ProfilePage({ onNavigate, currentUser }) {
               <div 
                 className="relative shrink-0 group cursor-pointer"
                 onClick={() => openMediaModal('pfp')}
-                title="Click to Drag & Drop or change Profile Picture (PFP)"
+                title="Change Profile Photo"
               >
                 <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-3xl bg-gradient-to-br from-emerald-700 to-teal-950 text-white font-extrabold text-2xl sm:text-4xl flex items-center justify-center border-4 border-white shadow-xl overflow-hidden relative">
                   {profileData.avatarImage ? (
@@ -291,7 +291,7 @@ export function ProfilePage({ onNavigate, currentUser }) {
               <div className="flex justify-between items-center pb-3 border-b border-slate-100">
                 <h3 className="font-extrabold text-base sm:text-lg text-slate-900 flex items-center gap-2">
                   <Camera className="w-5 h-5 text-emerald-700" />
-                  {activeMediaModal === 'pfp' ? 'Update Profile Picture (PFP)' : 'Update Cover Banner'}
+                  {activeMediaModal === 'pfp' ? 'Update Profile Picture' : 'Update Cover Photo'}
                 </h3>
                 <button
                   onClick={() => setActiveMediaModal(null)}
@@ -329,7 +329,7 @@ export function ProfilePage({ onNavigate, currentUser }) {
                     <Upload className="w-7 h-7" />
                   </div>
                   <p className="font-extrabold text-sm text-slate-900">
-                    Drag & Drop your {activeMediaModal === 'pfp' ? 'PFP photo' : 'cover banner image'} here
+                    Drag & Drop your {activeMediaModal === 'pfp' ? 'profile photo' : 'cover photo'} here
                   </p>
                   <p className="text-xs text-slate-500 mt-1">
                     or <span className="text-emerald-700 underline font-bold">click to browse</span> files from computer/phone
@@ -355,9 +355,10 @@ export function ProfilePage({ onNavigate, currentUser }) {
                 </h3>
                 <button
                   onClick={() => setIsEditingBio(false)}
-                  className="text-slate-400 hover:text-slate-600 p-1 rounded-lg"
+                  className="text-slate-400 hover:text-slate-600 p-1.5 rounded-xl hover:bg-slate-100 cursor-pointer"
+                  title="Close dialog"
                 >
-                  ✕
+                  <X className="w-5 h-5" />
                 </button>
               </div>
 
@@ -372,8 +373,8 @@ export function ProfilePage({ onNavigate, currentUser }) {
                   >
                     <User className="w-4 h-4 text-emerald-700 shrink-0" />
                     <div>
-                      <span className="text-xs font-extrabold text-slate-900 block leading-tight">Change PFP</span>
-                      <span className="text-[10px] text-slate-500">Drag & Drop photo</span>
+                      <span className="text-xs font-extrabold text-slate-900 block leading-tight">Change Photo</span>
+                      <span className="text-[10px] text-slate-500">Upload profile image</span>
                     </div>
                   </button>
 
@@ -384,8 +385,8 @@ export function ProfilePage({ onNavigate, currentUser }) {
                   >
                     <ImageIcon className="w-4 h-4 text-teal-700 shrink-0" />
                     <div>
-                      <span className="text-xs font-extrabold text-slate-900 block leading-tight">Edit Banner</span>
-                      <span className="text-[10px] text-slate-500">Drag & Drop cover</span>
+                      <span className="text-xs font-extrabold text-slate-900 block leading-tight">Change Cover</span>
+                      <span className="text-[10px] text-slate-500">Upload backdrop image</span>
                     </div>
                   </button>
                 </div>

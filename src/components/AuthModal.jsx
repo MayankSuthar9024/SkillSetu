@@ -68,7 +68,7 @@ export function AuthModal({ isOpen, mode, onClose, onSwitchMode, onLoginSuccess 
             <h4 className="font-bold text-lg text-on-surface">
               {mode === 'login' ? 'Authenticated successfully!' : 'Account created successfully!'}
             </h4>
-            <p className="text-xs text-on-surface-variant">Redirecting to your LinkedIn-style Ayush Professional Workspace...</p>
+            <p className="text-xs text-on-surface-variant">Redirecting to your verified Ayush professional workspace...</p>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">

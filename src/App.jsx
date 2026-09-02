@@ -172,7 +172,7 @@ export function App() {
       />
 
       {/* Main Content Area Based on Active Page */}
-      <main className="flex-grow pt-20">
+      <main className="flex-grow pt-20 pb-24 md:pb-8">
 
         {/* HOME PAGE */}
         {activePage === 'home' && (

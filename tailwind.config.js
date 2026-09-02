@@ -123,10 +123,8 @@ export default {
       },
       boxShadow: {
         'soft': '0 4px 24px rgba(0, 108, 73, 0.06)',
-        'medium': '0 12px 30px -4px rgba(13, 92, 67, 0.12)',
-        'elevated': '0 20px 40px -6px rgba(13, 92, 67, 0.16)',
-        'saffron-glow': '0 0 25px rgba(217, 119, 6, 0.25)',
-        'emerald-glow': '0 0 25px rgba(16, 185, 129, 0.25)',
+        'medium': '0 10px 25px -4px rgba(15, 23, 42, 0.08)',
+        'elevated': '0 20px 35px -6px rgba(15, 23, 42, 0.12)',
       },
       animation: {
         'pulse-subtle': 'pulseSubtle 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',

@@ -66,8 +66,8 @@ export const PortalSelectPage = ({
   return (
     <div className="min-h-screen bg-[#f3f9f6] bg-gradient-to-b from-[#e3f4ec] via-[#f2f9f5] to-[#f7faf8] flex flex-col font-sans text-slate-900 relative overflow-x-hidden selection:bg-emerald-200">
       
-      {/* Subtle Ambient Radial Glow */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[420px] bg-gradient-to-b from-emerald-200/50 via-teal-100/25 to-transparent blur-3xl pointer-events-none -z-10" />
+      {/* Subtle Ambient Background */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[420px] bg-gradient-to-b from-emerald-100/25 via-slate-100/15 to-transparent blur-3xl pointer-events-none -z-10" />
 
       {/* Top Header Navigation */}
       <header className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex items-center justify-between z-10">

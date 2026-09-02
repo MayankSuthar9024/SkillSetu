@@ -18,7 +18,9 @@ import {
   ExternalLink,
   BookOpen,
   Briefcase,
-  Flame
+  Flame,
+  X,
+  Camera
 } from 'lucide-react';
 
 export function FeedPage({ onNavigate, currentUser, openCreatePostModal, onCloseCreatePostModal }) {
@@ -306,8 +308,8 @@ export function FeedPage({ onNavigate, currentUser, openCreatePostModal, onClose
           {showHelpBanner && (
             <div className="bg-emerald-50 border border-emerald-200/90 rounded-2xl p-4 sm:p-5 flex items-start justify-between gap-3 animate-in fade-in">
               <div className="flex gap-3 min-w-0">
-                <div className="w-10 h-10 rounded-xl bg-emerald-800 text-white font-extrabold text-xl flex items-center justify-center shrink-0 shadow-xs">
-                  🌿
+                <div className="w-10 h-10 rounded-xl bg-emerald-800 text-white flex items-center justify-center shrink-0 shadow-xs">
+                  <Sparkles className="w-5 h-5 text-emerald-200" />
                 </div>
                 <div className="min-w-0">
                   <h3 className="font-extrabold text-sm text-slate-900">Welcome! Quick Guide to SkillSetu</h3>
@@ -329,10 +331,10 @@ export function FeedPage({ onNavigate, currentUser, openCreatePostModal, onClose
               </div>
               <button 
                 onClick={() => setShowHelpBanner(false)}
-                className="text-slate-400 hover:text-slate-600 font-bold text-xs p-1 rounded-lg shrink-0"
+                className="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg shrink-0 cursor-pointer"
                 title="Dismiss Guide"
               >
-                ✕
+                <X className="w-4 h-4" />
               </button>
             </div>
           )}
@@ -393,9 +395,10 @@ export function FeedPage({ onNavigate, currentUser, openCreatePostModal, onClose
                   </h3>
                   <button
                     onClick={() => setShowCreatePost(false)}
-                    className="text-slate-400 hover:text-slate-600 p-1 rounded-lg"
+                    className="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg cursor-pointer hover:bg-slate-100"
+                    title="Close dialog"
                   >
-                    ✕
+                    <X className="w-4 h-4" />
                   </button>
                 </div>
 
@@ -591,8 +594,9 @@ export function FeedPage({ onNavigate, currentUser, openCreatePostModal, onClose
                           className="w-full max-h-80 object-cover"
                         />
                         {post.imageCaption && (
-                          <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-slate-950/80 to-transparent p-2 text-[10px] text-slate-200 font-medium truncate">
-                            📷 {post.imageCaption}
+                          <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-slate-950/80 to-transparent p-2 text-[10px] text-slate-200 font-medium truncate flex items-center gap-1">
+                            <Camera className="w-3.5 h-3.5 text-slate-300 shrink-0" />
+                            <span>{post.imageCaption}</span>
                           </div>
                         )}
                       </div>

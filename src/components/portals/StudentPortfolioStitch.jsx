@@ -991,8 +991,9 @@ export const StudentPortfolioStitch = ({ user }) => {
               <h4 className="text-xs font-extrabold text-slate-700 mb-2">Verified Competency Outcomes</h4>
               <div className="flex flex-wrap gap-2">
                 {selectedCert.skillsCovered.map((skill, i) => (
-                  <span key={i} className="bg-emerald-50 text-[#006c49] px-3 py-1 rounded-full text-xs font-bold border border-emerald-200">
-                    ✓ {skill}
+                  <span key={i} className="bg-emerald-50 text-[#006c49] px-3 py-1 rounded-full text-xs font-bold border border-emerald-200 inline-flex items-center gap-1.5">
+                    <CheckCircle2 className="w-3 h-3 text-emerald-700 shrink-0" />
+                    <span>{skill}</span>
                   </span>
                 ))}
               </div>
