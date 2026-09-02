@@ -13,7 +13,8 @@ import {
   Layers,
   Home,
   BarChart3,
-  Plus
+  Plus,
+  MessageSquare
 } from 'lucide-react';
 import { PORTALS_DATA, PLATFORM_METADATA } from '../data/portalData';
 
@@ -27,6 +28,7 @@ import { FeedPage } from './FeedPage';
 import { ProfilePage } from './ProfilePage';
 import { SkillPage } from './SkillPage';
 import { IndustryPage } from './IndustryPage';
+import { MessagePage } from './MessagePage';
 
 export const StakeholderDashboard = ({
   activePortalId,
@@ -37,7 +39,7 @@ export const StakeholderDashboard = ({
   contrastMode,
   onToggleContrast
 }) => {
-  const [activeTab, setActiveTab] = useState('feed'); // 'feed' | 'profile' | 'jobs' | 'skills' | 'network' | 'console'
+  const [activeTab, setActiveTab] = useState('feed'); // 'feed' | 'messages' | 'jobs' | 'skills' | 'network' | 'console' | 'profile'
   const [roleDropdownOpen, setRoleDropdownOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
@@ -47,10 +49,10 @@ export const StakeholderDashboard = ({
   const user = currentUser || currentPortalConfig.demoUser;
 
   const notifications = [
-    { id: 1, title: 'Dabur R&D Centre viewed your SkillSetu Profile', time: '10m ago', unread: true },
-    { id: 2, title: 'Dr. Ananya Vaidya liked your Nadi Pariksha comment', time: '1h ago', unread: true },
-    { id: 3, title: 'New Job Match: Junior Ayurvedic Physician at AVP', time: '3h ago', unread: false },
-    { id: 4, title: 'Level 3 HPLC Verification Badge issued to your dossier', time: '1d ago', unread: false },
+    { id: 1, title: 'Prof. Meenakshi Joshi sent you a new message in Chat', time: '5m ago', unread: true },
+    { id: 2, title: 'Dabur R&D Centre viewed your SkillSetu Profile', time: '10m ago', unread: true },
+    { id: 3, title: 'Dr. Ananya Vaidya liked your Nadi Pariksha comment', time: '1h ago', unread: true },
+    { id: 4, title: 'New Job Match: Junior Ayurvedic Physician at AVP', time: '3h ago', unread: false },
   ];
 
   const handleOpenCreatePost = () => {
@@ -66,6 +68,7 @@ export const StakeholderDashboard = ({
           <FeedPage
             onNavigate={(page) => {
               if (page === 'profile') setActiveTab('profile');
+              else if (page === 'messages') setActiveTab('messages');
               else if (page === 'opportunities') setActiveTab('jobs');
               else if (page === 'skill') setActiveTab('skills');
               else if (page === 'industry') setActiveTab('network');
@@ -74,11 +77,22 @@ export const StakeholderDashboard = ({
             openCreatePostModal={openCreatePostModal}
           />
         );
+      case 'messages':
+        return (
+          <MessagePage
+            onNavigate={(page) => {
+              if (page === 'profile') setActiveTab('profile');
+              else if (page === 'feed') setActiveTab('feed');
+            }}
+            currentUser={user}
+          />
+        );
       case 'profile':
         return (
           <ProfilePage
             onNavigate={(page) => {
               if (page === 'feed') setActiveTab('feed');
+              else if (page === 'messages') setActiveTab('messages');
               else if (page === 'opportunities') setActiveTab('jobs');
               else if (page === 'skill') setActiveTab('skills');
             }}
@@ -190,7 +204,7 @@ export const StakeholderDashboard = ({
 
   const navItems = [
     { id: 'feed', label: 'Feed', icon: Flame },
-    { id: 'profile', label: 'My Profile', icon: User },
+    { id: 'messages', label: 'Messages', icon: MessageSquare },
     { id: 'jobs', label: 'Jobs', icon: Briefcase },
     { id: 'skills', label: 'Skill Hub', icon: Award },
     { id: 'network', label: 'Industry', icon: Building2 },
@@ -228,7 +242,7 @@ export const StakeholderDashboard = ({
               <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
               <input
                 type="text"
-                placeholder="Search clinical cases, jobs..."
+                placeholder="Search clinical cases, jobs, messages..."
                 className="w-full bg-slate-100 focus:bg-white border border-slate-200 rounded-xl pl-9 pr-3 py-1.5 text-xs text-slate-900 focus:ring-2 focus:ring-emerald-700"
               />
             </div>
@@ -256,7 +270,7 @@ export const StakeholderDashboard = ({
             })}
           </nav>
 
-          {/* Right Action Icons (Notifications, User PFP, Logout) */}
+          {/* Right Action Icons (Notifications, User PFP Avatar Button) */}
           <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             
             {/* Notifications Bell */}
@@ -290,16 +304,20 @@ export const StakeholderDashboard = ({
               )}
             </div>
 
-            {/* Profile Avatar (PFP) Button */}
+            {/* User Profile PFP Avatar Button */}
             <div className="relative">
               <button
                 onClick={() => setActiveTab('profile')}
                 onMouseEnter={() => setProfileDropdownOpen(true)}
                 className="flex items-center gap-2 bg-slate-100 hover:bg-emerald-50 border border-slate-200 rounded-xl p-1 pr-2 sm:pr-2.5 transition-all cursor-pointer shrink-0"
-                title="View Profile"
+                title="View Profile Page"
               >
-                <div className="w-7 h-7 rounded-lg bg-emerald-800 text-white font-extrabold text-xs flex items-center justify-center shadow-xs shrink-0">
-                  {user.avatar || 'AS'}
+                <div className="w-7 h-7 rounded-lg bg-emerald-800 text-white font-extrabold text-xs flex items-center justify-center shadow-xs shrink-0 overflow-hidden">
+                  {user.avatarImage ? (
+                    <img src={user.avatarImage} alt={user.name} className="w-full h-full object-cover" />
+                  ) : (
+                    <span>{user.avatar || 'AS'}</span>
+                  )}
                 </div>
                 <span className="text-xs font-bold text-slate-900 hidden lg:inline max-w-[100px] truncate">{user.name}</span>
                 <ChevronDown className="w-3.5 h-3.5 text-slate-400 hidden sm:inline shrink-0" />
@@ -321,6 +339,14 @@ export const StakeholderDashboard = ({
                   >
                     <User className="w-4 h-4 text-emerald-700" />
                     <span>View Profile Page</span>
+                  </button>
+
+                  <button
+                    onClick={() => { setActiveTab('messages'); setProfileDropdownOpen(false); }}
+                    className="w-full text-left px-4 py-2 text-xs font-bold text-slate-800 hover:bg-emerald-50 hover:text-emerald-900 flex items-center gap-2"
+                  >
+                    <MessageSquare className="w-4 h-4 text-teal-700" />
+                    <span>Messages & Connections</span>
                   </button>
 
                   <button
@@ -369,7 +395,7 @@ export const StakeholderDashboard = ({
         SkillSetu National Ayush Professional Platform · {PLATFORM_METADATA.ministryFull} · SIH 2026
       </footer>
 
-      {/* Exact Mobile App Bottom Footer Navigation Bar matching user design screenshot */}
+      {/* Mobile Bottom Footer Navigation Bar */}
       <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-xl border-t border-slate-200 shadow-2xl px-4 py-2.5 flex items-center justify-between rounded-t-3xl">
         
         {/* 1. Home */}
@@ -407,7 +433,18 @@ export const StakeholderDashboard = ({
           </div>
         </div>
 
-        {/* 4. Industry */}
+        {/* 4. Messages */}
+        <button
+          onClick={() => { setActiveTab('messages'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+          className={`flex flex-col items-center justify-center py-1 px-3 text-xs transition-all cursor-pointer ${
+            activeTab === 'messages' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-medium'
+          }`}
+        >
+          <MessageSquare className={`w-5 h-5 shrink-0 ${activeTab === 'messages' ? 'text-emerald-700' : 'text-slate-500'}`} />
+          <span className="text-[10px] mt-0.5 font-bold">Messages</span>
+        </button>
+
+        {/* 5. Industry */}
         <button
           onClick={() => { setActiveTab('network'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
           className={`flex flex-col items-center justify-center py-1 px-3 text-xs transition-all cursor-pointer ${
@@ -416,17 +453,6 @@ export const StakeholderDashboard = ({
         >
           <Building2 className={`w-5 h-5 shrink-0 ${activeTab === 'network' ? 'text-emerald-700' : 'text-slate-500'}`} />
           <span className="text-[10px] mt-0.5 font-bold">Industry</span>
-        </button>
-
-        {/* 5. Profile */}
-        <button
-          onClick={() => { setActiveTab('profile'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-          className={`flex flex-col items-center justify-center py-1 px-3 text-xs transition-all cursor-pointer ${
-            activeTab === 'profile' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-semibold'
-          }`}
-        >
-          <User className={`w-5 h-5 shrink-0 ${activeTab === 'profile' ? 'text-emerald-700' : 'text-slate-500'}`} />
-          <span className="text-[10px] mt-0.5 font-bold">Profile</span>
         </button>
 
       </div>

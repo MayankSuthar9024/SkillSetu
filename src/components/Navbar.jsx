@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Home, BarChart3, Plus, Building2, User, CheckCircle2, ChevronDown, Flame } from 'lucide-react';
+import { Home, BarChart3, Plus, Building2, User, CheckCircle2, ChevronDown, Flame, MessageSquare } from 'lucide-react';
 
 export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpenAuthModal, currentUser }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -249,7 +249,18 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
           </div>
         </div>
 
-        {/* 4. Industry */}
+        {/* 4. Messages */}
+        <button
+          onClick={() => handleNavClick('dashboard')}
+          className={`flex flex-col items-center justify-center py-1 px-2 text-xs transition-all cursor-pointer ${
+            activePage === 'messages' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-semibold'
+          }`}
+        >
+          <MessageSquare className={`w-5 h-5 shrink-0 ${activePage === 'messages' ? 'text-emerald-700' : 'text-slate-500'}`} />
+          <span className="text-[10px] mt-1 font-bold">Messages</span>
+        </button>
+
+        {/* 5. Industry */}
         <button
           onClick={() => handleNavClick('industry')}
           className={`flex flex-col items-center justify-center py-1 px-2 text-xs transition-all cursor-pointer ${
@@ -258,17 +269,6 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
         >
           <Building2 className={`w-5 h-5 shrink-0 ${activePage === 'industry' ? 'text-emerald-700' : 'text-slate-500'}`} />
           <span className="text-[10px] mt-1 font-bold">Industry</span>
-        </button>
-
-        {/* 5. Profile */}
-        <button
-          onClick={() => handleNavClick('profile')}
-          className={`flex flex-col items-center justify-center py-1 px-2 text-xs transition-all cursor-pointer ${
-            activePage === 'profile' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-semibold'
-          }`}
-        >
-          <User className={`w-5 h-5 shrink-0 ${activePage === 'profile' ? 'text-emerald-700' : 'text-slate-500'}`} />
-          <span className="text-[10px] mt-1 font-bold">Profile</span>
         </button>
 
       </div>
