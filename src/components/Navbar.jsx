@@ -9,8 +9,7 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
     { id: 'home', label: 'Home' },
     { id: 'opportunities', label: 'Opportunities' },
     { id: 'skill', label: 'Skill' },
-    { id: 'industry', label: 'Industry' },
-    { id: 'feed', label: 'Feed' }
+    { id: 'industry', label: 'Industry' }
   ];
 
   const handleNavClick = (id) => {
@@ -67,72 +66,15 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
             })}
           </nav>
 
-          {/* Right Action CTAs & Profile PFP */}
+          {/* Right Action CTAs */}
           <div className="hidden md:flex gap-3 items-center">
-            
-            {/* Profile PFP Avatar Button */}
-            <div className="relative">
-              <button
-                onClick={() => handleNavClick('profile')}
-                onMouseEnter={() => setProfileDropdownOpen(true)}
-                className="flex items-center gap-2.5 bg-white hover:bg-emerald-50/80 border border-slate-200/80 rounded-2xl p-1.5 pr-3.5 shadow-xs transition-all cursor-pointer group active:scale-95"
-                title="Click to view your Profile Page"
-              >
-                <div className="relative w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-700 to-teal-900 text-white font-extrabold text-xs flex items-center justify-center shadow-xs border-2 border-emerald-100 group-hover:scale-105 transition-transform shrink-0">
-                  {userAvatar}
-                  <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-white"></span>
-                </div>
+            <button 
+              onClick={() => onOpenAuthModal('login')}
+              className="text-slate-700 hover:text-emerald-800 font-bold text-xs px-4 py-2 rounded-xl hover:bg-emerald-50/80 border border-slate-200/80 transition-all cursor-pointer"
+            >
+              Log In
+            </button>
 
-                <div className="text-left hidden lg:block min-w-0">
-                  <div className="text-xs font-extrabold text-slate-900 group-hover:text-emerald-800 flex items-center gap-1 truncate">
-                    <span>{userName}</span>
-                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 fill-emerald-100 shrink-0" />
-                  </div>
-                  <div className="text-[10px] text-slate-500 font-semibold leading-none mt-0.5 truncate">
-                    View Profile
-                  </div>
-                </div>
-              </button>
-
-              {profileDropdownOpen && (
-                <div 
-                  onMouseLeave={() => setProfileDropdownOpen(false)}
-                  className="absolute right-0 mt-2 w-56 bg-white rounded-2xl shadow-xl border border-slate-200 py-2 z-50 animate-in fade-in zoom-in-95"
-                >
-                  <div className="px-4 py-2 border-b border-slate-100">
-                    <span className="font-extrabold text-xs text-slate-900 block">{userName}</span>
-                    <span className="text-[10px] text-slate-500 font-medium block">{userRole}</span>
-                  </div>
-                  
-                  <button
-                    onClick={() => handleNavClick('profile')}
-                    className="w-full text-left px-4 py-2 text-xs font-bold text-slate-800 hover:bg-emerald-50 hover:text-emerald-900 flex items-center gap-2"
-                  >
-                    <User className="w-4 h-4 text-emerald-700" />
-                    <span>My Profile Page</span>
-                  </button>
-
-                  <button
-                    onClick={() => handleNavClick('feed')}
-                    className="w-full text-left px-4 py-2 text-xs font-bold text-slate-800 hover:bg-emerald-50 hover:text-emerald-900 flex items-center gap-2"
-                  >
-                    <Flame className="w-4 h-4 text-rose-500" />
-                    <span>Community Feed</span>
-                  </button>
-
-                  <div className="pt-1 mt-1 border-t border-slate-100">
-                    <button
-                      onClick={() => onOpenAuthModal('login')}
-                      className="w-full text-left px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-50"
-                    >
-                      Role Portals
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Login / Auth Portal Button */}
             <button 
               onClick={() => onOpenAuthModal('login')}
               className="bg-gradient-to-r from-emerald-800 to-teal-900 text-white font-label-sm text-xs font-bold py-2.5 px-4 rounded-xl active:scale-95 hover:shadow-md transition-all flex items-center gap-1.5 cursor-pointer shrink-0"
@@ -142,14 +84,13 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
             </button>
           </div>
 
-          {/* Mobile Profile quick button */}
+          {/* Mobile Navigation Toggle Button */}
           <div className="md:hidden flex items-center gap-2">
-            <button
-              onClick={() => handleNavClick('profile')}
-              className="w-9 h-9 rounded-xl bg-emerald-800 text-white font-extrabold text-xs flex items-center justify-center border-2 border-white shadow-xs shrink-0"
-              title="Profile"
+            <button 
+              onClick={() => onOpenAuthModal('login')}
+              className="text-xs font-extrabold text-emerald-800 bg-emerald-50 px-3 py-1.5 rounded-xl border border-emerald-200/60"
             >
-              {userAvatar}
+              Log In
             </button>
 
             <button 
