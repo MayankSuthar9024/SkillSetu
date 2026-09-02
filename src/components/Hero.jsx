@@ -97,6 +97,7 @@ export function Hero({ onGetStarted, onSeeHowItWorks, onOpenReadinessModal }) {
             </div>
           </motion.div>
 
+<<<<<<< HEAD
           {/* Heading */}
           <motion.h1 
             variants={itemVariants}
@@ -105,6 +106,12 @@ export function Hero({ onGetStarted, onSeeHowItWorks, onOpenReadinessModal }) {
             Build the skills. <br />
             <span className="text-primary bg-gradient-to-r from-primary via-emerald-600 to-amber-600 bg-clip-text text-transparent">
               Prove your readiness.
+=======
+          <h1 className="hero-title font-display-lg text-4xl sm:text-5xl lg:text-6xl font-extrabold text-on-surface leading-[1.08] tracking-[-0.045em]">
+            Build skills. <br />
+            <span className="text-primary bg-gradient-to-r from-primary via-primary-container to-tertiary bg-clip-text text-transparent">
+              Prove your skills.
+>>>>>>> 48c98bc1f3f510f88600107d5a179522291ffab3
             </span> <br />
             Find your next opportunity.
           </motion.h1>
