@@ -91,7 +91,7 @@ export function SkillPage({ onNavigate, onOpenReadinessModal }) {
           <div className="flex gap-3">
             <button
               onClick={() => onNavigate('opportunities')}
-              className="bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs px-5 py-3 rounded-xl transition-all flex items-center gap-1.5 cursor-pointer"
+              className="bg-emerald-800 hover:bg-emerald-900 text-white font-bold text-xs px-5 py-3 rounded-xl transition-all flex items-center gap-1.5 cursor-pointer"
             >
               <span>Explore Eligible Jobs</span>
               <ArrowUpRight className="w-4 h-4" />

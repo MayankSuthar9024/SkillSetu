@@ -122,7 +122,7 @@ export function IndustryPage({ onNavigate }) {
 
                 <button
                   onClick={() => onNavigate('opportunities')}
-                  className="bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs px-4 py-2 rounded-xl transition-colors cursor-pointer"
+                  className="bg-emerald-800 hover:bg-emerald-900 text-white font-bold text-xs px-4 py-2 rounded-xl transition-colors cursor-pointer"
                 >
                   {comp.openings} →
                 </button>

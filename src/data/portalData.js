@@ -111,9 +111,9 @@ export const PORTALS_DATA = [
     description: "Generate annual reports for NAAC & NCISM compliance and track institutional placement readiness.",
     buttonText: "Select College",
     iconName: "Landmark",
-    accentBg: "bg-blue-50",
-    iconColor: "text-blue-700",
-    borderColor: "border-blue-200/80",
+    accentBg: "bg-emerald-50",
+    iconColor: "text-emerald-700",
+    borderColor: "border-emerald-200/80",
     buttonStyle: "bg-[#e5ede9] text-[#2d5244] hover:bg-emerald-800 hover:text-white border border-emerald-900/10",
     profileUser: {
       name: "Dr. Rajeshwar Pant",

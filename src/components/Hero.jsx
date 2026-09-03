@@ -120,7 +120,7 @@ export function Hero({ onGetStarted }) {
               whileHover={{ scale: 1.02, y: -1 }}
               whileTap={{ scale: 0.98 }}
               onClick={onGetStarted}
-              className="bg-slate-900 hover:bg-slate-800 text-white font-label-sm text-base py-4 px-8 rounded-2xl transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2.5 font-bold cursor-pointer group"
+              className="bg-gradient-to-r from-emerald-800 to-teal-900 hover:from-emerald-900 hover:to-teal-950 text-white font-label-sm text-base py-4 px-8 rounded-2xl transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2.5 font-bold cursor-pointer group"
             >
               <span className="material-symbols-outlined text-xl text-emerald-400">login</span>
               <span>Access Role Portals</span>

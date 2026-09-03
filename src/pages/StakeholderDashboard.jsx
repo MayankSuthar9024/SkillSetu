@@ -235,9 +235,9 @@ export const StakeholderDashboard = ({
           {/* Brand Logo */}
           <div className="flex items-center gap-3 shrink-0">
             <button
-              onClick={onBackToHome}
+              onClick={() => { setActiveTab('feed'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
               className="flex items-center gap-2 group cursor-pointer focus:outline-none"
-              title="Return to Public Landing Page"
+              title="SkillSetu Platform Home"
             >
               <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-gradient-to-br from-emerald-800 to-teal-950 flex items-center justify-center text-white shadow-md">
                 <span className="material-symbols-outlined text-xl sm:text-2xl">spa</span>
@@ -480,8 +480,8 @@ export const StakeholderDashboard = ({
               <button onClick={() => { setActiveTab('network'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-emerald-800 transition-colors cursor-pointer">
                 Industry Network
               </button>
-              <button onClick={onBackToHome} className="hover:text-emerald-800 transition-colors cursor-pointer text-emerald-800 font-bold">
-                Landing Overview
+              <button onClick={() => { setActiveTab('profile'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-emerald-800 transition-colors cursor-pointer text-emerald-800 font-bold">
+                My Profile
               </button>
             </div>
 

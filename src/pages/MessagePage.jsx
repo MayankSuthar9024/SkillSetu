@@ -20,7 +20,7 @@ export function MessagePage({ onNavigate, currentUser }) {
       unreadCount: 1,
       lastTime: '10:42 AM',
       messages: [
-        { id: 101, sender: 'them', text: 'Hello Aarav! I reviewed your Nadi Pariksha research paper notes.', time: '10:30 AM' },
+        { id: 101, sender: 'them', text: 'Hello! I reviewed your clinical research notes and case observations.', time: '10:30 AM' },
         { id: 102, sender: 'them', text: 'Approved your findings! Great work on the correlation metrics.', time: '10:35 AM' },
         { id: 103, sender: 'me', text: 'Thank you so much Professor! Should I upload the secondary dataset as well?', time: '10:38 AM' },
         { id: 104, sender: 'them', text: 'Yes, please share the secondary dataset by tomorrow evening.', time: '10:42 AM' }
@@ -36,13 +36,13 @@ export function MessagePage({ onNavigate, currentUser }) {
       unreadCount: 2,
       lastTime: '9:15 AM',
       messages: [
-        { id: 201, sender: 'them', text: 'Hi Aarav, we saw your verified HPLC Phytochemistry Badge score (88%).', time: '9:10 AM' },
+        { id: 201, sender: 'them', text: 'We reviewed your verified HPLC Phytochemistry Badge score (88%).', time: '9:10 AM' },
         { id: 202, sender: 'them', text: 'Would love to schedule an interview for the Junior Formulations Officer role!', time: '9:15 AM' }
       ]
     },
     {
       id: 3,
-      name: 'Priya Nair',
+      name: 'Dr. Priya Nair',
       role: 'BAMS Final Year Scholar, Amrita School of Ayurveda',
       avatar: 'PN',
       avatarBg: 'bg-emerald-700',
@@ -50,8 +50,8 @@ export function MessagePage({ onNavigate, currentUser }) {
       unreadCount: 0,
       lastTime: 'Yesterday',
       messages: [
-        { id: 301, sender: 'them', text: 'Hey Aarav! Can you share the Ashwagandha extraction protocol link?', time: 'Yesterday' },
-        { id: 302, sender: 'me', text: 'Sure Priya! Here is the CCRAS open-access protocol document link.', time: 'Yesterday' }
+        { id: 301, sender: 'them', text: 'Can you share the Ashwagandha extraction protocol link?', time: 'Yesterday' },
+        { id: 302, sender: 'me', text: 'Sure! Here is the CCRAS open-access protocol document link.', time: 'Yesterday' }
       ]
     },
     {
@@ -72,17 +72,32 @@ export function MessagePage({ onNavigate, currentUser }) {
   const [activeChatId, setActiveChatId] = useState(1);
   const [inputText, setInputText] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
+  const messagesEndRef = React.useRef(null);
 
   const activeChat = conversations.find(c => c.id === activeChatId) || conversations[0];
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  React.useEffect(() => {
+    scrollToBottom();
+  }, [activeChat?.messages]);
+
+  const handleSelectChat = (chatId) => {
+    setActiveChatId(chatId);
+    setConversations(prev => prev.map(c => c.id === chatId ? { ...c, unreadCount: 0 } : c));
+  };
 
   const handleSendMessage = (e) => {
     e.preventDefault();
     if (!inputText.trim()) return;
 
+    const userText = inputText.trim();
     const newMsg = {
       id: Date.now(),
       sender: 'me',
-      text: inputText.trim(),
+      text: userText,
       time: 'Just now'
     };
 
@@ -99,10 +114,12 @@ export function MessagePage({ onNavigate, currentUser }) {
 
     setInputText('');
 
-    // Simulate auto-acknowledgement after 1.5s
+    // Simulate acknowledgement
+    const targetChatId = activeChatId;
+    const recipientName = currentUser?.name?.split(' ')[0] || 'Doctor';
     setTimeout(() => {
       setConversations(prev => prev.map(chat => {
-        if (chat.id === activeChatId) {
+        if (chat.id === targetChatId) {
           return {
             ...chat,
             lastTime: 'Just now',
@@ -111,7 +128,7 @@ export function MessagePage({ onNavigate, currentUser }) {
               {
                 id: Date.now() + 1,
                 sender: 'them',
-                text: `Received! Thanks for messaging, Aarav. I will get back to you shortly.`,
+                text: `Received your note, ${recipientName}! Thank you for reaching out. I'll review and get back to you shortly.`,
                 time: 'Just now'
               }
             ]
@@ -119,7 +136,7 @@ export function MessagePage({ onNavigate, currentUser }) {
         }
         return chat;
       }));
-    }, 1500);
+    }, 1200);
   };
 
   const filteredConversations = conversations.filter(c => 
@@ -164,7 +181,7 @@ export function MessagePage({ onNavigate, currentUser }) {
             return (
               <div
                 key={chat.id}
-                onClick={() => setActiveChatId(chat.id)}
+                onClick={() => handleSelectChat(chat.id)}
                 className={`p-3.5 sm:p-4 transition-all cursor-pointer flex gap-3 items-start ${
                   isActive
                     ? 'bg-emerald-50/80 border-l-4 border-emerald-700'
@@ -283,6 +300,7 @@ export function MessagePage({ onNavigate, currentUser }) {
                   </div>
                 );
               })}
+              <div ref={messagesEndRef} />
             </div>
 
             {/* Live Message Input Form */}

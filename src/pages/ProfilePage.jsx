@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { 
   User, 
   CheckCircle2, 
@@ -16,24 +16,32 @@ import {
   Camera,
   Image as ImageIcon,
   Upload,
-  Link as LinkIcon,
   X,
   TrendingUp,
   BarChart3,
-  Eye
+  Eye,
+  FileText,
+  Download,
+  Lock,
+  GraduationCap,
+  Calendar,
+  Share2,
+  Check
 } from 'lucide-react';
 
 export function ProfilePage({ onNavigate, currentUser }) {
   const [activeTab, setActiveTab] = useState('overview');
   const [isEditingBio, setIsEditingBio] = useState(false);
+  const [saveSuccessToast, setSaveSuccessToast] = useState(false);
+  const [downloadSuccessToast, setDownloadSuccessToast] = useState(false);
   
-  // Dedicated Media Upload Modal state ('pfp' | 'banner' | null)
+  // Media Upload Modal state ('pfp' | 'banner' | null)
   const [activeMediaModal, setActiveMediaModal] = useState(null);
   const fileInputRef = useRef(null);
 
   const [profileData, setProfileData] = useState({
     name: currentUser?.name || 'Aarav Sharma',
-    role: currentUser?.role || 'BAMS Final Year Scholar & Ayush Research Fellow',
+    role: currentUser?.role || 'BAMS Scholar & Ayush Research Fellow',
     id: currentUser?.id || 'NIA/AY/2026/0491',
     email: currentUser?.email || 'aarav.sharma@nia.ac.in',
     institution: currentUser?.institution || 'National Institute of Ayurveda (NIA), Jaipur',
@@ -42,10 +50,43 @@ export function ProfilePage({ onNavigate, currentUser }) {
     readinessScore: 88,
     bio: 'Pioneering evidence-based Ayurvedic medicine, digital Nadi Pariksha diagnostics, and botanical extraction HPLC standardization. Fast-tracking Ayush academic research to clinical industry applications.',
     phone: '+91 98765 43210',
+    abhaId: '91-4402-8819-2041',
+    ncismReg: 'NCISM/AYU/RJ/2022/9912',
+    cgpa: '8.94 / 10.0 (Honors)',
+    batch: '2021 - 2026',
+    preceptor: 'Prof. Meenakshi Joshi (HOD Dravyaguna)',
     avatar: currentUser?.avatar || 'AS',
     avatarImage: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=400&q=80',
-    coverImage: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=1400&q=80'
+    coverImage: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=1400&q=80',
+    verificationHash: 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855'
   });
+
+  // Sync profile when currentUser changes
+  useEffect(() => {
+    if (currentUser) {
+      setProfileData(prev => ({
+        ...prev,
+        name: currentUser.name || prev.name,
+        role: currentUser.role || prev.role,
+        id: currentUser.id || prev.id,
+        email: currentUser.email || prev.email,
+        institution: currentUser.institution || prev.institution,
+        degree: currentUser.degree || prev.degree,
+        avatar: currentUser.avatar || prev.avatar,
+        readinessScore: currentUser.readiness ? parseInt(currentUser.readiness) : prev.readinessScore
+      }));
+      setEditForm(prev => ({
+        ...prev,
+        name: currentUser.name || prev.name,
+        role: currentUser.role || prev.role,
+        id: currentUser.id || prev.id,
+        email: currentUser.email || prev.email,
+        institution: currentUser.institution || prev.institution,
+        degree: currentUser.degree || prev.degree,
+        avatar: currentUser.avatar || prev.avatar
+      }));
+    }
+  }, [currentUser]);
 
   const [editForm, setEditForm] = useState({ ...profileData });
 
@@ -53,6 +94,8 @@ export function ProfilePage({ onNavigate, currentUser }) {
     e.preventDefault();
     setProfileData({ ...editForm });
     setIsEditingBio(false);
+    setSaveSuccessToast(true);
+    setTimeout(() => setSaveSuccessToast(false), 3000);
   };
 
   const handleFileUpload = (file, targetType) => {
@@ -72,25 +115,80 @@ export function ProfilePage({ onNavigate, currentUser }) {
     reader.readAsDataURL(file);
   };
 
+  const handleDownloadDossier = () => {
+    setDownloadSuccessToast(true);
+    setTimeout(() => setDownloadSuccessToast(false), 3500);
+  };
+
   const openMediaModal = (type) => {
     setActiveMediaModal(type);
   };
 
   const skillMatrix = [
-    { name: 'Nadi Pariksha (Pulse Diagnostics)', score: 92, status: 'Mastered' },
-    { name: 'Dravyaguna Phytochemistry & HPLC', score: 88, status: 'Verified' },
-    { name: 'GCP Clinical Trial Protocols', score: 85, status: 'Verified' },
-    { name: 'Panchakarma Clinical Management', score: 82, status: 'Proficient' },
-    { name: 'Tele-Ayush & Digital Health Care', score: 90, status: 'Mastered' },
+    { name: 'Nadi Pariksha (Pulse Diagnostics)', score: 92, status: 'Mastered', percentile: '98th' },
+    { name: 'Dravyaguna Phytochemistry & HPLC', score: 88, status: 'Verified', percentile: '94th' },
+    { name: 'Schedule T GMP Cleanroom Protocol', score: 94, status: 'Mastered', percentile: '99th' },
+    { name: 'GCP Clinical Trial Protocols', score: 85, status: 'Verified', percentile: '91st' },
+    { name: 'Panchakarma Clinical Management', score: 82, status: 'Proficient', percentile: '89th' },
+    { name: 'Rasa Shastra Quality Testing', score: 86, status: 'Verified', percentile: '93rd' },
+  ];
+
+  const clinicalRotations = [
+    { department: 'Kayachikitsa (Internal Medicine OPD)', duration: '4 Months', hospital: 'AIIA Apex Clinical Hospital', casesSeen: 240, status: 'Completed' },
+    { department: 'Panchakarma Therapy & IPD Care', duration: '3 Months', hospital: 'NIA Hospital, Jaipur', casesSeen: 180, status: 'Completed' },
+    { department: 'Shalya Tantra (Surgical & Kshara Sutra)', duration: '2 Months', hospital: 'National Institute Hospital', casesSeen: 95, status: 'Completed' },
+    { department: 'Dravyaguna Phytochemistry Lab', duration: '2 Months', hospital: 'AIIA Central Quality Testing Lab', casesSeen: 110, status: 'Completed' },
+    { department: 'Tele-Ayush Community Healthcare', duration: '1 Month', hospital: 'Ministry of Ayush eSanjeevani Unit', casesSeen: 150, status: 'In Progress' }
   ];
 
   const badges = [
-    { title: 'Digital Nadi Pariksha Master', issuer: 'All India Institute of Ayurveda', date: 'Jan 2026', code: 'AYUSH-BADGE-9912' },
-    { title: 'HPLC Herbal Quality Specialist', issuer: 'Dabur R&D Laboratory', date: 'Dec 2025', code: 'DABUR-QC-8821' },
-    { title: 'Ayush GCP Research Protocol', issuer: 'CCRAS Ministry of Ayush', date: 'Nov 2025', code: 'CCRAS-GCP-7714' },
-    { title: 'Ayurvedic Tele-Medicine Certified', issuer: 'National Health Authority', date: 'Oct 2025', code: 'NHA-TELE-4091' },
-    { title: 'Panchakarma Clinical Intern', issuer: 'NIA Jaipur Apex Hospital', date: 'Aug 2025', code: 'NIA-CLIN-3329' },
-    { title: 'Ethno-botanical Identification', issuer: 'Botanical Survey of India', date: 'Jul 2025', code: 'BSI-ETH-1120' },
+    { title: 'Digital Nadi Pariksha Master', issuer: 'All India Institute of Ayurveda', date: 'Jan 2026', code: 'AYUSH-BADGE-9912', status: 'Active' },
+    { title: 'HPLC Herbal Quality Specialist', issuer: 'Dabur R&D Laboratory', date: 'Dec 2025', code: 'DABUR-QC-8821', status: 'Active' },
+    { title: 'Schedule T GMP Cleanroom Protocol', issuer: 'Ayush Manufacturing Council', date: 'Dec 2025', code: 'GMP-SCH-T-4401', status: 'Active' },
+    { title: 'Ayush GCP Clinical Trial Protocol', issuer: 'CCRAS Ministry of Ayush', date: 'Nov 2025', code: 'CCRAS-GCP-7714', status: 'Active' },
+    { title: 'Ayurvedic Tele-Medicine Certified', issuer: 'National Health Authority', date: 'Oct 2025', code: 'NHA-TELE-4091', status: 'Active' },
+    { title: 'HSSC Skill Qualification Pack 4', issuer: 'Healthcare Sector Skill Council', date: 'Sep 2025', code: 'HSSC-NQR-8802', status: 'Active' }
+  ];
+
+  const publications = [
+    {
+      title: 'Comparative Phytochemical Fingerprinting of Withania somnifera using High-Performance Thin-Layer Chromatography (HPTLC)',
+      journal: 'Journal of Ayurveda and Integrative Medicine (JAIM)',
+      year: '2025',
+      doi: '10.1016/j.jaim.2025.100912',
+      badge: 'Peer-Reviewed'
+    },
+    {
+      title: 'Correlative Study of Radial Arterial Pulse Wave Analysis with Tridosha Phenotypic Classifications',
+      journal: 'CCRAS SPARK-4.0 National Research Grant Monograph',
+      year: '2025',
+      doi: '10.5530/ccras.spark.2025.0491',
+      badge: 'Sponsored Grant'
+    },
+    {
+      title: 'Heavy Metal Remediation and Quality Standards in Rasaushadhi Preparations: A Schedule T Perspective',
+      journal: 'International Journal of Ayurvedic Medicine',
+      year: '2024',
+      doi: '10.47552/ijam.v15i3.2201',
+      badge: 'Industry Standard'
+    }
+  ];
+
+  const endorsements = [
+    {
+      name: 'Prof. Meenakshi Joshi',
+      designation: 'Professor & HOD (Dravyaguna), AIIA New Delhi',
+      date: 'Feb 2026',
+      quote: 'Aarav shows rigorous diagnostic discipline in Nadi Pariksha and possesses exceptional laboratory command over herbal standardized extracts. Consistently top decile in clinical rotations.',
+      avatar: 'MJ'
+    },
+    {
+      name: 'Dr. Vikram Sethi',
+      designation: 'Director of Formulations & R&D, Dabur India Ltd',
+      date: 'Jan 2026',
+      quote: 'Demonstrated outstanding grasp of Schedule T cleanroom practices and HPLC validation workflows during our industry talent evaluation sprint.',
+      avatar: 'VS'
+    }
   ];
 
   const userPosts = [
@@ -98,14 +196,14 @@ export function ProfilePage({ onNavigate, currentUser }) {
       id: 2,
       title: 'Earned Level 3 Certification in Herbal Standardization & HPLC Quality Control!',
       time: '5 hours ago',
-      category: 'Skill Achievement',
+      category: 'Milestone',
       likes: 215,
-      comments: 1,
-      shares: 54,
+      comments: 14,
+      shares: 41,
       views: '2,840',
       recruiterViews: 84,
-      topAudience: 'Dabur R&D Mentors & AIIA Faculty',
-      snippet: 'Super thrilled to complete the 4-week micro-sprint on Chromatographic Fingerprinting for Ashwagandha extracts under Dabur R&D Mentorship...'
+      topAudience: 'Ayush Pharma R&D Leads',
+      snippet: 'Validated 6 botanical batches of Withania somnifera for withanolide content against USP-Ayush pharmacopoeial reference standards.'
     },
     {
       id: 10,
@@ -123,38 +221,57 @@ export function ProfilePage({ onNavigate, currentUser }) {
   ];
 
   return (
-    <div className="min-h-screen bg-[#f7faf8] text-slate-900 pb-16 overflow-x-hidden">
+    <div className="min-h-screen bg-[#f7faf8] text-slate-900 pb-16 overflow-x-hidden font-sans">
       
-      {/* Cover Backdrop with Image & Edit Banner Controls */}
+      {/* Toast Notifications */}
+      {saveSuccessToast && (
+        <div className="fixed top-20 right-5 z-50 bg-emerald-800 text-white px-4 py-3 rounded-2xl shadow-xl flex items-center gap-2 text-xs font-bold animate-in slide-in-from-top">
+          <Check className="w-4 h-4 text-emerald-300" />
+          <span>Profile details saved successfully!</span>
+        </div>
+      )}
+
+      {downloadSuccessToast && (
+        <div className="fixed top-20 right-5 z-50 bg-emerald-800 text-white px-4 py-3 rounded-2xl shadow-xl flex items-center gap-2 text-xs font-bold animate-in slide-in-from-top">
+          <Download className="w-4 h-4 text-emerald-300" />
+          <span>Verified Scholar Dossier (PDF) generated with SHA-256 seal.</span>
+        </div>
+      )}
+
+      {/* Fresh, Light Botanical Ayush Cover Banner (No Dark Blue/Black Overlays) */}
       <div 
-        className="h-44 sm:h-64 bg-gradient-to-r from-emerald-950 via-emerald-800 to-teal-900 relative overflow-hidden rounded-3xl mb-4 bg-cover bg-center transition-all duration-300"
+        className="h-44 sm:h-60 bg-gradient-to-r from-emerald-800 via-teal-700 to-emerald-600 relative overflow-hidden rounded-3xl mb-4 bg-cover bg-center transition-all duration-300 shadow-sm"
         style={{
           backgroundImage: profileData.coverImage ? `url(${profileData.coverImage})` : undefined
         }}
       >
-        {profileData.coverImage && (
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/30 to-transparent"></div>
-        )}
-
         <div className="max-w-6xl mx-auto px-4 h-full flex justify-between items-start pt-4 relative z-10">
-          
           {/* Edit Cover Banner Button */}
           <button
             onClick={() => openMediaModal('banner')}
-            className="bg-slate-900/80 hover:bg-slate-900 text-white font-extrabold text-xs px-3.5 py-2 rounded-xl backdrop-blur-md transition-all flex items-center gap-1.5 border border-white/20 cursor-pointer shadow-md"
-            title="Drag & Drop or Change Cover Banner"
+            className="bg-white/80 hover:bg-white text-emerald-950 font-bold text-xs px-3.5 py-2 rounded-xl backdrop-blur-md transition-all flex items-center gap-1.5 border border-emerald-200/60 cursor-pointer shadow-xs"
+            title="Change Cover Photo"
           >
-            <Camera className="w-3.5 h-3.5 text-emerald-400" />
-            <span>Change Cover Photo</span>
+            <Camera className="w-3.5 h-3.5 text-emerald-700" />
+            <span>Change Cover</span>
           </button>
 
-          <button
-            onClick={() => onNavigate('feed')}
-            className="bg-white/20 hover:bg-white/30 text-white font-bold text-xs px-3.5 py-2 rounded-xl backdrop-blur-md transition-all flex items-center gap-1.5 border border-white/20 cursor-pointer shadow-md"
-          >
-            <Activity className="w-3.5 h-3.5" />
-            <span>Go to Feed</span>
-          </button>
+          <div className="flex gap-2">
+            <button
+              onClick={handleDownloadDossier}
+              className="bg-white/80 hover:bg-white text-emerald-950 font-bold text-xs px-3.5 py-2 rounded-xl backdrop-blur-md transition-all flex items-center gap-1.5 border border-emerald-200/60 cursor-pointer shadow-xs"
+            >
+              <Download className="w-3.5 h-3.5 text-emerald-700" />
+              <span className="hidden sm:inline">Export Dossier (PDF)</span>
+            </button>
+            <button
+              onClick={() => onNavigate('feed')}
+              className="bg-emerald-900 hover:bg-emerald-950 text-white font-bold text-xs px-3.5 py-2 rounded-xl transition-all flex items-center gap-1.5 shadow-xs cursor-pointer"
+            >
+              <Activity className="w-3.5 h-3.5 text-emerald-300" />
+              <span>Community Feed</span>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -162,19 +279,19 @@ export function ProfilePage({ onNavigate, currentUser }) {
       <div className="max-w-6xl mx-auto -mt-16 sm:-mt-20 relative z-10 min-w-0 max-w-full overflow-hidden px-1 sm:px-0">
         
         {/* Header Card */}
-        <div className="bg-white rounded-3xl border border-slate-200/80 p-4 sm:p-8 shadow-md min-w-0 max-w-full overflow-hidden">
+        <div className="bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-8 shadow-sm min-w-0 max-w-full overflow-hidden">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-5 min-w-0 max-w-full">
             
             {/* Left Avatar & Core Info */}
             <div className="flex flex-col sm:flex-row items-start sm:items-end gap-4 sm:gap-6 min-w-0 max-w-full w-full">
               
-              {/* Profile Avatar (PFP) with Edit Camera Overlay */}
+              {/* Profile Avatar (PFP) */}
               <div 
                 className="relative shrink-0 group cursor-pointer"
                 onClick={() => openMediaModal('pfp')}
                 title="Change Profile Photo"
               >
-                <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-3xl bg-gradient-to-br from-emerald-700 to-teal-950 text-white font-extrabold text-2xl sm:text-4xl flex items-center justify-center border-4 border-white shadow-xl overflow-hidden relative">
+                <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-3xl bg-gradient-to-br from-emerald-700 to-teal-900 text-white font-extrabold text-2xl sm:text-4xl flex items-center justify-center border-4 border-white shadow-md overflow-hidden relative">
                   {profileData.avatarImage ? (
                     <img 
                       src={profileData.avatarImage} 
@@ -185,27 +302,29 @@ export function ProfilePage({ onNavigate, currentUser }) {
                     <span>{profileData.avatar}</span>
                   )}
 
-                  {/* Camera Hover Overlay */}
-                  <div className="absolute inset-0 bg-slate-950/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-white text-[11px] font-extrabold gap-1">
-                    <Camera className="w-6 h-6 text-emerald-400" />
-                    <span>Change PFP</span>
+                  <div className="absolute inset-0 bg-emerald-950/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-white text-[11px] font-bold gap-1">
+                    <Camera className="w-6 h-6 text-emerald-300" />
+                    <span>Change Photo</span>
                   </div>
                 </div>
 
-                {/* Verified Badge */}
-                <div className="absolute -bottom-1.5 -right-1.5 bg-emerald-600 text-white p-1.5 rounded-xl border-2 border-white shadow-md z-10" title="SkillSetu Verified Scholar">
-                  <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 fill-emerald-600 text-white" />
+                <div className="absolute -bottom-1.5 -right-1.5 bg-emerald-700 text-white p-1.5 rounded-xl border-2 border-white shadow-md z-10" title="Verified Ayush Scholar">
+                  <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                 </div>
               </div>
 
               <div className="min-w-0 flex-1 w-full overflow-hidden">
                 <div className="flex items-center gap-2 flex-wrap min-w-0 max-w-full">
-                  <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight break-words max-w-full">
+                  <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-900 tracking-tight break-words max-w-full">
                     {profileData.name}
                   </h1>
-                  <span className="bg-emerald-50 text-emerald-800 border border-emerald-200/80 text-[10px] sm:text-xs font-extrabold px-2.5 py-0.5 rounded-full flex items-center gap-1 shrink-0">
+                  <span className="bg-emerald-50 text-emerald-800 border border-emerald-200/80 text-[10px] sm:text-xs font-bold px-2.5 py-0.5 rounded-full flex items-center gap-1 shrink-0">
                     <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
                     ABHA Verified
+                  </span>
+                  <span className="bg-teal-50 text-teal-800 border border-teal-200/80 text-[10px] sm:text-xs font-bold px-2.5 py-0.5 rounded-full flex items-center gap-1 shrink-0">
+                    <GraduationCap className="w-3.5 h-3.5 text-teal-600" />
+                    NCISM Accredited
                   </span>
                 </div>
                 <p className="text-xs sm:text-sm font-semibold text-slate-600 mt-1 break-words">
@@ -224,7 +343,7 @@ export function ProfilePage({ onNavigate, currentUser }) {
               </div>
             </div>
 
-            {/* Right Action Buttons & Readiness Badge */}
+            {/* Right Action Buttons & Readiness Score */}
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full md:w-auto shrink-0">
               <div className="bg-emerald-50 border border-emerald-200/80 p-3 rounded-2xl flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-emerald-800 text-white font-extrabold text-base flex items-center justify-center shadow-xs shrink-0">
@@ -234,74 +353,70 @@ export function ProfilePage({ onNavigate, currentUser }) {
                   <div className="text-[10px] font-bold uppercase tracking-wider text-emerald-800">
                     Overall Skill Score
                   </div>
-                  <div className="text-xs font-extrabold text-slate-900">
-                    Verified Ayush Scholar
+                  <div className="text-xs font-bold text-slate-900">
+                    Clinical Ready Level 3
                   </div>
                 </div>
               </div>
 
-              <div className="flex gap-2">
-                <button
-                  onClick={() => setIsEditingBio(true)}
-                  className="w-full sm:w-auto bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs px-5 py-2.5 rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-sm"
-                >
-                  <Edit3 className="w-3.5 h-3.5" />
-                  <span>Edit Profile</span>
-                </button>
-              </div>
+              <button
+                onClick={() => setIsEditingBio(true)}
+                className="w-full sm:w-auto bg-emerald-800 hover:bg-emerald-900 text-white font-bold text-xs px-5 py-2.5 rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-xs"
+              >
+                <Edit3 className="w-3.5 h-3.5" />
+                <span>Edit Profile</span>
+              </button>
             </div>
 
           </div>
 
-          {/* Bio text */}
+          {/* Bio Summary text */}
           <div className="mt-5 pt-5 border-t border-slate-100">
-            <h3 className="text-xs font-bold uppercase text-slate-400 tracking-wider mb-1">Scholar Summary / Bio</h3>
+            <h3 className="text-xs font-bold uppercase text-slate-400 tracking-wider mb-1">Scholar Summary / Professional Statement</h3>
             <p className="text-xs sm:text-sm text-slate-700 leading-relaxed font-medium">
               "{profileData.bio}"
             </p>
           </div>
 
-          {/* Key Stats Bar */}
+          {/* Key Quick Indices */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3 mt-5 pt-5 border-t border-slate-100">
             <div className="bg-slate-50 p-3 rounded-2xl text-center border border-slate-200/60">
-              <span className="block text-lg sm:text-xl font-extrabold text-slate-900">88%</span>
-              <span className="text-[9px] sm:text-[10px] font-bold text-slate-500 uppercase">Readiness</span>
+              <span className="block text-lg sm:text-xl font-extrabold text-emerald-900">{profileData.readinessScore}%</span>
+              <span className="text-[9px] sm:text-[10px] font-bold text-slate-500 uppercase">Skill Readiness</span>
             </div>
             <div className="bg-slate-50 p-3 rounded-2xl text-center border border-slate-200/60">
-              <span className="block text-lg sm:text-xl font-extrabold text-slate-900">6</span>
+              <span className="block text-lg sm:text-xl font-extrabold text-slate-900">{badges.length}</span>
               <span className="text-[9px] sm:text-[10px] font-bold text-slate-500 uppercase">Verified Badges</span>
             </div>
             <div className="bg-slate-50 p-3 rounded-2xl text-center border border-slate-200/60">
-              <span className="block text-lg sm:text-xl font-extrabold text-slate-900">14</span>
-              <span className="text-[9px] sm:text-[10px] font-bold text-slate-500 uppercase">Clinical Cases</span>
+              <span className="block text-lg sm:text-xl font-extrabold text-slate-900">855+</span>
+              <span className="text-[9px] sm:text-[10px] font-bold text-slate-500 uppercase">Clinical Cases Logged</span>
             </div>
             <div className="bg-slate-50 p-3 rounded-2xl text-center border border-slate-200/60">
-              <span className="block text-lg sm:text-xl font-extrabold text-slate-900">480</span>
-              <span className="text-[9px] sm:text-[10px] font-bold text-slate-500 uppercase">Connects</span>
+              <span className="block text-lg sm:text-xl font-extrabold text-teal-800">3 Papers</span>
+              <span className="text-[9px] sm:text-[10px] font-bold text-slate-500 uppercase">Publications</span>
             </div>
           </div>
         </div>
 
-        {/* Dedicated Media Drag & Drop / URL / Preset Upload Modal */}
+        {/* Media Drag & Drop / Upload Modal */}
         {activeMediaModal && (
-          <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="fixed inset-0 z-50 bg-emerald-950/60 backdrop-blur-sm flex items-center justify-center p-4">
             <div className="bg-white rounded-3xl max-w-lg w-full p-5 sm:p-6 shadow-2xl border border-slate-200 animate-in fade-in zoom-in-95">
               
-              {/* Modal Header */}
               <div className="flex justify-between items-center pb-3 border-b border-slate-100">
-                <h3 className="font-extrabold text-base sm:text-lg text-slate-900 flex items-center gap-2">
+                <h3 className="font-bold text-base sm:text-lg text-slate-900 flex items-center gap-2">
                   <Camera className="w-5 h-5 text-emerald-700" />
-                  {activeMediaModal === 'pfp' ? 'Update Profile Picture' : 'Update Cover Photo'}
+                  {activeMediaModal === 'pfp' ? 'Update Profile Picture' : 'Update Cover Banner'}
                 </h3>
                 <button
                   onClick={() => setActiveMediaModal(null)}
-                  className="text-slate-400 hover:text-slate-600 p-1.5 rounded-xl hover:bg-slate-100"
+                  className="text-slate-400 hover:text-slate-600 p-1.5 rounded-xl hover:bg-slate-100 cursor-pointer"
                 >
                   <X className="w-5 h-5" />
                 </button>
               </div>
 
-              {/* Clean Drag & Drop File Upload Area */}
               <div className="mt-4">
                 <div
                   onDragOver={(e) => e.preventDefault()}
@@ -328,14 +443,14 @@ export function ProfilePage({ onNavigate, currentUser }) {
                   <div className="w-14 h-14 rounded-2xl bg-emerald-100 group-hover:bg-emerald-200 text-emerald-800 mx-auto flex items-center justify-center mb-3 transition-transform group-hover:scale-110 shadow-xs">
                     <Upload className="w-7 h-7" />
                   </div>
-                  <p className="font-extrabold text-sm text-slate-900">
-                    Drag & Drop your {activeMediaModal === 'pfp' ? 'profile photo' : 'cover photo'} here
+                  <p className="font-bold text-sm text-slate-900">
+                    Drag & Drop your {activeMediaModal === 'pfp' ? 'profile photo' : 'cover banner'} here
                   </p>
                   <p className="text-xs text-slate-500 mt-1">
-                    or <span className="text-emerald-700 underline font-bold">click to browse</span> files from computer/phone
+                    or <span className="text-emerald-700 underline font-bold">click to browse</span> from device
                   </p>
                   <span className="inline-block mt-3 text-[10px] text-slate-400 font-semibold bg-white px-3 py-1 rounded-full border border-slate-200">
-                    Supports PNG, JPG, WEBP, GIF
+                    Supports PNG, JPG, WEBP
                   </span>
                 </div>
               </div>
@@ -346,12 +461,12 @@ export function ProfilePage({ onNavigate, currentUser }) {
 
         {/* Edit Profile Info Modal */}
         {isEditingBio && (
-          <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="fixed inset-0 z-50 bg-emerald-950/60 backdrop-blur-sm flex items-center justify-center p-4">
             <div className="bg-white rounded-2xl max-w-lg w-full p-5 sm:p-6 shadow-2xl border border-slate-200 animate-in fade-in zoom-in-95 max-h-[90vh] overflow-y-auto">
               <div className="flex justify-between items-center pb-3 border-b border-slate-100">
-                <h3 className="font-extrabold text-base text-slate-900 flex items-center gap-2">
+                <h3 className="font-bold text-base text-slate-900 flex items-center gap-2">
                   <Edit3 className="w-5 h-5 text-emerald-700" />
-                  Edit Profile Details
+                  Edit Profile & Credentials
                 </h3>
                 <button
                   onClick={() => setIsEditingBio(false)}
@@ -364,7 +479,7 @@ export function ProfilePage({ onNavigate, currentUser }) {
 
               <form onSubmit={handleSaveBio} className="mt-4 space-y-4">
                 
-                {/* Media Edit Shortcuts */}
+                {/* Media Shortcuts */}
                 <div className="grid grid-cols-2 gap-2">
                   <button
                     type="button"
@@ -373,7 +488,7 @@ export function ProfilePage({ onNavigate, currentUser }) {
                   >
                     <User className="w-4 h-4 text-emerald-700 shrink-0" />
                     <div>
-                      <span className="text-xs font-extrabold text-slate-900 block leading-tight">Change Photo</span>
+                      <span className="text-xs font-bold text-slate-900 block leading-tight">Change Photo</span>
                       <span className="text-[10px] text-slate-500">Upload profile image</span>
                     </div>
                   </button>
@@ -385,7 +500,7 @@ export function ProfilePage({ onNavigate, currentUser }) {
                   >
                     <ImageIcon className="w-4 h-4 text-teal-700 shrink-0" />
                     <div>
-                      <span className="text-xs font-extrabold text-slate-900 block leading-tight">Change Cover</span>
+                      <span className="text-xs font-bold text-slate-900 block leading-tight">Change Banner</span>
                       <span className="text-[10px] text-slate-500">Upload backdrop image</span>
                     </div>
                   </button>
@@ -397,41 +512,20 @@ export function ProfilePage({ onNavigate, currentUser }) {
                     type="text"
                     value={editForm.name}
                     onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 font-medium"
                     required
                   />
                 </div>
 
                 <div>
                   <label className="block text-xs font-bold uppercase text-slate-500 mb-1">Role / Designation</label>
-                  <select
+                  <input
+                    type="text"
                     value={editForm.role}
                     onChange={(e) => setEditForm({ ...editForm, role: e.target.value })}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer"
-                  >
-                    {[
-                      'BAMS Final Year Scholar & Ayush Research Fellow',
-                      'BAMS Undergraduate Scholar (1st-4th Year)',
-                      'BAMS Clinical Intern (Rotatory Housemanship)',
-                      'MD / MS (Ayurveda) Post-Graduate Scholar',
-                      'Ayush Research Fellow (JRF / SRF - CCRAS)',
-                      'Dravyaguna Phytochemistry & Herbal QC Specialist',
-                      'Panchakarma Clinical Practitioner',
-                      'Nadi Pariksha & Classical Pulse Specialist',
-                      'Ayurveda Samhita & Siddhanta Scholar',
-                      'B.Pharm (Ayush) Herbal Technologist',
-                      'Junior Ayurvedic Medical Officer (AMO)',
-                      'Tele-Ayush Digital Health Consultant',
-                      'Rasashastra & Bhaishajya Kalpana Scholar',
-                      'Ethno-botanical Field Researcher',
-                      'Ayush Industrial R&D Quality Officer',
-                      'Senior Ayurvedic Physician & Clinical Preceptor'
-                    ].map((role, idx) => (
-                      <option key={idx} value={role}>
-                        {role}
-                      </option>
-                    ))}
-                  </select>
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 font-medium"
+                    required
+                  />
                 </div>
 
                 <div>
@@ -440,9 +534,31 @@ export function ProfilePage({ onNavigate, currentUser }) {
                     type="text"
                     value={editForm.institution}
                     onChange={(e) => setEditForm({ ...editForm, institution: e.target.value })}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 font-medium"
                     required
                   />
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-bold uppercase text-slate-500 mb-1">Degree Program</label>
+                    <input
+                      type="text"
+                      value={editForm.degree}
+                      onChange={(e) => setEditForm({ ...editForm, degree: e.target.value })}
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 font-medium"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold uppercase text-slate-500 mb-1">Phone Number</label>
+                    <input
+                      type="text"
+                      value={editForm.phone}
+                      onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })}
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 font-medium"
+                    />
+                  </div>
                 </div>
 
                 <div>
@@ -451,22 +567,22 @@ export function ProfilePage({ onNavigate, currentUser }) {
                     rows={3}
                     value={editForm.bio}
                     onChange={(e) => setEditForm({ ...editForm, bio: e.target.value })}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 leading-relaxed font-medium"
                     required
-                  ></textarea>
+                  />
                 </div>
 
-                <div className="flex justify-end gap-2 pt-2 border-t border-slate-100">
+                <div className="pt-3 border-t border-slate-100 flex justify-end gap-2">
                   <button
                     type="button"
                     onClick={() => setIsEditingBio(false)}
-                    className="px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded-xl"
+                    className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl cursor-pointer"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="bg-emerald-800 text-white px-5 py-2 text-xs font-bold rounded-xl hover:bg-emerald-900 cursor-pointer shadow-xs"
+                    className="px-5 py-2 bg-emerald-800 hover:bg-emerald-900 text-white font-bold text-xs rounded-xl transition-all shadow-xs cursor-pointer"
                   >
                     Save Changes
                   </button>
@@ -479,10 +595,12 @@ export function ProfilePage({ onNavigate, currentUser }) {
         {/* Tab Navigation */}
         <div className="mt-6 flex items-center gap-1 sm:gap-2 border-b border-slate-200 overflow-x-auto no-scrollbar pb-0.5">
           {[
-            { id: 'overview', label: 'Overview & Skills', icon: Award },
-            { id: 'badges', label: 'Skill Badges', icon: ShieldCheck },
-            { id: 'posts', label: 'My Posts', icon: User },
-            { id: 'portfolio', label: 'Clinical Records', icon: BookOpen }
+            { id: 'overview', label: 'Overview & Competencies', icon: Award },
+            { id: 'rotations', label: 'Clinical Rotations', icon: BookOpen },
+            { id: 'badges', label: 'Certifications & Ledger', icon: ShieldCheck },
+            { id: 'research', label: 'Research & Papers', icon: FileText },
+            { id: 'endorsements', label: 'Preceptor Recommendations', icon: Sparkles },
+            { id: 'posts', label: 'Posts & Analytics', icon: User }
           ].map((tab) => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
@@ -490,7 +608,7 @@ export function ProfilePage({ onNavigate, currentUser }) {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-1.5 px-3.5 sm:px-5 py-2.5 border-b-2 font-bold text-xs sm:text-sm whitespace-nowrap transition-all cursor-pointer shrink-0 ${
+                className={`flex items-center gap-1.5 px-3.5 sm:px-4 py-2.5 border-b-2 font-bold text-xs sm:text-sm whitespace-nowrap transition-all cursor-pointer shrink-0 ${
                   isActive
                     ? 'border-emerald-800 text-emerald-900 bg-white/60 rounded-t-xl'
                     : 'border-transparent text-slate-500 hover:text-slate-800'
@@ -506,104 +624,263 @@ export function ProfilePage({ onNavigate, currentUser }) {
         {/* Tab Contents */}
         <div className="mt-5">
           
-          {/* TAB 1: OVERVIEW */}
+          {/* TAB 1: OVERVIEW & COMPETENCIES */}
           {activeTab === 'overview' && (
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
               
               {/* Skill Matrix Column */}
-              <div className="lg:col-span-8 bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-6 shadow-soft">
-                <h3 className="font-extrabold text-base text-slate-900 flex items-center gap-2 mb-4">
-                  <Award className="w-5 h-5 text-emerald-700" />
-                  Ayush Skill Assessment Matrix
-                </h3>
+              <div className="lg:col-span-8 space-y-6">
+                
+                <div className="bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-6 shadow-xs">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="font-bold text-base text-slate-900 flex items-center gap-2">
+                      <Award className="w-5 h-5 text-emerald-700" />
+                      6-Axis Ayush Competency Breakdown
+                    </h3>
+                    <span className="text-xs text-slate-500 font-semibold bg-emerald-50 text-emerald-800 px-2.5 py-1 rounded-lg border border-emerald-200">
+                      Verified Diagnostic
+                    </span>
+                  </div>
 
-                <div className="space-y-4">
-                  {skillMatrix.map((item, idx) => (
-                    <div key={idx}>
-                      <div className="flex justify-between items-center mb-1 text-xs">
-                        <span className="font-extrabold text-slate-800 truncate pr-2">{item.name}</span>
-                        <div className="flex items-center gap-2 shrink-0">
-                          <span className="bg-emerald-50 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded-md hidden sm:inline">
-                            {item.status}
-                          </span>
-                          <span className="font-extrabold text-slate-900 text-xs sm:text-sm">{item.score}%</span>
+                  <div className="space-y-4">
+                    {skillMatrix.map((item, idx) => (
+                      <div key={idx}>
+                        <div className="flex justify-between items-center mb-1 text-xs">
+                          <span className="font-bold text-slate-800 truncate pr-2">{item.name}</span>
+                          <div className="flex items-center gap-2 shrink-0">
+                            <span className="text-[10px] text-slate-500 font-semibold">{item.percentile} Percentile</span>
+                            <span className="bg-emerald-50 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded-md hidden sm:inline">
+                              {item.status}
+                            </span>
+                            <span className="font-extrabold text-slate-900 text-xs sm:text-sm">{item.score}%</span>
+                          </div>
+                        </div>
+                        <div className="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
+                          <div 
+                            className="bg-gradient-to-r from-emerald-700 to-teal-500 h-2.5 rounded-full transition-all duration-500"
+                            style={{ width: `${item.score}%` }}
+                          ></div>
                         </div>
                       </div>
-                      <div className="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
-                        <div 
-                          className="bg-gradient-to-r from-emerald-700 to-teal-500 h-2.5 rounded-full transition-all duration-500"
-                          style={{ width: `${item.score}%` }}
-                        ></div>
-                      </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
+
+                  <div className="mt-6 pt-5 border-t border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                    <span className="text-xs text-slate-500 font-medium">Mapped to HSSC National Occupational Standards (NOS)</span>
+                    <button 
+                      onClick={() => onNavigate('skill')}
+                      className="text-xs font-bold text-emerald-800 hover:text-emerald-900 flex items-center gap-1 cursor-pointer"
+                    >
+                      <span>Take Diagnostic Assessment</span>
+                      <ChevronRight className="w-4 h-4" />
+                    </button>
+                  </div>
                 </div>
 
-                <div className="mt-6 pt-5 border-t border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-                  <span className="text-xs text-slate-500 font-medium">Verified by SkillSetu Diagnostic Engine</span>
-                  <button 
-                    onClick={() => onNavigate('skill')}
-                    className="text-xs font-bold text-emerald-800 hover:text-emerald-900 flex items-center gap-1 cursor-pointer"
-                  >
-                    <span>Take Assessment</span>
-                    <ChevronRight className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
+                {/* Academic Background & Qualifications */}
+                <div className="bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-6 shadow-xs">
+                  <h3 className="font-bold text-base text-slate-900 flex items-center gap-2 mb-4">
+                    <GraduationCap className="w-5 h-5 text-emerald-700" />
+                    Academic Profile & Institutional Records
+                  </h3>
 
-              {/* Sidebar Info */}
-              <div className="lg:col-span-4 space-y-6">
-                <div className="bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-6 shadow-soft">
-                  <h3 className="font-extrabold text-slate-900 text-sm mb-3">Academic & Credentials</h3>
-                  <div className="space-y-3 text-xs">
-                    <div>
-                      <span className="text-slate-400 font-semibold block">Degree Program</span>
-                      <span className="font-bold text-slate-800">{profileData.degree}</span>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                    <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/60">
+                      <span className="text-slate-400 font-semibold block text-[11px]">Degree Program</span>
+                      <span className="font-bold text-slate-900 text-sm mt-0.5 block">{profileData.degree}</span>
+                      <span className="text-slate-500 mt-1 block">Batch: {profileData.batch}</span>
                     </div>
-                    <div>
-                      <span className="text-slate-400 font-semibold block">Roll / Scholar ID</span>
-                      <span className="font-bold text-slate-800">{profileData.id}</span>
+
+                    <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/60">
+                      <span className="text-slate-400 font-semibold block text-[11px]">Academic Standing</span>
+                      <span className="font-bold text-slate-900 text-sm mt-0.5 block">{profileData.cgpa}</span>
+                      <span className="text-slate-500 mt-1 block">Institutional Guide: {profileData.preceptor}</span>
                     </div>
-                    <div>
-                      <span className="text-slate-400 font-semibold block">Official Contact</span>
-                      <span className="font-bold text-slate-800 break-all">{profileData.email}</span>
+
+                    <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/60">
+                      <span className="text-slate-400 font-semibold block text-[11px]">NCISM Registration</span>
+                      <span className="font-mono font-bold text-slate-900 text-xs mt-0.5 block">{profileData.ncismReg}</span>
+                      <span className="text-emerald-700 font-semibold mt-1 block flex items-center gap-1">
+                        <CheckCircle2 className="w-3.5 h-3.5" /> License Active
+                      </span>
                     </div>
-                    <div>
-                      <span className="text-slate-400 font-semibold block">Verified Contact</span>
-                      <span className="font-bold text-slate-800">{profileData.phone}</span>
+
+                    <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/60">
+                      <span className="text-slate-400 font-semibold block text-[11px]">ABHA Healthcare ID</span>
+                      <span className="font-mono font-bold text-slate-900 text-xs mt-0.5 block">{profileData.abhaId}</span>
+                      <span className="text-teal-700 font-semibold mt-1 block flex items-center gap-1">
+                        <ShieldCheck className="w-3.5 h-3.5" /> DigiLocker Verified
+                      </span>
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-gradient-to-br from-emerald-900 to-teal-950 text-white rounded-3xl p-5 sm:p-6 shadow-soft">
-                  <Sparkles className="w-5 h-5 text-emerald-400 mb-2" />
-                  <h3 className="font-extrabold text-base">Match Score for R&D Fellowship</h3>
-                  <p className="text-xs text-emerald-100 mt-1">
-                    Your profile matches 94% of criteria for Dabur & AIIA Junior R&D Fellow postings.
+              </div>
+
+              {/* Sidebar Credentials */}
+              <div className="lg:col-span-4 space-y-6">
+                
+                {/* Official Contacts */}
+                <div className="bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-6 shadow-xs">
+                  <h3 className="font-bold text-slate-900 text-sm mb-3">Verified Contact & Identity</h3>
+                  <div className="space-y-3 text-xs">
+                    <div>
+                      <span className="text-slate-400 font-semibold block">University Enrollment Roll</span>
+                      <span className="font-bold font-mono text-slate-800">{profileData.id}</span>
+                    </div>
+                    <div>
+                      <span className="text-slate-400 font-semibold block">Official Institutional Email</span>
+                      <span className="font-bold text-slate-800 break-all">{profileData.email}</span>
+                    </div>
+                    <div>
+                      <span className="text-slate-400 font-semibold block">Contact Number</span>
+                      <span className="font-bold text-slate-800">{profileData.phone}</span>
+                    </div>
+                    <div>
+                      <span className="text-slate-400 font-semibold block">Clinical Campus Location</span>
+                      <span className="font-bold text-slate-800">{profileData.location}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Industry Placement Match */}
+                <div className="bg-gradient-to-br from-emerald-800 to-teal-900 text-white rounded-3xl p-5 sm:p-6 shadow-xs">
+                  <Sparkles className="w-5 h-5 text-emerald-300 mb-2" />
+                  <h3 className="font-bold text-base">Match Score for R&D Fellowship</h3>
+                  <p className="text-xs text-emerald-100 mt-1 leading-relaxed">
+                    Your verified Schedule T GMP and HPLC skills match 94% of criteria for Dabur, Himalaya & AIIA Fellow postings.
                   </p>
                   <button
                     onClick={() => onNavigate('opportunities')}
-                    className="mt-4 w-full bg-emerald-500 hover:bg-emerald-400 text-emerald-950 font-extrabold text-xs py-2.5 rounded-xl transition-colors cursor-pointer"
+                    className="mt-4 w-full bg-white hover:bg-emerald-50 text-emerald-950 font-bold text-xs py-2.5 rounded-xl transition-colors cursor-pointer shadow-xs"
                   >
-                    View Matching Opportunities
+                    View Matching Job Openings
                   </button>
                 </div>
+
+                {/* Cryptographic Ledger Public Proof */}
+                <div className="bg-white rounded-3xl border border-emerald-200/80 p-5 shadow-xs text-xs space-y-2.5">
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-emerald-900 flex items-center gap-1.5">
+                      <Lock className="w-4 h-4 text-emerald-700" />
+                      SHA-256 Ledger Proof
+                    </span>
+                    <span className="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-md font-bold">
+                      VERIFIED
+                    </span>
+                  </div>
+                  <p className="font-mono text-[10px] text-slate-600 bg-slate-50 p-2 rounded-xl border border-slate-200/60 break-all">
+                    {profileData.verificationHash}
+                  </p>
+                  <button
+                    onClick={handleDownloadDossier}
+                    className="w-full py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold text-xs rounded-xl transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+                  >
+                    <Download className="w-3.5 h-3.5" />
+                    <span>Download Cryptographic Dossier</span>
+                  </button>
+                </div>
+
               </div>
 
             </div>
           )}
 
-          {/* TAB 2: BADGES */}
+          {/* TAB 2: CLINICAL ROTATIONS & CASES */}
+          {activeTab === 'rotations' && (
+            <div className="space-y-6">
+              
+              {/* Rotations Table */}
+              <div className="bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-6 shadow-xs">
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <h3 className="font-bold text-base text-slate-900 flex items-center gap-2">
+                      <BookOpen className="w-5 h-5 text-emerald-700" />
+                      Completed Clinical Rotations & Postings
+                    </h3>
+                    <p className="text-xs text-slate-500 mt-0.5">Formal rotatory clinical training supervised by senior Ayush preceptors.</p>
+                  </div>
+                </div>
+
+                <div className="overflow-x-auto">
+                  <table className="w-full text-xs text-left">
+                    <thead>
+                      <tr className="border-b border-slate-200 text-slate-400 font-bold uppercase text-[10px]">
+                        <th className="pb-3 pr-4">Clinical Department</th>
+                        <th className="pb-3 pr-4">Duration</th>
+                        <th className="pb-3 pr-4">Hospital Center</th>
+                        <th className="pb-3 pr-4">Cases Seen</th>
+                        <th className="pb-3 text-right">Preceptor Status</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100 font-medium">
+                      {clinicalRotations.map((rot, idx) => (
+                        <tr key={idx} className="hover:bg-slate-50/80 transition-colors">
+                          <td className="py-3.5 pr-4 font-bold text-slate-900">{rot.department}</td>
+                          <td className="py-3.5 pr-4 text-slate-600">{rot.duration}</td>
+                          <td className="py-3.5 pr-4 text-slate-600">{rot.hospital}</td>
+                          <td className="py-3.5 pr-4 font-bold text-emerald-800">{rot.casesSeen} Patients</td>
+                          <td className="py-3.5 text-right">
+                            <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${
+                              rot.status === 'Completed' 
+                                ? 'bg-emerald-100 text-emerald-900' 
+                                : 'bg-amber-100 text-amber-900'
+                            }`}>
+                              {rot.status}
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              {/* Patient Case Log */}
+              <div className="bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-6 shadow-xs space-y-4">
+                <h3 className="font-bold text-slate-900 text-base mb-1">Preceptor-Verified Patient Case Logs</h3>
+                <p className="text-xs text-slate-500 mb-4">
+                  Clinical case records and therapeutic protocols verified by institutional preceptors.
+                </p>
+
+                {[
+                  { title: 'Case Study #801: Amavata (Rheumatoid Arthritis) Protocol', date: 'Feb 14, 2026', preceptor: 'Prof. Meenakshi Joshi', diagnosis: 'Vata-Kapha Prakopa in Asthi-Majja', formulation: 'Simhanada Guggulu + Rasnasaptaka Kwath', outcome: '72% reduction in DAS-28 score over 28 days.' },
+                  { title: 'Case Study #762: Twak Vikara (Psoriasis) Shodhana Protocol', date: 'Jan 28, 2026', preceptor: 'Dr. R. K. Sharma', diagnosis: 'Tridoshaja Kustha with Kapha predominance', formulation: 'Vamana Karma followed by Mahatiktaka Ghrita', outcome: 'PASI score improved from 18.4 to 4.2.' },
+                  { title: 'Case Study #719: Medoroga (Metabolic Balance & Dyslipidemia)', date: 'Dec 18, 2025', preceptor: 'Dr. Ananya Vaidya', diagnosis: 'Medo Dhatu Dushti with Medovaha Srotas Blockage', formulation: 'Triphala Guggulu + Varunadi Kashaya', outcome: 'Serum triglycerides reduced by 22% over 6 weeks.' }
+                ].map((cs, idx) => (
+                  <div key={idx} className="p-4 rounded-2xl bg-slate-50 border border-slate-200/60 space-y-2">
+                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1">
+                      <h4 className="font-bold text-xs sm:text-sm text-slate-900">{cs.title}</h4>
+                      <span className="text-[10px] font-bold bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full shrink-0">
+                        Preceptor Approved
+                      </span>
+                    </div>
+                    <div className="text-xs text-slate-600 grid grid-cols-1 sm:grid-cols-2 gap-1.5 pt-1">
+                      <div><strong className="text-slate-800">Doshic Diagnosis:</strong> {cs.diagnosis}</div>
+                      <div><strong className="text-slate-800">Herbal Regimen:</strong> {cs.formulation}</div>
+                    </div>
+                    <div className="text-xs text-emerald-900 font-semibold bg-emerald-50/60 p-2 rounded-xl border border-emerald-100 mt-1">
+                      <strong>Clinical Outcome:</strong> {cs.outcome}
+                    </div>
+                    <span className="text-[10px] text-slate-400 block pt-1">Preceptor: {cs.preceptor} · Logged: {cs.date}</span>
+                  </div>
+                ))}
+              </div>
+
+            </div>
+          )}
+
+          {/* TAB 3: BADGES & CERTIFICATIONS */}
           {activeTab === 'badges' && (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {badges.map((badge, idx) => (
-                <div key={idx} className="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-soft hover:shadow-md transition-all flex flex-col justify-between">
+                <div key={idx} className="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-xs hover:shadow-md transition-all flex flex-col justify-between">
                   <div>
                     <div className="flex justify-between items-start mb-3">
                       <div className="w-10 h-10 rounded-xl bg-emerald-800 text-white flex items-center justify-center font-bold shadow-xs">
                         <Award className="w-5 h-5 text-emerald-300" />
                       </div>
-                      <span className="text-[10px] font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200/50">
+                      <span className="text-[10px] font-bold text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200/50">
                         Blockchain Verified
                       </span>
                     </div>
@@ -613,113 +890,144 @@ export function ProfilePage({ onNavigate, currentUser }) {
 
                   <div className="mt-4 pt-3 border-t border-slate-100 flex justify-between items-center text-[10px] text-slate-400 font-mono">
                     <span>Issued: {badge.date}</span>
-                    <span>{badge.code}</span>
+                    <span className="text-emerald-700 font-bold">{badge.code}</span>
                   </div>
                 </div>
               ))}
             </div>
           )}
 
-          {/* TAB 3: USER POSTS & ANALYTICS */}
+          {/* TAB 4: RESEARCH & PUBLICATIONS */}
+          {activeTab === 'research' && (
+            <div className="space-y-4">
+              <div className="bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-6 shadow-xs">
+                <h3 className="font-bold text-base text-slate-900 flex items-center gap-2 mb-2">
+                  <FileText className="w-5 h-5 text-emerald-700" />
+                  Peer-Reviewed Publications & National Grants
+                </h3>
+                <p className="text-xs text-slate-500 mb-5">
+                  Ayush academic research contributions in phytochemistry, pulse diagnostics, and herbal drug standardization.
+                </p>
+
+                <div className="space-y-4">
+                  {publications.map((pub, idx) => (
+                    <div key={idx} className="p-4 rounded-2xl bg-slate-50 border border-slate-200/60 space-y-2">
+                      <div className="flex justify-between items-start gap-2">
+                        <h4 className="font-bold text-xs sm:text-sm text-slate-900 leading-snug">{pub.title}</h4>
+                        <span className="text-[10px] font-bold bg-emerald-100 text-emerald-800 px-2.5 py-0.5 rounded-md shrink-0">
+                          {pub.badge}
+                        </span>
+                      </div>
+                      <p className="text-xs text-slate-600">
+                        <strong className="text-slate-800">{pub.journal}</strong> ({pub.year})
+                      </p>
+                      <div className="flex items-center justify-between pt-2 border-t border-slate-200/60 text-[11px]">
+                        <span className="font-mono text-slate-500">DOI: {pub.doi}</span>
+                        <button 
+                          onClick={handleDownloadDossier}
+                          className="text-emerald-800 font-bold hover:underline flex items-center gap-1 cursor-pointer"
+                        >
+                          <span>Download Pre-print</span>
+                          <Download className="w-3 h-3" />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 5: PRECEPTOR RECOMMENDATIONS */}
+          {activeTab === 'endorsements' && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {endorsements.map((end, idx) => (
+                <div key={idx} className="bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-6 shadow-xs space-y-4 flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-emerald-800 to-teal-900 text-white font-bold flex items-center justify-center shadow-xs">
+                        {end.avatar}
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-sm text-slate-900">{end.name}</h4>
+                        <p className="text-xs text-slate-500 font-medium">{end.designation}</p>
+                      </div>
+                    </div>
+                    <p className="text-xs sm:text-sm text-slate-700 italic leading-relaxed bg-slate-50 p-4 rounded-2xl border border-slate-200/60">
+                      "{end.quote}"
+                    </p>
+                  </div>
+                  <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-[10px] text-slate-400">
+                    <span>Verified Academic Endorsement</span>
+                    <span>{end.date}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* TAB 6: POSTS & ANALYTICS */}
           {activeTab === 'posts' && (
             <div className="space-y-6">
               
-              {/* Overall Post Analytics Dashboard Card */}
-              <div className="bg-gradient-to-br from-slate-900 via-slate-900 to-emerald-950 text-white rounded-3xl p-5 sm:p-6 shadow-md">
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-slate-800">
+              {/* Analytics Card (Harmonized to Emerald, No Dark Slate Blocks) */}
+              <div className="bg-gradient-to-br from-emerald-900 to-teal-950 text-white rounded-3xl p-5 sm:p-6 shadow-md border border-emerald-800">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-emerald-800/80">
                   <div>
-                    <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 text-[10px] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-wider flex items-center gap-1.5 w-fit">
+                    <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider flex items-center gap-1.5 w-fit">
                       <TrendingUp className="w-3.5 h-3.5" />
                       Post Analytics & Reach Overview
                     </span>
-                    <h3 className="text-lg sm:text-xl font-extrabold text-white mt-2">
+                    <h3 className="text-lg sm:text-xl font-bold text-white mt-2">
                       4,280 Total Post Impressions
                     </h3>
-                    <p className="text-xs text-slate-300 mt-0.5">
+                    <p className="text-xs text-emerald-200/80 mt-0.5">
                       Your clinical case posts reached +24% more preceptors & recruiters this month.
                     </p>
                   </div>
 
-                  <div className="flex items-center gap-2">
-                    <span className="bg-emerald-500 text-emerald-950 text-xs font-black px-3 py-1.5 rounded-xl shadow-xs">
-                      Top 5% Ayush Scholar Content
-                    </span>
-                  </div>
+                  <span className="bg-emerald-500 text-emerald-950 text-xs font-bold px-3 py-1.5 rounded-xl shadow-xs">
+                    Top 5% Ayush Scholar Content
+                  </span>
                 </div>
 
                 {/* Performance Metric Grid */}
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4">
-                  <div className="bg-slate-800/60 border border-slate-700/60 p-3 rounded-2xl">
-                    <span className="text-[11px] text-slate-400 font-semibold block">Total Views</span>
-                    <span className="text-lg sm:text-xl font-extrabold text-white">4,280</span>
-                    <span className="text-[10px] text-emerald-400 font-bold block mt-0.5">↑ +18% this week</span>
+                  <div className="bg-emerald-950/60 border border-emerald-700/50 p-3 rounded-2xl">
+                    <span className="text-[11px] text-emerald-300/80 font-semibold block">Total Views</span>
+                    <span className="text-lg sm:text-xl font-bold text-white">4,280</span>
+                    <span className="text-[10px] text-emerald-300 font-semibold block mt-0.5">↑ +18% this week</span>
                   </div>
 
-                  <div className="bg-slate-800/60 border border-slate-700/60 p-3 rounded-2xl">
-                    <span className="text-[11px] text-slate-400 font-semibold block">Post Engagements</span>
-                    <span className="text-lg sm:text-xl font-extrabold text-rose-400">399</span>
-                    <span className="text-[10px] text-rose-300 font-bold block mt-0.5">9.3% engagement</span>
+                  <div className="bg-emerald-950/60 border border-emerald-700/50 p-3 rounded-2xl">
+                    <span className="text-[11px] text-emerald-300/80 font-semibold block">Post Engagements</span>
+                    <span className="text-lg sm:text-xl font-bold text-white">399</span>
+                    <span className="text-[10px] text-emerald-200 font-semibold block mt-0.5">9.3% engagement</span>
                   </div>
 
-                  <div className="bg-slate-800/60 border border-slate-700/60 p-3 rounded-2xl">
-                    <span className="text-[11px] text-slate-400 font-semibold block">Faculty Comments</span>
-                    <span className="text-lg sm:text-xl font-extrabold text-teal-300">9</span>
-                    <span className="text-[10px] text-teal-400 font-bold block mt-0.5">3 preceptor threads</span>
+                  <div className="bg-emerald-950/60 border border-emerald-700/50 p-3 rounded-2xl">
+                    <span className="text-[11px] text-emerald-300/80 font-semibold block">Faculty Comments</span>
+                    <span className="text-lg sm:text-xl font-bold text-white">9</span>
+                    <span className="text-[10px] text-emerald-300 font-semibold block mt-0.5">3 preceptor threads</span>
                   </div>
 
-                  <div className="bg-slate-800/60 border border-slate-700/60 p-3 rounded-2xl">
-                    <span className="text-[11px] text-slate-400 font-semibold block">Recruiter Profile Visits</span>
-                    <span className="text-lg sm:text-xl font-extrabold text-amber-300">128</span>
-                    <span className="text-[10px] text-amber-400 font-bold block mt-0.5">Via posted cases</span>
-                  </div>
-                </div>
-
-                {/* Audience Demographics Progress Bars */}
-                <div className="mt-5 pt-4 border-t border-slate-800/80">
-                  <span className="text-[10px] font-extrabold uppercase text-slate-400 tracking-wider block mb-2">Audience Demographics Breakdown</span>
-                  <div className="space-y-2.5">
-                    <div>
-                      <div className="flex justify-between text-xs mb-1">
-                        <span className="text-slate-300 font-semibold">Ayush Scholars & Students</span>
-                        <span className="font-extrabold text-emerald-400">62% (2,653 views)</span>
-                      </div>
-                      <div className="w-full bg-slate-800 rounded-full h-2">
-                        <div className="bg-emerald-500 h-2 rounded-full" style={{ width: '62%' }}></div>
-                      </div>
-                    </div>
-
-                    <div>
-                      <div className="flex justify-between text-xs mb-1">
-                        <span className="text-slate-300 font-semibold">Industry Recruiters (Dabur, Himalaya, AVP)</span>
-                        <span className="font-extrabold text-teal-300">26% (1,112 views)</span>
-                      </div>
-                      <div className="w-full bg-slate-800 rounded-full h-2">
-                        <div className="bg-teal-400 h-2 rounded-full" style={{ width: '26%' }}></div>
-                      </div>
-                    </div>
-
-                    <div>
-                      <div className="flex justify-between text-xs mb-1">
-                        <span className="text-slate-300 font-semibold">Faculty Preceptors & Senior Physicians</span>
-                        <span className="font-extrabold text-amber-300">12% (515 views)</span>
-                      </div>
-                      <div className="w-full bg-slate-800 rounded-full h-2">
-                        <div className="bg-amber-400 h-2 rounded-full" style={{ width: '12%' }}></div>
-                      </div>
-                    </div>
+                  <div className="bg-emerald-950/60 border border-emerald-700/50 p-3 rounded-2xl">
+                    <span className="text-[11px] text-emerald-300/80 font-semibold block">Recruiter Views</span>
+                    <span className="text-lg sm:text-xl font-bold text-white">128</span>
+                    <span className="text-[10px] text-emerald-300 font-semibold block mt-0.5">Via posted cases</span>
                   </div>
                 </div>
               </div>
 
-              {/* Per-Post Individual Analytics Breakdown */}
+              {/* Per-Post Breakdown */}
               <div className="space-y-4">
-                <h4 className="font-extrabold text-sm text-slate-900 flex items-center gap-2">
+                <h4 className="font-bold text-sm text-slate-900 flex items-center gap-2">
                   <BarChart3 className="w-4 h-4 text-emerald-700" />
-                  Your Posts & Individual Post Analytics
+                  Your Posts & Individual Analytics
                 </h4>
 
                 {userPosts.map((post) => (
-                  <div key={post.id} className="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-soft hover:shadow-md transition-shadow">
+                  <div key={post.id} className="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-xs hover:shadow-md transition-shadow">
                     <div className="flex justify-between items-start mb-2">
                       <span className="bg-emerald-50 text-emerald-800 text-[10px] font-bold px-2.5 py-0.5 rounded-md border border-emerald-200/60">
                         {post.category}
@@ -730,11 +1038,10 @@ export function ProfilePage({ onNavigate, currentUser }) {
                     <h4 className="font-bold text-slate-900 text-base mb-1">{post.title}</h4>
                     <p className="text-xs text-slate-600 mb-3.5 leading-relaxed">{post.snippet}</p>
 
-                    {/* Post Analytics Sub-Card */}
                     <div className="bg-slate-50 p-3 rounded-xl border border-slate-200/60 mb-3 grid grid-cols-2 sm:grid-cols-4 gap-2 text-center text-xs">
                       <div>
                         <span className="text-[10px] text-slate-400 font-bold block">Post Views</span>
-                        <span className="font-extrabold text-slate-900 flex items-center justify-center gap-1">
+                        <span className="font-bold text-slate-900 flex items-center justify-center gap-1">
                           <Eye className="w-3.5 h-3.5 text-slate-500" />
                           {post.views}
                         </span>
@@ -742,15 +1049,15 @@ export function ProfilePage({ onNavigate, currentUser }) {
 
                       <div>
                         <span className="text-[10px] text-slate-400 font-bold block">Recruiter Views</span>
-                        <span className="font-extrabold text-emerald-800 flex items-center justify-center gap-1">
+                        <span className="font-bold text-emerald-800 flex items-center justify-center gap-1">
                           <Building className="w-3.5 h-3.5 text-emerald-600" />
                           {post.recruiterViews}
                         </span>
                       </div>
 
                       <div>
-                        <span className="text-[10px] text-slate-400 font-bold block">Likes & Applauds</span>
-                        <span className="font-extrabold text-rose-600 flex items-center justify-center gap-1">
+                        <span className="text-[10px] text-slate-400 font-bold block">Likes</span>
+                        <span className="font-bold text-rose-600 flex items-center justify-center gap-1">
                           <Heart className="w-3.5 h-3.5 fill-rose-600" />
                           {post.likes}
                         </span>
@@ -758,7 +1065,7 @@ export function ProfilePage({ onNavigate, currentUser }) {
 
                       <div>
                         <span className="text-[10px] text-slate-400 font-bold block">Shares</span>
-                        <span className="font-extrabold text-teal-700 flex items-center justify-center gap-1">
+                        <span className="font-bold text-teal-700 flex items-center justify-center gap-1">
                           <MessageSquare className="w-3.5 h-3.5" />
                           {post.shares}
                         </span>
@@ -772,40 +1079,15 @@ export function ProfilePage({ onNavigate, currentUser }) {
 
                       <button
                         onClick={() => onNavigate('feed')}
-                        className="text-emerald-800 font-bold hover:underline text-xs"
+                        className="text-emerald-800 font-bold hover:underline text-xs cursor-pointer"
                       >
-                        View Live on Feed →
+                        View on Feed →
                       </button>
                     </div>
                   </div>
                 ))}
               </div>
 
-            </div>
-          )}
-
-          {/* TAB 4: PORTFOLIO */}
-          {activeTab === 'portfolio' && (
-            <div className="bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-6 shadow-soft space-y-4">
-              <h3 className="font-extrabold text-slate-900 text-base mb-1">Verified Patient Clinical Logbook</h3>
-              <p className="text-xs text-slate-500 mb-4">
-                Clinical observations verified by faculty preceptors at National Institute of Ayurveda Hospital.
-              </p>
-
-              {[
-                { title: 'Case Study #801: Amavata (Rheumatoid Arthritis) Management', date: 'Feb 14, 2026', preceptor: 'Prof. Meenakshi Joshi', status: 'Preceptor Approved' },
-                { title: 'Case Study #762: Twak Vikara (Psoriasis) Shodhana Protocol', date: 'Jan 28, 2026', preceptor: 'Dr. R. K. Sharma', status: 'Preceptor Approved' },
-              ].map((cs, idx) => (
-                <div key={idx} className="p-4 rounded-2xl bg-slate-50 border border-slate-200/60 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
-                  <div>
-                    <h4 className="font-bold text-xs sm:text-sm text-slate-900">{cs.title}</h4>
-                    <span className="text-[11px] text-slate-500 block mt-0.5">Preceptor: {cs.preceptor} • {cs.date}</span>
-                  </div>
-                  <span className="text-[10px] font-extrabold bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full shrink-0">
-                    {cs.status}
-                  </span>
-                </div>
-              ))}
             </div>
           )}
 

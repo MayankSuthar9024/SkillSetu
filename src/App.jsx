@@ -52,8 +52,12 @@ export function App() {
         setActivePage('dashboard');
       } else if (['features', 'about', 'opportunities', 'how-it-works', 'skill', 'industry', 'feed', 'profile', 'messages'].includes(hash)) {
         setActivePage(hash);
-      } else if (!hash) {
-        setActivePage('home');
+      } else if (!hash || hash === 'home') {
+        if (currentUser) {
+          setActivePage('dashboard');
+        } else {
+          setActivePage('home');
+        }
       }
     };
 
@@ -103,6 +107,12 @@ export function App() {
   };
 
   const handleNavigate = (page) => {
+    if (currentUser) {
+      setActivePage('dashboard');
+      window.location.hash = `dashboard-${activePortalId}`;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
     if (page === 'login' || page === 'portals') {
       handleOpenAuth();
     } else if (page === 'dashboard') {
@@ -132,7 +142,7 @@ export function App() {
   };
 
   // 1. DEDICATED PORTAL SELECTION / LOGIN PAGE
-  if (activePage === 'login' || activePage === 'portals') {
+  if (!currentUser && (activePage === 'login' || activePage === 'portals')) {
     return (
       <PortalSelectPage
         onBackToHome={handleBackToHome}
@@ -143,15 +153,15 @@ export function App() {
     );
   }
 
-  // 2. AUTHENTICATED STAKEHOLDER DASHBOARD
-  if (activePage === 'dashboard') {
+  // 2. AUTHENTICATED STAKEHOLDER DASHBOARD (Once signed in, user stays on platform)
+  if (currentUser || activePage === 'dashboard') {
     return (
       <StakeholderDashboard
         activePortalId={activePortalId}
-        currentUser={currentUser}
+        currentUser={currentUser || PORTALS_DATA[0].profileUser}
         onSwitchPortal={handleSwitchPortal}
         onLogout={handleLogout}
-        onBackToHome={handleBackToHome}
+        onBackToHome={() => {}}
         contrastMode={contrastMode}
         onToggleContrast={handleToggleContrast}
       />

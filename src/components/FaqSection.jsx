@@ -84,7 +84,7 @@ export function FaqSection({ onOpenReadinessModal, onOpenAuthModal }) {
           <div className="flex justify-center pt-2">
             <button 
               onClick={() => onOpenAuthModal('login')}
-              className="shimmer-btn bg-slate-900 text-white font-bold text-sm px-8 py-3 rounded-xl hover:bg-slate-800 transition-all shadow-soft active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
+              className="shimmer-btn bg-emerald-800 text-white font-bold text-sm px-8 py-3 rounded-xl hover:bg-emerald-900 transition-all shadow-soft active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
             >
               <span className="material-symbols-outlined text-base text-emerald-400">login</span>
               <span>Sign In to Portal</span>

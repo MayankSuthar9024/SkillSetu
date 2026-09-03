@@ -390,7 +390,7 @@ export const StudentPortalView = ({ user }) => {
 
               <button
                 onClick={() => setEnrolledCourse(mod.id)}
-                className="w-full py-2 px-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition-colors cursor-pointer"
+                className="w-full py-2 px-3 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-white text-xs font-bold transition-colors cursor-pointer"
               >
                 {enrolledCourse === mod.id ? (
                   <span className="flex items-center justify-center gap-1.5">
