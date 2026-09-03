@@ -14,7 +14,9 @@ import {
   Home,
   BarChart3,
   Plus,
-  MessageSquare
+  MessageSquare,
+  Landmark,
+  ShieldCheck
 } from 'lucide-react';
 import { PORTALS_DATA, PLATFORM_METADATA } from '../data/portalData';
 
@@ -45,9 +47,9 @@ export const StakeholderDashboard = ({
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [openCreatePostModal, setOpenCreatePostModal] = useState(false);
 
-  // Automatically default to 'console' when logging in or switching to Company Portal
+  // Automatically default to 'console' when logging in or switching to any non-student portal
   React.useEffect(() => {
-    if (activePortalId === 'company') {
+    if (activePortalId && activePortalId !== 'student') {
       setActiveTab('console');
     }
   }, [activePortalId]);
@@ -219,16 +221,42 @@ export const StakeholderDashboard = ({
     { id: 'console', label: 'Console', icon: Layers }
   ];
 
-  const companyNavItems = [
-    { id: 'console', label: 'Console', icon: Layers },
-    { id: 'profile', label: 'Company', icon: Building2 },
-    { id: 'jobs', label: 'Talent', icon: Briefcase },
-    { id: 'messages', label: 'Messages', icon: MessageSquare },
-    { id: 'network', label: 'Industry', icon: Building2 },
-    { id: 'feed', label: 'Feed', icon: Home }
-  ];
+  const roleNavItems = {
+    company: [
+      { id: 'console', label: 'Console', icon: Layers },
+      { id: 'profile', label: 'Company', icon: Building2 },
+      { id: 'jobs', label: 'Talent', icon: Briefcase },
+      { id: 'messages', label: 'Messages', icon: MessageSquare },
+      { id: 'network', label: 'Industry', icon: Building2 },
+      { id: 'feed', label: 'Feed', icon: Home }
+    ],
+    faculty: [
+      { id: 'console', label: 'Console', icon: Layers },
+      { id: 'profile', label: 'Faculty', icon: User },
+      { id: 'skills', label: 'Skills', icon: Award },
+      { id: 'messages', label: 'Messages', icon: MessageSquare },
+      { id: 'network', label: 'Industry', icon: Building2 },
+      { id: 'feed', label: 'Feed', icon: Home }
+    ],
+    college: [
+      { id: 'console', label: 'Console', icon: Layers },
+      { id: 'profile', label: 'College', icon: Landmark },
+      { id: 'jobs', label: 'Placements', icon: Briefcase },
+      { id: 'messages', label: 'Messages', icon: MessageSquare },
+      { id: 'network', label: 'Industry', icon: Building2 },
+      { id: 'feed', label: 'Feed', icon: Home }
+    ],
+    admin: [
+      { id: 'console', label: 'Console', icon: Layers },
+      { id: 'profile', label: 'Ministry', icon: ShieldCheck },
+      { id: 'skills', label: 'Skills', icon: Award },
+      { id: 'messages', label: 'Messages', icon: MessageSquare },
+      { id: 'network', label: 'Industry', icon: Building2 },
+      { id: 'feed', label: 'Feed', icon: Home }
+    ]
+  };
 
-  const navItems = activePortalId === 'company' ? companyNavItems : defaultNavItems;
+  const navItems = roleNavItems[activePortalId] || defaultNavItems;
 
   return (
     <div className="min-h-screen bg-[#f3f7f5] flex flex-col font-sans text-slate-900 overflow-x-hidden relative">

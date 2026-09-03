@@ -24,15 +24,25 @@ import {
 } from 'lucide-react';
 
 import { CompanyProfileView } from '../components/portals/CompanyProfileView';
+import { FacultyProfileView } from '../components/portals/FacultyProfileView';
+import { CollegeProfileView } from '../components/portals/CollegeProfileView';
+import { MinistryAdminProfileView } from '../components/portals/MinistryAdminProfileView';
 
 export function ProfilePage({ onNavigate, currentUser, activePortalId }) {
-  const isCompanyUser = activePortalId === 'company' || 
-    currentUser?.role?.toLowerCase().includes('recruiter') || 
-    currentUser?.institution?.toLowerCase().includes('dabur') || 
-    currentUser?.id?.includes('DABUR');
-
-  if (isCompanyUser) {
+  if (activePortalId === 'company' || currentUser?.role?.toLowerCase().includes('recruiter') || currentUser?.institution?.toLowerCase().includes('dabur')) {
     return <CompanyProfileView user={currentUser} onNavigate={onNavigate} />;
+  }
+
+  if (activePortalId === 'faculty' || currentUser?.role?.toLowerCase().includes('professor') || currentUser?.role?.toLowerCase().includes('preceptor') || currentUser?.id?.includes('FAC-')) {
+    return <FacultyProfileView user={currentUser} />;
+  }
+
+  if (activePortalId === 'college' || currentUser?.role?.toLowerCase().includes('dean') || currentUser?.id?.includes('AISHE-')) {
+    return <CollegeProfileView user={currentUser} />;
+  }
+
+  if (activePortalId === 'admin' || currentUser?.role?.toLowerCase().includes('director general') || currentUser?.role?.toLowerCase().includes('ministry') || currentUser?.id?.includes('GOI-')) {
+    return <MinistryAdminProfileView user={currentUser} />;
   }
 
   const [activeTab, setActiveTab] = useState('overview');
