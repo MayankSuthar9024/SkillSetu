@@ -260,43 +260,6 @@ export function FeedPage({ onNavigate, currentUser, openCreatePostModal, onClose
   return (
     <div className="min-h-screen bg-[#f7faf8] text-slate-900 pb-16 overflow-x-hidden">
       
-      {/* Feed Hero Header Banner */}
-      <div className="bg-gradient-to-r from-emerald-900 via-emerald-800 to-teal-900 text-white py-6 sm:py-7 px-4 sm:px-6 rounded-3xl shadow-md mb-6">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-          <div>
-            <div className="flex items-center gap-2 mb-2">
-              <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 text-xs font-extrabold px-3 py-1 rounded-full uppercase tracking-wider flex items-center gap-1.5 shrink-0">
-                <Sparkles className="w-3.5 h-3.5 shrink-0" />
-                Community Feed
-              </span>
-            </div>
-            <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold tracking-tight">
-              Ayush Doctors & Scholars Community
-            </h1>
-            <p className="text-emerald-100 text-xs sm:text-sm max-w-2xl mt-1.5">
-              Read medical case studies, research updates, verified skill badges, and job openings.
-            </p>
-          </div>
-
-          <div className="flex gap-2.5 w-full md:w-auto">
-            <button
-              onClick={() => setShowCreatePost(true)}
-              className="flex-1 md:flex-none bg-emerald-400 hover:bg-emerald-300 text-emerald-950 font-extrabold text-xs px-4 py-2.5 rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
-            >
-              <Sparkles className="w-4 h-4 shrink-0" />
-              <span>+ Create Post</span>
-            </button>
-
-            <button
-              onClick={() => onNavigate('profile')}
-              className="flex-1 md:flex-none bg-white/10 hover:bg-white/20 text-white font-bold text-xs px-4 py-2.5 rounded-xl backdrop-blur-md transition-all flex items-center justify-center gap-2 border border-white/20 cursor-pointer"
-            >
-              <User className="w-4 h-4 shrink-0" />
-              <span>My Profile</span>
-            </button>
-          </div>
-        </div>
-      </div>
 
       {/* Main Content Layout */}
       <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6">
