@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import { motion, useMotionValue, useTransform, useSpring } from 'framer-motion';
-import { SAMPLE_STUDENTS, TRUST_METRICS } from '../data/stitchData';
+import { TRUST_METRICS } from '../data/stitchData';
 
 export function Hero({ onGetStarted }) {
-  const [selectedStudentIndex, setSelectedStudentIndex] = useState(0);
-  const currentStudent = SAMPLE_STUDENTS[selectedStudentIndex];
 
   // Apple-style subtle 3D card tilt on mouse move
   const mouseX = useMotionValue(0);
@@ -172,32 +170,25 @@ export function Hero({ onGetStarted }) {
               <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
             </div>
             
-            {/* Header & Student Switcher */}
+            {/* Card Header: Standardized Benchmark System */}
             <div className="flex flex-wrap items-center justify-between gap-4 mb-6 border-b border-outline-variant/20 pb-5">
-              <div className="flex items-center gap-4">
-                <div className="w-14 h-14 rounded-2xl ring-2 ring-primary/20 p-0.5 overflow-hidden bg-surface-container shadow-inner">
-                  <img 
-                    className="w-full h-full object-cover rounded-2xl" 
-                    src={currentStudent.avatar} 
-                    alt={currentStudent.name} 
-                  />
+              <div className="flex items-center gap-3.5">
+                <div className="w-12 h-12 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 flex items-center justify-center shadow-xs">
+                  <span className="material-symbols-outlined text-2xl">radar</span>
                 </div>
                 <div>
-                  <h3 className="font-serif text-xl font-bold text-on-surface flex items-center gap-2">
-                    {currentStudent.name}
+                  <h3 className="font-serif text-xl font-bold text-on-surface">
+                    Ayush Competency Benchmark
                   </h3>
-                  <p className="text-xs sm:text-sm text-on-surface-variant font-medium">
-                    {currentStudent.degree}
-                  </p>
-                  <p className="text-[11px] text-outline truncate max-w-[200px]">
-                    {currentStudent.institution}
+                  <p className="text-xs text-on-surface-variant font-medium">
+                    Verified Clinical & Industrial Assessment Matrix
                   </p>
                 </div>
               </div>
 
               <div className="bg-secondary-container text-tertiary px-3.5 py-1.5 rounded-full text-xs font-bold flex items-center gap-1.5 shadow-2xs">
                 <span className="material-symbols-outlined text-base">verified</span> 
-                {currentStudent.verifiedStatus}
+                100% SHA-256 Verifiable
               </div>
             </div>
 
@@ -206,32 +197,32 @@ export function Hero({ onGetStarted }) {
               <div className="flex justify-between items-end mb-2">
                 <div>
                   <span className="font-label-sm text-xs uppercase tracking-wider text-outline block">Clinical Competency</span>
-                  <span className="font-headline-md text-sm font-semibold text-on-surface-variant">Readiness Score</span>
+                  <span className="font-headline-md text-sm font-semibold text-on-surface-variant">Overall Industry Readiness Index</span>
                 </div>
                 <div className="text-right">
-                  <motion.span 
-                    key={currentStudent.readinessScore}
-                    initial={{ opacity: 0, y: -4 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="font-display-lg text-3xl font-extrabold text-primary block"
-                  >
-                    {currentStudent.readinessScore}%
-                  </motion.span>
+                  <span className="font-display-lg text-3xl font-extrabold text-primary block">
+                    88%
+                  </span>
                 </div>
               </div>
               <div className="w-full bg-surface-container-high h-3.5 rounded-full overflow-hidden p-0.5">
                 <motion.div 
                   initial={{ width: 0 }}
-                  animate={{ width: `${currentStudent.readinessScore}%` }}
+                  animate={{ width: '88%' }}
                   transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
                   className="bg-gradient-to-r from-primary via-emerald-600 to-amber-500 h-full rounded-full" 
                 />
               </div>
             </div>
 
-            {/* Assessment Cards */}
+            {/* Verified Competency Benchmark Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
-              {currentStudent.assessments.map((ast, idx) => (
+              {[
+                { name: 'Schedule T GMP Compliance', score: '94/100', icon: 'verified' },
+                { name: 'HPTLC Standardization Assay', score: '88/100', icon: 'biotech' },
+                { name: 'Clinical Nadi Pariksha Protocol', score: '92/100', icon: 'ecg_heart' },
+                { name: 'Good Clinical Practices (GCP)', score: '96/100', icon: 'assignment_turned_in' }
+              ].map((ast, idx) => (
                 <motion.div 
                   key={idx}
                   whileHover={{ scale: 1.02 }}
@@ -248,24 +239,15 @@ export function Hero({ onGetStarted }) {
               ))}
             </div>
 
-            {/* Candidate Profile Showcase */}
-            <div className="mt-6 pt-4 border-t border-outline-variant/20 flex items-center justify-between text-xs">
-              <span className="text-outline font-medium">Featured Candidates:</span>
-              <div className="flex gap-1.5">
-                {SAMPLE_STUDENTS.map((st, i) => (
-                  <button
-                    key={st.id}
-                    onClick={() => setSelectedStudentIndex(i)}
-                    className={`px-2.5 py-1 rounded-lg font-semibold transition-all cursor-pointer ${
-                      selectedStudentIndex === i
-                        ? 'bg-primary text-on-primary shadow-xs scale-105'
-                        : 'bg-surface-container text-on-surface-variant hover:bg-surface-container-high'
-                    }`}
-                  >
-                    {st.name.split(' ')[0]}
-                  </button>
-                ))}
-              </div>
+            {/* Industry Pipeline Status */}
+            <div className="mt-6 pt-4 border-t border-outline-variant/20 flex items-center justify-between text-xs text-slate-600">
+              <span className="flex items-center gap-1.5 font-medium">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span>Direct Talent Pipeline Active</span>
+              </span>
+              <span className="font-bold text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded-md border border-emerald-200/80">
+                7,345+ Pharma Units Linked
+              </span>
             </div>
 
           </motion.div>

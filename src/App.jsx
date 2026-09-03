@@ -168,7 +168,7 @@ export function App() {
         setActivePage={handleNavigate}
         onOpenReadinessModal={() => setIsReadinessModalOpen(true)}
         onOpenAuthModal={handleOpenAuth}
-        currentUser={activeUser}
+        currentUser={currentUser}
       />
 
       {/* Main Content Area Based on Active Page */}
@@ -382,17 +382,19 @@ export function App() {
         onClose={() => setIsReadinessModalOpen(false)}
       />
 
-      {/* Shared Footer */}
-      <Footer
-        onNavigate={(page) => {
-          if (page === 'login') {
-            handleOpenAuth();
-          } else {
-            handleNavigate(page);
-          }
-        }}
-        onSeeHowItWorks={handleSeeHowItWorks}
-      />
+      {/* Shared Footer - Removed from landing page per user flow specification */}
+      {activePage !== 'home' && (
+        <Footer
+          onNavigate={(page) => {
+            if (page === 'login') {
+              handleOpenAuth();
+            } else {
+              handleNavigate(page);
+            }
+          }}
+          onSeeHowItWorks={handleSeeHowItWorks}
+        />
+      )}
 
     </div>
   );
