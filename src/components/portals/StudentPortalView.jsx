@@ -15,13 +15,15 @@ import {
   Clock,
   ChevronRight,
   User,
-  LayoutGrid
+  LayoutGrid,
+  X
 } from 'lucide-react';
 import { HERO_STATS, PLATFORM_METADATA } from '../../data/portalData';
 
 export const StudentPortalView = ({ user }) => {
   const [activeTab, setActiveTab] = useState('assessment');
   const [selectedAssessmentOption, setSelectedAssessmentOption] = useState(null);
+  const [hasAwardedBonus, setHasAwardedBonus] = useState(false);
   const [assessmentScore, setAssessmentScore] = useState(88);
   const [appliedJobs, setAppliedJobs] = useState({});
   const [enrolledCourse, setEnrolledCourse] = useState(null);
@@ -71,27 +73,27 @@ export const StudentPortalView = ({ user }) => {
   const bridgeModules = [
     {
       id: 'bm-1',
-      title: 'Micro-Sprint: Schedule T GMP Cleanroom Protocol',
-      duration: '45 Mins',
-      sponsor: 'Apex Ayush Pharmacopoeia',
+      title: 'Schedule T GMP Cleanroom Protocol',
+      duration: '15 Mins',
+      sponsor: 'Dabur R&D & AIIA Preceptors',
       status: 'Ready to Solve',
-      badge: 'Tamper-Proof Badge'
+      badge: 'Schedule T Certified'
     },
     {
       id: 'bm-2',
       title: 'HPTLC Rf Value Quantification & Marker Assay',
-      duration: '60 Mins',
-      sponsor: 'NIA Central Instrumentation Lab',
+      duration: '15 Mins',
+      sponsor: 'Patanjali Central Instrumentation Lab',
       status: 'In Progress (60%)',
-      badge: 'QC Specialist'
+      badge: 'QC Analyst'
     },
     {
       id: 'bm-3',
-      title: 'National Ayush Pharmacovigilance Case Review',
-      duration: '30 Mins',
-      sponsor: 'Ministry of Ayush Adverse Event Cell',
+      title: 'Good Clinical Practices (GCP) & Protocol Case Review',
+      duration: '15 Mins',
+      sponsor: 'CCRAS SPARK-4.0 Research Cell',
       status: 'Enrolled',
-      badge: 'PV Associate'
+      badge: 'Clinical Associate'
     }
   ];
 
@@ -115,7 +117,7 @@ export const StudentPortalView = ({ user }) => {
               <h2 className="text-lg sm:text-xl font-extrabold text-slate-900 truncate">{user.name}</h2>
               <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-200 flex items-center gap-1 shrink-0">
                 <ShieldCheck className="w-3.5 h-3.5 shrink-0" />
-                ABHA Verified
+                100% SHA-256 Verifiable Ayush Portfolio
               </span>
             </div>
             <p className="text-xs text-slate-500 mt-1 break-words">
@@ -141,54 +143,54 @@ export const StudentPortalView = ({ user }) => {
         </div>
       </div>
 
-      {/* Portal Navigation Tabs */}
-      <div className="flex flex-wrap items-center gap-2 border-b border-slate-200 pb-2">
+      {/* Portal Navigation Tabs: Radar > Bridge > 1-Click Apply > Ayush Passport */}
+      <div className="flex items-center gap-2 border-b border-slate-200 pb-2 overflow-x-auto no-scrollbar py-1">
         <button
           onClick={() => setActiveTab('assessment')}
-          className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 ${
+          className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 shrink-0 ${
             activeTab === 'assessment'
               ? 'bg-emerald-800 text-white shadow-xs'
               : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
           }`}
         >
           <Compass className="w-4 h-4" />
-          <span>01 · Diagnostic Radar & Skill Assessment</span>
-        </button>
-
-        <button
-          onClick={() => setActiveTab('jobs')}
-          className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 ${
-            activeTab === 'jobs'
-              ? 'bg-emerald-800 text-white shadow-xs'
-              : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
-          }`}
-        >
-          <Briefcase className="w-4 h-4" />
-          <span>02 · 1-Click Verified Job Matches ({jobsList.length})</span>
+          <span>Phase 1: 6-Axis Radar & Diagnostic Test</span>
         </button>
 
         <button
           onClick={() => setActiveTab('bridge')}
-          className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 ${
+          className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 shrink-0 ${
             activeTab === 'bridge'
               ? 'bg-emerald-800 text-white shadow-xs'
               : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
           }`}
         >
           <BookOpen className="w-4 h-4" />
-          <span>03 · Micro-Bridge Courses & Sprints</span>
+          <span>Phase 2: 15-Min Bridge Courses</span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab('jobs')}
+          className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 shrink-0 ${
+            activeTab === 'jobs'
+              ? 'bg-emerald-800 text-white shadow-xs'
+              : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
+          }`}
+        >
+          <Briefcase className="w-4 h-4" />
+          <span>Phase 3: 1-Click Placements ({jobsList.length})</span>
         </button>
 
         <button
           onClick={() => setActiveTab('dossier')}
-          className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 ${
+          className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 shrink-0 ${
             activeTab === 'dossier'
               ? 'bg-emerald-800 text-white shadow-xs'
               : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
           }`}
         >
           <Award className="w-4 h-4" />
-          <span>04 · Cryptographic Digital Portfolio</span>
+          <span>Verified Digital Dossier</span>
         </button>
       </div>
 
@@ -244,7 +246,7 @@ export const StudentPortalView = ({ user }) => {
                 </span>
                 <span className="text-xs text-slate-400">Schedule T GMP</span>
               </div>
-              <span className="text-xs font-mono font-bold text-emerald-700">+10 Vector Weight</span>
+              <span className="text-xs font-semibold text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded-md">Competency Weight: +10 pts</span>
             </div>
 
             <p className="text-sm font-bold text-slate-900 leading-relaxed">
@@ -262,8 +264,9 @@ export const StudentPortalView = ({ user }) => {
                   key={opt.id}
                   onClick={() => {
                     setSelectedAssessmentOption(opt.id);
-                    if (opt.isCorrect && selectedAssessmentOption !== opt.id) {
+                    if (opt.isCorrect && !hasAwardedBonus) {
                       setAssessmentScore(prev => Math.min(100, prev + 2));
+                      setHasAwardedBonus(true);
                     }
                   }}
                   className={`w-full text-left p-3.5 rounded-xl text-xs font-medium transition-all cursor-pointer border flex items-center justify-between ${
@@ -276,8 +279,18 @@ export const StudentPortalView = ({ user }) => {
                 >
                   <span>{opt.text}</span>
                   {selectedAssessmentOption === opt.id && (
-                    <span className={`text-xs font-bold ${opt.isCorrect ? 'text-emerald-700' : 'text-red-600'}`}>
-                      {opt.isCorrect ? '✓ Correct Benchmark (+2%)' : '✕ Gap Identified'}
+                    <span className={`text-xs font-bold flex items-center gap-1 shrink-0 ${opt.isCorrect ? 'text-emerald-700' : 'text-red-600'}`}>
+                      {opt.isCorrect ? (
+                        <>
+                          <CheckCircle2 className="w-3.5 h-3.5" />
+                          <span>Correct Benchmark (+2%)</span>
+                        </>
+                      ) : (
+                        <>
+                          <X className="w-3.5 h-3.5" />
+                          <span>Skill Gap Identified</span>
+                        </>
+                      )}
                     </span>
                   )}
                 </button>
@@ -344,11 +357,11 @@ export const StudentPortalView = ({ user }) => {
                   {appliedJobs[job.id] ? (
                     <>
                       <CheckCircle2 className="w-4 h-4 text-emerald-300" />
-                      <span>Applied (Dossier Sent)</span>
+                      <span>Application Submitted</span>
                     </>
                   ) : (
                     <>
-                      <span>1-Click Apply with Dossier</span>
+                      <span>Apply with Verified Dossier</span>
                       <ArrowRight className="w-3.5 h-3.5" />
                     </>
                   )}
@@ -377,9 +390,16 @@ export const StudentPortalView = ({ user }) => {
 
               <button
                 onClick={() => setEnrolledCourse(mod.id)}
-                className="w-full py-2 px-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition-colors cursor-pointer"
+                className="w-full py-2 px-3 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-white text-xs font-bold transition-colors cursor-pointer"
               >
-                {enrolledCourse === mod.id ? '✓ Module Active in Lab' : 'Start Micro-Sprint →'}
+                {enrolledCourse === mod.id ? (
+                  <span className="flex items-center justify-center gap-1.5">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>Module Active in Lab</span>
+                  </span>
+                ) : (
+                  'Start Micro-Sprint'
+                )}
               </button>
             </div>
           ))}

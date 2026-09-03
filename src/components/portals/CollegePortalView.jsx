@@ -28,14 +28,14 @@ export const CollegePortalView = ({ user }) => {
       {/* College Dean Banner */}
       <div className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-soft flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
         <div className="flex items-center gap-4">
-          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-900 to-slate-900 text-white font-extrabold text-2xl flex items-center justify-center shadow-md border-2 border-blue-400/40">
+          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-800 to-teal-900 text-white font-extrabold text-2xl flex items-center justify-center shadow-md border-2 border-emerald-300/40">
             {user.avatar || 'RP'}
           </div>
           <div>
             <div className="flex flex-wrap items-center gap-2">
               <h2 className="text-xl font-extrabold text-slate-900">{user.name}</h2>
-              <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-100 text-blue-900 border border-blue-200 flex items-center gap-1">
-                <Landmark className="w-3.5 h-3.5" />
+              <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-900 border border-emerald-200 flex items-center gap-1">
+                <Landmark className="w-3.5 h-3.5 text-emerald-700" />
                 Apex Academic Institution
               </span>
             </div>
@@ -48,7 +48,7 @@ export const CollegePortalView = ({ user }) => {
         {/* Action button */}
         <button
           onClick={() => setNaacReportGenerated(true)}
-          className="inline-flex items-center gap-2 px-4 py-2.5 bg-blue-900 hover:bg-blue-950 text-white text-xs font-bold rounded-xl shadow-xs transition-all cursor-pointer"
+          className="inline-flex items-center gap-2 px-4 py-2.5 bg-emerald-800 hover:bg-emerald-900 text-white text-xs font-bold rounded-xl shadow-xs transition-all cursor-pointer"
         >
           <FileCheck className="w-4 h-4" />
           <span>Generate NAAC Criteria III/V Dossier</span>
@@ -58,7 +58,7 @@ export const CollegePortalView = ({ user }) => {
       {/* Quick College Indices */}
       <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
         <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-soft text-center">
-          <span className="text-2xl font-extrabold text-blue-900">680</span>
+          <span className="text-2xl font-extrabold text-emerald-900">680</span>
           <span className="text-xs text-slate-500 block mt-0.5">Enrolled Ayush Scholars</span>
         </div>
         <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-soft text-center">

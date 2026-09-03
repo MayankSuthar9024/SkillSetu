@@ -55,7 +55,7 @@ export function SkillPage({ onNavigate, onOpenReadinessModal }) {
               <Zap className="w-3.5 h-3.5" />
               National Ayush Skill Hub
             </span>
-            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
+            <h1 className="font-serif text-3xl sm:text-4xl font-bold tracking-tight">
               Skill Mapping & Readiness Engine
             </h1>
             <p className="text-emerald-100 text-xs sm:text-sm max-w-2xl mt-1.5">
@@ -91,7 +91,7 @@ export function SkillPage({ onNavigate, onOpenReadinessModal }) {
           <div className="flex gap-3">
             <button
               onClick={() => onNavigate('opportunities')}
-              className="bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs px-5 py-3 rounded-xl transition-all flex items-center gap-1.5 cursor-pointer"
+              className="bg-emerald-800 hover:bg-emerald-900 text-white font-bold text-xs px-5 py-3 rounded-xl transition-all flex items-center gap-1.5 cursor-pointer"
             >
               <span>Explore Eligible Jobs</span>
               <ArrowUpRight className="w-4 h-4" />

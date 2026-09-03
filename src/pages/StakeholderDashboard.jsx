@@ -15,8 +15,12 @@ import {
   BarChart3,
   Plus,
   MessageSquare,
+<<<<<<< HEAD
   Landmark,
   ShieldCheck
+=======
+  X
+>>>>>>> b0e4934a9f343aa2e97611e9818f99ea1835edfa
 } from 'lucide-react';
 import { PORTALS_DATA, PLATFORM_METADATA } from '../data/portalData';
 
@@ -54,8 +58,19 @@ export const StakeholderDashboard = ({
     }
   }, [activePortalId]);
 
+  // Automatic screen size detection for responsive mobile app vs desktop website layout
+  const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' ? window.innerWidth < 768 : false);
+
+  React.useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   const currentPortalConfig = PORTALS_DATA.find(p => p.id === activePortalId) || PORTALS_DATA[0];
-  const user = currentUser || currentPortalConfig.profileUser || currentPortalConfig.demoUser;
+  const user = currentUser || currentPortalConfig.profileUser;
 
   const notifications = [
     { id: 1, title: 'Prof. Meenakshi Joshi sent you a new message in Chat', time: '5m ago', unread: true },
@@ -115,7 +130,7 @@ export const StakeholderDashboard = ({
             <div className="bg-gradient-to-r from-emerald-900 to-teal-900 text-white p-6 sm:p-8 rounded-3xl shadow-md">
               <div className="max-w-3xl">
                 <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 text-xs font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">
-                  LinkedIn-Style Ayush Career Desk
+                  Verified Ayush Clinical Career Desk
                 </span>
                 <h1 className="text-2xl sm:text-3xl font-extrabold mt-3">
                   Verified Opportunities & Clinical Fellowships
@@ -153,7 +168,7 @@ export const StakeholderDashboard = ({
             <div className="bg-white p-5 sm:p-6 rounded-3xl border border-slate-200 shadow-soft flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
               <div>
                 <span className="text-xs font-bold uppercase tracking-wider text-emerald-800 bg-emerald-50 px-3 py-1 rounded-full">
-                  Stakeholder Console View
+                  Operations & Management Console
                 </span>
                 <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 mt-2">
                   {currentPortalConfig.title} Operational Dashboard
@@ -176,14 +191,14 @@ export const StakeholderDashboard = ({
                 {roleDropdownOpen && (
                   <div className="absolute right-0 mt-2 w-64 bg-white rounded-2xl shadow-2xl border border-slate-200 py-2 z-50 animate-in fade-in">
                     <div className="px-3 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                      Select Stakeholder Role
+                      Switch Role
                     </div>
                     {PORTALS_DATA.map((p) => (
                       <button
                         key={p.id}
                         onClick={() => {
                           setRoleDropdownOpen(false);
-                          onSwitchPortal(p.id, p.demoUser);
+                          onSwitchPortal(p.id, p.profileUser);
                         }}
                         className={`w-full text-left px-3 py-2 text-xs flex items-center justify-between transition-colors ${
                           activePortalId === p.id 
@@ -270,9 +285,9 @@ export const StakeholderDashboard = ({
           {/* Brand Logo */}
           <div className="flex items-center gap-3 shrink-0">
             <button
-              onClick={onBackToHome}
+              onClick={() => { setActiveTab('feed'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
               className="flex items-center gap-2 group cursor-pointer focus:outline-none"
-              title="Return to Public Landing Page"
+              title="SkillSetu Platform Home"
             >
               <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-gradient-to-br from-emerald-800 to-teal-950 flex items-center justify-center text-white shadow-md">
                 <span className="material-symbols-outlined text-xl sm:text-2xl">spa</span>
@@ -292,6 +307,44 @@ export const StakeholderDashboard = ({
                 placeholder="Search clinical cases, jobs, messages..."
                 className="w-full bg-slate-100 focus:bg-white border border-slate-200 rounded-xl pl-9 pr-3 py-1.5 text-xs text-slate-900 focus:ring-2 focus:ring-emerald-700"
               />
+            </div>
+            <span className="hidden md:inline text-slate-300">|</span>
+
+            {/* Role Switcher Pill */}
+            <div className="relative">
+              <button
+                onClick={() => setRoleDropdownOpen(!roleDropdownOpen)}
+                className="hidden sm:inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold border border-slate-200 transition-colors cursor-pointer"
+              >
+                <RefreshCw className="w-3 h-3 text-emerald-700" />
+                <span>Switch Portal: {currentPortalConfig.title}</span>
+                <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
+              </button>
+
+              {roleDropdownOpen && (
+                <div className="absolute left-0 mt-1.5 w-60 bg-white rounded-2xl shadow-elevated border border-slate-200 py-2 z-50 animate-in fade-in zoom-in-95">
+                  <div className="px-3 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                    Switch Portal
+                  </div>
+                  {PORTALS_DATA.map((p) => (
+                    <button
+                      key={p.id}
+                      onClick={() => {
+                        setRoleDropdownOpen(false);
+                        onSwitchPortal(p.id, p.profileUser);
+                      }}
+                      className={`w-full text-left px-3 py-2 text-xs flex items-center justify-between transition-colors ${
+                        activePortalId === p.id 
+                          ? 'bg-emerald-50 text-emerald-900 font-bold' 
+                          : 'text-slate-700 hover:bg-slate-50'
+                      }`}
+                    >
+                      <span>{p.title} Portal</span>
+                      <span className="text-[10px] text-slate-400 font-normal">{p.subtitle}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
 
@@ -346,8 +399,9 @@ export const StakeholderDashboard = ({
                     <button
                       onClick={() => setNotificationsOpen(false)}
                       className="text-slate-400 hover:text-slate-600 p-1 rounded-lg text-xs cursor-pointer"
+                      title="Close notifications"
                     >
-                      ✕
+                      <X className="w-4 h-4" />
                     </button>
                   </div>
                   <div className="divide-y divide-slate-100 max-h-64 overflow-y-auto">
@@ -408,7 +462,7 @@ export const StakeholderDashboard = ({
                     className="w-full text-left px-4 py-2 text-xs font-bold text-slate-800 hover:bg-emerald-50 hover:text-emerald-900 flex items-center gap-2"
                   >
                     <Layers className="w-4 h-4 text-teal-700" />
-                    <span>Stakeholder Console ({currentPortalConfig.title})</span>
+                    <span>Operational Console ({currentPortalConfig.title})</span>
                   </button>
 
                   <div className="pt-1 mt-1 border-t border-slate-100">
@@ -435,72 +489,108 @@ export const StakeholderDashboard = ({
         {renderActiveView()}
       </main>
 
-      {/* Footer */}
-      <footer className="py-4 border-t border-slate-200 bg-white text-center text-xs text-slate-500 mb-20 md:mb-0">
-        SkillSetu National Ayush Professional Platform · {PLATFORM_METADATA.ministryFull} · SIH 2026
-      </footer>
+      {/* Main Platform Desktop Website Footer (Visible on Desktop / Laptop mode) */}
+      {!isMobile && (
+        <footer className="border-t border-slate-200 bg-white py-8 mt-12 text-slate-600">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-xl bg-emerald-800 text-white flex items-center justify-center font-bold shadow-xs">
+                <span className="material-symbols-outlined text-lg">spa</span>
+              </div>
+              <div>
+                <span className="font-extrabold text-slate-900 block">SkillSetu National Platform</span>
+                <span className="text-[11px] text-slate-500">{PLATFORM_METADATA.ministryFull}</span>
+              </div>
+            </div>
 
-      {/* Mobile Bottom Footer Navigation Bar */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-xl border-t border-slate-200 shadow-2xl px-4 py-2.5 flex items-center justify-between rounded-t-3xl">
-        
-        {/* 1. Home */}
-        <button
-          onClick={() => { setActiveTab('feed'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-          className={`flex flex-col items-center justify-center py-1 px-3 text-xs transition-all cursor-pointer ${
-            activeTab === 'feed' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-medium'
-          }`}
-        >
-          <Home className={`w-5 h-5 shrink-0 ${activeTab === 'feed' ? 'text-emerald-700' : 'text-slate-500'}`} />
-          <span className="text-[10px] mt-0.5 font-bold">Home</span>
-        </button>
+            <div className="flex items-center gap-6 text-xs text-slate-600 font-medium">
+              <button onClick={() => { setActiveTab('feed'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-emerald-800 transition-colors cursor-pointer">
+                Community Feed
+              </button>
+              <button onClick={() => { setActiveTab('skills'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-emerald-800 transition-colors cursor-pointer">
+                6-Axis Radar
+              </button>
+              <button onClick={() => { setActiveTab('jobs'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-emerald-800 transition-colors cursor-pointer">
+                Placements
+              </button>
+              <button onClick={() => { setActiveTab('network'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-emerald-800 transition-colors cursor-pointer">
+                Industry Network
+              </button>
+              <button onClick={() => { setActiveTab('profile'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-emerald-800 transition-colors cursor-pointer text-emerald-800 font-bold">
+                My Profile
+              </button>
+            </div>
 
-        {/* 2. Skills */}
-        <button
-          onClick={() => { setActiveTab('skills'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-          className={`flex flex-col items-center justify-center py-1 px-3 text-xs transition-all cursor-pointer ${
-            activeTab === 'skills' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-medium'
-          }`}
-        >
-          <BarChart3 className={`w-5 h-5 shrink-0 ${activeTab === 'skills' ? 'text-emerald-700' : 'text-slate-500'}`} />
-          <span className="text-[10px] mt-0.5 font-bold">Skills</span>
-        </button>
-
-        {/* 3. Center Elevated Floating Green (+) Button */}
-        <div className="relative -mt-9 flex items-center justify-center shrink-0">
-          <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center shadow-lg border border-slate-100 p-1">
-            <button
-              onClick={handleOpenCreatePost}
-              className="w-14 h-14 rounded-full bg-gradient-to-br from-emerald-500 via-teal-600 to-emerald-800 hover:from-emerald-400 hover:to-teal-700 active:scale-95 text-white flex items-center justify-center shadow-[0_8px_20px_rgba(16,185,129,0.4)] transition-all cursor-pointer group"
-              title="Create Post / Share Insight"
-            >
-              <Plus className="w-7 h-7 stroke-[2.8] group-hover:rotate-90 transition-transform duration-300" />
-            </button>
+            <div className="text-[11px] text-slate-400">
+              © 2026 SkillSetu · Ministry of Ayush & AIIA
+            </div>
           </div>
+        </footer>
+      )}
+
+      {/* Mobile App Bottom Navigation Bar (Auto-detected on Mobile screens) */}
+      {isMobile && (
+        <div className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-xl border-t border-slate-200 shadow-2xl px-4 py-2.5 flex items-center justify-between rounded-t-3xl">
+          
+          {/* 1. Home */}
+          <button
+            onClick={() => { setActiveTab('feed'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+            className={`flex flex-col items-center justify-center py-1 px-3 text-xs transition-all cursor-pointer ${
+              activeTab === 'feed' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-medium'
+            }`}
+          >
+            <Home className={`w-5 h-5 shrink-0 ${activeTab === 'feed' ? 'text-emerald-700' : 'text-slate-500'}`} />
+            <span className="text-[10px] mt-0.5 font-bold">Home</span>
+          </button>
+
+          {/* 2. Skills */}
+          <button
+            onClick={() => { setActiveTab('skills'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+            className={`flex flex-col items-center justify-center py-1 px-3 text-xs transition-all cursor-pointer ${
+              activeTab === 'skills' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-medium'
+            }`}
+          >
+            <BarChart3 className={`w-5 h-5 shrink-0 ${activeTab === 'skills' ? 'text-emerald-700' : 'text-slate-500'}`} />
+            <span className="text-[10px] mt-0.5 font-bold">Skills</span>
+          </button>
+
+          {/* 3. Center Elevated Floating Green (+) Button */}
+          <div className="relative -mt-9 flex items-center justify-center shrink-0">
+            <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center shadow-lg border border-slate-100 p-1">
+              <button
+                onClick={handleOpenCreatePost}
+                className="w-14 h-14 rounded-full bg-gradient-to-br from-emerald-800 to-teal-900 hover:from-emerald-900 hover:to-teal-950 active:scale-95 text-white flex items-center justify-center shadow-md hover:shadow-lg transition-all cursor-pointer group"
+                title="Create Post"
+              >
+                <Plus className="w-7 h-7 stroke-[2.5] group-hover:rotate-90 transition-transform duration-300" />
+              </button>
+            </div>
+          </div>
+
+          {/* 4. Messages */}
+          <button
+            onClick={() => { setActiveTab('messages'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+            className={`flex flex-col items-center justify-center py-1 px-3 text-xs transition-all cursor-pointer ${
+              activeTab === 'messages' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-medium'
+            }`}
+          >
+            <MessageSquare className={`w-5 h-5 shrink-0 ${activeTab === 'messages' ? 'text-emerald-700' : 'text-slate-500'}`} />
+            <span className="text-[10px] mt-0.5 font-bold">Messages</span>
+          </button>
+
+          {/* 5. Industry */}
+          <button
+            onClick={() => { setActiveTab('network'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+            className={`flex flex-col items-center justify-center py-1 px-3 text-xs transition-all cursor-pointer ${
+              activeTab === 'network' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-medium'
+            }`}
+          >
+            <Building2 className={`w-5 h-5 shrink-0 ${activeTab === 'network' ? 'text-emerald-700' : 'text-slate-500'}`} />
+            <span className="text-[10px] mt-0.5 font-bold">Industry</span>
+          </button>
+
         </div>
-
-        {/* 4. Messages */}
-        <button
-          onClick={() => { setActiveTab('messages'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-          className={`flex flex-col items-center justify-center py-1 px-3 text-xs transition-all cursor-pointer ${
-            activeTab === 'messages' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-medium'
-          }`}
-        >
-          <MessageSquare className={`w-5 h-5 shrink-0 ${activeTab === 'messages' ? 'text-emerald-700' : 'text-slate-500'}`} />
-          <span className="text-[10px] mt-0.5 font-bold">Messages</span>
-        </button>
-
-        {/* 5. Industry */}
-        <button
-          onClick={() => { setActiveTab('network'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-          className={`flex flex-col items-center justify-center py-1 px-3 text-xs transition-all cursor-pointer ${
-            activeTab === 'network' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-medium'
-          }`}
-        >
-          <Building2 className={`w-5 h-5 shrink-0 ${activeTab === 'network' ? 'text-emerald-700' : 'text-slate-500'}`} />
-          <span className="text-[10px] mt-0.5 font-bold">Industry</span>
-        </button>
-
-      </div>
+      )}
 
     </div>
   );

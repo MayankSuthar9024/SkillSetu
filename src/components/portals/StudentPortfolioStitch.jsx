@@ -825,35 +825,35 @@ export const StudentPortfolioStitch = ({ user }) => {
 
       {/* TAB 6: CRYPTOGRAPHIC LEDGER */}
       {activeTab === 'ledger' && (
-        <div className="bg-slate-900 text-white rounded-3xl p-6 sm:p-8 border border-slate-800 shadow-2xl space-y-6 font-mono">
-          <div className="flex items-center justify-between pb-4 border-b border-slate-800">
+        <div className="bg-emerald-950 text-white rounded-3xl p-6 sm:p-8 border border-emerald-800 shadow-2xl space-y-6 font-mono">
+          <div className="flex items-center justify-between pb-4 border-b border-emerald-800/80">
             <div>
               <h2 className="text-base font-bold text-emerald-400 flex items-center gap-2">
                 <Lock className="w-5 h-5 text-emerald-400" />
                 SkillSetu Immutable Credential Ledger
               </h2>
-              <p className="text-xs text-slate-400 font-sans mt-0.5">Public Key Cryptographic Proof for {profileData.name}</p>
+              <p className="text-xs text-emerald-200/80 font-sans mt-0.5">Public Key Cryptographic Proof for {profileData.name}</p>
             </div>
             <span className="bg-emerald-500/20 text-emerald-400 px-3 py-1 rounded-full text-xs font-bold border border-emerald-500/30">
               LEDGER VERIFIED
             </span>
           </div>
 
-          <div className="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3 text-xs">
-            <div className="flex justify-between border-b border-slate-800/80 pb-2">
-              <span className="text-slate-500">Student Reg Hash:</span>
+          <div className="bg-emerald-900/40 p-4 rounded-2xl border border-emerald-800/80 space-y-3 text-xs">
+            <div className="flex justify-between border-b border-emerald-800/60 pb-2">
+              <span className="text-emerald-300/70">Student Reg Hash:</span>
               <span className="text-emerald-400 font-bold">{profileData.metrics.verificationHash}</span>
             </div>
-            <div className="flex justify-between border-b border-slate-800/80 pb-2">
-              <span className="text-slate-500">AYUSH Registration:</span>
+            <div className="flex justify-between border-b border-emerald-800/60 pb-2">
+              <span className="text-emerald-300/70">AYUSH Registration:</span>
               <span className="text-slate-200">{profileData.regNo}</span>
             </div>
-            <div className="flex justify-between border-b border-slate-800/80 pb-2">
-              <span className="text-slate-500">Consensus Engine:</span>
+            <div className="flex justify-between border-b border-emerald-800/60 pb-2">
+              <span className="text-emerald-300/70">Consensus Engine:</span>
               <span className="text-slate-200">Proof-of-Competency (PoC v2.4)</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-slate-500">Timestamp:</span>
+              <span className="text-emerald-300/70">Timestamp:</span>
               <span className="text-slate-200">2026-09-02 T16:43:00 UTC</span>
             </div>
           </div>
@@ -991,8 +991,9 @@ export const StudentPortfolioStitch = ({ user }) => {
               <h4 className="text-xs font-extrabold text-slate-700 mb-2">Verified Competency Outcomes</h4>
               <div className="flex flex-wrap gap-2">
                 {selectedCert.skillsCovered.map((skill, i) => (
-                  <span key={i} className="bg-emerald-50 text-[#006c49] px-3 py-1 rounded-full text-xs font-bold border border-emerald-200">
-                    ✓ {skill}
+                  <span key={i} className="bg-emerald-50 text-[#006c49] px-3 py-1 rounded-full text-xs font-bold border border-emerald-200 inline-flex items-center gap-1.5">
+                    <CheckCircle2 className="w-3 h-3 text-emerald-700 shrink-0" />
+                    <span>{skill}</span>
                   </span>
                 ))}
               </div>

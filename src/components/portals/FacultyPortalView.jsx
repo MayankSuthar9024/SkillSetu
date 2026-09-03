@@ -192,7 +192,14 @@ export const FacultyPortalView = ({ user }) => {
                         : 'bg-emerald-800 hover:bg-emerald-900 text-white shadow-xs'
                     }`}
                   >
-                    {sub.status.includes('Digitally Signed') ? '✓ Cryptographically Signed' : 'Sign & Verify Dossier'}
+                    {sub.status.includes('Digitally Signed') ? (
+                      <span className="flex items-center gap-1.5">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700" />
+                        <span>Signed & Verified</span>
+                      </span>
+                    ) : (
+                      'Sign & Verify Dossier'
+                    )}
                   </button>
                 </div>
               </div>
@@ -201,18 +208,61 @@ export const FacultyPortalView = ({ user }) => {
         </div>
       )}
 
-      {/* TAB 3: Author Studio */}
+      {/* TAB 3: Author Studio & Research Grants */}
       {activeTab === 'author' && (
-        <div className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-soft space-y-4">
-          <h3 className="text-base font-extrabold text-slate-900">Micro-Course Authoring Studio</h3>
-          <p className="text-xs text-slate-500">
-            Create interactive practical micro-sprints aligned with National Commission for Indian System of Medicine (NCISM) syllabus guidelines.
-          </p>
-          <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-800">New Module Draft: "Rasa Shastra Bhasma Incineration Temperature Curves"</span>
-            <button className="px-3.5 py-1.5 bg-slate-900 text-white rounded-xl text-xs font-bold">
-              Open Studio Editor →
-            </button>
+        <div className="space-y-6">
+          <div className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-soft space-y-4">
+            <h3 className="text-base font-extrabold text-slate-900">Micro-Course Authoring Studio</h3>
+            <p className="text-xs text-slate-500">
+              Create interactive 15-minute micro-sprints aligned with 12 HSSC NQR Qualification Packs and NCISM curricula.
+            </p>
+            <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+              <span className="text-xs font-bold text-slate-800">New Module Draft: "Rasa Shastra Bhasma Incineration & Standardization"</span>
+              <button className="px-3.5 py-1.5 bg-slate-900 text-white rounded-xl text-xs font-bold cursor-pointer hover:bg-slate-800">
+                Open Studio Editor →
+              </button>
+            </div>
+          </div>
+
+          {/* CCRAS SPARK-4.0 & Industry FDP Desk */}
+          <div className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-soft space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-base font-extrabold text-slate-900">
+                  CCRAS SPARK-4.0 & Industry FDP Opportunities
+                </h3>
+                <p className="text-xs text-slate-500">
+                  Direct government research grants and pharma consultancy partnerships for academicians
+                </p>
+              </div>
+              <span className="px-3 py-1 bg-emerald-100 text-emerald-900 font-bold text-xs rounded-full">
+                300+ Grants Active
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+              <div className="p-4 rounded-2xl border border-emerald-200 bg-emerald-50/50 space-y-2">
+                <div className="flex justify-between items-center text-xs">
+                  <span className="font-bold text-emerald-900">CCRAS SPARK-4.0 Research Studentship</span>
+                  <span className="font-bold text-emerald-700 bg-white px-2 py-0.5 rounded border border-emerald-300">₹50,000 Grant</span>
+                </div>
+                <p className="text-xs text-slate-600">
+                  Faculty mentorship track for BAMS students conducting classical formulation validation and clinical evidence research.
+                </p>
+                <div className="text-[11px] text-emerald-800 font-semibold">Status: Accepting Institutional Nominations</div>
+              </div>
+
+              <div className="p-4 rounded-2xl border border-blue-200 bg-blue-50/50 space-y-2">
+                <div className="flex justify-between items-center text-xs">
+                  <span className="font-bold text-blue-900">Pharma FDP: Advanced HPTLC Fingerprinting</span>
+                  <span className="font-bold text-blue-700 bg-white px-2 py-0.5 rounded border border-blue-300">2-Week FDP</span>
+                </div>
+                <p className="text-xs text-slate-600">
+                  Sponsored by Dabur & Patanjali R&D labs for Ayush professors to master high-throughput botanical chromatography.
+                </p>
+                <div className="text-[11px] text-blue-800 font-semibold">Status: Sponsored & AICTE / NCISM Aligned</div>
+              </div>
+            </div>
           </div>
         </div>
       )}
