@@ -9,8 +9,8 @@ export function FaqSection({ onOpenReadinessModal, onOpenAuthModal }) {
   };
 
   return (
-    <section className="premium-section py-16 lg:py-24 bg-surface-container-lowest border-b border-outline-variant/30">
-      <div className="max-w-container-max mx-auto px-4 md:px-margin-desktop">
+    <section className="premium-section py-12 sm:py-16 lg:py-24 bg-surface-container-lowest border-b border-outline-variant/30 overflow-hidden w-full max-w-full">
+      <div className="max-w-container-max mx-auto px-4 sm:px-6 md:px-margin-desktop w-full max-w-full">
         
         {/* Section Header */}
         <div className="flex flex-col items-center text-center max-w-3xl mx-auto mb-16">
@@ -19,7 +19,7 @@ export function FaqSection({ onOpenReadinessModal, onOpenAuthModal }) {
             <span>Got Questions? We've Got Answers</span>
           </div>
 
-          <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-on-surface mb-4 tracking-tight">
+          <h2 className="text-2xl sm:text-4xl lg:text-5xl font-bold text-on-surface mb-3 sm:mb-4 tracking-tight break-words">
             Frequently Asked Questions
           </h2>
 
@@ -45,7 +45,7 @@ export function FaqSection({ onOpenReadinessModal, onOpenAuthModal }) {
                   onClick={() => toggleFaq(faq.id)}
                   aria-expanded={isOpen}
                   aria-controls={`${faq.id}-answer`}
-                  className="w-full px-6 py-5 text-left flex items-center justify-between gap-4 font-headline-md font-bold text-base sm:text-lg text-on-surface"
+                  className="w-full px-4 sm:px-6 py-3.5 sm:py-5 text-left flex items-center justify-between gap-3 sm:gap-4 font-bold text-sm sm:text-lg text-on-surface"
                 >
                   <span className="flex items-center gap-3">
                     <span className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold transition-colors ${
@@ -68,8 +68,8 @@ export function FaqSection({ onOpenReadinessModal, onOpenAuthModal }) {
                   className={`faq-answer-shell ${isOpen ? 'faq-answer-open' : ''}`}
                   aria-hidden={!isOpen}
                 >
-                  <div className="faq-answer px-6 pb-6 pt-1 text-sm sm:text-base text-on-surface-variant leading-relaxed border-t border-outline-variant/20">
-                    <p className="pl-11">{faq.answer}</p>
+                  <div className="faq-answer px-4 sm:px-6 pb-4 sm:pb-6 pt-1 text-xs sm:text-base text-on-surface-variant leading-relaxed border-t border-outline-variant/20">
+                    <p className="pl-0 sm:pl-11">{faq.answer}</p>
                   </div>
                 </div>
               </div>

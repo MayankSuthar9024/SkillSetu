@@ -12,8 +12,8 @@ export function Features() {
     : PLATFORM_FEATURES.filter(f => f.category === selectedCategory);
 
   return (
-    <section className="premium-section py-16 lg:py-24 bg-surface-container-lowest border-b border-outline-variant/30 relative overflow-hidden">
-      <div className="max-w-container-max mx-auto px-4 md:px-margin-desktop">
+    <section className="premium-section py-12 sm:py-16 lg:py-24 bg-surface-container-lowest border-b border-outline-variant/30 relative overflow-hidden w-full max-w-full">
+      <div className="max-w-container-max mx-auto px-4 sm:px-6 md:px-margin-desktop w-full max-w-full">
         
         {/* Section Header */}
         <div className="flex flex-col items-center text-center max-w-3xl mx-auto mb-12">
@@ -32,7 +32,7 @@ export function Features() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.05 }}
-            className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-on-surface mb-4 tracking-tight"
+            className="text-2xl sm:text-4xl lg:text-5xl font-bold text-on-surface mb-3 sm:mb-4 tracking-tight break-words"
           >
             Proposed Solution Architecture
           </motion.h2>
@@ -131,9 +131,13 @@ export function Features() {
             <p className="text-sm sm:text-base text-slate-600">
               Why SkillSetu outperforms generic recruitment portals by catering strictly to Ayush domain competencies.
             </p>
+            <div className="flex items-center justify-center sm:hidden gap-1 text-[11px] text-emerald-800 font-semibold mt-3 bg-emerald-50 py-1 px-3 rounded-full border border-emerald-200/80 inline-flex">
+              <span>Swipe horizontally to compare</span>
+              <span className="material-symbols-outlined text-xs">arrow_forward</span>
+            </div>
           </div>
 
-          <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-xs">
+          <div className="overflow-x-auto rounded-xl sm:rounded-2xl border border-slate-200 bg-white shadow-xs w-full max-w-full">
             <table className="w-full text-left border-collapse text-xs sm:text-sm">
               <thead>
                 <tr className="bg-slate-50 border-b border-slate-200 text-slate-700 font-bold uppercase tracking-wider text-[11px]">

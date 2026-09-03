@@ -11,11 +11,11 @@ export function AboutEcosystem() {
   ];
 
   return (
-    <section className="premium-section py-16 lg:py-24 bg-surface tech-grid border-b border-outline-variant/30 relative overflow-hidden">
-      <div className="max-w-container-max mx-auto px-4 md:px-margin-desktop">
+    <section className="premium-section py-12 sm:py-16 lg:py-24 bg-surface tech-grid border-b border-outline-variant/30 relative overflow-hidden w-full max-w-full">
+      <div className="max-w-container-max mx-auto px-4 sm:px-6 md:px-margin-desktop w-full max-w-full">
         
         {/* Profile Card & Narrative Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center mb-24">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center mb-16 sm:mb-24 w-full max-w-full">
           
           {/* Left Column Visual: Standardized Dossier Card */}
           <motion.div 
@@ -25,7 +25,7 @@ export function AboutEcosystem() {
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
             className="relative order-2 lg:order-1"
           >
-            <div className="bg-surface-bright border border-outline-variant/30 rounded-3xl p-6 sm:p-8 soft-shadow relative z-10 backdrop-blur-sm">
+            <div className="bg-surface-bright border border-outline-variant/30 rounded-2xl sm:rounded-3xl p-4 sm:p-8 soft-shadow relative z-10 backdrop-blur-sm w-full max-w-full overflow-hidden">
               
               <div className="flex justify-between items-start mb-6">
                 <div>
@@ -95,7 +95,7 @@ export function AboutEcosystem() {
               <span>Objective Clinical Benchmarks</span>
             </div>
 
-            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-on-surface leading-tight tracking-tight">
+            <h2 className="text-2xl sm:text-4xl lg:text-5xl font-bold text-on-surface leading-tight tracking-tight break-words">
               A clearer view of <br />
               <span className="text-primary bg-gradient-to-r from-primary to-emerald-600 bg-clip-text text-transparent">
                 candidate clinical readiness.

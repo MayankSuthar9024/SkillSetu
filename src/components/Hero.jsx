@@ -50,7 +50,7 @@ export function Hero({ onGetStarted }) {
   };
 
   return (
-    <section className="relative pt-10 lg:pt-16 pb-20 hero-grid-bg border-b border-outline-variant/30 overflow-hidden">
+    <section className="relative pt-8 sm:pt-12 lg:pt-16 pb-14 sm:pb-20 hero-grid-bg border-b border-outline-variant/30 overflow-hidden w-full max-w-full">
       
       {/* Dynamic Animated Motion Graphics Mesh Orbs in Background */}
       <motion.div 
@@ -74,7 +74,7 @@ export function Hero({ onGetStarted }) {
         className="absolute bottom-10 left-10 w-[420px] h-[420px] bg-gradient-to-tr from-amber-100/15 via-emerald-100/15 to-transparent rounded-full blur-3xl pointer-events-none -z-10"
       />
 
-      <div className="max-w-container-max mx-auto px-4 md:px-margin-desktop grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center relative z-10">
+      <div className="max-w-container-max mx-auto px-4 sm:px-6 md:px-margin-desktop grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center relative z-10 w-full max-w-full">
         
         {/* Left Column: Hero Content with Staggered Motion */}
         <motion.div 
@@ -95,7 +95,7 @@ export function Hero({ onGetStarted }) {
           {/* Heading */}
           <motion.h1 
             variants={itemVariants}
-            className="hero-title font-serif text-5xl sm:text-6xl lg:text-7xl font-bold text-on-surface leading-[1.04] tracking-tight"
+            className="hero-title text-3xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold text-on-surface leading-[1.1] sm:leading-[1.05] tracking-tight break-words"
           >
             Build the skills. <br />
             <span className="text-primary bg-gradient-to-r from-primary via-emerald-700 to-amber-700 bg-clip-text text-transparent">
@@ -107,7 +107,7 @@ export function Hero({ onGetStarted }) {
           {/* Subtitle */}
           <motion.p 
             variants={itemVariants}
-            className="hero-copy font-body-lg text-base sm:text-lg text-on-surface-variant max-w-xl mx-auto lg:mx-0 leading-relaxed"
+            className="hero-copy text-sm sm:text-base lg:text-lg text-on-surface-variant max-w-xl mx-auto lg:mx-0 leading-relaxed"
           >
             SkillSetu is the centralized Ayush web platform connecting 42,000+ scholars, 536+ permitted colleges, and 7,345+ licensed pharma units for 6-axis competency testing, 15-minute bridge courses, and 1-click verified hiring.
           </motion.p>
@@ -159,10 +159,10 @@ export function Hero({ onGetStarted }) {
           {/* Main Card with Spring 3D Tilt */}
           <motion.div 
             style={{ rotateX, rotateY }}
-            className="bg-white/95 border border-white/90 rounded-[28px] p-6 sm:p-8 soft-shadow-elevated relative z-20 backdrop-blur-md transition-shadow hover:shadow-2xl"
+            className="bg-white/95 border border-white/90 rounded-2xl sm:rounded-[28px] p-4 sm:p-7 soft-shadow-elevated relative z-20 backdrop-blur-md transition-shadow hover:shadow-2xl w-full max-w-full overflow-hidden"
           >
             {/* Editorial image layer (Clean, no text overlay) */}
-            <div className="relative h-44 sm:h-52 -mx-6 sm:-mx-8 -mt-6 sm:-mt-8 mb-6 overflow-hidden rounded-t-[28px] group bg-emerald-950/10">
+            <div className="relative h-40 sm:h-52 -mx-4 sm:-mx-7 -mt-4 sm:-mt-7 mb-4 sm:mb-6 overflow-hidden rounded-t-2xl sm:rounded-t-[28px] group bg-emerald-950/10">
               <img
                 src={heroBannerImg}
                 alt="Ayurvedic clinical research and botanical extraction laboratory"
@@ -262,27 +262,27 @@ export function Hero({ onGetStarted }) {
       </div>
 
       {/* Trust Metrics Bar with Staggered Entrance */}
-      <div className="max-w-container-max mx-auto px-4 md:px-margin-desktop mt-16 pt-8 border-t border-outline-variant/20">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 items-center">
+      <div className="max-w-container-max mx-auto px-4 sm:px-6 md:px-margin-desktop mt-12 sm:mt-16 pt-6 sm:pt-8 border-t border-outline-variant/20 w-full max-w-full">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4 lg:gap-6 items-stretch">
           {TRUST_METRICS.map((metric, idx) => (
             <motion.div 
               key={idx} 
               whileHover={{ y: -3, scale: 1.01 }}
               transition={{ duration: 0.2 }}
-              className="flex items-center gap-3 p-3.5 rounded-2xl bg-white/90 border border-outline-variant/30 shadow-xs backdrop-blur-sm"
+              className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3 p-3 sm:p-3.5 rounded-2xl bg-white/90 border border-outline-variant/30 shadow-xs backdrop-blur-sm min-w-0 w-full overflow-hidden"
             >
-              <div className="w-10 h-10 rounded-xl bg-secondary-container text-tertiary flex items-center justify-center font-bold">
-                <span className="material-symbols-outlined text-xl">{metric.icon}</span>
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-secondary-container text-tertiary flex items-center justify-center font-bold shrink-0">
+                <span className="material-symbols-outlined text-lg sm:text-xl">{metric.icon}</span>
               </div>
-              <div>
-                <div className="font-display-lg text-lg font-bold text-on-surface leading-tight">
+              <div className="min-w-0 flex-1 w-full">
+                <div className="text-sm sm:text-lg font-bold text-on-surface leading-tight truncate">
                   {metric.value}
                 </div>
-                <div className="text-xs text-on-surface-variant font-medium">
+                <div className="text-[11px] sm:text-xs text-on-surface-variant font-medium leading-tight mt-0.5 line-clamp-2">
                   {metric.label}
                 </div>
                 {metric.subtext && (
-                  <div className="text-[10px] text-emerald-800 font-semibold truncate">
+                  <div className="text-[9px] sm:text-[10px] text-emerald-800 font-semibold truncate mt-0.5">
                     {metric.subtext}
                   </div>
                 )}
