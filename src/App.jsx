@@ -161,7 +161,7 @@ export function App() {
         currentUser={currentUser || PORTALS_DATA[0].profileUser}
         onSwitchPortal={handleSwitchPortal}
         onLogout={handleLogout}
-        onBackToHome={() => {}}
+        onBackToHome={() => { }}
         contrastMode={contrastMode}
         onToggleContrast={handleToggleContrast}
       />
