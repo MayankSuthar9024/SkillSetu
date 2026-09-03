@@ -93,8 +93,8 @@ export function HowItWorks() {
   };
 
   return (
-    <section id="how-it-works" className="premium-section py-16 lg:py-24 bg-surface tech-grid relative overflow-hidden">
-      <div className="max-w-container-max mx-auto px-4 md:px-margin-desktop">
+    <section id="how-it-works" className="premium-section py-12 sm:py-16 lg:py-24 bg-surface tech-grid relative overflow-hidden w-full max-w-full">
+      <div className="max-w-container-max mx-auto px-4 sm:px-6 md:px-margin-desktop w-full max-w-full">
         
         {/* Section Header */}
         <div className="flex flex-col items-center text-center max-w-3xl mx-auto mb-16">
@@ -112,7 +112,7 @@ export function HowItWorks() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.05 }}
-            className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-on-surface mb-4 tracking-tight"
+            className="text-2xl sm:text-4xl lg:text-5xl font-bold text-on-surface mb-3 sm:mb-4 tracking-tight break-words"
           >
             Radar → Bridge → 1-Click Apply
           </motion.h2>
@@ -136,7 +136,7 @@ export function HowItWorks() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: idx * 0.08 }}
-              className="bg-surface-container-lowest border border-outline-variant/30 rounded-3xl p-6 sm:p-8 soft-shadow relative overflow-hidden backdrop-blur-sm"
+              className="bg-surface-container-lowest border border-outline-variant/30 rounded-2xl sm:rounded-3xl p-4 sm:p-8 soft-shadow relative overflow-hidden backdrop-blur-sm w-full max-w-full"
             >
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
                 

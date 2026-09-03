@@ -1,3 +1,7 @@
+import priyaAvatar from '../assets/images/priya_avatar.jpg';
+import kabirAvatar from '../assets/images/kabir_avatar.jpg';
+import ananyaAvatar from '../assets/images/ananya_avatar.jpg';
+
 export const AYUSH_DISCIPLINES = [
   {
     id: 'ayurveda',
@@ -161,20 +165,148 @@ export const PLATFORM_FEATURES = [
 ];
 
 /**
+ * Research-Backed Benchmark: Doximity & Handshake vs SkillSetu
+ * Integrating features, limitations, and the unified Ayush opportunity.
+ */
+export const DOXIMITY_HANDSHAKE_BENCHMARK = {
+  keyUsp: "Learning + Mentorship + Research + Internships/Jobs + Networking — all within one Ayurveda-focused student ecosystem.",
+  platforms: [
+    {
+      id: "doximity",
+      name: "Doximity",
+      tagline: "Healthcare Professional Network",
+      targetAudience: "Practicing Allopathic Doctors & Physicians",
+      strengths: [
+        "Professional profile & verified clinician identity",
+        "Medical news & specialty-focused updates",
+        "Secure communication & clinical workflows",
+        "Telemedicine & virtual care tools",
+        "Physician career opportunities"
+      ],
+      limitations: [
+        "Healthcare-professional focused: Not suited to the student journey",
+        "Limited student ecosystem: No academic projects, internships, or college collaboration",
+        "No structured learning: Lacks courses, bridge sprints, or academic communities",
+        "Zero Ayush specialization: Only conventional allopathic medicine",
+        "Narrow audience: Excludes student-to-industry transition"
+      ]
+    },
+    {
+      id: "handshake",
+      name: "Handshake",
+      tagline: "University Career & Recruitment Ecosystem",
+      targetAudience: "General College Students & Corporate Recruiters",
+      strengths: [
+        "Job & internship search across campus networks",
+        "Personalized career recommendations",
+        "Employer networking & career fairs",
+        "Career advice, videos & AI career tools",
+        "Student digital profiles & resumes"
+      ],
+      limitations: [
+        "Career-focused, not education-focused: No specialized academic learning",
+        "Zero Ayurveda specialization: No classical texts, herbs, Panchakarma, or clinical research",
+        "Restricted access: Student-employer interactions depend on university approvals",
+        "Hidden opportunities: Not every job is visible to every student due to institutional silos",
+        "Third-party recruiter risk: Suspicious recruiters & off-platform communication risks",
+        "Limited domain mentorship: No long-term mentorship from clinical experts"
+      ]
+    },
+    {
+      id: "skillsetu",
+      name: "SkillSetu",
+      tagline: "Unified National Ayush Student & Practitioner Platform",
+      targetAudience: "Ayush Scholars, Vaidyas, Colleges, and 7,345+ Licensed Pharma Units",
+      strengths: [
+        "Unified Key USP: Learning + Mentorship + Research + Jobs + Networking in one ecosystem",
+        "Ayurveda-Specific Learning: Classical texts, Panchakarma, Schedule T GMP, botanical assays",
+        "Domain Mentorship: Direct access to certified Ayurvedic doctors, senior Vaidyas & researchers",
+        "Ayush Research Hub: Clinical trial discovery, case study logs, AIIA & CCRAS alignment",
+        "Zero Recruiter Risk: Direct 1-click verified hiring with licensed Ayush pharma units",
+        "Objective 6-Axis Visual Radar: Standardized competency testing & verified digital dossiers"
+      ],
+      limitations: []
+    }
+  ],
+  differentiationPillars: [
+    {
+      id: 'learning',
+      title: 'Ayurveda-Specific Learning',
+      subtitle: 'Structured Study & Classical Repositories',
+      description: 'Classical textbooks (Charaka & Sushruta Samhita), herbal pharmacology (Dravyaguna), Rasashastra, Panchakarma protocols, and 15-minute Schedule T GMP sprints.',
+      icon: 'menu_book',
+      badge: 'Academic & Sprints',
+      color: 'from-emerald-800 to-teal-900',
+      stats: '500+ Curated Modules'
+    },
+    {
+      id: 'mentorship',
+      title: 'Doctor & Vaidya Mentorship',
+      subtitle: 'Certified Vaidyas, Teachers & Researchers',
+      description: 'Connect students directly with experienced Ayurvedic doctors, institutional faculty, clinical researchers, and master Vaidyas for clinical guidance.',
+      icon: 'supervisor_account',
+      badge: '1-on-1 Guidance',
+      color: 'from-teal-800 to-emerald-900',
+      stats: '1,200+ Verified Mentors'
+    },
+    {
+      id: 'research',
+      title: 'Clinical Research & Publications',
+      subtitle: 'Case Studies, Trials & Publication Discovery',
+      description: 'Document real patient case studies, participate in multi-center clinical trials, collaborate with AIIA and CCRAS research projects, and explore publications.',
+      icon: 'biotech',
+      badge: 'AIIA Aligned',
+      color: 'from-cyan-900 to-teal-950',
+      stats: '350+ Clinical Projects'
+    },
+    {
+      id: 'jobs',
+      title: 'Domain Internships & Jobs',
+      subtitle: 'Zero Recruiter Risk & Direct 1-Click Hiring',
+      description: 'Directly verified internships and apprenticeships with 7,345+ licensed Ayush drug manufacturers, clinical wellness resorts, and hospital chains without third-party intermediaries.',
+      icon: 'verified_user',
+      badge: 'Direct Industry Hiring',
+      color: 'from-emerald-900 to-teal-950',
+      stats: '2,400+ Active Roles'
+    },
+    {
+      id: 'networking',
+      title: 'Healthcare & Alumni Communities',
+      subtitle: 'Students, Faculty, Practitioners & Alumni',
+      description: 'An exclusive professional community for Ayush medicine, uniting students, practicing physicians, pharmaceutical R&D leaders, and academic alumni in one verified ecosystem.',
+      icon: 'hub',
+      badge: 'Multi-Stakeholder Network',
+      color: 'from-teal-900 to-emerald-950',
+      stats: '42,000+ Ayush Network'
+    },
+    {
+      id: 'resources',
+      title: 'Ayurveda-Specific Resources',
+      subtitle: 'Herbs, Classical Texts & Clinical Assays',
+      description: 'Dedicated botanical extraction repositories, HPTLC standardization data, pulse diagnosis (Nadi Pariksha) protocols, and classical formulation monographs.',
+      icon: 'local_pharmacy',
+      badge: 'Botanical & Clinical Assays',
+      color: 'from-emerald-950 to-teal-900',
+      stats: '1,500+ Plant Monographs'
+    }
+  ]
+};
+
+/**
  * Industry Comparison Matrix
- * Comprehensive Ayush platform comparison against general portals.
+ * Comprehensive Ayush platform comparison against general portals (Doximity, Handshake, LinkedIn, Internshala).
  */
 export const SYSTEM_COMPARISON_DATA = [
-  { feature: 'Job and Internship Listing', skillsetu: true, aicte: true, internshala: true, linkedin: true, ncs: true },
-  { feature: 'Profile and Application Tracking', skillsetu: true, aicte: true, internshala: true, linkedin: true, ncs: true },
-  { feature: '1-Click Apply System', skillsetu: true, aicte: true, internshala: true, linkedin: true, ncs: true },
-  { feature: 'Ayush Domain Skill Mapping', skillsetu: true, aicte: false, internshala: false, linkedin: false, ncs: false },
-  { feature: 'Visual Competency Radar System', skillsetu: true, aicte: false, internshala: false, linkedin: false, ncs: false },
-  { feature: 'Automated Skill-Gap Analysis', skillsetu: true, aicte: false, internshala: false, linkedin: false, ncs: false },
-  { feature: 'Targeted Ayush Course Suggestions', skillsetu: true, aicte: false, internshala: false, linkedin: false, ncs: false },
-  { feature: 'Verified Digital Student Portfolio', skillsetu: true, aicte: false, internshala: false, linkedin: false, ncs: false },
-  { feature: 'College and Industry Analytics Dashboard', skillsetu: true, aicte: true, internshala: false, linkedin: false, ncs: false },
-  { feature: 'Industry-Academia Collaboration Hub', skillsetu: true, aicte: true, internshala: false, linkedin: false, ncs: true },
+  { feature: 'Job & Internship Discovery', skillsetu: true, doximity: true, handshake: true, linkedin: true, internshala: true },
+  { feature: 'Student Academic & Clinical Learning', skillsetu: true, doximity: false, handshake: false, linkedin: false, internshala: false },
+  { feature: 'Ayurveda Classical Texts & Herb Repositories', skillsetu: true, doximity: false, handshake: false, linkedin: false, internshala: false },
+  { feature: 'Domain-Specific Vaidya & Doctor Mentorship', skillsetu: true, doximity: false, handshake: false, linkedin: false, internshala: false },
+  { feature: 'Clinical Case Study & Research Collaboration', skillsetu: true, doximity: false, handshake: false, linkedin: false, internshala: false },
+  { feature: 'Schedule T GMP Compliance Benchmarks', skillsetu: true, doximity: false, handshake: false, linkedin: false, internshala: false },
+  { feature: 'Visual 6-Axis Competency Radar', skillsetu: true, doximity: false, handshake: false, linkedin: false, internshala: false },
+  { feature: 'Zero Third-Party Recruiter Risk (Verified Units Only)', skillsetu: true, doximity: true, handshake: false, linkedin: false, internshala: false },
+  { feature: 'Verified Digital Clinical Dossier', skillsetu: true, doximity: true, handshake: false, linkedin: false, internshala: false },
+  { feature: 'Industry-College Analytics & Collaboration Hub', skillsetu: true, doximity: false, handshake: true, linkedin: false, internshala: false },
 ];
 
 export const SAMPLE_STUDENTS = [
@@ -185,7 +317,7 @@ export const SAMPLE_STUDENTS = [
     institution: 'National Institute of Ayurveda (NIA), Jaipur',
     readinessScore: 88,
     verifiedStatus: 'Verified Ayush Dossier',
-    avatar: '/images/priya_avatar.jpg',
+    avatar: priyaAvatar,
     assessments: [
       { name: 'Schedule T GMP Compliance', score: '94/100', icon: 'verified', status: 'Passed' },
       { name: 'HPTLC Standardization Assay', score: '88/100', icon: 'biotech', status: 'Passed' },
@@ -199,7 +331,7 @@ export const SAMPLE_STUDENTS = [
     institution: 'Government Ayurveda College, Thiruvananthapuram',
     readinessScore: 78,
     verifiedStatus: 'Verified Ayush Dossier',
-    avatar: '/images/kabir_avatar.jpg',
+    avatar: kabirAvatar,
     assessments: [
       { name: 'Dravyaguna Herbology', score: '85/100', icon: 'local_pharmacy', status: 'Completed' },
       { name: 'Rasa Shastra Formulations', score: '72/100', icon: 'science', status: 'In Progress' }
@@ -212,7 +344,7 @@ export const SAMPLE_STUDENTS = [
     institution: 'Nehru Homoeopathic Medical College, New Delhi',
     readinessScore: 92,
     verifiedStatus: 'Top 5% Candidate',
-    avatar: '/images/ananya_avatar.jpg',
+    avatar: ananyaAvatar,
     assessments: [
       { name: 'Good Clinical Practices (GCP)', score: '96/100', icon: 'assignment_turned_in', status: 'Completed' },
       { name: 'Constitutional Case Taking', score: '90/100', icon: 'clinical_notes', status: 'Passed' }

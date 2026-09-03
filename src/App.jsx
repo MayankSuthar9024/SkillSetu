@@ -170,7 +170,7 @@ export function App() {
 
   // 3. MAIN LANDING PAGES (Home, Features, About, Opportunities)
   return (
-    <div className="min-h-screen bg-surface text-on-surface font-sans flex flex-col antialiased">
+    <div className="min-h-screen bg-surface text-on-surface font-sans flex flex-col antialiased w-full max-w-full overflow-x-hidden">
 
       {/* Shared Sticky Navbar */}
       <Navbar
@@ -182,7 +182,7 @@ export function App() {
       />
 
       {/* Main Content Area Based on Active Page */}
-      <main className="flex-grow pt-20 pb-24 md:pb-8">
+      <main className="flex-grow pt-20 pb-12 w-full max-w-full overflow-x-hidden">
 
         {/* HOME PAGE */}
         {activePage === 'home' && (

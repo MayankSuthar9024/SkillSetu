@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Home, BarChart3, Plus, Building2, User, CheckCircle2, ChevronDown, Flame, MessageSquare } from 'lucide-react';
+import { User, CheckCircle2, ChevronDown, Flame } from 'lucide-react';
 
 export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpenAuthModal, currentUser }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -25,9 +25,7 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
   const userRole = currentUser?.role || 'BAMS Scholar';
 
   return (
-    <>
-      {/* Top Header Bar */}
-      <header className="site-nav bg-[#f7faf8]/80 backdrop-blur-xl fixed top-0 w-full z-50 border-b border-white/60 shadow-xs transition-all duration-200">
+    <header className="site-nav bg-[#f7faf8]/80 backdrop-blur-xl fixed top-0 w-full z-50 border-b border-white/60 shadow-xs transition-all duration-200">
         <div className="max-w-container-max mx-auto px-4 md:px-margin-desktop flex justify-between items-center h-[76px]">
 
           {/* Brand Logo */}
