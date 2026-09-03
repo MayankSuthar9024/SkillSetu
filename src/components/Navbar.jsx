@@ -27,9 +27,9 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
   return (
     <header className="site-nav bg-[#f7faf8]/80 backdrop-blur-xl fixed top-0 w-full z-50 border-b border-white/60 shadow-xs transition-all duration-200">
         <div className="max-w-container-max mx-auto px-4 md:px-margin-desktop flex justify-between items-center h-[76px]">
-          
+
           {/* Brand Logo */}
-          <div 
+          <div
             onClick={() => handleNavClick('home')}
             className="flex items-center gap-3 cursor-pointer group select-none"
           >
@@ -51,11 +51,10 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
                 <button
                   key={item.id}
                   onClick={() => handleNavClick(item.id)}
-                  className={`h-full flex items-center px-4 rounded-xl font-body-md text-sm lg:text-[15px] transition-all duration-200 active:scale-95 cursor-pointer ${
-                    isActive
+                  className={`h-full flex items-center px-4 rounded-xl font-body-md text-sm lg:text-[15px] transition-all duration-200 active:scale-95 cursor-pointer ${isActive
                       ? 'text-primary font-extrabold bg-white shadow-sm ring-1 ring-primary/10'
                       : 'text-slate-600 hover:text-primary hover:bg-white/80 font-medium'
-                  }`}
+                    }`}
                 >
                   {item.label === 'Feed' && <Flame className="w-3.5 h-3.5 text-rose-500 mr-1 animate-pulse" />}
                   {item.label}
@@ -96,7 +95,7 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
                 </button>
 
                 {profileDropdownOpen && (
-                  <div 
+                  <div
                     onMouseLeave={() => setProfileDropdownOpen(false)}
                     className="absolute right-0 mt-2 w-56 bg-white rounded-2xl shadow-xl border border-slate-200 py-2 z-50 animate-in fade-in zoom-in-95"
                   >
@@ -104,7 +103,7 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
                       <span className="font-extrabold text-xs text-slate-900 block">{userName}</span>
                       <span className="text-[10px] text-slate-500 font-medium block">{userRole}</span>
                     </div>
-                    
+
                     <button
                       onClick={() => handleNavClick('profile')}
                       className="w-full text-left px-4 py-2 text-xs font-bold text-slate-800 hover:bg-emerald-50 hover:text-emerald-900 flex items-center gap-2"
@@ -135,7 +134,7 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
             ) : null}
 
             {/* Sign In / Role Selection CTA */}
-            <button 
+            <button
               onClick={() => onOpenAuthModal('login')}
               className="bg-gradient-to-r from-emerald-800 to-teal-900 text-white font-label-sm text-xs font-bold py-2.5 px-5 rounded-xl active:scale-95 hover:shadow-md transition-all flex items-center gap-2 cursor-pointer shrink-0"
             >
@@ -167,7 +166,7 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
               </button>
             )}
 
-            <button 
+            <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="p-2 rounded-lg text-primary hover:bg-surface-container-low transition-colors"
               aria-label="Toggle Navigation Menu"
@@ -188,11 +187,10 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
                 <button
                   key={item.id}
                   onClick={() => handleNavClick(item.id)}
-                  className={`w-full text-left py-3 px-4 rounded-lg font-medium text-base flex justify-between items-center ${
-                    isActive
+                  className={`w-full text-left py-3 px-4 rounded-lg font-medium text-base flex justify-between items-center ${isActive
                       ? 'bg-primary text-on-primary font-semibold'
                       : 'text-on-surface-variant hover:bg-surface-container-low'
-                  }`}
+                    }`}
                 >
                   <span>{item.label}</span>
                   <span className="material-symbols-outlined text-lg">chevron_right</span>
@@ -215,6 +213,65 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
           </div>
         )}
       </header>
+
+      {/* Mobile App Bottom Footer Navigation Bar */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-xl border-t border-slate-200 shadow-2xl px-4 py-2.5 flex items-center justify-between rounded-t-3xl">
+
+        {/* 1. Home */}
+        <button
+          onClick={() => handleNavClick('home')}
+          className={`flex flex-col items-center justify-center py-1 px-2 text-xs transition-all cursor-pointer ${activePage === 'home' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-semibold'
+            }`}
+        >
+          <Home className={`w-5 h-5 shrink-0 ${activePage === 'home' ? 'text-emerald-700' : 'text-slate-500'}`} />
+          <span className="text-[10px] mt-1 font-bold">Home</span>
+        </button>
+
+        {/* 2. Skills */}
+        <button
+          onClick={() => handleNavClick('skill')}
+          className={`flex flex-col items-center justify-center py-1 px-2 text-xs transition-all cursor-pointer ${activePage === 'skill' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-semibold'
+            }`}
+        >
+          <BarChart3 className={`w-5 h-5 shrink-0 ${activePage === 'skill' ? 'text-emerald-700' : 'text-slate-500'}`} />
+          <span className="text-[10px] mt-1 font-bold">Skills</span>
+        </button>
+
+        {/* 3. Center Elevated Floating Green (+) Button */}
+        <div className="relative -mt-9 flex items-center justify-center shrink-0">
+          <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center shadow-lg border border-slate-100 p-1">
+            <button
+              onClick={() => onOpenAuthModal('login')}
+              className="w-14 h-14 rounded-full bg-gradient-to-br from-emerald-800 to-teal-900 hover:from-emerald-900 hover:to-teal-950 active:scale-95 text-white flex items-center justify-center shadow-md hover:shadow-lg transition-all cursor-pointer group"
+              title="Access Platform"
+            >
+              <Plus className="w-7 h-7 stroke-[2.5] group-hover:rotate-90 transition-transform duration-300" />
+            </button>
+          </div>
+        </div>
+
+        {/* 4. Messages */}
+        <button
+          onClick={() => handleNavClick('messages')}
+          className={`flex flex-col items-center justify-center py-1 px-2 text-xs transition-all cursor-pointer ${activePage === 'messages' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-semibold'
+            }`}
+        >
+          <MessageSquare className={`w-5 h-5 shrink-0 ${activePage === 'messages' ? 'text-emerald-700' : 'text-slate-500'}`} />
+          <span className="text-[10px] mt-1 font-bold">Messages</span>
+        </button>
+
+        {/* 5. Industry */}
+        <button
+          onClick={() => handleNavClick('industry')}
+          className={`flex flex-col items-center justify-center py-1 px-2 text-xs transition-all cursor-pointer ${activePage === 'industry' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-semibold'
+            }`}
+        >
+          <Building2 className={`w-5 h-5 shrink-0 ${activePage === 'industry' ? 'text-emerald-700' : 'text-slate-500'}`} />
+          <span className="text-[10px] mt-1 font-bold">Industry</span>
+        </button>
+
+      </div>
+    </>
   );
 }
 

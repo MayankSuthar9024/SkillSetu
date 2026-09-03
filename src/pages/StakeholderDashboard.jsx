@@ -30,6 +30,9 @@ import { ProfilePage } from './ProfilePage';
 import { SkillPage } from './SkillPage';
 import { IndustryPage } from './IndustryPage';
 import { MessagePage } from './MessagePage';
+import { FacultyPage } from './FacultyPage';
+import { CompanyPage } from './CompanyPage';
+import { MinistryPage } from './MinistryPage';
 
 export const StakeholderDashboard = ({
   activePortalId,
@@ -40,15 +43,15 @@ export const StakeholderDashboard = ({
   contrastMode,
   onToggleContrast
 }) => {
-  const [activeTab, setActiveTab] = useState(activePortalId === 'company' ? 'console' : 'feed'); // 'feed' | 'messages' | 'jobs' | 'skills' | 'network' | 'console' | 'profile'
+  const [activeTab, setActiveTab] = useState(activePortalId !== 'student' ? 'console' : 'feed'); // 'feed' | 'messages' | 'jobs' | 'skills' | 'network' | 'console' | 'profile'
   const [roleDropdownOpen, setRoleDropdownOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [openCreatePostModal, setOpenCreatePostModal] = useState(false);
 
-  // Automatically default to 'console' when logging in or switching to Company Portal
+  // Automatically default to 'console' when logging in or switching to any non-student portal
   React.useEffect(() => {
-    if (activePortalId === 'company') {
+    if (activePortalId && activePortalId !== 'student') {
       setActiveTab('console');
     }
   }, [activePortalId]);
@@ -211,10 +214,10 @@ export const StakeholderDashboard = ({
             </div>
 
             {activePortalId === 'student' && <StudentPortalView user={user} />}
-            {activePortalId === 'company' && <CompanyPortalView user={user} />}
-            {activePortalId === 'faculty' && <FacultyPortalView user={user} />}
+            {activePortalId === 'company' && <CompanyPage currentUser={user} onOpenAuthModal={() => {}} />}
+            {activePortalId === 'faculty' && <FacultyPage currentUser={user} onOpenReadinessModal={() => {}} />}
             {activePortalId === 'college' && <CollegePortalView user={user} />}
-            {activePortalId === 'admin' && <MinistryAdminPortalView user={user} />}
+            {activePortalId === 'admin' && <MinistryPage currentUser={user} />}
           </div>
         );
       default:
@@ -222,25 +225,51 @@ export const StakeholderDashboard = ({
     }
   };
 
-  const defaultNavItems = [
+  const studentNavItems = [
     { id: 'feed', label: 'Home', icon: Home },
-    { id: 'messages', label: 'Messages', icon: MessageSquare },
-    { id: 'jobs', label: 'Jobs', icon: Briefcase },
+    { id: 'console', label: 'Student Desk', icon: User },
+    { id: 'jobs', label: 'Opportunities', icon: Briefcase },
     { id: 'skills', label: 'Skill Hub', icon: Award },
-    { id: 'network', label: 'Industry', icon: Building2 },
-    { id: 'console', label: 'Console', icon: Layers }
+    { id: 'messages', label: 'Messages', icon: MessageSquare },
+    { id: 'profile', label: 'Profile', icon: User }
   ];
 
   const companyNavItems = [
-    { id: 'console', label: 'Console', icon: Layers },
-    { id: 'profile', label: 'Company', icon: Building2 },
-    { id: 'jobs', label: 'Talent', icon: Briefcase },
+    { id: 'console', label: 'Company Console', icon: Layers },
+    { id: 'profile', label: 'Company Profile', icon: Building2 },
+    { id: 'jobs', label: 'Talent ATS', icon: Briefcase },
     { id: 'messages', label: 'Messages', icon: MessageSquare },
     { id: 'network', label: 'Industry', icon: Building2 },
     { id: 'feed', label: 'Feed', icon: Home }
   ];
 
-  const navItems = activePortalId === 'company' ? companyNavItems : defaultNavItems;
+  const facultyNavItems = [
+    { id: 'console', label: 'Faculty Console', icon: Layers },
+    { id: 'skills', label: 'Department Radar', icon: BarChart3 },
+    { id: 'profile', label: 'Faculty Profile', icon: User },
+    { id: 'messages', label: 'Messages', icon: MessageSquare },
+    { id: 'feed', label: 'Feed', icon: Home }
+  ];
+
+  const ministryNavItems = [
+    { id: 'console', label: 'Ministry Command', icon: Layers },
+    { id: 'network', label: 'State Ecosystem', icon: Building2 },
+    { id: 'messages', label: 'Messages', icon: MessageSquare },
+    { id: 'feed', label: 'Feed', icon: Home }
+  ];
+
+  const collegeNavItems = [
+    { id: 'console', label: 'College Console', icon: Layers },
+    { id: 'network', label: 'Placement Desk', icon: Building2 },
+    { id: 'messages', label: 'Messages', icon: MessageSquare },
+    { id: 'feed', label: 'Feed', icon: Home }
+  ];
+
+  let navItems = studentNavItems;
+  if (activePortalId === 'company') navItems = companyNavItems;
+  else if (activePortalId === 'faculty') navItems = facultyNavItems;
+  else if (activePortalId === 'admin') navItems = ministryNavItems;
+  else if (activePortalId === 'college') navItems = collegeNavItems;
 
   return (
     <div className="min-h-screen bg-[#f3f7f5] flex flex-col font-sans text-slate-900 overflow-x-hidden relative">
