@@ -39,11 +39,18 @@ export const StakeholderDashboard = ({
   contrastMode,
   onToggleContrast
 }) => {
-  const [activeTab, setActiveTab] = useState('feed'); // 'feed' | 'messages' | 'jobs' | 'skills' | 'network' | 'console' | 'profile'
+  const [activeTab, setActiveTab] = useState(activePortalId === 'company' ? 'console' : 'feed'); // 'feed' | 'messages' | 'jobs' | 'skills' | 'network' | 'console' | 'profile'
   const [roleDropdownOpen, setRoleDropdownOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [openCreatePostModal, setOpenCreatePostModal] = useState(false);
+
+  // Automatically default to 'console' when logging in or switching to Company Portal
+  React.useEffect(() => {
+    if (activePortalId === 'company') {
+      setActiveTab('console');
+    }
+  }, [activePortalId]);
 
   const currentPortalConfig = PORTALS_DATA.find(p => p.id === activePortalId) || PORTALS_DATA[0];
   const user = currentUser || currentPortalConfig.profileUser || currentPortalConfig.demoUser;
@@ -97,6 +104,7 @@ export const StakeholderDashboard = ({
               else if (page === 'skill') setActiveTab('skills');
             }}
             currentUser={user}
+            activePortalId={activePortalId}
           />
         );
       case 'jobs':
@@ -202,7 +210,7 @@ export const StakeholderDashboard = ({
     }
   };
 
-  const navItems = [
+  const defaultNavItems = [
     { id: 'feed', label: 'Home', icon: Home },
     { id: 'messages', label: 'Messages', icon: MessageSquare },
     { id: 'jobs', label: 'Jobs', icon: Briefcase },
@@ -210,6 +218,17 @@ export const StakeholderDashboard = ({
     { id: 'network', label: 'Industry', icon: Building2 },
     { id: 'console', label: 'Console', icon: Layers }
   ];
+
+  const companyNavItems = [
+    { id: 'console', label: 'Console', icon: Layers },
+    { id: 'profile', label: 'Company', icon: Building2 },
+    { id: 'jobs', label: 'Talent', icon: Briefcase },
+    { id: 'messages', label: 'Messages', icon: MessageSquare },
+    { id: 'network', label: 'Industry', icon: Building2 },
+    { id: 'feed', label: 'Feed', icon: Home }
+  ];
+
+  const navItems = activePortalId === 'company' ? companyNavItems : defaultNavItems;
 
   return (
     <div className="min-h-screen bg-[#f3f7f5] flex flex-col font-sans text-slate-900 overflow-x-hidden relative">
@@ -246,8 +265,6 @@ export const StakeholderDashboard = ({
                 className="w-full bg-slate-100 focus:bg-white border border-slate-200 rounded-xl pl-9 pr-3 py-1.5 text-xs text-slate-900 focus:ring-2 focus:ring-emerald-700"
               />
             </div>
-
-
           </div>
 
           {/* Desktop Center Nav Tabs */}
@@ -322,18 +339,14 @@ export const StakeholderDashboard = ({
               <button
                 onClick={() => setActiveTab('profile')}
                 onMouseEnter={() => setProfileDropdownOpen(true)}
-                className="flex items-center gap-2 bg-slate-100 hover:bg-emerald-50 border border-slate-200 rounded-xl p-1 pr-2 sm:pr-2.5 transition-all cursor-pointer shrink-0"
-                title="View Profile Page"
+                className="w-9 h-9 rounded-xl bg-emerald-800 text-white font-extrabold text-xs flex items-center justify-center shadow-xs hover:ring-2 hover:ring-emerald-600 transition-all cursor-pointer shrink-0 overflow-hidden border border-emerald-900/20"
+                title={`View Profile Page (${user.name})`}
               >
-                <div className="w-7 h-7 rounded-lg bg-emerald-800 text-white font-extrabold text-xs flex items-center justify-center shadow-xs shrink-0 overflow-hidden">
-                  {user.avatarImage ? (
-                    <img src={user.avatarImage} alt={user.name} className="w-full h-full object-cover" />
-                  ) : (
-                    <span>{user.avatar || 'AS'}</span>
-                  )}
-                </div>
-                <span className="text-xs font-bold text-slate-900 hidden lg:inline max-w-[100px] truncate">{user.name}</span>
-                <ChevronDown className="w-3.5 h-3.5 text-slate-400 hidden sm:inline shrink-0" />
+                {user.avatarImage ? (
+                  <img src={user.avatarImage} alt={user.name} className="w-full h-full object-cover" />
+                ) : (
+                  <span>{user.avatar || 'AS'}</span>
+                )}
               </button>
 
               {profileDropdownOpen && (
@@ -383,16 +396,7 @@ export const StakeholderDashboard = ({
               )}
             </div>
 
-            {/* Logout Button */}
-            <button
-              onClick={onLogout}
-              className="hidden sm:flex items-center gap-1 px-3 py-1.5 rounded-xl bg-white hover:bg-rose-50 text-slate-700 hover:text-rose-700 border border-slate-200 text-xs font-bold transition-colors cursor-pointer shrink-0"
-            >
-              <LogOut className="w-3.5 h-3.5" />
-              <span>Log Out</span>
-            </button>
-
-          </div>
+            </div>
 
         </div>
 

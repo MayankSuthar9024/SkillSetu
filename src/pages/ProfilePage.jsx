@@ -23,7 +23,18 @@ import {
   Eye
 } from 'lucide-react';
 
-export function ProfilePage({ onNavigate, currentUser }) {
+import { CompanyProfileView } from '../components/portals/CompanyProfileView';
+
+export function ProfilePage({ onNavigate, currentUser, activePortalId }) {
+  const isCompanyUser = activePortalId === 'company' || 
+    currentUser?.role?.toLowerCase().includes('recruiter') || 
+    currentUser?.institution?.toLowerCase().includes('dabur') || 
+    currentUser?.id?.includes('DABUR');
+
+  if (isCompanyUser) {
+    return <CompanyProfileView user={currentUser} onNavigate={onNavigate} />;
+  }
+
   const [activeTab, setActiveTab] = useState('overview');
   const [isEditingBio, setIsEditingBio] = useState(false);
   
