@@ -1,3 +1,7 @@
+import priyaAvatar from '../assets/images/priya_avatar.jpg';
+import kabirAvatar from '../assets/images/kabir_avatar.jpg';
+import ananyaAvatar from '../assets/images/ananya_avatar.jpg';
+
 export const AYUSH_DISCIPLINES = [
   {
     id: 'ayurveda',
@@ -185,7 +189,7 @@ export const SAMPLE_STUDENTS = [
     institution: 'National Institute of Ayurveda (NIA), Jaipur',
     readinessScore: 88,
     verifiedStatus: 'Verified Ayush Dossier',
-    avatar: '/images/priya_avatar.jpg',
+    avatar: priyaAvatar,
     assessments: [
       { name: 'Schedule T GMP Compliance', score: '94/100', icon: 'verified', status: 'Passed' },
       { name: 'HPTLC Standardization Assay', score: '88/100', icon: 'biotech', status: 'Passed' },
@@ -199,7 +203,7 @@ export const SAMPLE_STUDENTS = [
     institution: 'Government Ayurveda College, Thiruvananthapuram',
     readinessScore: 78,
     verifiedStatus: 'Verified Ayush Dossier',
-    avatar: '/images/kabir_avatar.jpg',
+    avatar: kabirAvatar,
     assessments: [
       { name: 'Dravyaguna Herbology', score: '85/100', icon: 'local_pharmacy', status: 'Completed' },
       { name: 'Rasa Shastra Formulations', score: '72/100', icon: 'science', status: 'In Progress' }
@@ -212,7 +216,7 @@ export const SAMPLE_STUDENTS = [
     institution: 'Nehru Homoeopathic Medical College, New Delhi',
     readinessScore: 92,
     verifiedStatus: 'Top 5% Candidate',
-    avatar: '/images/ananya_avatar.jpg',
+    avatar: ananyaAvatar,
     assessments: [
       { name: 'Good Clinical Practices (GCP)', score: '96/100', icon: 'assignment_turned_in', status: 'Completed' },
       { name: 'Constitutional Case Taking', score: '90/100', icon: 'clinical_notes', status: 'Passed' }

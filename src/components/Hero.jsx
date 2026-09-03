@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, useMotionValue, useTransform, useSpring } from 'framer-motion';
 import { TRUST_METRICS } from '../data/stitchData';
+import heroBannerImg from '../assets/images/ayush_hero_banner.jpg';
 
 export function Hero({ onGetStarted }) {
 
@@ -161,13 +162,17 @@ export function Hero({ onGetStarted }) {
             className="bg-white/95 border border-white/90 rounded-[28px] p-6 sm:p-8 soft-shadow-elevated relative z-20 backdrop-blur-md transition-shadow hover:shadow-2xl"
           >
             {/* Editorial image layer (Clean, no text overlay) */}
-            <div className="relative h-44 sm:h-52 -mx-6 sm:-mx-8 -mt-6 sm:-mt-8 mb-6 overflow-hidden rounded-t-[28px] group">
+            <div className="relative h-44 sm:h-52 -mx-6 sm:-mx-8 -mt-6 sm:-mt-8 mb-6 overflow-hidden rounded-t-[28px] group bg-emerald-950/10">
               <img
-                src="/images/ayush_hero_banner.jpg"
+                src={heroBannerImg}
                 alt="Ayurvedic clinical research and botanical extraction laboratory"
                 className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                loading="eager"
+                onError={(e) => {
+                  e.currentTarget.src = './images/ayush_hero_banner.jpg';
+                }}
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent pointer-events-none" />
             </div>
             
             {/* Card Header: Standardized Benchmark System */}
