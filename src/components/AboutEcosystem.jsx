@@ -3,7 +3,12 @@ import { motion } from 'framer-motion';
 import { AYUSH_DISCIPLINES, SAMPLE_STUDENTS } from '../data/stitchData';
 
 export function AboutEcosystem() {
-  const featuredScholar = SAMPLE_STUDENTS[1]; // Kabir Mehta 78% score profile
+  const benchmarkScores = [
+    { name: 'Schedule T GMP Compliance', score: '94/100', level: 'Mastered' },
+    { name: 'HPTLC Standardization Assay', score: '88/100', level: 'Verified' },
+    { name: 'Clinical Nadi Pariksha Protocol', score: '92/100', level: 'Mastered' },
+    { name: 'Good Clinical Practices (GCP)', score: '96/100', level: 'Verified' }
+  ];
 
   return (
     <section className="premium-section py-16 lg:py-24 bg-surface tech-grid border-b border-outline-variant/30 relative overflow-hidden">
@@ -12,7 +17,7 @@ export function AboutEcosystem() {
         {/* Profile Card & Narrative Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center mb-24">
           
-          {/* Left Column Visual: Profile Card */}
+          {/* Left Column Visual: Standardized Dossier Card */}
           <motion.div 
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -24,31 +29,31 @@ export function AboutEcosystem() {
               
               <div className="flex justify-between items-start mb-6">
                 <div>
-                  <h3 className="font-serif text-2xl font-bold text-on-surface mb-1">
-                    {featuredScholar.name}
+                  <h3 className="text-xl sm:text-2xl font-bold text-on-surface mb-1">
+                    Standardized Scholar Dossier
                   </h3>
                   <p className="text-sm text-on-surface-variant font-medium">
-                    {featuredScholar.degree}
+                    National Ayush Competency Framework
                   </p>
-                  <p className="text-xs text-outline">{featuredScholar.institution}</p>
+                  <p className="text-xs text-outline">NCISM & NCH Aligned · AIIA Validated Diagnostic</p>
                 </div>
                 <div className="bg-secondary-container text-tertiary px-3.5 py-1 rounded-full text-xs font-bold flex items-center gap-1 shadow-2xs">
-                  <span className="material-symbols-outlined text-sm">verified</span> Verified Profile
+                  <span className="material-symbols-outlined text-sm">verified</span> Verified Matrix
                 </div>
               </div>
 
               {/* Match Score Display */}
               <div className="bg-surface-container-lowest border border-outline-variant/30 rounded-2xl p-6 mb-6 text-center shadow-xs">
-                <div className="font-display-lg text-4xl sm:text-5xl font-extrabold text-primary mb-1">
-                  {featuredScholar.readinessScore}%
+                <div className="text-4xl sm:text-5xl font-extrabold text-primary mb-1">
+                  88%
                 </div>
                 <div className="text-xs sm:text-sm font-semibold uppercase tracking-wide text-on-surface-variant">
-                  Clinical Competency Index
+                  Overall Clinical Readiness Index
                 </div>
                 <div className="w-full h-3 bg-surface-container rounded-full mt-4 overflow-hidden p-0.5">
                   <motion.div 
                     initial={{ width: 0 }}
-                    whileInView={{ width: `${featuredScholar.readinessScore}%` }}
+                    whileInView={{ width: '88%' }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
                     className="bg-gradient-to-r from-primary via-emerald-600 to-amber-500 h-full rounded-full" 
@@ -58,7 +63,7 @@ export function AboutEcosystem() {
 
               {/* Assessment Scores List */}
               <div className="space-y-3">
-                {featuredScholar.assessments.map((ast, idx) => (
+                {benchmarkScores.map((ast, idx) => (
                   <div 
                     key={idx}
                     className="flex justify-between items-center p-3 border border-outline-variant/20 rounded-xl bg-white/70 shadow-2xs"

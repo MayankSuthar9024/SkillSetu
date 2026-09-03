@@ -41,7 +41,7 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
             </div>
             <div className="text-left">
               <span className="font-extrabold text-xl text-slate-900 tracking-tight block leading-none">
-                Skill<span className="text-primary font-accent font-normal text-2xl ml-0.5">Setu</span>
+                Skill<span className="text-emerald-700 font-extrabold ml-0.5">Setu</span>
               </span>
             </div>
           </div>
