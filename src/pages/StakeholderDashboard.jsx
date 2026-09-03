@@ -47,7 +47,7 @@ export const StakeholderDashboard = ({
   const [openCreatePostModal, setOpenCreatePostModal] = useState(false);
 
   const currentPortalConfig = PORTALS_DATA.find(p => p.id === activePortalId) || PORTALS_DATA[0];
-  const user = currentUser || currentPortalConfig.profileUser || currentPortalConfig.demoUser;
+  const user = currentUser || currentPortalConfig.profileUser;
 
   const notifications = [
     { id: 1, title: 'Prof. Meenakshi Joshi sent you a new message in Chat', time: '5m ago', unread: true },
@@ -174,7 +174,7 @@ export const StakeholderDashboard = ({
                         key={p.id}
                         onClick={() => {
                           setRoleDropdownOpen(false);
-                          onSwitchPortal(p.id, p.demoUser);
+                          onSwitchPortal(p.id, p.profileUser);
                         }}
                         className={`w-full text-left px-3 py-2 text-xs flex items-center justify-between transition-colors ${
                           activePortalId === p.id 
@@ -271,7 +271,7 @@ export const StakeholderDashboard = ({
                       key={p.id}
                       onClick={() => {
                         setRoleDropdownOpen(false);
-                        onSwitchPortal(p.id, p.profileUser || p.demoUser);
+                        onSwitchPortal(p.id, p.profileUser);
                       }}
                       className={`w-full text-left px-3 py-2 text-xs flex items-center justify-between transition-colors ${
                         activePortalId === p.id 
@@ -444,7 +444,7 @@ export const StakeholderDashboard = ({
 
       {/* Footer */}
       <footer className="py-4 border-t border-slate-200 bg-white text-center text-xs text-slate-500 mb-20 md:mb-0">
-        SkillSetu National Ayush Professional Platform · {PLATFORM_METADATA.ministryFull} · SIH 2026
+        SkillSetu National Ayush Professional Platform · {PLATFORM_METADATA.ministryFull}
       </footer>
 
       {/* Mobile Bottom Footer Navigation Bar */}

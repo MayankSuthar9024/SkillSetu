@@ -24,7 +24,7 @@ export function Features() {
             className="inline-flex items-center gap-2 px-3.5 py-1 bg-surface-container-low border border-outline-variant/30 rounded-full text-xs font-semibold text-on-surface-variant mb-4 shadow-2xs"
           >
             <span className="material-symbols-outlined text-base text-primary">auto_awesome</span>
-            <span>Documented Core Innovations (Slide 2)</span>
+            <span>Enterprise Capabilities</span>
           </motion.div>
 
           <motion.h2 
@@ -111,19 +111,19 @@ export function Features() {
 
                 <div className="mt-6 pt-4 border-t border-outline-variant/20 flex justify-between items-center text-xs font-semibold text-primary">
                   <span>Category: {feature.category}</span>
-                  <span className="text-slate-400 font-medium">SIH26044 Verified</span>
+                  <span className="text-slate-400 font-medium">Ayush Verified</span>
                 </div>
               </motion.div>
             ))}
           </AnimatePresence>
         </motion.div>
 
-        {/* Official Comparison With Existing Systems (Slide 6 & 7) */}
+        {/* Industry Comparison Matrix */}
         <div className="mt-16 pt-12 border-t border-outline-variant/30">
           <div className="text-center max-w-3xl mx-auto mb-8">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-100/70 border border-emerald-300 text-emerald-900 rounded-full text-xs font-bold mb-3">
               <span className="material-symbols-outlined text-sm">balance</span>
-              Documented Benchmark Comparison (Slide 6 & 7)
+              Industry Benchmark Comparison
             </span>
             <h3 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold text-slate-900 mb-3">
               Comparison With Existing Systems

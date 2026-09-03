@@ -89,7 +89,7 @@ export function Hero({ onGetStarted }) {
           <motion.div variants={itemVariants} className="flex justify-center lg:justify-start">
             <span className="inline-flex items-center gap-2 px-3.5 py-1 bg-emerald-50/90 border border-emerald-200/90 rounded-full text-xs font-semibold text-emerald-900 shadow-2xs">
               <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span>
-              <span className="font-accent tracking-wider text-xs">Team NJABBIC · Problem Statement SIH26044 · Ministry of Ayush & AIIA</span>
+              <span className="font-accent tracking-wider text-xs">National Ayush Platform · Ministry of Ayush & AIIA</span>
             </span>
           </motion.div>
 
@@ -248,9 +248,9 @@ export function Hero({ onGetStarted }) {
               ))}
             </div>
 
-            {/* Candidate Profile Switcher */}
+            {/* Candidate Profile Showcase */}
             <div className="mt-6 pt-4 border-t border-outline-variant/20 flex items-center justify-between text-xs">
-              <span className="text-outline font-medium">Switch Candidate Profile:</span>
+              <span className="text-outline font-medium">Featured Candidates:</span>
               <div className="flex gap-1.5">
                 {SAMPLE_STUDENTS.map((st, i) => (
                   <button

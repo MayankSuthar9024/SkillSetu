@@ -1,6 +1,6 @@
 /**
- * 5 Stakeholder Portals Data for SkillSetu (SIH 2026 - SIH26044)
- * Official Stakeholder Configurations & Workflows.
+ * 5 Stakeholder Portals Data for SkillSetu
+ * Production Stakeholder Configurations & Workflows.
  */
 
 export const PORTALS_DATA = [
@@ -172,26 +172,18 @@ export const PORTALS_DATA = [
   }
 ];
 
-// Alias demoUser to profileUser for full backwards compatibility
-PORTALS_DATA.forEach(portal => {
-  portal.demoUser = portal.profileUser;
-});
 
 export const PLATFORM_METADATA = {
   name: "SkillSetu",
   nameHindi: "कौशलसेतु",
-  teamName: "NJABBIC",
-  sihId: "SIH26044",
-  title: "Portal for Academia Industry collaboration for Skill Mapping, Internships and Placement",
-  theme: "Smart Automation",
-  category: "Software",
+  title: "National Ayush Academia-Industry Skill Mapping, Internships & Placement Platform",
   ministry: "Ministry of Ayush",
   department: "All India Institute of Ayurveda (AIIA)",
   ministryFull: "Ministry of Ayush · All India Institute of Ayurveda",
   tagline: "Centralized Ayush Web Platform for Skill Testing, Gap Analysis, Bridge Courses, and 1-Click Hiring",
   stats: {
     marketSize: "$43.4B+",
-    marketSource: "WHO / Invest India / PIB Delhi",
+    marketSource: "WHO / Invest India",
     skillDeficit: "55%+",
     deficitSource: "FICCI & HSSC Schedule T GMP Report",
     msmeDemand: "10,000+",
@@ -200,7 +192,7 @@ export const PLATFORM_METADATA = {
     permittedColleges: "536+",
     licensedPharma: "7,345+",
     nsqfModules: "12 HSSC NQR Packs",
-    ccrasGrants: "300+ SPARK-4.0",
+    ccrasGrants: "300+ Active Grants",
     sheetsSaved: "900,000+ A4 Sheets",
     verificationStandard: "100% SHA-256 Verifiable"
   }

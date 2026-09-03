@@ -105,7 +105,7 @@ export function HowItWorks() {
             className="bg-secondary-fixed text-on-secondary-container px-4 py-1.5 rounded-full font-label-sm text-xs uppercase tracking-wider font-bold mb-4 inline-flex items-center gap-1.5 shadow-2xs"
           >
             <span className="material-symbols-outlined text-base">route</span>
-            Official 3-Phase Modular Pipeline (Slide 4)
+            Three-Phase Competency Pipeline
           </motion.span>
           <motion.h2 
             initial={{ opacity: 0, y: 14 }}
@@ -123,7 +123,7 @@ export function HowItWorks() {
             transition={{ delay: 0.1 }}
             className="font-body-lg text-base sm:text-lg text-on-surface-variant max-w-2xl leading-relaxed"
           >
-            Documented in the SIH26044 Technical Approach: replace unverified paper resumes with visual 6-axis competency mapping, 15-minute pharma micro-courses, and frictionless 1-click hiring.
+            A standardized methodology connecting Ayush scholars with verified industry opportunities: visual 6-axis competency mapping, 15-minute pharmaceutical micro-courses, and frictionless 1-click hiring.
           </motion.p>
         </div>
 
@@ -175,7 +175,7 @@ export function HowItWorks() {
 
                   <div className="pt-2 text-xs text-outline font-medium flex items-center gap-1.5">
                     <span className="material-symbols-outlined text-base text-primary">timer</span>
-                    <span>{stepItem.demoMetric.label}: <strong>{stepItem.demoMetric.value}</strong></span>
+                    <span>{stepItem.benchmarkMetric?.label}: <strong>{stepItem.benchmarkMetric?.value}</strong></span>
                   </div>
                 </div>
 

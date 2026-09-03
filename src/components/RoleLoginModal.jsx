@@ -58,7 +58,7 @@ export const RoleLoginModal = ({ isOpen, onClose, portal, onLoginSuccess }) => {
     setTimeout(() => {
       setIsLoading(false);
       const authenticatedUser = {
-        ...(portal.profileUser || portal.demoUser),
+        ...portal.profileUser,
         name: identifier.includes('@') ? (portal.profileUser?.name || identifier.split('@')[0]) : (portal.profileUser?.name || identifier),
         email: identifier.includes('@') ? identifier : (portal.profileUser?.email || identifier),
       };

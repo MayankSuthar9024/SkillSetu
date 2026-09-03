@@ -60,7 +60,7 @@ export const HOW_IT_WORKS_STEPS = [
       'Dynamic testing with strict per-item timer',
       'Replaces unverified text resumes with real competency metrics'
     ],
-    demoMetric: { label: 'Deficit Detection', value: 'Instant 6-Axis Plot' }
+    benchmarkMetric: { label: 'Deficit Detection', value: 'Instant 6-Axis Plot' }
   },
   {
     step: '02',
@@ -75,7 +75,7 @@ export const HOW_IT_WORKS_STEPS = [
       'Curriculum-to-industry discrepancy detection',
       'Instant generation of tailored remediation roadmap'
     ],
-    demoMetric: { label: 'Accuracy Index', value: '94.8% Curricular Match' }
+    benchmarkMetric: { label: 'Accuracy Index', value: '94.8% Curricular Match' }
   },
   {
     step: '03',
@@ -90,7 +90,7 @@ export const HOW_IT_WORKS_STEPS = [
       'Built and verified by Ayush pharma R&D leaders',
       'Unlocks verified digital badges upon completion'
     ],
-    demoMetric: { label: 'Course Format', value: '15-Min Focused Sprints' }
+    benchmarkMetric: { label: 'Course Format', value: '15-Min Focused Sprints' }
   },
   {
     step: '04',
@@ -105,7 +105,7 @@ export const HOW_IT_WORKS_STEPS = [
       'Direct talent pipeline to India\'s 7,345+ licensed pharmacies',
       'Eliminates 900,000+ paper A4 sheets annually'
     ],
-    demoMetric: { label: 'Placement Speedup', value: '40% Faster (6 Wks)' }
+    benchmarkMetric: { label: 'Placement Speedup', value: '40% Faster (6 Wks)' }
   }
 ];
 
@@ -161,8 +161,8 @@ export const PLATFORM_FEATURES = [
 ];
 
 /**
- * Official Comparison With Existing Systems Matrix
- * Directly from Slide 6 & 7 of official documentation (sih final 1 ppt.pdf)
+ * Industry Comparison Matrix
+ * Comprehensive Ayush platform comparison against general portals.
  */
 export const SYSTEM_COMPARISON_DATA = [
   { feature: 'Job and Internship Listing', skillsetu: true, aicte: true, internshala: true, linkedin: true, ncs: true },
@@ -231,7 +231,7 @@ export const FAQ_ITEMS = [
   {
     id: 'faq-1',
     question: 'What is SkillSetu and what problem does it solve?',
-    answer: 'SkillSetu addresses Problem Statement SIH26044 (Ministry of Ayush / All India Institute of Ayurveda). It bridges the significant gap between academic curricula and industry competencies for 42,000+ graduates across India\'s 536+ permitted Ayush colleges and 7,345+ licensed pharmaceutical units.'
+    answer: 'SkillSetu is the national collaboration platform developed under the Ministry of Ayush and All India Institute of Ayurveda (AIIA). It bridges the critical competency gap between academic curricula and industry requirements for 42,000+ scholars across India\'s 536+ permitted Ayush colleges and 7,345+ licensed pharmaceutical units.'
   },
   {
     id: 'faq-2',

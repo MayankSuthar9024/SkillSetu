@@ -44,7 +44,7 @@ export function ReadinessModal({ isOpen, onClose }) {
               <h3 className="font-headline-md text-xl font-bold text-on-surface">
                 Skill Readiness Assessor
               </h3>
-              <p className="text-xs text-on-surface-variant">SIH 2026 SkillSetu Interactive Benchmark</p>
+              <p className="text-xs text-on-surface-variant">Standardized Ayush Clinical Competency Benchmark</p>
             </div>
           </div>
 

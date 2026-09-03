@@ -81,11 +81,11 @@ export const PortalSelectPage = ({
           <span>Back to Home</span>
         </button>
 
-        {/* Right Help / SIH Context */}
+        {/* Right Status / Organization */}
         <div className="flex items-center gap-3">
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-white/80 text-emerald-900 border border-emerald-300 shadow-xs">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            Team {PLATFORM_METADATA.teamName} · {PLATFORM_METADATA.sihId}
+            Ministry of Ayush · AIIA
           </span>
         </div>
       </header>
