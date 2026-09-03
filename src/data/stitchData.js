@@ -49,196 +49,213 @@ export const AYUSH_DISCIPLINES = [
 export const HOW_IT_WORKS_STEPS = [
   {
     step: '01',
-    title: 'Standardized Clinical Assessments',
-    subtitle: 'Evaluate practical and clinical competencies against national Ayush benchmarks.',
-    icon: 'assignment',
-    badge: 'Baseline Assessment',
+    title: 'Visual 6-Axis Competency Radar',
+    subtitle: 'Maps clinical and industrial skills like Schedule T GMP and HPTLC to replace flat text resumes.',
+    icon: 'radar',
+    badge: 'Phase 1: Radar',
     color: 'emerald',
-    description: 'Students complete structured micro-evaluations tailored to their specific medical stream (BAMS, BNYS, BUMS, BSMS, BHMS) benchmarking diagnostic skills against clinical standards.',
+    description: 'Students benchmark their practical competencies across 6 core industry axes: Schedule T GMP, HPTLC Fingerprinting, Clinical Diagnosis & Nadi Pariksha, Dravyaguna Pharmacology, Rasa Shastra, and Good Clinical Practices (GCP).',
     highlights: [
-      'National NCISM & NCH curriculum alignment',
-      'Clinical scenario & case-taking simulations',
-      'Instant diagnostic score computation'
+      'Visual 6-Axis diagnostic mapping',
+      'Dynamic testing with strict per-item timer',
+      'Replaces unverified text resumes with real competency metrics'
     ],
-    demoMetric: { label: 'Evaluation Format', value: '25 Min Modules' }
+    benchmarkMetric: { label: 'Deficit Detection', value: 'Instant 6-Axis Plot' }
   },
   {
     step: '02',
-    title: 'Competency Gap Analysis',
-    subtitle: 'Detailed breakdown of diagnostic strengths and priority learning areas.',
-    icon: 'insights',
-    badge: 'Gap Analysis',
+    title: 'Automated Skill-Gap Analysis',
+    subtitle: 'Identifies what practical skills a student lacks compared to current Ayush industry needs.',
+    icon: 'analytics',
+    badge: 'Phase 2: Gap Analysis',
     color: 'teal',
-    description: 'Our diagnostic benchmarking engine analyzes student performance against industry criteria, highlighting specific clinical competencies that require advancement.',
+    description: 'Directly addresses the 55%+ practical skill deficit reported by FICCI & HSSC by pinpointing exact cleanroom, assay, and clinical protocol gaps before application.',
     highlights: [
-      'Competency radar across 12+ clinical dimensions',
-      'Objective clinical readiness score (0-100%)',
-      'Targeted skill enhancement roadmap'
+      'Standardized against 12 HSSC NQR Qualification Packs',
+      'Curriculum-to-industry discrepancy detection',
+      'Instant generation of tailored remediation roadmap'
     ],
-    demoMetric: { label: 'Benchmark Precision', value: '94.8%' }
+    benchmarkMetric: { label: 'Accuracy Index', value: '94.8% Curricular Match' }
   },
   {
     step: '03',
-    title: 'Practical Micro-Sprints',
-    subtitle: 'Hands-on practical modules mentored by senior practitioners.',
+    title: 'Targeted 15-Minute Micro-Bridge Courses',
+    subtitle: 'Suggests short training modules so students can improve weak skills before applying.',
     icon: 'biotech',
-    badge: 'Hands-on Sprint',
+    badge: 'Phase 3: Bridge',
     color: 'amber',
-    description: 'Participate in structured 1 to 2-week practical sprints. Practice case analysis, herbal formulation compliance, and modern clinic protocols with senior practitioner guidance.',
+    description: 'Interactive 15-minute micro-courses built directly by Ayush pharmaceutical R&D labs and industry preceptors covering Schedule T GMP, HPTLC standardization, and clinical protocols.',
     highlights: [
-      'Standardized review from verified senior practitioners',
-      'Real clinical case analysis submissions',
-      'Hands-on formulation and protocol practice'
+      '15-minute bite-sized practical sprints',
+      'Built and verified by Ayush pharma R&D leaders',
+      'Unlocks verified digital badges upon completion'
     ],
-    demoMetric: { label: 'Active Modules', value: '120+' }
+    benchmarkMetric: { label: 'Course Format', value: '15-Min Focused Sprints' }
   },
   {
     step: '04',
-    title: 'Verified Digital Dossier',
-    subtitle: 'Connect with healthcare employers using authenticated credentials.',
+    title: 'Smart Matching & 1-Click Apply',
+    subtitle: 'Automatically matches eligible students with internships and jobs across 7,345+ Ayush companies.',
     icon: 'verified',
-    badge: 'Employer Matching',
+    badge: 'Phase 4: 1-Click Apply',
     color: 'emerald',
-    description: 'Generate an authenticated SkillSetu digital dossier. Ayush hospitals, pharmaceutical labs, and wellness centers review verified practical competency scores for placements.',
+    description: 'Frictionless 1-click application system with automated skill threshold filtering. Slashes hiring cycles from 10 weeks to 6 weeks for 42,000+ BAMS graduates.',
     highlights: [
-      'Standardized verification for hospital and industry partners',
-      'Verifiable QR credentials for clinical portfolios',
-      'Direct candidate shortlisting by readiness index'
+      '1-click apply with 100% SHA-256 verifiable portfolio',
+      'Direct talent pipeline to India\'s 7,345+ licensed pharmacies',
+      'Eliminates 900,000+ paper A4 sheets annually'
     ],
-    demoMetric: { label: 'Verification Speed', value: 'Real-Time' }
+    benchmarkMetric: { label: 'Placement Speedup', value: '40% Faster (6 Wks)' }
   }
 ];
 
 export const PLATFORM_FEATURES = [
   {
-    id: 'verified-passport',
-    title: 'Verified Digital Dossier',
-    icon: 'verified_user',
-    description: 'Cryptographically verifiable digital credential summarizing authenticated clinical competencies, assessment scores, and sprint achievements.',
-    category: 'Credibility',
-    badge: 'Verifiable'
+    id: 'centralized-platform',
+    title: 'Centralized Ayush Web Platform',
+    icon: 'hub',
+    description: 'Single portal connecting students, colleges, and companies for standardized skill testing, gap analysis, and verified hiring.',
+    category: 'Core Infrastructure',
+    badge: 'Unified Ecosystem'
   },
   {
-    id: 'competency-gap-mapping',
-    title: 'Competency Gap Mapping',
-    icon: 'analytics',
-    description: 'Real-time diagnostic algorithms that benchmark candidate performance against current clinical demands across all 5 Ayush streams.',
-    category: 'Intelligence',
-    badge: 'Standardized'
+    id: 'skill-testing-gap',
+    title: 'Skill Testing & Gap Analysis',
+    icon: 'quiz',
+    description: 'Dynamic diagnostic tests with strict per-item timer to identify exact practical skills a student lacks compared to industry needs.',
+    category: 'Assessment',
+    badge: 'Timed Engine'
   },
   {
-    id: 'micro-sprints',
-    title: 'Clinical Micro-Sprints',
-    icon: 'sprint',
-    description: 'Structured 2-week practical modules aligned with Ayush wellness centers, research laboratories, and pharmaceutical facilities.',
-    category: 'Practical Skills',
-    badge: 'Hands-On'
+    id: 'micro-bridge-courses',
+    title: 'Targeted Bridge Courses',
+    icon: 'school',
+    description: '15-minute practical training modules built by pharma R&D so students can improve weak skills before applying for roles.',
+    category: 'Remediation',
+    badge: '15-Min Modules'
   },
   {
-    id: 'employer-connect',
-    title: 'Direct Industry Matching',
+    id: 'smart-internship-matching',
+    title: 'Smart Internship Matching',
     icon: 'handshake',
-    description: 'Direct pipeline connecting qualified candidates with Ayush hospital networks, wellness centers, and research foundations.',
-    category: 'Career Growth',
-    badge: 'Direct Match'
+    description: 'Automatically matches eligible candidates with internships and entry-level jobs across India\'s 7,345+ licensed Ayush manufacturers.',
+    category: 'Placements',
+    badge: 'Auto-Match'
   },
   {
-    id: 'institutional-dashboard',
-    title: 'Institutional Analytics Desk',
-    icon: 'domain',
-    description: 'Comprehensive workspace for college deans and faculty to monitor batch competency curves and curriculum alignment.',
-    category: 'Academia',
-    badge: 'Institutional'
+    id: 'competency-radar',
+    title: 'Visual 6-Axis Competency Radar',
+    icon: 'radar',
+    description: 'Maps clinical and industrial skills like Schedule T GMP and HPTLC fingerprinting to replace flat text resumes with verified proof-of-work.',
+    category: 'Credibility',
+    badge: '6-Axis Visual'
   },
   {
-    id: 'expert-mentorship',
-    title: 'Senior Practitioner Network',
-    icon: 'clinical_notes',
-    description: 'Structured clinical feedback from experienced Vaidyas, Hakeems, Doctors, and Naturopaths across India.',
-    category: 'Mentorship',
-    badge: 'Clinical Guidance'
+    id: 'app-first-mobile',
+    title: 'App-First Mobile Interface',
+    icon: 'smartphone',
+    description: 'Built with a native mobile UI, featuring a bottom navigation bar and zero web clutter for smooth access on any device across rural and urban India.',
+    category: 'Accessibility',
+    badge: 'PWA Mobile-First'
   }
+];
+
+/**
+ * Industry Comparison Matrix
+ * Comprehensive Ayush platform comparison against general portals.
+ */
+export const SYSTEM_COMPARISON_DATA = [
+  { feature: 'Job and Internship Listing', skillsetu: true, aicte: true, internshala: true, linkedin: true, ncs: true },
+  { feature: 'Profile and Application Tracking', skillsetu: true, aicte: true, internshala: true, linkedin: true, ncs: true },
+  { feature: '1-Click Apply System', skillsetu: true, aicte: true, internshala: true, linkedin: true, ncs: true },
+  { feature: 'Ayush Domain Skill Mapping', skillsetu: true, aicte: false, internshala: false, linkedin: false, ncs: false },
+  { feature: 'Visual Competency Radar System', skillsetu: true, aicte: false, internshala: false, linkedin: false, ncs: false },
+  { feature: 'Automated Skill-Gap Analysis', skillsetu: true, aicte: false, internshala: false, linkedin: false, ncs: false },
+  { feature: 'Targeted Ayush Course Suggestions', skillsetu: true, aicte: false, internshala: false, linkedin: false, ncs: false },
+  { feature: 'Verified Digital Student Portfolio', skillsetu: true, aicte: false, internshala: false, linkedin: false, ncs: false },
+  { feature: 'College and Industry Analytics Dashboard', skillsetu: true, aicte: true, internshala: false, linkedin: false, ncs: false },
+  { feature: 'Industry-Academia Collaboration Hub', skillsetu: true, aicte: true, internshala: false, linkedin: false, ncs: true },
 ];
 
 export const SAMPLE_STUDENTS = [
   {
     id: 'priya',
     name: 'Priya Sharma',
-    degree: 'BAMS Final Year',
-    institution: 'National Institute of Ayurveda, Jaipur',
-    readinessScore: 85,
-    verifiedStatus: 'Verified Profile',
+    degree: 'BAMS Final Year Scholar',
+    institution: 'National Institute of Ayurveda (NIA), Jaipur',
+    readinessScore: 88,
+    verifiedStatus: 'Verified Ayush Dossier',
     avatar: '/images/priya_avatar.jpg',
     assessments: [
-      { name: 'Clinical Assessment', score: 'Passed (Advanced)', icon: 'psychiatry', status: 'Completed' },
-      { name: 'Pharmacology (Dravyaguna)', score: '88/100', icon: 'local_pharmacy', status: 'Passed' },
-      { name: 'Nadi Pariksha Protocol', score: '92/100', icon: 'pulse_alert', status: 'Completed' }
+      { name: 'Schedule T GMP Compliance', score: '94/100', icon: 'verified', status: 'Passed' },
+      { name: 'HPTLC Standardization Assay', score: '88/100', icon: 'biotech', status: 'Passed' },
+      { name: 'Nadi Pariksha Clinical Protocol', score: '92/100', icon: 'ecg_heart', status: 'Completed' }
     ]
   },
   {
     id: 'kabir',
     name: 'Kabir Mehta',
-    degree: 'BAMS Final Year Scholar',
-    institution: 'Government Ayurveda College, Trivandrum',
+    degree: 'BAMS Graduate Trainee',
+    institution: 'Government Ayurveda College, Thiruvananthapuram',
     readinessScore: 78,
-    verifiedStatus: 'Verified Profile',
+    verifiedStatus: 'Verified Ayush Dossier',
     avatar: '/images/kabir_avatar.jpg',
     assessments: [
-      { name: 'Diagnostic Skills', score: '85/100', icon: 'insights', status: 'Completed' },
-      { name: 'Treatment Protocols', score: '72/100', icon: 'medical_services', status: 'In Progress' }
+      { name: 'Dravyaguna Herbology', score: '85/100', icon: 'local_pharmacy', status: 'Completed' },
+      { name: 'Rasa Shastra Formulations', score: '72/100', icon: 'science', status: 'In Progress' }
     ]
   },
   {
     id: 'ananya',
     name: 'Dr. Ananya Varma',
     degree: 'BHMS House Surgeon',
-    institution: 'Nehru Homoeopathic Medical College, Delhi',
+    institution: 'Nehru Homoeopathic Medical College, New Delhi',
     readinessScore: 92,
     verifiedStatus: 'Top 5% Candidate',
     avatar: '/images/ananya_avatar.jpg',
     assessments: [
-      { name: 'Repertory Analysis', score: '96/100', icon: 'science', status: 'Completed' },
+      { name: 'Good Clinical Practices (GCP)', score: '96/100', icon: 'assignment_turned_in', status: 'Completed' },
       { name: 'Constitutional Case Taking', score: '90/100', icon: 'clinical_notes', status: 'Passed' }
     ]
   }
 ];
 
 export const TRUST_METRICS = [
-  { label: 'Registered Candidates', value: '1,000+', icon: 'group' },
-  { label: 'Standardized Competencies', value: '50+', icon: 'assignment' },
-  { label: 'Partner Healthcare Networks', value: '20+', icon: 'handshake' },
-  { label: 'Average Competency Growth', value: '+34%', icon: 'trending_up' }
+  { label: 'Indian Ayush Market Growth', value: '$43.4B+', subtext: 'WHO / Invest India / PIB Delhi', icon: 'trending_up' },
+  { label: 'Schedule T GMP Skill Deficit', value: '55%+', subtext: 'FICCI & HSSC Industry Report', icon: 'warning' },
+  { label: 'Licensed Drug Manufacturers', value: '7,345+', subtext: 'Ministry of Ayush Directory', icon: 'domain' },
+  { label: 'Permitted Ayush Colleges', value: '536+', subtext: 'NCISM Permitted Seat Matrix', icon: 'school' }
 ];
 
 export const FAQ_ITEMS = [
   {
     id: 'faq-1',
-    question: 'What is SkillSetu and how does it benefit Ayush students?',
-    answer: 'SkillSetu is a national skill benchmarking and placement ecosystem built for Ayush candidates (Ayurveda, Yoga & Naturopathy, Unani, Siddha, and Homeopathy). It allows students to benchmark their practical competencies, bridge skill gaps through guided micro-sprints, earn digital dossiers, and connect with healthcare employers.'
+    question: 'What is SkillSetu and what problem does it solve?',
+    answer: 'SkillSetu is the national collaboration platform developed under the Ministry of Ayush and All India Institute of Ayurveda (AIIA). It bridges the critical competency gap between academic curricula and industry requirements for 42,000+ scholars across India\'s 536+ permitted Ayush colleges and 7,345+ licensed pharmaceutical units.'
   },
   {
     id: 'faq-2',
-    question: 'How is the Skill Readiness Score calculated?',
-    answer: 'Our standardized evaluation engine uses adaptive micro-assessments aligned with NCISM & NCH national curricula. It measures diagnostic skills, classical herbology/pharmacology, treatment protocols, and case-taking accuracy to compute an objective 0–100% readiness score.'
+    question: 'How does the 3-Phase Modular Pipeline work?',
+    answer: 'SkillSetu executes a 3-phase progression: (1) Radar: Visual 6-axis competency radar and timed diagnostic assessment; (2) Bridge: 15-minute targeted micro-courses built by pharma R&D to close practical gaps; and (3) 1-Click Apply: Frictionless job and internship applications using verified digital dossiers.'
   },
   {
     id: 'faq-3',
-    question: 'What is a Verified Digital Dossier?',
-    answer: 'The SkillSetu Digital Dossier is an authenticated credential containing your verified competency scores, micro-sprint records, and practical clinical evaluations. Healthcare employers can review this dossier to evaluate candidate suitability.'
+    question: 'What is the 6-Axis Competency Radar?',
+    answer: 'The radar replaces flat, unverified text resumes by dynamically plotting student skills across 6 high-demand axes: Schedule T GMP, HPTLC Fingerprinting, Clinical Diagnosis (Nadi Pariksha), Dravyaguna Pharmacology, Rasa Shastra Formulations, and Good Clinical Practices (GCP).'
   },
   {
     id: 'faq-4',
-    question: 'How do practical Micro-Sprints work?',
-    answer: 'Micro-sprints are short, intensive 1 to 2-week practical modules aligned with Ayush hospitals, research institutes, and pharmaceutical laboratories. They provide hands-on experience in real-world clinical and formulation scenarios.'
+    question: 'How does SkillSetu assist Ayush Colleges with NAAC & NCISM compliance?',
+    answer: 'Colleges access automated analytics and 1-click exportable reports specifically formatted for NAAC Criteria 3.5 (Collaborations) and Criteria 5.2 (Student Placement), as well as NCISM annual academic inspection audits.'
   },
   {
     id: 'faq-5',
-    question: 'How can Ayush colleges participate?',
-    answer: 'Ayush medical colleges receive access to an Institutional Analytics Dashboard. Faculty and Deans can track batch performance, evaluate curriculum alignment with industry demands, and support student placement readiness.'
+    question: 'What are the 5 official user roles supported by SkillSetu?',
+    answer: 'SkillSetu provides role-based access for: (1) Students (Learn & Explore), (2) Ayush Pharma Companies (Partner & Hire), (3) Faculty (Guide & Mentor), (4) Colleges (Manage & Connect), and (5) Ministry Administrators (Control & Manage).'
   },
   {
     id: 'faq-6',
-    question: 'How do stakeholders access their workspaces?',
-    answer: 'Students, Companies, Faculty, Colleges, and Ministry Administrators can log in through their dedicated stakeholder portals using official credentials.'
+    question: 'How does SkillSetu compare to general portals like LinkedIn or Internshala?',
+    answer: 'Unlike general platforms, SkillSetu specializes strictly in Ayush healthcare domains. It features domain skill mapping, 6-axis radar plotting, automated skill-gap analysis, pharma-sponsored micro-bridges, and SHA-256 verifiable credentials that general job boards do not offer.'
   }
 ];

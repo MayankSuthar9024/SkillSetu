@@ -19,9 +19,9 @@ export function AuthModal({ isOpen, mode, onClose, onSwitchMode, onLoginSuccess 
 
     const targetPortal = PORTALS_DATA.find(p => p.id === (role === 'employer' ? 'company' : role === 'institution' ? 'college' : role)) || PORTALS_DATA[0];
     const loggedUser = {
-      ...targetPortal.demoUser,
-      name: formData.name || targetPortal.demoUser.name,
-      email: formData.email || targetPortal.demoUser.email,
+      ...targetPortal.profileUser,
+      name: formData.name || targetPortal.profileUser.name,
+      email: formData.email || targetPortal.profileUser.email,
     };
 
     setTimeout(() => {
@@ -48,7 +48,7 @@ export function AuthModal({ isOpen, mode, onClose, onSwitchMode, onLoginSuccess 
               <h3 className="font-headline-md text-xl font-bold text-on-surface">
                 {mode === 'login' ? 'Welcome Back to SkillSetu' : 'Create SkillSetu Account'}
               </h3>
-              <p className="text-xs text-on-surface-variant">National Ayush Professional Ecosystem · SIH 2026</p>
+              <p className="text-xs text-on-surface-variant">National Ayush Professional Ecosystem · Ministry of Ayush</p>
             </div>
           </div>
 
@@ -68,7 +68,7 @@ export function AuthModal({ isOpen, mode, onClose, onSwitchMode, onLoginSuccess 
             <h4 className="font-bold text-lg text-on-surface">
               {mode === 'login' ? 'Authenticated successfully!' : 'Account created successfully!'}
             </h4>
-            <p className="text-xs text-on-surface-variant">Redirecting to your LinkedIn-style Ayush Professional Workspace...</p>
+            <p className="text-xs text-on-surface-variant">Redirecting to your verified Ayush professional workspace...</p>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">

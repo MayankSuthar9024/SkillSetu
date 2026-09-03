@@ -1,7 +1,7 @@
 {
   "name": "skill-setu-p2",
   "version": "1.0.0",
-  "description": "**Smart India Hackathon 2026 (SIH 2026) • Problem Statement ID: SIH26044**",
+  "description": "SkillSetu - National Ayush Academia-Industry Collaboration Platform",
   "main": "index.js",
   "type": "module",
   "scripts": {

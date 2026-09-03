@@ -18,7 +18,9 @@ import {
   ExternalLink,
   BookOpen,
   Briefcase,
-  Flame
+  Flame,
+  X,
+  Camera
 } from 'lucide-react';
 
 export function FeedPage({ onNavigate, currentUser, openCreatePostModal, onCloseCreatePostModal }) {
@@ -302,41 +304,6 @@ export function FeedPage({ onNavigate, currentUser, openCreatePostModal, onClose
         {/* Left / Main Feed Column */}
         <div className="lg:col-span-8 space-y-5">
           
-          {/* Non-Tech User Friendly Onboarding Help Banner */}
-          {showHelpBanner && (
-            <div className="bg-emerald-50 border border-emerald-200/90 rounded-2xl p-4 sm:p-5 flex items-start justify-between gap-3 animate-in fade-in">
-              <div className="flex gap-3 min-w-0">
-                <div className="w-10 h-10 rounded-xl bg-emerald-800 text-white font-extrabold text-xl flex items-center justify-center shrink-0 shadow-xs">
-                  🌿
-                </div>
-                <div className="min-w-0">
-                  <h3 className="font-extrabold text-sm text-slate-900">Welcome! Quick Guide to SkillSetu</h3>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 mt-2.5 text-xs text-slate-700 font-medium">
-                    <div className="bg-white p-2.5 rounded-xl border border-emerald-100/80 shadow-2xs">
-                      <strong className="text-emerald-900 block mb-0.5 font-extrabold">1. Browse Feed</strong>
-                      Read medical case studies & community posts.
-                    </div>
-                    <div className="bg-white p-2.5 rounded-xl border border-emerald-100/80 shadow-2xs">
-                      <strong className="text-emerald-900 block mb-0.5 font-extrabold">2. Explore Jobs</strong>
-                      Click "Jobs" to see verified Ayush openings.
-                    </div>
-                    <div className="bg-white p-2.5 rounded-xl border border-emerald-100/80 shadow-2xs">
-                      <strong className="text-emerald-900 block mb-0.5 font-extrabold">3. Share Post</strong>
-                      Tap the green <span className="font-extrabold text-emerald-700 text-sm">+</span> button anytime to post.
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <button 
-                onClick={() => setShowHelpBanner(false)}
-                className="text-slate-400 hover:text-slate-600 font-bold text-xs p-1 rounded-lg shrink-0"
-                title="Dismiss Guide"
-              >
-                ✕
-              </button>
-            </div>
-          )}
-          
           {/* Quick Create Post Box */}
           <div className="bg-white rounded-2xl border border-slate-200/80 p-4 shadow-sm hover:shadow-md transition-shadow">
             <div className="flex gap-3 items-center">
@@ -393,9 +360,10 @@ export function FeedPage({ onNavigate, currentUser, openCreatePostModal, onClose
                   </h3>
                   <button
                     onClick={() => setShowCreatePost(false)}
-                    className="text-slate-400 hover:text-slate-600 p-1 rounded-lg"
+                    className="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg cursor-pointer hover:bg-slate-100"
+                    title="Close dialog"
                   >
-                    ✕
+                    <X className="w-4 h-4" />
                   </button>
                 </div>
 
@@ -591,8 +559,9 @@ export function FeedPage({ onNavigate, currentUser, openCreatePostModal, onClose
                           className="w-full max-h-80 object-cover"
                         />
                         {post.imageCaption && (
-                          <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-slate-950/80 to-transparent p-2 text-[10px] text-slate-200 font-medium truncate">
-                            📷 {post.imageCaption}
+                          <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-slate-950/80 to-transparent p-2 text-[10px] text-slate-200 font-medium truncate flex items-center gap-1">
+                            <Camera className="w-3.5 h-3.5 text-slate-300 shrink-0" />
+                            <span>{post.imageCaption}</span>
                           </div>
                         )}
                       </div>

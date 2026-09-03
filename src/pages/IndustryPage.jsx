@@ -55,7 +55,7 @@ export function IndustryPage({ onNavigate }) {
             <Building2 className="w-3.5 h-3.5" />
             Ayush Corporate & R&D Network
           </span>
-          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
+          <h1 className="font-serif text-3xl sm:text-4xl font-bold tracking-tight">
             Industry Partners & R&D Laboratories
           </h1>
           <p className="text-slate-300 text-xs sm:text-sm max-w-2xl mt-1.5">
@@ -122,7 +122,7 @@ export function IndustryPage({ onNavigate }) {
 
                 <button
                   onClick={() => onNavigate('opportunities')}
-                  className="bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs px-4 py-2 rounded-xl transition-colors cursor-pointer"
+                  className="bg-emerald-800 hover:bg-emerald-900 text-white font-bold text-xs px-4 py-2 rounded-xl transition-colors cursor-pointer"
                 >
                   {comp.openings} →
                 </button>

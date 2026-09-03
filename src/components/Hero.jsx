@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import { motion, useMotionValue, useTransform, useSpring } from 'framer-motion';
-import { SAMPLE_STUDENTS, TRUST_METRICS } from '../data/stitchData';
+import { TRUST_METRICS } from '../data/stitchData';
 
 export function Hero({ onGetStarted }) {
-  const [selectedStudentIndex, setSelectedStudentIndex] = useState(0);
-  const currentStudent = SAMPLE_STUDENTS[selectedStudentIndex];
 
   // Apple-style subtle 3D card tilt on mouse move
   const mouseX = useMotionValue(0);
@@ -56,23 +54,23 @@ export function Hero({ onGetStarted }) {
       {/* Dynamic Animated Motion Graphics Mesh Orbs in Background */}
       <motion.div 
         animate={{ 
-          scale: [1, 1.12, 1],
-          opacity: [0.35, 0.5, 0.35],
-          x: [0, 15, 0],
-          y: [0, -15, 0]
+          scale: [1, 1.08, 1],
+          opacity: [0.15, 0.25, 0.15],
+          x: [0, 10, 0],
+          y: [0, -10, 0]
         }}
         transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
-        className="absolute top-10 right-10 w-96 h-96 bg-gradient-to-br from-emerald-300/30 via-teal-200/20 to-transparent rounded-full blur-3xl pointer-events-none -z-10"
+        className="absolute top-10 right-10 w-96 h-96 bg-gradient-to-br from-emerald-200/20 via-teal-100/15 to-transparent rounded-full blur-3xl pointer-events-none -z-10"
       />
       <motion.div 
         animate={{ 
-          scale: [1, 1.15, 1],
-          opacity: [0.25, 0.45, 0.25],
-          x: [0, -20, 0],
-          y: [0, 20, 0]
+          scale: [1, 1.08, 1],
+          opacity: [0.12, 0.2, 0.12],
+          x: [0, -12, 0],
+          y: [0, 12, 0]
         }}
         transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
-        className="absolute bottom-10 left-10 w-[420px] h-[420px] bg-gradient-to-tr from-amber-200/25 via-emerald-100/30 to-transparent rounded-full blur-3xl pointer-events-none -z-10"
+        className="absolute bottom-10 left-10 w-[420px] h-[420px] bg-gradient-to-tr from-amber-100/15 via-emerald-100/15 to-transparent rounded-full blur-3xl pointer-events-none -z-10"
       />
 
       <div className="max-w-container-max mx-auto px-4 md:px-margin-desktop grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center relative z-10">
@@ -85,13 +83,21 @@ export function Hero({ onGetStarted }) {
           className="space-y-6 lg:space-y-8 text-center lg:text-left"
         >
 
+          {/* Eyebrow Accent Badge */}
+          <motion.div variants={itemVariants} className="flex justify-center lg:justify-start">
+            <span className="inline-flex items-center gap-2 px-3.5 py-1 bg-emerald-50/90 border border-emerald-200/90 rounded-full text-xs font-semibold text-emerald-900 shadow-2xs">
+              <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span>
+              <span className="font-accent tracking-wider text-xs">National Ayush Platform · Ministry of Ayush & AIIA</span>
+            </span>
+          </motion.div>
+
           {/* Heading */}
           <motion.h1 
             variants={itemVariants}
-            className="hero-title font-display-lg text-4xl sm:text-5xl lg:text-6xl font-extrabold text-on-surface leading-[1.08] tracking-[-0.045em]"
+            className="hero-title font-serif text-5xl sm:text-6xl lg:text-7xl font-bold text-on-surface leading-[1.04] tracking-tight"
           >
             Build the skills. <br />
-            <span className="text-primary bg-gradient-to-r from-primary via-emerald-600 to-amber-600 bg-clip-text text-transparent">
+            <span className="text-primary bg-gradient-to-r from-primary via-emerald-700 to-amber-700 bg-clip-text text-transparent">
               Prove your readiness.
             </span> <br />
             Find your next opportunity.
@@ -102,7 +108,7 @@ export function Hero({ onGetStarted }) {
             variants={itemVariants}
             className="hero-copy font-body-lg text-base sm:text-lg text-on-surface-variant max-w-xl mx-auto lg:mx-0 leading-relaxed"
           >
-            SkillSetu connects Ayush students, institutional curriculum, practical competency assessments, and career opportunities in one unified platform. Bridging academic learning with clinical healthcare demands.
+            SkillSetu is the centralized Ayush web platform connecting 42,000+ scholars, 536+ permitted colleges, and 7,345+ licensed pharma units for 6-axis competency testing, 15-minute bridge courses, and 1-click verified hiring.
           </motion.p>
 
           {/* Single Focused Login CTA */}
@@ -111,13 +117,13 @@ export function Hero({ onGetStarted }) {
             className="flex flex-col sm:flex-row flex-wrap justify-center lg:justify-start gap-4 pt-2"
           >
             <motion.button 
-              whileHover={{ scale: 1.025, y: -1 }}
-              whileTap={{ scale: 0.975 }}
+              whileHover={{ scale: 1.02, y: -1 }}
+              whileTap={{ scale: 0.98 }}
               onClick={onGetStarted}
-              className="shimmer-btn bg-slate-900 hover:bg-slate-800 text-white font-label-sm text-base py-4 px-8 rounded-2xl transition-all shadow-medium flex items-center justify-center gap-2.5 font-bold cursor-pointer group"
+              className="bg-gradient-to-r from-emerald-800 to-teal-900 hover:from-emerald-900 hover:to-teal-950 text-white font-label-sm text-base py-4 px-8 rounded-2xl transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2.5 font-bold cursor-pointer group"
             >
               <span className="material-symbols-outlined text-xl text-emerald-400">login</span>
-              <span>Sign In to Stakeholder Portal</span>
+              <span>Access Role Portals</span>
               <span className="material-symbols-outlined text-xl group-hover:translate-x-1 transition-transform">arrow_forward</span>
             </motion.button>
           </motion.div>
@@ -164,32 +170,25 @@ export function Hero({ onGetStarted }) {
               <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
             </div>
             
-            {/* Header & Student Switcher */}
+            {/* Card Header: Standardized Benchmark System */}
             <div className="flex flex-wrap items-center justify-between gap-4 mb-6 border-b border-outline-variant/20 pb-5">
-              <div className="flex items-center gap-4">
-                <div className="w-14 h-14 rounded-2xl ring-2 ring-primary/20 p-0.5 overflow-hidden bg-surface-container shadow-inner">
-                  <img 
-                    className="w-full h-full object-cover rounded-2xl" 
-                    src={currentStudent.avatar} 
-                    alt={currentStudent.name} 
-                  />
+              <div className="flex items-center gap-3.5">
+                <div className="w-12 h-12 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 flex items-center justify-center shadow-xs">
+                  <span className="material-symbols-outlined text-2xl">radar</span>
                 </div>
                 <div>
-                  <h3 className="font-headline-md text-lg font-bold text-on-surface flex items-center gap-2">
-                    {currentStudent.name}
+                  <h3 className="font-serif text-xl font-bold text-on-surface">
+                    Ayush Competency Benchmark
                   </h3>
-                  <p className="text-xs sm:text-sm text-on-surface-variant font-medium">
-                    {currentStudent.degree}
-                  </p>
-                  <p className="text-[11px] text-outline truncate max-w-[200px]">
-                    {currentStudent.institution}
+                  <p className="text-xs text-on-surface-variant font-medium">
+                    Verified Clinical & Industrial Assessment Matrix
                   </p>
                 </div>
               </div>
 
               <div className="bg-secondary-container text-tertiary px-3.5 py-1.5 rounded-full text-xs font-bold flex items-center gap-1.5 shadow-2xs">
                 <span className="material-symbols-outlined text-base">verified</span> 
-                {currentStudent.verifiedStatus}
+                100% SHA-256 Verifiable
               </div>
             </div>
 
@@ -198,32 +197,32 @@ export function Hero({ onGetStarted }) {
               <div className="flex justify-between items-end mb-2">
                 <div>
                   <span className="font-label-sm text-xs uppercase tracking-wider text-outline block">Clinical Competency</span>
-                  <span className="font-headline-md text-sm font-semibold text-on-surface-variant">Readiness Score</span>
+                  <span className="font-headline-md text-sm font-semibold text-on-surface-variant">Overall Industry Readiness Index</span>
                 </div>
                 <div className="text-right">
-                  <motion.span 
-                    key={currentStudent.readinessScore}
-                    initial={{ opacity: 0, y: -4 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="font-display-lg text-3xl font-extrabold text-primary block"
-                  >
-                    {currentStudent.readinessScore}%
-                  </motion.span>
+                  <span className="font-display-lg text-3xl font-extrabold text-primary block">
+                    88%
+                  </span>
                 </div>
               </div>
               <div className="w-full bg-surface-container-high h-3.5 rounded-full overflow-hidden p-0.5">
                 <motion.div 
                   initial={{ width: 0 }}
-                  animate={{ width: `${currentStudent.readinessScore}%` }}
+                  animate={{ width: '88%' }}
                   transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
                   className="bg-gradient-to-r from-primary via-emerald-600 to-amber-500 h-full rounded-full" 
                 />
               </div>
             </div>
 
-            {/* Assessment Cards */}
+            {/* Verified Competency Benchmark Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
-              {currentStudent.assessments.map((ast, idx) => (
+              {[
+                { name: 'Schedule T GMP Compliance', score: '94/100', icon: 'verified' },
+                { name: 'HPTLC Standardization Assay', score: '88/100', icon: 'biotech' },
+                { name: 'Clinical Nadi Pariksha Protocol', score: '92/100', icon: 'ecg_heart' },
+                { name: 'Good Clinical Practices (GCP)', score: '96/100', icon: 'assignment_turned_in' }
+              ].map((ast, idx) => (
                 <motion.div 
                   key={idx}
                   whileHover={{ scale: 1.02 }}
@@ -240,24 +239,15 @@ export function Hero({ onGetStarted }) {
               ))}
             </div>
 
-            {/* Candidate Profile Switcher */}
-            <div className="mt-6 pt-4 border-t border-outline-variant/20 flex items-center justify-between text-xs">
-              <span className="text-outline font-medium">Switch Candidate Profile:</span>
-              <div className="flex gap-1.5">
-                {SAMPLE_STUDENTS.map((st, i) => (
-                  <button
-                    key={st.id}
-                    onClick={() => setSelectedStudentIndex(i)}
-                    className={`px-2.5 py-1 rounded-lg font-semibold transition-all cursor-pointer ${
-                      selectedStudentIndex === i
-                        ? 'bg-primary text-on-primary shadow-xs scale-105'
-                        : 'bg-surface-container text-on-surface-variant hover:bg-surface-container-high'
-                    }`}
-                  >
-                    {st.name.split(' ')[0]}
-                  </button>
-                ))}
-              </div>
+            {/* Industry Pipeline Status */}
+            <div className="mt-6 pt-4 border-t border-outline-variant/20 flex items-center justify-between text-xs text-slate-600">
+              <span className="flex items-center gap-1.5 font-medium">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span>Direct Talent Pipeline Active</span>
+              </span>
+              <span className="font-bold text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded-md border border-emerald-200/80">
+                7,345+ Pharma Units Linked
+              </span>
             </div>
 
           </motion.div>
@@ -286,6 +276,11 @@ export function Hero({ onGetStarted }) {
                 <div className="text-xs text-on-surface-variant font-medium">
                   {metric.label}
                 </div>
+                {metric.subtext && (
+                  <div className="text-[10px] text-emerald-800 font-semibold truncate">
+                    {metric.subtext}
+                  </div>
+                )}
               </div>
             </motion.div>
           ))}

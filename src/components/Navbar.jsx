@@ -39,8 +39,8 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
               <span className="material-symbols-outlined text-2xl">spa</span>
             </div>
             <div className="text-left">
-              <span className="font-title-lg font-black text-xl text-slate-900 tracking-tight block leading-none">
-                Skill<span className="text-primary">Setu</span>
+              <span className="font-extrabold text-xl text-slate-900 tracking-tight block leading-none">
+                Skill<span className="text-emerald-700 font-extrabold ml-0.5">Setu</span>
               </span>
             </div>
           </div>
@@ -68,30 +68,106 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
 
           {/* Right Action CTAs */}
           <div className="hidden md:flex gap-3 items-center">
-            <button 
-              onClick={() => onOpenAuthModal('login')}
-              className="text-slate-700 hover:text-emerald-800 font-bold text-xs px-4 py-2 rounded-xl hover:bg-emerald-50/80 border border-slate-200/80 transition-all cursor-pointer"
-            >
-              Log In
-            </button>
+            {currentUser ? (
+              /* Profile PFP Avatar Button (Only when user is signed in) */
+              <div className="relative">
+                <button
+                  onClick={() => handleNavClick('profile')}
+                  onMouseEnter={() => setProfileDropdownOpen(true)}
+                  className="flex items-center gap-2.5 bg-white hover:bg-emerald-50/80 border border-slate-200/80 rounded-2xl p-1.5 pr-3.5 shadow-xs transition-all cursor-pointer group active:scale-95"
+                  title="Click to view your Profile Page"
+                >
+                  <div className="relative w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-700 to-teal-900 text-white font-extrabold text-xs flex items-center justify-center shadow-xs border-2 border-emerald-100 group-hover:scale-105 transition-transform shrink-0 overflow-hidden">
+                    {currentUser.avatarImage ? (
+                      <img src={currentUser.avatarImage} alt={userName} className="w-full h-full object-cover" />
+                    ) : (
+                      <span>{userAvatar}</span>
+                    )}
+                    <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-white"></span>
+                  </div>
 
+                  <div className="text-left hidden lg:block min-w-0">
+                    <div className="text-xs font-extrabold text-slate-900 group-hover:text-emerald-800 flex items-center gap-1 truncate">
+                      <span>{userName}</span>
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 fill-emerald-100 shrink-0" />
+                    </div>
+                    <div className="text-[10px] text-slate-500 font-semibold leading-none mt-0.5 truncate">
+                      {userRole}
+                    </div>
+                  </div>
+                </button>
+
+                {profileDropdownOpen && (
+                  <div 
+                    onMouseLeave={() => setProfileDropdownOpen(false)}
+                    className="absolute right-0 mt-2 w-56 bg-white rounded-2xl shadow-xl border border-slate-200 py-2 z-50 animate-in fade-in zoom-in-95"
+                  >
+                    <div className="px-4 py-2 border-b border-slate-100">
+                      <span className="font-extrabold text-xs text-slate-900 block">{userName}</span>
+                      <span className="text-[10px] text-slate-500 font-medium block">{userRole}</span>
+                    </div>
+                    
+                    <button
+                      onClick={() => handleNavClick('profile')}
+                      className="w-full text-left px-4 py-2 text-xs font-bold text-slate-800 hover:bg-emerald-50 hover:text-emerald-900 flex items-center gap-2"
+                    >
+                      <User className="w-4 h-4 text-emerald-700" />
+                      <span>My Profile Page</span>
+                    </button>
+
+                    <button
+                      onClick={() => handleNavClick('feed')}
+                      className="w-full text-left px-4 py-2 text-xs font-bold text-slate-800 hover:bg-emerald-50 hover:text-emerald-900 flex items-center gap-2"
+                    >
+                      <Flame className="w-4 h-4 text-rose-500" />
+                      <span>Community Feed</span>
+                    </button>
+
+                    <div className="pt-1 mt-1 border-t border-slate-100">
+                      <button
+                        onClick={() => onOpenAuthModal('login')}
+                        className="w-full text-left px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-50"
+                      >
+                        Role Portals
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : null}
+
+            {/* Sign In / Role Selection CTA */}
             <button 
               onClick={() => onOpenAuthModal('login')}
-              className="bg-gradient-to-r from-emerald-800 to-teal-900 text-white font-label-sm text-xs font-bold py-2.5 px-4 rounded-xl active:scale-95 hover:shadow-md transition-all flex items-center gap-1.5 cursor-pointer shrink-0"
+              className="bg-gradient-to-r from-emerald-800 to-teal-900 text-white font-label-sm text-xs font-bold py-2.5 px-5 rounded-xl active:scale-95 hover:shadow-md transition-all flex items-center gap-2 cursor-pointer shrink-0"
             >
-              <span>Role Portals</span>
-              <span className="material-symbols-outlined text-base">arrow_outward</span>
+              <span>Sign In</span>
+              <span className="material-symbols-outlined text-base">arrow_forward</span>
             </button>
           </div>
 
-          {/* Mobile Navigation Toggle Button */}
+          {/* Mobile Action Controls */}
           <div className="md:hidden flex items-center gap-2">
-            <button 
-              onClick={() => onOpenAuthModal('login')}
-              className="text-xs font-extrabold text-emerald-800 bg-emerald-50 px-3 py-1.5 rounded-xl border border-emerald-200/60"
-            >
-              Log In
-            </button>
+            {currentUser ? (
+              <button
+                onClick={() => handleNavClick('profile')}
+                className="w-9 h-9 rounded-xl bg-emerald-800 text-white font-extrabold text-xs flex items-center justify-center border-2 border-white shadow-xs shrink-0 overflow-hidden"
+                title="Profile"
+              >
+                {currentUser.avatarImage ? (
+                  <img src={currentUser.avatarImage} alt={userName} className="w-full h-full object-cover" />
+                ) : (
+                  <span>{userAvatar}</span>
+                )}
+              </button>
+            ) : (
+              <button
+                onClick={() => onOpenAuthModal('login')}
+                className="px-3.5 py-1.5 rounded-xl bg-emerald-800 text-white text-xs font-bold shadow-xs flex items-center gap-1 cursor-pointer"
+              >
+                <span>Sign In</span>
+              </button>
+            )}
 
             <button 
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -147,12 +223,12 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
         
         {/* 1. Home */}
         <button
-          onClick={() => handleNavClick('feed')}
+          onClick={() => handleNavClick('home')}
           className={`flex flex-col items-center justify-center py-1 px-2 text-xs transition-all cursor-pointer ${
-            activePage === 'feed' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-semibold'
+            activePage === 'home' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-semibold'
           }`}
         >
-          <Home className={`w-5 h-5 shrink-0 ${activePage === 'feed' ? 'text-emerald-700' : 'text-slate-500'}`} />
+          <Home className={`w-5 h-5 shrink-0 ${activePage === 'home' ? 'text-emerald-700' : 'text-slate-500'}`} />
           <span className="text-[10px] mt-1 font-bold">Home</span>
         </button>
 
@@ -172,17 +248,17 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
           <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center shadow-lg border border-slate-100 p-1">
             <button
               onClick={() => onOpenAuthModal('login')}
-              className="w-14 h-14 rounded-full bg-gradient-to-br from-emerald-500 via-teal-600 to-emerald-800 hover:from-emerald-400 hover:to-teal-700 active:scale-95 text-white flex items-center justify-center shadow-[0_8px_20px_rgba(16,185,129,0.4)] transition-all cursor-pointer group"
-              title="Create Post / Access Platform"
+              className="w-14 h-14 rounded-full bg-gradient-to-br from-emerald-800 to-teal-900 hover:from-emerald-900 hover:to-teal-950 active:scale-95 text-white flex items-center justify-center shadow-md hover:shadow-lg transition-all cursor-pointer group"
+              title="Access Platform"
             >
-              <Plus className="w-7 h-7 stroke-[2.8] group-hover:rotate-90 transition-transform duration-300" />
+              <Plus className="w-7 h-7 stroke-[2.5] group-hover:rotate-90 transition-transform duration-300" />
             </button>
           </div>
         </div>
 
         {/* 4. Messages */}
         <button
-          onClick={() => handleNavClick('dashboard')}
+          onClick={() => handleNavClick('messages')}
           className={`flex flex-col items-center justify-center py-1 px-2 text-xs transition-all cursor-pointer ${
             activePage === 'messages' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-semibold'
           }`}

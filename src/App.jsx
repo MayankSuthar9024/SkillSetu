@@ -11,9 +11,14 @@ import ScrollReveal from './components/ScrollReveal';
 import { PortalSelectPage } from './pages/PortalSelectPage';
 import { StakeholderDashboard } from './pages/StakeholderDashboard';
 import { PORTALS_DATA } from './data/portalData';
+import { SkillPage } from './pages/SkillPage';
+import { IndustryPage } from './pages/IndustryPage';
+import { FeedPage } from './pages/FeedPage';
+import { ProfilePage } from './pages/ProfilePage';
+import { MessagePage } from './pages/MessagePage';
 
 export function App() {
-  const [activePage, setActivePage] = useState('home'); // 'home' | 'features' | 'about' | 'opportunities' | 'login' | 'portals' | 'dashboard'
+  const [activePage, setActivePage] = useState('home'); // 'home' | 'features' | 'about' | 'opportunities' | 'skill' | 'industry' | 'feed' | 'profile' | 'messages' | 'login' | 'portals' | 'dashboard'
   const [isReadinessModalOpen, setIsReadinessModalOpen] = useState(false);
   const [activePortalId, setActivePortalId] = useState('student');
   const [currentUser, setCurrentUser] = useState(null);
@@ -42,13 +47,17 @@ export function App() {
         if (role && PORTALS_DATA.some(p => p.id === role)) {
           setActivePortalId(role);
           const portalCfg = PORTALS_DATA.find(p => p.id === role);
-          setCurrentUser(portalCfg?.profileUser || portalCfg?.demoUser || null);
+          setCurrentUser(portalCfg?.profileUser || null);
         }
         setActivePage('dashboard');
-      } else if (hash === 'features' || hash === 'about' || hash === 'opportunities' || hash === 'how-it-works') {
+      } else if (['features', 'about', 'opportunities', 'how-it-works', 'skill', 'industry', 'feed', 'profile', 'messages'].includes(hash)) {
         setActivePage(hash);
-      } else if (!hash) {
-        setActivePage('home');
+      } else if (!hash || hash === 'home') {
+        if (currentUser) {
+          setActivePage('dashboard');
+        } else {
+          setActivePage('home');
+        }
       }
     };
 
@@ -75,7 +84,7 @@ export function App() {
     if (newPortalId) {
       setActivePortalId(newPortalId);
       const portalCfg = PORTALS_DATA.find(p => p.id === newPortalId);
-      setCurrentUser(newUser || portalCfg?.profileUser || portalCfg?.demoUser || null);
+      setCurrentUser(newUser || portalCfg?.profileUser || null);
       window.location.hash = `dashboard-${newPortalId}`;
     } else {
       setActivePage('login');
@@ -97,6 +106,28 @@ export function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const handleNavigate = (page) => {
+    if (currentUser) {
+      setActivePage('dashboard');
+      window.location.hash = `dashboard-${activePortalId}`;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+    if (page === 'login' || page === 'portals') {
+      handleOpenAuth();
+    } else if (page === 'dashboard') {
+      setActivePage('dashboard');
+      window.location.hash = `dashboard-${activePortalId}`;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      setActivePage(page);
+      window.location.hash = page === 'home' ? '' : page;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
+  const activeUser = currentUser || PORTALS_DATA[0].profileUser;
+
   const handleSeeHowItWorks = () => {
     if (activePage !== 'home') {
       setActivePage('home');
@@ -111,7 +142,7 @@ export function App() {
   };
 
   // 1. DEDICATED PORTAL SELECTION / LOGIN PAGE
-  if (activePage === 'login' || activePage === 'portals') {
+  if (!currentUser && (activePage === 'login' || activePage === 'portals')) {
     return (
       <PortalSelectPage
         onBackToHome={handleBackToHome}
@@ -122,15 +153,15 @@ export function App() {
     );
   }
 
-  // 2. AUTHENTICATED STAKEHOLDER DASHBOARD
-  if (activePage === 'dashboard') {
+  // 2. AUTHENTICATED STAKEHOLDER DASHBOARD (Once signed in, user stays on platform)
+  if (currentUser || activePage === 'dashboard') {
     return (
       <StakeholderDashboard
         activePortalId={activePortalId}
-        currentUser={currentUser}
+        currentUser={currentUser || PORTALS_DATA[0].profileUser}
         onSwitchPortal={handleSwitchPortal}
         onLogout={handleLogout}
-        onBackToHome={handleBackToHome}
+        onBackToHome={() => {}}
         contrastMode={contrastMode}
         onToggleContrast={handleToggleContrast}
       />
@@ -144,16 +175,14 @@ export function App() {
       {/* Shared Sticky Navbar */}
       <Navbar
         activePage={activePage}
-        setActivePage={(page) => {
-          setActivePage(page);
-          window.location.hash = page === 'home' ? '' : page;
-        }}
+        setActivePage={handleNavigate}
         onOpenReadinessModal={() => setIsReadinessModalOpen(true)}
         onOpenAuthModal={handleOpenAuth}
+        currentUser={currentUser}
       />
 
       {/* Main Content Area Based on Active Page */}
-      <main className="flex-grow pt-20">
+      <main className="flex-grow pt-20 pb-24 md:pb-8">
 
         {/* HOME PAGE */}
         {activePage === 'home' && (
@@ -305,6 +334,56 @@ export function App() {
           </div>
         )}
 
+        {/* SKILL HUB PAGE */}
+        {activePage === 'skill' && (
+          <div className="animate-fadeIn">
+            <SkillPage
+              onNavigate={handleNavigate}
+              onOpenReadinessModal={() => setIsReadinessModalOpen(true)}
+            />
+          </div>
+        )}
+
+        {/* INDUSTRY PAGE */}
+        {activePage === 'industry' && (
+          <div className="animate-fadeIn">
+            <IndustryPage
+              onNavigate={handleNavigate}
+              onOpenAuthModal={handleOpenAuth}
+            />
+          </div>
+        )}
+
+        {/* COMMUNITY FEED PAGE */}
+        {activePage === 'feed' && (
+          <div className="animate-fadeIn py-6 px-4 max-w-7xl mx-auto">
+            <FeedPage
+              onNavigate={handleNavigate}
+              currentUser={activeUser}
+            />
+          </div>
+        )}
+
+        {/* PROFILE PAGE */}
+        {activePage === 'profile' && (
+          <div className="animate-fadeIn py-6 px-4 max-w-7xl mx-auto">
+            <ProfilePage
+              onNavigate={handleNavigate}
+              currentUser={activeUser}
+            />
+          </div>
+        )}
+
+        {/* MESSAGES PAGE */}
+        {activePage === 'messages' && (
+          <div className="animate-fadeIn py-6 px-4 max-w-7xl mx-auto">
+            <MessagePage
+              onNavigate={handleNavigate}
+              currentUser={activeUser}
+            />
+          </div>
+        )}
+
       </main>
 
       {/* Global Readiness Diagnostic Modal */}
@@ -313,19 +392,19 @@ export function App() {
         onClose={() => setIsReadinessModalOpen(false)}
       />
 
-      {/* Shared Footer */}
-      <Footer
-        onNavigate={(page) => {
-          if (page === 'login') {
-            handleOpenAuth();
-          } else {
-            setActivePage(page);
-            window.location.hash = page === 'home' ? '' : page;
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-          }
-        }}
-        onSeeHowItWorks={handleSeeHowItWorks}
-      />
+      {/* Shared Footer - Removed from landing page per user flow specification */}
+      {activePage !== 'home' && (
+        <Footer
+          onNavigate={(page) => {
+            if (page === 'login') {
+              handleOpenAuth();
+            } else {
+              handleNavigate(page);
+            }
+          }}
+          onSeeHowItWorks={handleSeeHowItWorks}
+        />
+      )}
 
     </div>
   );
