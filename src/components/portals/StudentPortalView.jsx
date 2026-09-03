@@ -73,27 +73,27 @@ export const StudentPortalView = ({ user }) => {
   const bridgeModules = [
     {
       id: 'bm-1',
-      title: 'Micro-Sprint: Schedule T GMP Cleanroom Protocol',
-      duration: '45 Mins',
-      sponsor: 'Apex Ayush Pharmacopoeia',
+      title: 'Schedule T GMP Cleanroom Protocol',
+      duration: '15 Mins',
+      sponsor: 'Dabur R&D & AIIA Preceptors',
       status: 'Ready to Solve',
-      badge: 'Cryptographic Badge'
+      badge: 'Schedule T Certified'
     },
     {
       id: 'bm-2',
       title: 'HPTLC Rf Value Quantification & Marker Assay',
-      duration: '60 Mins',
-      sponsor: 'NIA Central Instrumentation Lab',
+      duration: '15 Mins',
+      sponsor: 'Patanjali Central Instrumentation Lab',
       status: 'In Progress (60%)',
-      badge: 'QC Specialist'
+      badge: 'QC Analyst'
     },
     {
       id: 'bm-3',
-      title: 'National Ayush Pharmacovigilance Case Review',
-      duration: '30 Mins',
-      sponsor: 'Ministry of Ayush Adverse Event Cell',
+      title: 'Good Clinical Practices (GCP) & Protocol Case Review',
+      duration: '15 Mins',
+      sponsor: 'CCRAS SPARK-4.0 Research Cell',
       status: 'Enrolled',
-      badge: 'PV Associate'
+      badge: 'Clinical Associate'
     }
   ];
 
@@ -117,7 +117,7 @@ export const StudentPortalView = ({ user }) => {
               <h2 className="text-lg sm:text-xl font-extrabold text-slate-900 truncate">{user.name}</h2>
               <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-200 flex items-center gap-1 shrink-0">
                 <ShieldCheck className="w-3.5 h-3.5 shrink-0" />
-                ABHA Verified
+                100% SHA-256 Verifiable Ayush Portfolio
               </span>
             </div>
             <p className="text-xs text-slate-500 mt-1 break-words">
@@ -143,7 +143,7 @@ export const StudentPortalView = ({ user }) => {
         </div>
       </div>
 
-      {/* Portal Navigation Tabs */}
+      {/* Portal Navigation Tabs: Radar > Bridge > 1-Click Apply > Ayush Passport */}
       <div className="flex items-center gap-2 border-b border-slate-200 pb-2 overflow-x-auto no-scrollbar py-1">
         <button
           onClick={() => setActiveTab('assessment')}
@@ -154,19 +154,7 @@ export const StudentPortalView = ({ user }) => {
           }`}
         >
           <Compass className="w-4 h-4" />
-          <span>Competency Diagnostics</span>
-        </button>
-
-        <button
-          onClick={() => setActiveTab('jobs')}
-          className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 shrink-0 ${
-            activeTab === 'jobs'
-              ? 'bg-emerald-800 text-white shadow-xs'
-              : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
-          }`}
-        >
-          <Briefcase className="w-4 h-4" />
-          <span>Verified Positions ({jobsList.length})</span>
+          <span>Phase 1: 6-Axis Radar & Diagnostic Test</span>
         </button>
 
         <button
@@ -178,7 +166,19 @@ export const StudentPortalView = ({ user }) => {
           }`}
         >
           <BookOpen className="w-4 h-4" />
-          <span>Skill Bridge Sprints</span>
+          <span>Phase 2: 15-Min Bridge Courses</span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab('jobs')}
+          className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 shrink-0 ${
+            activeTab === 'jobs'
+              ? 'bg-emerald-800 text-white shadow-xs'
+              : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
+          }`}
+        >
+          <Briefcase className="w-4 h-4" />
+          <span>Phase 3: 1-Click Placements ({jobsList.length})</span>
         </button>
 
         <button

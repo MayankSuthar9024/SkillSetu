@@ -7,8 +7,8 @@ export const PORTALS_DATA = [
   {
     id: "student",
     title: "Student",
-    subtitle: "Scholars & Graduates",
-    description: "Diagnostic assessments, bridge courses, and 1-click verified job applications.",
+    subtitle: "Learn & Explore",
+    description: "Find Schedule T GMP gaps, finish 15-minute bridge courses, and get 1-click verified job matches.",
     buttonText: "Select Student",
     iconName: "GraduationCap",
     accentBg: "bg-emerald-50",
@@ -41,8 +41,8 @@ export const PORTALS_DATA = [
   {
     id: "company",
     title: "Company",
-    subtitle: "Enterprises & R&D Labs",
-    description: "Explore candidate talent pools, manage job vacancies, and manage applicant ATS pipelines.",
+    subtitle: "Partner & Hire",
+    description: "Post openings with skill thresholds (Schedule T GMP, HPTLC) to hire pre-vetted, job-ready talent.",
     buttonText: "Select Company",
     iconName: "Building2",
     accentBg: "bg-emerald-50",
@@ -74,8 +74,8 @@ export const PORTALS_DATA = [
   {
     id: "faculty",
     title: "Faculty",
-    subtitle: "Professors & Preceptors",
-    description: "Cohort radar analysis, micro-course authoring builder, and student mentorship desk.",
+    subtitle: "Guide & Mentor",
+    description: "Track cohort radars, assign remedial micro-modules, and access CCRAS SPARK-4.0 research grants & FDPs.",
     buttonText: "Select Faculty",
     iconName: "UserCheck",
     accentBg: "bg-emerald-50",
@@ -107,8 +107,8 @@ export const PORTALS_DATA = [
   {
     id: "college",
     title: "College",
-    subtitle: "Apex Institutes & Deans",
-    description: "Institutional benchmarking, campus placement console, and NAAC accreditation audits.",
+    subtitle: "Manage & Connect",
+    description: "Generate annual reports for NAAC & NCISM compliance and track institutional placement readiness.",
     buttonText: "Select College",
     iconName: "Landmark",
     accentBg: "bg-blue-50",
@@ -140,8 +140,8 @@ export const PORTALS_DATA = [
   {
     id: "admin",
     title: "Ministry Admin",
-    subtitle: "National Ayush Command",
-    description: "State-wise skill deficit map, national reports, RBAC user admin, and blockchain nodes.",
+    subtitle: "Control & Manage",
+    description: "Analyze state deficit heatmaps for targeted policy and monitor national talent readiness.",
     buttonText: "Select Admin",
     iconName: "ShieldCheck",
     accentBg: "bg-purple-50",
@@ -180,17 +180,37 @@ PORTALS_DATA.forEach(portal => {
 export const PLATFORM_METADATA = {
   name: "SkillSetu",
   nameHindi: "कौशलसेतु",
-  slogan: "Bridging Ayush Academia, Skills & Industry",
+  teamName: "NJABBIC",
   sihId: "SIH26044",
-  sihYear: "2026",
+  title: "Portal for Academia Industry collaboration for Skill Mapping, Internships and Placement",
+  theme: "Smart Automation",
+  category: "Software",
   ministry: "Ministry of Ayush",
-  ministryFull: "Ministry of Ayush, Government of India",
-  tagline: "National Skill Mapping, Micro-Sprints, and Verified Opportunity Matching Ecosystem",
+  department: "All India Institute of Ayurveda (AIIA)",
+  ministryFull: "Ministry of Ayush · All India Institute of Ayurveda",
+  tagline: "Centralized Ayush Web Platform for Skill Testing, Gap Analysis, Bridge Courses, and 1-Click Hiring",
+  stats: {
+    marketSize: "$43.4B+",
+    marketSource: "WHO / Invest India / PIB Delhi",
+    skillDeficit: "55%+",
+    deficitSource: "FICCI & HSSC Schedule T GMP Report",
+    msmeDemand: "10,000+",
+    demandSource: "NITI Aayog Day-1 QA/QC Demand",
+    bamsGraduates: "42,000+",
+    permittedColleges: "536+",
+    licensedPharma: "7,345+",
+    nsqfModules: "12 HSSC NQR Packs",
+    ccrasGrants: "300+ SPARK-4.0",
+    sheetsSaved: "900,000+ A4 Sheets",
+    verificationStandard: "100% SHA-256 Verifiable"
+  }
 };
 
 export const HERO_STATS = {
-  studentReadiness: 78,
-  skillMatch: 92,
-  verifiedSkillsCount: 12,
-  activeOpportunities: 24
+  marketGrowth: "$43.4B+",
+  skillDeficit: "55%+",
+  licensedPharmacies: "7,345+",
+  permittedColleges: "536+",
+  bamsGraduates: "42,000+",
+  placementSpeedup: "40% Faster"
 };

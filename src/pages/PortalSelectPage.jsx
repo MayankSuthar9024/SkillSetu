@@ -85,7 +85,7 @@ export const PortalSelectPage = ({
         <div className="flex items-center gap-3">
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-white/80 text-emerald-900 border border-emerald-300 shadow-xs">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            SIH 2026 · {PLATFORM_METADATA.sihId}
+            Team {PLATFORM_METADATA.teamName} · {PLATFORM_METADATA.sihId}
           </span>
         </div>
       </header>
@@ -100,11 +100,11 @@ export const PortalSelectPage = ({
           </h1>
 
           <p className="text-sm sm:text-base text-slate-600 font-medium max-w-2xl mx-auto leading-relaxed">
-            Choose your stakeholder role to access personalized dashboards and tailored Ayush workflows.
+            Choose your stakeholder role to access personalized dashboards and verified Ayush workflows.
           </p>
         </div>
 
-        {/* 5 Portal Cards Grid matching the screenshot */}
+        {/* 5 Portal Cards Grid matching Slide 2 & 3 */}
         <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5 sm:gap-6 items-stretch">
           {PORTALS_DATA.map((portal) => {
             const isAdmin = portal.id === 'admin';
@@ -128,19 +128,24 @@ export const PortalSelectPage = ({
                 }`} />
 
                 {/* Card Main Info */}
-                <div className="flex flex-col items-center space-y-4 w-full">
+                <div className="flex flex-col items-center space-y-3 w-full">
                   {/* Icon Container */}
                   <div className="transition-transform duration-300 group-hover:scale-105">
                     {getPortalIcon(portal.id)}
                   </div>
 
-                  {/* Portal Title */}
-                  <h3 className="text-lg font-extrabold text-slate-900 group-hover:text-emerald-800 transition-colors">
-                    {portal.title}
-                  </h3>
+                  {/* Portal Title & Documented Subtitle */}
+                  <div>
+                    <h3 className="text-lg font-extrabold text-slate-900 group-hover:text-emerald-800 transition-colors">
+                      {portal.title}
+                    </h3>
+                    <span className="text-[11px] font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-md inline-block mt-1">
+                      {portal.subtitle}
+                    </span>
+                  </div>
 
                   {/* Portal Description */}
-                  <p className="text-xs text-slate-600 leading-relaxed min-h-[64px] flex items-center justify-center font-normal">
+                  <p className="text-xs text-slate-600 leading-relaxed min-h-[58px] flex items-center justify-center font-normal">
                     {portal.description}
                   </p>
                 </div>

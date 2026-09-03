@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { PLATFORM_FEATURES } from '../data/stitchData';
+import { PLATFORM_FEATURES, SYSTEM_COMPARISON_DATA } from '../data/stitchData';
 
 export function Features() {
   const [selectedCategory, setSelectedCategory] = useState('All');
 
-  const categories = ['All', 'Credibility', 'Intelligence', 'Practical Skills', 'Career Growth', 'Academia'];
+  const categories = ['All', 'Core Infrastructure', 'Assessment', 'Remediation', 'Placements', 'Credibility', 'Accessibility'];
 
   const filteredFeatures = selectedCategory === 'All'
     ? PLATFORM_FEATURES
@@ -24,7 +24,7 @@ export function Features() {
             className="inline-flex items-center gap-2 px-3.5 py-1 bg-surface-container-low border border-outline-variant/30 rounded-full text-xs font-semibold text-on-surface-variant mb-4 shadow-2xs"
           >
             <span className="material-symbols-outlined text-base text-primary">auto_awesome</span>
-            <span>Platform Capabilities</span>
+            <span>Documented Core Innovations (Slide 2)</span>
           </motion.div>
 
           <motion.h2 
@@ -34,7 +34,7 @@ export function Features() {
             transition={{ delay: 0.05 }}
             className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-on-surface mb-4 tracking-tight"
           >
-            Designed for the Ayush Ecosystem
+            Proposed Solution Architecture
           </motion.h2>
 
           <motion.p 
@@ -44,10 +44,10 @@ export function Features() {
             transition={{ delay: 0.1 }}
             className="font-body-lg text-base sm:text-lg text-on-surface-variant max-w-2xl leading-relaxed"
           >
-            From standardized clinical assessments to verified digital dossiers, explore the core infrastructure supporting students, colleges, and healthcare employers.
+            A centralized Ayush web platform connecting students, colleges, and pharmaceutical companies for skill testing, gap analysis, 15-minute bridge courses, and 1-click hiring.
           </motion.p>
 
-          {/* Filter Categories with Apple-style Layout Pill */}
+          {/* Filter Categories with Pill */}
           <div className="mt-8 flex flex-wrap justify-center gap-2 p-1.5 bg-surface-container-low/70 rounded-2xl border border-outline-variant/30 backdrop-blur-sm">
             {categories.map((cat) => {
               const isActive = selectedCategory === cat;
@@ -76,7 +76,7 @@ export function Features() {
         {/* Feature Cards Grid */}
         <motion.div 
           layout
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mb-20"
         >
           <AnimatePresence>
             {filteredFeatures.map((feature) => (
@@ -111,12 +111,121 @@ export function Features() {
 
                 <div className="mt-6 pt-4 border-t border-outline-variant/20 flex justify-between items-center text-xs font-semibold text-primary">
                   <span>Category: {feature.category}</span>
-                  <span className="text-slate-400 font-medium">Standardized</span>
+                  <span className="text-slate-400 font-medium">SIH26044 Verified</span>
                 </div>
               </motion.div>
             ))}
           </AnimatePresence>
         </motion.div>
+
+        {/* Official Comparison With Existing Systems (Slide 6 & 7) */}
+        <div className="mt-16 pt-12 border-t border-outline-variant/30">
+          <div className="text-center max-w-3xl mx-auto mb-8">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-100/70 border border-emerald-300 text-emerald-900 rounded-full text-xs font-bold mb-3">
+              <span className="material-symbols-outlined text-sm">balance</span>
+              Documented Benchmark Comparison (Slide 6 & 7)
+            </span>
+            <h3 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold text-slate-900 mb-3">
+              Comparison With Existing Systems
+            </h3>
+            <p className="text-sm sm:text-base text-slate-600">
+              Why SkillSetu outperforms generic recruitment portals by catering strictly to Ayush domain competencies.
+            </p>
+          </div>
+
+          <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-xs">
+            <table className="w-full text-left border-collapse text-xs sm:text-sm">
+              <thead>
+                <tr className="bg-slate-50 border-b border-slate-200 text-slate-700 font-bold uppercase tracking-wider text-[11px]">
+                  <th className="py-4 px-4 sm:px-6">Feature</th>
+                  <th className="py-4 px-3 sm:px-4 text-center bg-emerald-50 text-emerald-900 font-extrabold border-x border-emerald-200">
+                    SKILLSETU
+                  </th>
+                  <th className="py-4 px-3 sm:px-4 text-center">AICTE Portal</th>
+                  <th className="py-4 px-3 sm:px-4 text-center">Internshala</th>
+                  <th className="py-4 px-3 sm:px-4 text-center">LinkedIn</th>
+                  <th className="py-4 px-3 sm:px-4 text-center">NCS Portal</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100 font-medium text-slate-800">
+                {SYSTEM_COMPARISON_DATA.map((row, idx) => (
+                  <tr key={idx} className="hover:bg-slate-50/70 transition-colors">
+                    <td className="py-3.5 px-4 sm:px-6 font-medium text-slate-900">
+                      {row.feature}
+                    </td>
+                    <td className="py-3.5 px-3 sm:px-4 text-center bg-emerald-50/50 border-x border-emerald-100">
+                      {row.skillsetu ? (
+                        <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-emerald-100 text-emerald-700">
+                          <span className="material-symbols-outlined text-base">check</span>
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-rose-100 text-rose-600">
+                          <span className="material-symbols-outlined text-base">close</span>
+                        </span>
+                      )}
+                    </td>
+                    <td className="py-3.5 px-3 sm:px-4 text-center">
+                      {row.aicte ? (
+                        <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-emerald-100 text-emerald-700">
+                          <span className="material-symbols-outlined text-base">check</span>
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-rose-100 text-rose-600">
+                          <span className="material-symbols-outlined text-base">close</span>
+                        </span>
+                      )}
+                    </td>
+                    <td className="py-3.5 px-3 sm:px-4 text-center">
+                      {row.internshala ? (
+                        <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-emerald-100 text-emerald-700">
+                          <span className="material-symbols-outlined text-base">check</span>
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-rose-100 text-rose-600">
+                          <span className="material-symbols-outlined text-base">close</span>
+                        </span>
+                      )}
+                    </td>
+                    <td className="py-3.5 px-3 sm:px-4 text-center">
+                      {row.linkedin ? (
+                        <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-emerald-100 text-emerald-700">
+                          <span className="material-symbols-outlined text-base">check</span>
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-rose-100 text-rose-600">
+                          <span className="material-symbols-outlined text-base">close</span>
+                        </span>
+                      )}
+                    </td>
+                    <td className="py-3.5 px-3 sm:px-4 text-center">
+                      {row.ncs ? (
+                        <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-emerald-100 text-emerald-700">
+                          <span className="material-symbols-outlined text-base">check</span>
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-rose-100 text-rose-600">
+                          <span className="material-symbols-outlined text-base">close</span>
+                        </span>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Official Research Citations directly from Slide 6 */}
+          <div className="mt-4 p-4 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-600 flex flex-wrap items-center justify-between gap-3">
+            <span className="font-bold text-slate-800">Official Citations & References:</span>
+            <div className="flex flex-wrap gap-x-4 gap-y-1">
+              <span>• WHO Notes $43.4B Indian Ayush Market (PIB Delhi)</span>
+              <span>• NCISM Permitted Ayurveda Colleges & Seat Matrix (NCISM India)</span>
+              <span>• CCRAS SPARK-4.0 Research Studentships for BAMS (PIB Delhi)</span>
+              <span>• HSSC Formalizes 12 NQR Ayush Skill Packs (PIB Delhi)</span>
+              <span>• Ministry of Ayush: 7,345+ Licensed Pharmacies (PIB Delhi)</span>
+            </div>
+          </div>
+        </div>
 
       </div>
     </section>

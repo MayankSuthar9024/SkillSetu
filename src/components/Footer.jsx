@@ -48,7 +48,7 @@ export function Footer({ onNavigate, onSeeHowItWorks }) {
           </p>
           <div className="inline-flex items-center gap-2 px-3 py-1 bg-surface-container border border-outline-variant/30 rounded-lg text-xs font-semibold text-outline">
             <span className="material-symbols-outlined text-sm text-primary">workspace_premium</span>
-            <span>Smart India Hackathon 2026 • SIH26044</span>
+            <span>Team NJABBIC · Smart India Hackathon 2026 · SIH26044 (Ministry of Ayush & AIIA)</span>
           </div>
         </div>
 
@@ -163,7 +163,7 @@ export function Footer({ onNavigate, onSeeHowItWorks }) {
 
       {/* Copyright Bar */}
       <div className="border-t border-outline-variant/20 py-4 text-center text-xs text-outline font-medium">
-        © 2026 SkillSetu National Ayush Skill Portal. All rights reserved.
+        © 2026 SkillSetu · Team NJABBIC · Problem Statement SIH26044 (Ministry of Ayush & All India Institute of Ayurveda). All rights reserved.
       </div>
     </footer>
   );

@@ -8,50 +8,51 @@ export function HowItWorks() {
       case '01':
         return (
           <div className="space-y-3 py-2">
+            <div className="text-xs font-bold text-slate-800 mb-1">Visual 6-Axis Competency Radar:</div>
+            <div className="p-3.5 bg-white rounded-xl border border-outline-variant/20 flex justify-between items-center shadow-2xs">
+              <div className="flex items-center gap-2.5">
+                <span className="material-symbols-outlined text-emerald-700 text-lg">verified</span>
+                <span className="text-xs font-semibold text-slate-800">Schedule T GMP Cleanroom Protocol</span>
+              </div>
+              <span className="text-xs font-bold text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded border border-emerald-200">94% Benchmark</span>
+            </div>
+            <div className="p-3.5 bg-white rounded-xl border border-outline-variant/20 flex justify-between items-center shadow-2xs">
+              <div className="flex items-center gap-2.5">
+                <span className="material-symbols-outlined text-emerald-700 text-lg">biotech</span>
+                <span className="text-xs font-semibold text-slate-800">HPTLC Standardization Assay</span>
+              </div>
+              <span className="text-xs font-bold text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded border border-emerald-200">88% Benchmark</span>
+            </div>
             <div className="p-3.5 bg-white rounded-xl border border-outline-variant/20 flex justify-between items-center shadow-2xs">
               <div className="flex items-center gap-2.5">
                 <span className="material-symbols-outlined text-emerald-700 text-lg">ecg_heart</span>
-                <span className="text-xs font-semibold text-slate-800">Nadi Pariksha Scenario #4</span>
+                <span className="text-xs font-semibold text-slate-800">Nadi Pariksha & Clinical Diagnosis</span>
               </div>
-              <span className="text-xs font-bold text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded border border-emerald-200">92% Accuracy</span>
-            </div>
-            <div className="p-3.5 bg-white rounded-xl border border-outline-variant/20 flex justify-between items-center shadow-2xs">
-              <div className="flex items-center gap-2.5">
-                <span className="material-symbols-outlined text-emerald-700 text-lg">local_pharmacy</span>
-                <span className="text-xs font-semibold text-slate-800">Dravyaguna Herb Analysis</span>
-              </div>
-              <span className="text-xs font-bold text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded border border-emerald-200">88% Score</span>
-            </div>
-            <div className="p-3.5 bg-white rounded-xl border border-outline-variant/20 flex justify-between items-center shadow-2xs">
-              <div className="flex items-center gap-2.5">
-                <span className="material-symbols-outlined text-amber-700 text-lg">verified</span>
-                <span className="text-xs font-semibold text-slate-800">Panchakarma Protocol</span>
-              </div>
-              <span className="text-xs font-bold text-amber-800 bg-amber-50 px-2.5 py-0.5 rounded border border-amber-200">Standardized</span>
+              <span className="text-xs font-bold text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded border border-emerald-200">92% Benchmark</span>
             </div>
           </div>
         );
       case '02':
         return (
           <div className="space-y-3 py-2">
-            <div className="text-xs font-bold text-slate-800 mb-1">Clinical Competency Radar:</div>
+            <div className="text-xs font-bold text-slate-800 mb-1">Automated Deficit Detection Engine:</div>
             <div className="space-y-3 bg-white p-4 rounded-xl border border-outline-variant/20 shadow-2xs">
               <div>
                 <div className="flex justify-between text-xs font-semibold mb-1">
-                  <span className="text-slate-700">Clinical Diagnosis</span>
-                  <span className="text-primary font-bold">88%</span>
+                  <span className="text-slate-700">Schedule T GMP Compliance</span>
+                  <span className="text-amber-700 font-bold">55% Industry Deficit Detected</span>
                 </div>
                 <div className="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
-                  <div className="bg-primary h-full rounded-full w-[88%]" />
+                  <div className="bg-amber-600 h-full rounded-full w-[45%]" />
                 </div>
               </div>
               <div>
                 <div className="flex justify-between text-xs font-semibold mb-1">
-                  <span className="text-slate-700">Herbology & Formulations</span>
-                  <span className="text-amber-800 font-bold">76%</span>
+                  <span className="text-slate-700">Curriculum-to-Industry Alignment</span>
+                  <span className="text-primary font-bold">12 HSSC NQR Qualification Packs</span>
                 </div>
                 <div className="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
-                  <div className="bg-amber-600 h-full rounded-full w-[76%]" />
+                  <div className="bg-emerald-600 h-full rounded-full w-[94%]" />
                 </div>
               </div>
             </div>
@@ -61,11 +62,14 @@ export function HowItWorks() {
         return (
           <div className="space-y-3 py-2">
             <div className="p-4 bg-white rounded-xl border border-outline-variant/30 shadow-2xs">
-              <div className="text-xs font-bold text-primary mb-1">Active Clinical Sprint</div>
-              <div className="text-sm font-semibold text-slate-900">2-Week Panchakarma Clinical Case Study</div>
-              <div className="text-xs text-outline mt-1">Preceptor: Senior Vaidya Evaluation Desk</div>
+              <div className="flex justify-between items-center mb-1.5">
+                <div className="text-xs font-bold text-primary">Pharma R&D Micro-Bridge</div>
+                <span className="text-[11px] font-bold bg-amber-100 text-amber-900 px-2 py-0.5 rounded">15-Minute Sprint</span>
+              </div>
+              <div className="text-sm font-semibold text-slate-900">Schedule T Sterile Manufacturing & QA/QC</div>
+              <div className="text-xs text-outline mt-1">Co-developed by Dabur R&D & AIIA Preceptors</div>
               <div className="mt-2.5 bg-emerald-50 text-emerald-800 text-xs px-2.5 py-1 rounded font-semibold inline-block border border-emerald-200">
-                Phase: Hands-On Protocol In Progress
+                Remediation: Unlocks 1-Click Industry Matching
               </div>
             </div>
           </div>
@@ -74,12 +78,12 @@ export function HowItWorks() {
         return (
           <div className="space-y-3 py-2 text-center bg-white p-4 rounded-xl border border-outline-variant/30 shadow-2xs">
             <div className="w-16 h-16 mx-auto bg-slate-50 p-2 rounded-xl border border-outline-variant/40 flex items-center justify-center">
-              <span className="material-symbols-outlined text-3xl text-primary">qr_code_2</span>
+              <span className="material-symbols-outlined text-3xl text-primary">verified_user</span>
             </div>
-            <div className="text-xs font-bold text-slate-900">SkillSetu Verified Digital Dossier</div>
-            <div className="text-[11px] text-outline font-mono">ID: SKILL-AYUSH-2026-88912</div>
-            <div className="bg-emerald-700 text-white text-xs font-bold py-1 px-3.5 rounded-full inline-block">
-              Authenticated & Placement Ready
+            <div className="text-xs font-bold text-slate-900">100% SHA-256 Verifiable Ayush Dossier</div>
+            <div className="text-[11px] text-outline font-mono">HASH: 8f2b7...d4a19 · 7,345+ Factories Linked</div>
+            <div className="bg-emerald-700 text-white text-xs font-bold py-1 px-3.5 rounded-full inline-block mt-1">
+              1-Click Shortlist Enabled (40% Faster Hiring)
             </div>
           </div>
         );
@@ -101,7 +105,7 @@ export function HowItWorks() {
             className="bg-secondary-fixed text-on-secondary-container px-4 py-1.5 rounded-full font-label-sm text-xs uppercase tracking-wider font-bold mb-4 inline-flex items-center gap-1.5 shadow-2xs"
           >
             <span className="material-symbols-outlined text-base">route</span>
-            Standardized Progression Journey
+            Official 3-Phase Modular Pipeline (Slide 4)
           </motion.span>
           <motion.h2 
             initial={{ opacity: 0, y: 14 }}
@@ -110,7 +114,7 @@ export function HowItWorks() {
             transition={{ delay: 0.05 }}
             className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-on-surface mb-4 tracking-tight"
           >
-            How SkillSetu Works
+            Radar → Bridge → 1-Click Apply
           </motion.h2>
           <motion.p 
             initial={{ opacity: 0, y: 14 }}
@@ -119,7 +123,7 @@ export function HowItWorks() {
             transition={{ delay: 0.1 }}
             className="font-body-lg text-base sm:text-lg text-on-surface-variant max-w-2xl leading-relaxed"
           >
-            A four-step progression designed to assess, analyze, bridge, and connect Ayush candidates to real-world healthcare and research opportunities.
+            Documented in the SIH26044 Technical Approach: replace unverified paper resumes with visual 6-axis competency mapping, 15-minute pharma micro-courses, and frictionless 1-click hiring.
           </motion.p>
         </div>
 

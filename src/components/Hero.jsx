@@ -89,7 +89,7 @@ export function Hero({ onGetStarted }) {
           <motion.div variants={itemVariants} className="flex justify-center lg:justify-start">
             <span className="inline-flex items-center gap-2 px-3.5 py-1 bg-emerald-50/90 border border-emerald-200/90 rounded-full text-xs font-semibold text-emerald-900 shadow-2xs">
               <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span>
-              <span className="font-accent tracking-wider text-xs">Ayush Academia-Industry Bridge</span>
+              <span className="font-accent tracking-wider text-xs">Team NJABBIC · Problem Statement SIH26044 · Ministry of Ayush & AIIA</span>
             </span>
           </motion.div>
 
@@ -110,7 +110,7 @@ export function Hero({ onGetStarted }) {
             variants={itemVariants}
             className="hero-copy font-body-lg text-base sm:text-lg text-on-surface-variant max-w-xl mx-auto lg:mx-0 leading-relaxed"
           >
-            SkillSetu connects Ayush students, institutional curriculum, practical competency assessments, and career opportunities in one unified platform. Bridging academic learning with clinical healthcare demands.
+            SkillSetu is the centralized Ayush web platform connecting 42,000+ scholars, 536+ permitted colleges, and 7,345+ licensed pharma units for 6-axis competency testing, 15-minute bridge courses, and 1-click verified hiring.
           </motion.p>
 
           {/* Single Focused Login CTA */}
@@ -294,6 +294,11 @@ export function Hero({ onGetStarted }) {
                 <div className="text-xs text-on-surface-variant font-medium">
                   {metric.label}
                 </div>
+                {metric.subtext && (
+                  <div className="text-[10px] text-emerald-800 font-semibold truncate">
+                    {metric.subtext}
+                  </div>
+                )}
               </div>
             </motion.div>
           ))}
