@@ -15,6 +15,7 @@ import {
   BarChart3,
   Plus,
   MessageSquare,
+  BookOpen,
   X
 } from 'lucide-react';
 import { PORTALS_DATA, PLATFORM_METADATA } from '../data/portalData';
@@ -33,6 +34,7 @@ import { MessagePage } from './MessagePage';
 import { FacultyPage } from './FacultyPage';
 import { CompanyPage } from './CompanyPage';
 import { MinistryPage } from './MinistryPage';
+import { CoursesPage } from './CoursesPage';
 
 export const StakeholderDashboard = ({
   activePortalId,
@@ -160,58 +162,67 @@ export const StakeholderDashboard = ({
             onOpenAuthModal={() => {}}
           />
         );
+      case 'courses':
+        return (
+          <CoursesPage
+            currentUser={user}
+            activePortalId={activePortalId}
+          />
+        );
       case 'console':
         return (
           <div className="space-y-6">
-            <div className="bg-white p-5 sm:p-6 rounded-3xl border border-slate-200 shadow-soft flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-              <div>
-                <span className="text-xs font-bold uppercase tracking-wider text-emerald-800 bg-emerald-50 px-3 py-1 rounded-full">
-                  Operations & Management Console
-                </span>
-                <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 mt-2">
-                  {currentPortalConfig.title} Operational Dashboard
-                </h2>
-                <p className="text-xs text-slate-500 mt-1">
-                  Tailored tools and analytics for {user.name} ({currentPortalConfig.subtitle})
-                </p>
-              </div>
+            {activePortalId !== 'faculty' && (
+              <div className="bg-white p-5 sm:p-6 rounded-3xl border border-slate-200 shadow-soft flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div>
+                  <span className="text-xs font-bold uppercase tracking-wider text-emerald-800 bg-emerald-50 px-3 py-1 rounded-full">
+                    Operations & Management Console
+                  </span>
+                  <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 mt-2">
+                    {currentPortalConfig.title} Operational Dashboard
+                  </h2>
+                  <p className="text-xs text-slate-500 mt-1">
+                    Tailored tools and analytics for {user.name} ({currentPortalConfig.subtitle})
+                  </p>
+                </div>
 
-              <div className="relative w-full sm:w-auto">
-                <button
-                  onClick={() => setRoleDropdownOpen(!roleDropdownOpen)}
-                  className="w-full sm:w-auto px-4 py-2.5 bg-emerald-800 hover:bg-emerald-900 text-white font-bold text-xs rounded-xl flex items-center justify-between sm:justify-start gap-2 cursor-pointer shadow-xs"
-                >
-                  <RefreshCw className="w-3.5 h-3.5" />
-                  <span>Switch Role: {currentPortalConfig.title}</span>
-                  <ChevronDown className="w-4 h-4" />
-                </button>
+                <div className="relative w-full sm:w-auto">
+                  <button
+                    onClick={() => setRoleDropdownOpen(!roleDropdownOpen)}
+                    className="w-full sm:w-auto px-4 py-2.5 bg-emerald-800 hover:bg-emerald-900 text-white font-bold text-xs rounded-xl flex items-center justify-between sm:justify-start gap-2 cursor-pointer shadow-xs"
+                  >
+                    <RefreshCw className="w-3.5 h-3.5" />
+                    <span>Switch Role: {currentPortalConfig.title}</span>
+                    <ChevronDown className="w-4 h-4" />
+                  </button>
 
-                {roleDropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-64 bg-white rounded-2xl shadow-2xl border border-slate-200 py-2 z-50 animate-in fade-in">
-                    <div className="px-3 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                      Switch Role
+                  {roleDropdownOpen && (
+                    <div className="absolute right-0 mt-2 w-64 bg-white rounded-2xl shadow-2xl border border-slate-200 py-2 z-50 animate-in fade-in">
+                      <div className="px-3 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                        Switch Role
+                      </div>
+                      {PORTALS_DATA.map((p) => (
+                        <button
+                          key={p.id}
+                          onClick={() => {
+                            setRoleDropdownOpen(false);
+                            onSwitchPortal(p.id, p.profileUser);
+                          }}
+                          className={`w-full text-left px-3 py-2 text-xs flex items-center justify-between transition-colors ${
+                            activePortalId === p.id 
+                              ? 'bg-emerald-50 text-emerald-900 font-bold' 
+                              : 'text-slate-700 hover:bg-slate-50'
+                          }`}
+                        >
+                          <span>{p.title} Console</span>
+                          <span className="text-[10px] text-slate-400">{p.subtitle}</span>
+                        </button>
+                      ))}
                     </div>
-                    {PORTALS_DATA.map((p) => (
-                      <button
-                        key={p.id}
-                        onClick={() => {
-                          setRoleDropdownOpen(false);
-                          onSwitchPortal(p.id, p.profileUser);
-                        }}
-                        className={`w-full text-left px-3 py-2 text-xs flex items-center justify-between transition-colors ${
-                          activePortalId === p.id 
-                            ? 'bg-emerald-50 text-emerald-900 font-bold' 
-                            : 'text-slate-700 hover:bg-slate-50'
-                        }`}
-                      >
-                        <span>{p.title} Console</span>
-                        <span className="text-[10px] text-slate-400">{p.subtitle}</span>
-                      </button>
-                    ))}
-                  </div>
-                )}
+                  )}
+                </div>
               </div>
-            </div>
+            )}
 
             {activePortalId === 'student' && <StudentPortalView user={user} />}
             {activePortalId === 'company' && <CompanyPage currentUser={user} onOpenAuthModal={() => {}} />}
@@ -226,43 +237,40 @@ export const StakeholderDashboard = ({
   };
 
   const studentNavItems = [
-    { id: 'feed', label: 'Home', icon: Home },
+    { id: 'feed', label: 'Feed', icon: Home },
+    { id: 'courses', label: 'Courses', icon: BookOpen },
     { id: 'console', label: 'Student Desk', icon: User },
     { id: 'jobs', label: 'Opportunities', icon: Briefcase },
-    { id: 'skills', label: 'Skill Hub', icon: Award },
-    { id: 'messages', label: 'Messages', icon: MessageSquare },
-    { id: 'profile', label: 'Profile', icon: User }
+    { id: 'skills', label: 'Skill Hub', icon: Award }
   ];
 
   const companyNavItems = [
+    { id: 'feed', label: 'Feed', icon: Home },
+    { id: 'courses', label: 'Courses', icon: BookOpen },
     { id: 'console', label: 'Company Console', icon: Layers },
-    { id: 'profile', label: 'Company Profile', icon: Building2 },
     { id: 'jobs', label: 'Talent ATS', icon: Briefcase },
-    { id: 'messages', label: 'Messages', icon: MessageSquare },
-    { id: 'network', label: 'Industry', icon: Building2 },
-    { id: 'feed', label: 'Feed', icon: Home }
+    { id: 'network', label: 'Industry', icon: Building2 }
   ];
 
   const facultyNavItems = [
+    { id: 'feed', label: 'Feed', icon: Home },
+    { id: 'courses', label: 'Courses', icon: BookOpen },
     { id: 'console', label: 'Faculty Console', icon: Layers },
-    { id: 'skills', label: 'Department Radar', icon: BarChart3 },
-    { id: 'profile', label: 'Faculty Profile', icon: User },
-    { id: 'messages', label: 'Messages', icon: MessageSquare },
-    { id: 'feed', label: 'Feed', icon: Home }
+    { id: 'skills', label: 'Department Radar', icon: BarChart3 }
   ];
 
   const ministryNavItems = [
+    { id: 'feed', label: 'Feed', icon: Home },
+    { id: 'courses', label: 'Courses', icon: BookOpen },
     { id: 'console', label: 'Ministry Command', icon: Layers },
-    { id: 'network', label: 'State Ecosystem', icon: Building2 },
-    { id: 'messages', label: 'Messages', icon: MessageSquare },
-    { id: 'feed', label: 'Feed', icon: Home }
+    { id: 'network', label: 'State Ecosystem', icon: Building2 }
   ];
 
   const collegeNavItems = [
+    { id: 'feed', label: 'Feed', icon: Home },
+    { id: 'courses', label: 'Courses', icon: BookOpen },
     { id: 'console', label: 'College Console', icon: Layers },
-    { id: 'network', label: 'Placement Desk', icon: Building2 },
-    { id: 'messages', label: 'Messages', icon: MessageSquare },
-    { id: 'feed', label: 'Feed', icon: Home }
+    { id: 'network', label: 'Placement Desk', icon: Building2 }
   ];
 
   let navItems = studentNavItems;

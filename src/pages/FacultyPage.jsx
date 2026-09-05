@@ -16,11 +16,19 @@ import {
   GraduationCap,
   ChevronRight,
   Download,
-  Share2
+  Share2,
+  FileText,
+  UploadCloud,
+  Check,
+  Layers,
+  AlertCircle,
+  Tag,
+  Video,
+  X
 } from 'lucide-react';
 
 export function FacultyPage({ onNavigate, onOpenReadinessModal, currentUser }) {
-  const [activeTab, setActiveTab] = useState('radar'); // 'radar' | 'review' | 'author' | 'grants'
+  const [activeTab, setActiveTab] = useState('radar'); // 'radar' | 'review' | 'author' | 'publish' | 'grants'
   const [selectedCohort, setSelectedCohort] = useState('BAMS-FinalYear');
   const [searchTerm, setSearchTerm] = useState('');
   
@@ -67,10 +75,178 @@ export function FacultyPage({ onNavigate, onOpenReadinessModal, currentUser }) {
   ]);
 
   const [microCourses, setMicroCourses] = useState([
-    { id: 'mc-1', title: 'HPTLC Mobile Phase Selection Simulator', duration: '45 mins', enrolled: 142, rating: '4.9/5', status: 'Published' },
-    { id: 'mc-2', title: 'Schedule T Cleanroom Airflow Validation', duration: '30 mins', enrolled: 98, rating: '4.8/5', status: 'Published' },
-    { id: 'mc-3', title: 'Rasa Shastra Bhasma Incineration & Standardization', duration: '60 mins', enrolled: 0, rating: 'Draft', status: 'In Review' },
+    { 
+      id: 'mc-1', 
+      title: 'Schedule T Cleanroom Airflow & Manufacturing Basics', 
+      category: 'Manufacturing & GMP',
+      duration: '90 mins', 
+      enrolled: 142, 
+      rating: '4.9/5', 
+      status: 'Published',
+      targetCohort: 'BAMS Final Year',
+      skillGap: 'Translating Drugs Rules 1945 Schedule T requirements into cleanroom premises & hygiene.',
+      competencies: ['Schedule T Rules', 'GMP Protocol', 'Cleanroom Airflow']
+    },
+    { 
+      id: 'mc-2', 
+      title: 'Good Clinical Practice (GCP) – ICH E6(R3)', 
+      category: 'Clinical Research',
+      duration: '120 mins', 
+      enrolled: 98, 
+      rating: '4.8/5', 
+      status: 'Published',
+      targetCohort: 'MD Dravyaguna Scholars',
+      skillGap: 'Risk-based quality thinking, informed consent & essential clinical trial records.',
+      competencies: ['ICH E6(R3)', 'Trial Ethics', 'Data Integrity']
+    },
+    { 
+      id: 'mc-3', 
+      title: 'Pharmacovigilance Basics & ADR Reporting Protocol', 
+      category: 'Pharmacovigilance',
+      duration: '60 mins', 
+      enrolled: 64, 
+      rating: '4.7/5', 
+      status: 'Published',
+      targetCohort: 'All Ayush Scholars',
+      skillGap: 'Real-world adverse drug reaction (ADR) monitoring and CDSCO safety submission.',
+      competencies: ['ADR Detection', 'WHO-UMC Causality', 'Signal Safety']
+    },
+    { 
+      id: 'mc-4', 
+      title: 'HPTLC Mobile Phase Selection & Marker Fingerprinting', 
+      category: 'Quality Control / QA',
+      duration: '45 mins', 
+      enrolled: 0, 
+      rating: 'New', 
+      status: 'Draft',
+      targetCohort: 'BAMS 3rd Year',
+      skillGap: 'Spectrophotometric botanical marker extraction and chromatographic assay.',
+      competencies: ['HPTLC Assay', 'Botanical Markers', 'Lab SOPs']
+    },
   ]);
+
+  // Form State for Posting New Micro-Course
+  const [courseForm, setCourseForm] = useState({
+    title: '',
+    category: 'Manufacturing & GMP',
+    duration: '90 mins',
+    targetCohort: 'BAMS Final Year',
+    skillGap: '',
+    competencies: '',
+    learningDesign: 'Standard 6-Module Blueprint (Pre-test, Lesson, Case Study, Activity, Assessment, Badge)',
+    videoUrl: '',
+    attachedFileName: ''
+  });
+
+  const [publishSuccess, setPublishSuccess] = useState(false);
+  const [isPostingModalOpen, setIsPostingModalOpen] = useState(false);
+
+  // Task 5 PDF Recommended Presets for 1-Click Auto-Fill
+  const coursePresets = [
+    {
+      label: 'Schedule T Basics',
+      tag: 'Manufacturing',
+      title: 'Schedule T Basics & Manufacturing Compliance',
+      category: 'Manufacturing & GMP',
+      duration: '90 mins',
+      targetCohort: 'BAMS Final Year',
+      skillGap: 'Understanding Indian pharmaceutical manufacturing requirements, premises, equipment, hygiene, and documentation under Drugs Rules 1945.',
+      competencies: 'Schedule T Rules, Premises Hygiene, GMP Compliance, QA Documentation'
+    },
+    {
+      label: 'GCP – ICH E6(R3)',
+      tag: 'Clinical Research',
+      title: 'Good Clinical Practice (GCP) – ICH E6(R3)',
+      category: 'Clinical Research',
+      duration: '120 mins',
+      targetCohort: 'MD Dravyaguna Scholars',
+      skillGap: 'International ethical, scientific, and quality standards for clinical trials. Emphasis on participant protection, data reliability, and risk-based quality thinking.',
+      competencies: 'ICH E6(R3), Informed Consent, Trial Lifecycle, Data Integrity'
+    },
+    {
+      label: 'GMP Basics',
+      tag: 'Quality Assurance',
+      title: 'Good Manufacturing Practice (GMP) Basics',
+      category: 'Quality Assurance / QA',
+      duration: '90 mins',
+      targetCohort: 'All Ayush Scholars',
+      skillGap: 'Quality-management framework for consistently producing and controlling medicines. Covers validation, documentation, and contamination control.',
+      competencies: 'WHO-GMP Standards, Quality Systems, Contamination Control, Validation SOPs'
+    },
+    {
+      label: 'Regulatory Affairs',
+      tag: 'Regulatory',
+      title: 'Regulatory Affairs Basics & CDSCO Framework',
+      category: 'Regulatory Compliance',
+      duration: '90 mins',
+      targetCohort: 'BAMS 3rd Year',
+      skillGap: 'CDSCO regulatory framework, Drugs and Cosmetics Act/Rules, and New Drugs and Clinical Trials Rules high-level drug approval pathways.',
+      competencies: 'CDSCO Regulatory Pathway, Submission Checklist, CTRI Rules, Compliance'
+    },
+    {
+      label: 'Pharmacovigilance',
+      tag: 'Medicine Safety',
+      title: 'Pharmacovigilance Basics & ADR Safety Monitoring',
+      category: 'Pharmacovigilance',
+      duration: '90 mins',
+      targetCohort: 'All Ayush Scholars',
+      skillGap: 'Detection, assessment, understanding and prevention of adverse drug effects. Real-world ADR reporting workflows and safety signal processing.',
+      competencies: 'ADR Detection, WHO-UMC Causality, Safety Reporting, Signal Assessment'
+    }
+  ];
+
+  const handleApplyPreset = (preset) => {
+    setCourseForm({
+      ...courseForm,
+      title: preset.title,
+      category: preset.category,
+      duration: preset.duration,
+      targetCohort: preset.targetCohort,
+      skillGap: preset.skillGap,
+      competencies: preset.competencies,
+      attachedFileName: `${preset.label.replace(/[^a-zA-Z0-9]/g, '_')}_Standard_SOP.pdf`
+    });
+  };
+
+  const handlePublishCourse = (isDraft = false) => {
+    if (!courseForm.title.trim()) {
+      alert('Please provide a Course Title before posting.');
+      return;
+    }
+
+    const newCourse = {
+      id: `mc-${Date.now()}`,
+      title: courseForm.title,
+      category: courseForm.category,
+      duration: courseForm.duration,
+      enrolled: 0,
+      rating: 'New',
+      status: isDraft ? 'Draft' : 'Published',
+      targetCohort: courseForm.targetCohort,
+      skillGap: courseForm.skillGap || 'Targeted student skill-gap development',
+      competencies: courseForm.competencies ? courseForm.competencies.split(',').map(c => c.trim()) : ['Core Competency'],
+      attachedFileName: courseForm.attachedFileName || 'Course_Module_Material.pdf'
+    };
+
+    setMicroCourses(prev => [newCourse, ...prev]);
+    setPublishSuccess(true);
+    setTimeout(() => {
+      setPublishSuccess(false);
+      setIsPostingModalOpen(false);
+      setCourseForm({
+        title: '',
+        category: 'Manufacturing & GMP',
+        duration: '90 mins',
+        targetCohort: 'BAMS Final Year',
+        skillGap: '',
+        competencies: '',
+        learningDesign: 'Standard 6-Module Blueprint',
+        videoUrl: '',
+        attachedFileName: ''
+      });
+      setActiveTab('author'); // Switch to Micro-Course Studio tab to see newly posted course
+    }, 1200);
+  };
 
   const handleApprove = (id) => {
     setPendingSubmissions(prev => prev.map(s => 
@@ -87,59 +263,14 @@ export function FacultyPage({ onNavigate, onOpenReadinessModal, currentUser }) {
     <div className="min-h-screen bg-[#f3f7f5] py-8 px-4 sm:px-6 lg:px-8 font-sans text-slate-900">
       <div className="max-w-7xl mx-auto space-y-8">
         
-        {/* Header Hero Banner */}
-        <div className="relative overflow-hidden bg-gradient-to-r from-emerald-900 via-teal-900 to-slate-900 text-white rounded-3xl p-6 sm:p-10 shadow-xl border border-emerald-800/40">
-          <div className="absolute right-0 top-0 opacity-10 pointer-events-none transform translate-x-12 -translate-y-12">
-            <GraduationCap className="w-96 h-96 text-white" />
-          </div>
 
-          <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-            <div className="flex items-center gap-5">
-              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br from-emerald-400 to-teal-600 text-slate-950 font-extrabold text-2xl sm:text-3xl flex items-center justify-center shadow-lg border-2 border-white/20 shrink-0">
-                {facultyUser.avatar || 'MJ'}
-              </div>
-              <div>
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 text-[11px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider flex items-center gap-1">
-                    <ShieldCheck className="w-3.5 h-3.5" /> NCISM Verified Preceptor
-                  </span>
-                  <span className="bg-white/10 text-white text-[11px] font-bold px-3 py-1 rounded-full border border-white/10">
-                    Faculty ID: {facultyUser.id}
-                  </span>
-                </div>
-                <h1 className="text-2xl sm:text-4xl font-extrabold mt-2 tracking-tight">
-                  {facultyUser.name}
-                </h1>
-                <p className="text-emerald-100 text-xs sm:text-sm mt-1 max-w-2xl">
-                  {facultyUser.role} · {facultyUser.institution}
-                </p>
-              </div>
-            </div>
-
-            {/* Quick Metrics */}
-            <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
-              <div className="bg-white/10 backdrop-blur-md border border-white/15 px-4 py-2.5 rounded-2xl text-center flex-1 md:flex-initial">
-                <span className="text-[10px] uppercase font-bold text-emerald-200 block">Mentored Scholars</span>
-                <span className="text-xl font-extrabold text-white">142 Students</span>
-              </div>
-              <div className="bg-white/10 backdrop-blur-md border border-white/15 px-4 py-2.5 rounded-2xl text-center flex-1 md:flex-initial">
-                <span className="text-[10px] uppercase font-bold text-emerald-200 block">Micro-Courses</span>
-                <span className="text-xl font-extrabold text-white">4 Modules</span>
-              </div>
-              <div className="bg-emerald-500 text-slate-950 font-bold px-4 py-2.5 rounded-2xl text-center shadow-md flex-1 md:flex-initial">
-                <span className="text-[10px] uppercase font-extrabold text-slate-900 block">Audit Pass Rate</span>
-                <span className="text-xl font-extrabold">98.4%</span>
-              </div>
-            </div>
-          </div>
-        </div>
 
         {/* Navigation Tabs */}
         <div className="flex flex-wrap items-center gap-2 border-b border-slate-200/80 pb-3">
           {[
             { id: 'radar', label: 'Department Cohort Radar', icon: BarChart3, badge: '142 Scholars' },
             { id: 'review', label: 'Evaluation & Digital Signature', icon: CheckCircle2, badge: `${pendingSubmissions.filter(s => s.status.includes('Pending')).length} Pending` },
-            { id: 'author', label: 'Micro-Course Studio', icon: BookOpen, badge: '3 Active' },
+            { id: 'author', label: 'Micro-Course Studio', icon: BookOpen, badge: `${microCourses.length} Modules` },
             { id: 'grants', label: 'CCRAS SPARK-4.0 & FDPs', icon: Award, badge: '300+ Grants' },
           ].map((tab) => {
             const Icon = tab.icon;
@@ -372,42 +503,67 @@ export function FacultyPage({ onNavigate, onOpenReadinessModal, currentUser }) {
         {activeTab === 'author' && (
           <div className="space-y-6 animate-fadeIn">
             <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-soft space-y-6">
-              <div className="flex justify-between items-center">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
                   <h2 className="text-xl font-extrabold text-slate-900">
-                    Micro-Course Authoring Studio
+                    Micro-Course Authoring Studio & Active Modules
                   </h2>
                   <p className="text-xs text-slate-500 mt-1">
-                    Design 15-minute micro-sprints mapped to 12 HSSC NQR Qualification Packs.
+                    Design and monitor industry-oriented training modules mapped to NCISM, CDSCO, and WHO-GMP benchmarks.
                   </p>
                 </div>
-
-                <button 
-                  onClick={() => alert("Opening Micro-Course Authoring Canvas...")}
-                  className="px-4 py-2.5 bg-emerald-800 hover:bg-emerald-900 text-white text-xs font-bold rounded-xl shadow-xs transition-all cursor-pointer flex items-center gap-2"
+                <button
+                  onClick={() => setIsPostingModalOpen(true)}
+                  className="px-5 py-2.5 bg-emerald-800 hover:bg-emerald-900 text-white font-extrabold text-xs rounded-xl shadow-md transition-all cursor-pointer flex items-center justify-center gap-2 shrink-0 active:scale-95"
                 >
-                  <PlusCircle className="w-4 h-4" />
-                  <span>Create New Micro-Sprint</span>
+                  <PlusCircle className="w-4 h-4 text-emerald-300" />
+                  <span>+ Post Course</span>
                 </button>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                 {microCourses.map((course) => (
-                  <div key={course.id} className="p-5 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-3 flex flex-col justify-between">
+                  <div key={course.id} className="p-5 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-4 flex flex-col justify-between hover:border-emerald-300 transition-all">
                     <div>
-                      <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full ${
-                        course.status === 'Published' ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-200 text-slate-700'
-                      }`}>
-                        {course.status}
-                      </span>
-                      <h3 className="font-extrabold text-sm text-slate-900 mt-2">{course.title}</h3>
-                      <p className="text-xs text-slate-500 mt-1">Duration: {course.duration} · Enrolled: {course.enrolled} Students</p>
+                      <div className="flex justify-between items-center">
+                        <span className={`text-[10px] font-extrabold px-2.5 py-0.5 rounded-full ${
+                          course.status === 'Published' ? 'bg-emerald-100 text-emerald-800 border border-emerald-200' : 'bg-slate-200 text-slate-700'
+                        }`}>
+                          {course.status}
+                        </span>
+                        <span className="text-[10px] font-bold text-slate-500 bg-white px-2 py-0.5 rounded border border-slate-200">
+                          {course.category || 'General'}
+                        </span>
+                      </div>
+
+                      <h3 className="font-extrabold text-sm text-slate-900 mt-3 leading-snug">{course.title}</h3>
+                      
+                      {course.skillGap && (
+                        <p className="text-xs text-slate-600 mt-2 line-clamp-2 leading-relaxed">
+                          {course.skillGap}
+                        </p>
+                      )}
+
+                      <div className="flex flex-wrap items-center gap-1.5 mt-3">
+                        <span className="text-[10px] font-semibold bg-emerald-50 text-emerald-800 px-2 py-0.5 rounded-md border border-emerald-100">
+                          Target: {course.targetCohort || 'All Students'}
+                        </span>
+                        <span className="text-[10px] font-semibold bg-slate-100 text-slate-700 px-2 py-0.5 rounded-md">
+                          {course.duration}
+                        </span>
+                      </div>
                     </div>
 
-                    <div className="pt-3 border-t border-slate-200 flex justify-between items-center text-xs">
-                      <span className="font-bold text-emerald-800">{course.rating}</span>
-                      <button className="text-emerald-800 font-bold hover:underline cursor-pointer">
-                        Edit Canvas →
+                    <div className="pt-3 border-t border-slate-200/80 flex justify-between items-center text-xs">
+                      <span className="font-extrabold text-slate-700">
+                        {course.enrolled} Enrolled · <strong className="text-emerald-800">{course.rating}</strong>
+                      </span>
+                      <button 
+                        onClick={() => alert(`Opening analytics canvas for: ${course.title}`)}
+                        className="text-emerald-800 font-bold hover:underline cursor-pointer flex items-center gap-1"
+                      >
+                        <span>Manage SOP</span>
+                        <ChevronRight className="w-3.5 h-3.5" />
                       </button>
                     </div>
                   </div>
@@ -473,6 +629,201 @@ export function FacultyPage({ onNavigate, onOpenReadinessModal, currentUser }) {
         )}
 
       </div>
+
+      {/* FACULTY POST COURSE MODAL */}
+      {isPostingModalOpen && (
+        <div className="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto animate-fadeIn">
+          <div className="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl border border-slate-200 space-y-6 relative my-8">
+            
+            <div className="flex justify-between items-center border-b border-slate-100 pb-4">
+              <div>
+                <span className="text-xs font-extrabold uppercase tracking-wider text-emerald-800 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
+                  Faculty Micro-Course Desk
+                </span>
+                <h2 className="text-xl font-extrabold text-slate-900 mt-2">
+                  + Post New Micro-Course
+                </h2>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Publish a new training module mapped to NCISM, CDSCO, and WHO-GMP benchmarks.
+                </p>
+              </div>
+
+              <button
+                onClick={() => setIsPostingModalOpen(false)}
+                className="p-2 text-slate-400 hover:text-slate-600 rounded-xl hover:bg-slate-100 cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Success Toast */}
+            {publishSuccess && (
+              <div className="p-4 bg-emerald-600 text-white rounded-2xl shadow-lg flex items-center justify-between animate-bounce">
+                <div className="flex items-center gap-3">
+                  <CheckCircle2 className="w-6 h-6 text-emerald-200" />
+                  <div>
+                    <h4 className="font-extrabold text-sm">Course Module Published Successfully!</h4>
+                    <p className="text-xs text-emerald-100">Live for student enrollment and verified cohort tracking.</p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Quick 1-Click Topic Presets */}
+            <div className="bg-emerald-50/70 p-4 rounded-2xl border border-emerald-200/80 space-y-2.5">
+              <span className="text-[11px] font-extrabold text-emerald-950 uppercase tracking-wider block">
+                Quick 1-Click Curriculum Presets:
+              </span>
+              <div className="flex flex-wrap gap-2">
+                {coursePresets.map((preset, idx) => (
+                  <button
+                    key={idx}
+                    type="button"
+                    onClick={() => handleApplyPreset(preset)}
+                    className="px-3 py-1.5 bg-white hover:bg-emerald-800 hover:text-white text-slate-800 font-bold text-xs rounded-xl border border-slate-200 transition-all cursor-pointer"
+                  >
+                    + {preset.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Form Fields */}
+            <div className="space-y-4">
+              <div>
+                <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-1">
+                  Course Title *
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g. Schedule T Basics & Manufacturing Compliance"
+                  value={courseForm.title}
+                  onChange={(e) => setCourseForm({ ...courseForm, title: e.target.value })}
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-900 focus:ring-2 focus:ring-emerald-700 focus:bg-white"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div>
+                  <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-1">
+                    Domain / Track
+                  </label>
+                  <select
+                    value={courseForm.category}
+                    onChange={(e) => setCourseForm({ ...courseForm, category: e.target.value })}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-900 focus:ring-2 focus:ring-emerald-700"
+                  >
+                    <option value="Manufacturing & GMP">Manufacturing & GMP</option>
+                    <option value="Clinical Research">Clinical Research (GCP)</option>
+                    <option value="Regulatory Compliance">Regulatory Compliance</option>
+                    <option value="Pharmacovigilance">Pharmacovigilance</option>
+                    <option value="Quality Assurance / QA">Quality Assurance / QA</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-1">
+                    Target Cohort
+                  </label>
+                  <select
+                    value={courseForm.targetCohort}
+                    onChange={(e) => setCourseForm({ ...courseForm, targetCohort: e.target.value })}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-900 focus:ring-2 focus:ring-emerald-700"
+                  >
+                    <option value="BAMS Final Year">BAMS Final Year</option>
+                    <option value="MD Dravyaguna Scholars">MD Dravyaguna Scholars</option>
+                    <option value="BAMS 3rd Year">BAMS 3rd Year</option>
+                    <option value="All Ayush Scholars">All Ayush Scholars</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-1">
+                    Duration
+                  </label>
+                  <select
+                    value={courseForm.duration}
+                    onChange={(e) => setCourseForm({ ...courseForm, duration: e.target.value })}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-900 focus:ring-2 focus:ring-emerald-700"
+                  >
+                    <option value="60 mins">60 mins</option>
+                    <option value="90 mins">90 mins</option>
+                    <option value="120 mins">120 mins</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-1">
+                  Target Skill Gap Addressed
+                </label>
+                <textarea
+                  rows="2"
+                  placeholder="e.g. Schedule M/T compliance, premises hygiene, QA record-keeping..."
+                  value={courseForm.skillGap}
+                  onChange={(e) => setCourseForm({ ...courseForm, skillGap: e.target.value })}
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-medium text-slate-900 focus:ring-2 focus:ring-emerald-700 focus:bg-white"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-1">
+                  Target Competencies (Comma separated)
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g. Schedule T Rules, Cleanroom SOP, GMP Audits"
+                  value={courseForm.competencies}
+                  onChange={(e) => setCourseForm({ ...courseForm, competencies: e.target.value })}
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-medium text-slate-900 focus:ring-2 focus:ring-emerald-700 focus:bg-white"
+                />
+              </div>
+
+              {/* Syllabus / Module Material Attachment */}
+              <div className="p-3 bg-slate-50 rounded-xl border border-dashed border-slate-300 flex items-center justify-between">
+                <div className="flex items-center gap-2.5">
+                  <UploadCloud className="w-5 h-5 text-emerald-800" />
+                  <div>
+                    <p className="text-xs font-bold text-slate-800">
+                      {courseForm.attachedFileName || 'Course SOP & Curriculum Attached'}
+                    </p>
+                    <p className="text-[10px] text-slate-500">PDF / Video Modules Ready for Student Portal</p>
+                  </div>
+                </div>
+                <span className="text-[10px] font-bold text-emerald-800 bg-emerald-100 px-2.5 py-1 rounded-md">
+                  Verified
+                </span>
+              </div>
+            </div>
+
+            {/* Modal Actions */}
+            <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
+              <button
+                type="button"
+                onClick={() => setIsPostingModalOpen(false)}
+                className="px-5 py-2.5 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded-xl cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={() => handlePublishCourse(true)}
+                className="px-5 py-2.5 text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl cursor-pointer"
+              >
+                Save as Draft
+              </button>
+              <button
+                type="button"
+                onClick={() => handlePublishCourse(false)}
+                className="px-6 py-2.5 text-xs font-bold text-white bg-emerald-800 hover:bg-emerald-900 rounded-xl shadow-md cursor-pointer transition-all active:scale-95"
+              >
+                Publish Course Module
+              </button>
+            </div>
+
+          </div>
+        </div>
+      )}
     </div>
   );
 }
