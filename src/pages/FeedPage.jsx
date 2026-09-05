@@ -27,7 +27,8 @@ import {
   Building2,
   ShieldCheck,
   Zap,
-  ArrowRight
+  ArrowRight,
+  Flame
 } from 'lucide-react';
 
 export function FeedPage({ onNavigate, currentUser, openCreatePostModal, onCloseCreatePostModal }) {

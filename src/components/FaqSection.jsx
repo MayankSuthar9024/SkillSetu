@@ -9,11 +9,11 @@ export function FaqSection({ onOpenReadinessModal, onOpenAuthModal }) {
   };
 
   return (
-    <section className="premium-section py-12 sm:py-16 lg:py-24 bg-surface-container-lowest border-b border-outline-variant/30 overflow-hidden w-full max-w-full">
+    <section className="premium-section py-8 sm:py-14 lg:py-20 bg-surface-container-lowest border-b border-outline-variant/30 overflow-hidden w-full max-w-full">
       <div className="max-w-container-max mx-auto px-4 sm:px-6 md:px-margin-desktop w-full max-w-full">
         
         {/* Section Header */}
-        <div className="flex flex-col items-center text-center max-w-3xl mx-auto mb-16">
+        <div className="flex flex-col items-center text-center max-w-3xl mx-auto mb-8 sm:mb-12">
           <div className="inline-flex items-center gap-2 px-3.5 py-1 bg-surface-container-low border border-outline-variant/30 rounded-full text-xs font-semibold text-on-surface-variant mb-4">
             <span className="material-symbols-outlined text-base text-primary">help</span>
             <span>Got Questions? We've Got Answers</span>

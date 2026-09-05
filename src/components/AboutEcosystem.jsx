@@ -11,18 +11,18 @@ export function AboutEcosystem() {
   ];
 
   return (
-    <section className="premium-section py-12 sm:py-16 lg:py-24 bg-surface tech-grid border-b border-outline-variant/30 relative overflow-hidden w-full max-w-full">
+    <section className="premium-section py-8 sm:py-14 lg:py-20 bg-surface tech-grid border-b border-outline-variant/30 relative overflow-hidden w-full max-w-full">
       <div className="max-w-container-max mx-auto px-4 sm:px-6 md:px-margin-desktop w-full max-w-full">
         
         {/* Profile Card & Narrative Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center mb-16 sm:mb-24 w-full max-w-full">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center mb-10 sm:mb-16 w-full max-w-full">
           
           {/* Left Column Visual: Standardized Dossier Card */}
           <motion.div 
-            initial={{ opacity: 0, x: -20 }}
+            initial={{ opacity: 0, x: -16 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            viewport={{ once: true, margin: "50px 0px -20px 0px" }}
+            transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
             className="relative order-2 lg:order-1"
           >
             <div className="bg-surface-bright border border-outline-variant/30 rounded-2xl sm:rounded-3xl p-4 sm:p-8 soft-shadow relative z-10 backdrop-blur-sm w-full max-w-full overflow-hidden">

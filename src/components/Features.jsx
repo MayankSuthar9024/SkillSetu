@@ -12,15 +12,15 @@ export function Features() {
     : PLATFORM_FEATURES.filter(f => f.category === selectedCategory);
 
   return (
-    <section className="premium-section py-12 sm:py-16 lg:py-24 bg-surface-container-lowest border-b border-outline-variant/30 relative overflow-hidden w-full max-w-full">
+    <section className="premium-section py-8 sm:py-14 lg:py-20 bg-surface-container-lowest border-b border-outline-variant/30 relative overflow-hidden w-full max-w-full">
       <div className="max-w-container-max mx-auto px-4 sm:px-6 md:px-margin-desktop w-full max-w-full">
         
         {/* Section Header */}
-        <div className="flex flex-col items-center text-center max-w-3xl mx-auto mb-12">
+        <div className="flex flex-col items-center text-center max-w-3xl mx-auto mb-8 sm:mb-12">
           <motion.div 
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: "50px 0px -20px 0px" }}
             className="inline-flex items-center gap-2 px-3.5 py-1 bg-surface-container-low border border-outline-variant/30 rounded-full text-xs font-semibold text-on-surface-variant mb-4 shadow-2xs"
           >
             <span className="material-symbols-outlined text-base text-primary">auto_awesome</span>
@@ -30,7 +30,7 @@ export function Features() {
           <motion.h2 
             initial={{ opacity: 0, y: 14 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: "50px 0px -20px 0px" }}
             transition={{ delay: 0.05 }}
             className="text-2xl sm:text-4xl lg:text-5xl font-bold text-on-surface mb-3 sm:mb-4 tracking-tight break-words"
           >
@@ -40,7 +40,7 @@ export function Features() {
           <motion.p 
             initial={{ opacity: 0, y: 14 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: "50px 0px -20px 0px" }}
             transition={{ delay: 0.1 }}
             className="font-body-lg text-base sm:text-lg text-on-surface-variant max-w-2xl leading-relaxed"
           >

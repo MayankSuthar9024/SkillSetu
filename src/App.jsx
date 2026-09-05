@@ -193,13 +193,13 @@ export function App() {
               onSeeHowItWorks={handleSeeHowItWorks}
               onOpenReadinessModal={() => setIsReadinessModalOpen(true)}
             />
-            <ScrollReveal><HowItWorks onOpenReadinessModal={() => setIsReadinessModalOpen(true)} /></ScrollReveal>
-            <ScrollReveal delay={80}><Features onOpenReadinessModal={() => setIsReadinessModalOpen(true)} /></ScrollReveal>
-            <ScrollReveal delay={120}><AboutEcosystem onOpenReadinessModal={() => setIsReadinessModalOpen(true)} /></ScrollReveal>
-            <ScrollReveal delay={160}><FaqSection
+            <HowItWorks onOpenReadinessModal={() => setIsReadinessModalOpen(true)} />
+            <Features onOpenReadinessModal={() => setIsReadinessModalOpen(true)} />
+            <AboutEcosystem onOpenReadinessModal={() => setIsReadinessModalOpen(true)} />
+            <FaqSection
               onOpenReadinessModal={() => setIsReadinessModalOpen(true)}
               onOpenAuthModal={handleOpenAuth}
-            /></ScrollReveal>
+            />
           </div>
         )}
 

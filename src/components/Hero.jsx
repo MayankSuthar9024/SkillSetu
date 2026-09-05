@@ -50,7 +50,7 @@ export function Hero({ onGetStarted }) {
   };
 
   return (
-    <section className="relative pt-8 sm:pt-12 lg:pt-16 pb-14 sm:pb-20 hero-grid-bg border-b border-outline-variant/30 overflow-hidden w-full max-w-full">
+    <section className="relative pt-6 sm:pt-10 lg:pt-14 pb-8 sm:pb-14 lg:pb-18 hero-grid-bg border-b border-outline-variant/30 overflow-hidden w-full max-w-full">
       <div className="max-w-container-max mx-auto px-4 sm:px-6 md:px-margin-desktop grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center relative z-10 w-full max-w-full">
         
         {/* Left Column: Hero Content with Staggered Motion */}

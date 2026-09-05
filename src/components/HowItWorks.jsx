@@ -93,15 +93,15 @@ export function HowItWorks() {
   };
 
   return (
-    <section id="how-it-works" className="premium-section py-12 sm:py-16 lg:py-24 bg-surface tech-grid relative overflow-hidden w-full max-w-full">
+    <section id="how-it-works" className="premium-section py-8 sm:py-14 lg:py-20 bg-surface tech-grid relative overflow-hidden w-full max-w-full">
       <div className="max-w-container-max mx-auto px-4 sm:px-6 md:px-margin-desktop w-full max-w-full">
         
         {/* Section Header */}
-        <div className="flex flex-col items-center text-center max-w-3xl mx-auto mb-16">
+        <div className="flex flex-col items-center text-center max-w-3xl mx-auto mb-8 sm:mb-12">
           <motion.span 
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: "50px 0px -20px 0px" }}
             className="bg-secondary-fixed text-on-secondary-container px-4 py-1.5 rounded-full font-label-sm text-xs uppercase tracking-wider font-bold mb-4 inline-flex items-center gap-1.5 shadow-2xs"
           >
             <span className="material-symbols-outlined text-base">route</span>
@@ -110,7 +110,7 @@ export function HowItWorks() {
           <motion.h2 
             initial={{ opacity: 0, y: 14 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: "50px 0px -20px 0px" }}
             transition={{ delay: 0.05 }}
             className="text-2xl sm:text-4xl lg:text-5xl font-bold text-on-surface mb-3 sm:mb-4 tracking-tight break-words"
           >
@@ -119,7 +119,7 @@ export function HowItWorks() {
           <motion.p 
             initial={{ opacity: 0, y: 14 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: "50px 0px -20px 0px" }}
             transition={{ delay: 0.1 }}
             className="font-body-lg text-base sm:text-lg text-on-surface-variant max-w-2xl leading-relaxed"
           >
@@ -128,14 +128,14 @@ export function HowItWorks() {
         </div>
 
         {/* All 4 Distinct Step Showcases Rendered Direct Without Tab Clicking */}
-        <div className="space-y-8 mb-16">
+        <div className="space-y-6 sm:space-y-8 mb-8 sm:mb-12">
           {HOW_IT_WORKS_STEPS.map((stepItem, idx) => (
             <motion.div
               key={stepItem.step}
-              initial={{ opacity: 0, y: 16 }}
+              initial={{ opacity: 0, y: 14 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: idx * 0.08 }}
+              viewport={{ once: true, margin: "60px 0px -20px 0px" }}
+              transition={{ duration: 0.35, delay: idx * 0.05 }}
               className="bg-surface-container-lowest border border-outline-variant/30 rounded-2xl sm:rounded-3xl p-4 sm:p-8 soft-shadow relative overflow-hidden backdrop-blur-sm w-full max-w-full"
             >
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
