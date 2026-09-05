@@ -6,7 +6,8 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
 
   const navItems = [
-    { id: 'home', label: 'Home' },
+    { id: 'feed', label: 'Feed' },
+    { id: 'courses', label: 'Courses' },
     { id: 'opportunities', label: 'Opportunities' },
     { id: 'skill', label: 'Skill' },
     { id: 'industry', label: 'Industry' }

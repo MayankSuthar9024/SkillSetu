@@ -16,9 +16,10 @@ import { IndustryPage } from './pages/IndustryPage';
 import { FeedPage } from './pages/FeedPage';
 import { ProfilePage } from './pages/ProfilePage';
 import { MessagePage } from './pages/MessagePage';
+import { CoursesPage } from './pages/CoursesPage';
 
 export function App() {
-  const [activePage, setActivePage] = useState('home'); // 'home' | 'features' | 'about' | 'opportunities' | 'skill' | 'industry' | 'feed' | 'profile' | 'messages' | 'login' | 'portals' | 'dashboard'
+  const [activePage, setActivePage] = useState('home'); // 'home' | 'features' | 'about' | 'opportunities' | 'skill' | 'industry' | 'courses' | 'feed' | 'profile' | 'messages' | 'login' | 'portals' | 'dashboard'
   const [isReadinessModalOpen, setIsReadinessModalOpen] = useState(false);
   const [activePortalId, setActivePortalId] = useState('student');
   const [currentUser, setCurrentUser] = useState(null);
@@ -50,7 +51,7 @@ export function App() {
           setCurrentUser(portalCfg?.profileUser || null);
         }
         setActivePage('dashboard');
-      } else if (['features', 'about', 'opportunities', 'how-it-works', 'skill', 'industry', 'feed', 'profile', 'messages'].includes(hash)) {
+      } else if (['features', 'about', 'opportunities', 'how-it-works', 'skill', 'industry', 'courses', 'feed', 'profile', 'messages'].includes(hash)) {
         setActivePage(hash);
       } else if (!hash || hash === 'home') {
         if (currentUser) {
@@ -350,6 +351,16 @@ export function App() {
             <IndustryPage
               onNavigate={handleNavigate}
               onOpenAuthModal={handleOpenAuth}
+            />
+          </div>
+        )}
+
+        {/* COURSES PAGE */}
+        {activePage === 'courses' && (
+          <div className="animate-fadeIn">
+            <CoursesPage
+              currentUser={activeUser}
+              activePortalId={activePortalId}
             />
           </div>
         )}
