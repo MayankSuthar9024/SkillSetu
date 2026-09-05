@@ -60,29 +60,25 @@ export function MinistryPage({ onNavigate, currentUser }) {
       <div className="max-w-7xl mx-auto space-y-8">
         
         {/* Header Government Banner */}
-        <div className="relative overflow-hidden bg-gradient-to-r from-[#063A2B] via-[#042d22] to-slate-950 text-white rounded-3xl p-6 sm:p-10 shadow-xl border border-emerald-700/40">
-          <div className="absolute right-0 top-0 opacity-10 pointer-events-none transform translate-x-12 -translate-y-12">
-            <Landmark className="w-96 h-96 text-white" />
-          </div>
-
+        <div className="relative overflow-hidden bg-white border border-slate-200/90 text-slate-900 rounded-3xl p-6 sm:p-10 element-glow-shadow">
           <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
             <div className="flex items-center gap-5">
-              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-700 text-white font-extrabold text-2xl sm:text-3xl flex items-center justify-center shadow-lg border-2 border-white/20 shrink-0">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-emerald-800 text-white font-extrabold text-2xl sm:text-3xl flex items-center justify-center shadow-md border border-emerald-700 shrink-0">
                 {adminUser.avatar || 'SV'}
               </div>
               <div>
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="bg-purple-500/20 text-purple-300 border border-purple-400/30 text-[11px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider flex items-center gap-1">
-                    <ShieldCheck className="w-3.5 h-3.5" /> Government Command Center
+                  <span className="bg-purple-50 text-purple-900 border border-purple-200 text-[11px] font-bold px-3 py-1 rounded-full uppercase tracking-wider flex items-center gap-1">
+                    <ShieldCheck className="w-3.5 h-3.5 text-purple-700" /> Government Command Center
                   </span>
-                  <span className="bg-white/10 text-white text-[11px] font-bold px-3 py-1 rounded-full border border-white/10">
+                  <span className="bg-slate-100 text-slate-700 text-[11px] font-bold px-3 py-1 rounded-full border border-slate-200">
                     Token: {adminUser.id}
                   </span>
                 </div>
-                <h1 className="text-2xl sm:text-4xl font-extrabold mt-2 tracking-tight">
+                <h1 className="text-2xl sm:text-4xl font-extrabold text-slate-900 mt-2 tracking-tight font-serif">
                   Ministry of Ayush Command Portal
                 </h1>
-                <p className="text-emerald-100 text-xs sm:text-sm mt-1 max-w-2xl">
+                <p className="text-slate-600 text-xs sm:text-sm mt-1 max-w-2xl">
                   {adminUser.name} · {adminUser.role} · {adminUser.institution}
                 </p>
               </div>

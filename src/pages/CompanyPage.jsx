@@ -110,29 +110,25 @@ export function CompanyPage({ onNavigate, onOpenAuthModal, currentUser }) {
       <div className="max-w-7xl mx-auto space-y-8">
         
         {/* Header Enterprise Banner */}
-        <div className="relative overflow-hidden bg-gradient-to-r from-emerald-950 via-slate-900 to-teal-950 text-white rounded-3xl p-6 sm:p-10 shadow-xl border border-emerald-800/40">
-          <div className="absolute right-0 top-0 opacity-10 pointer-events-none transform translate-x-12 -translate-y-12">
-            <Building2 className="w-96 h-96 text-white" />
-          </div>
-
+        <div className="relative overflow-hidden bg-white border border-slate-200/90 text-slate-900 rounded-3xl p-6 sm:p-10 element-glow-shadow">
           <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
             <div className="flex items-center gap-5">
-              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-700 text-white font-extrabold text-2xl sm:text-3xl flex items-center justify-center shadow-lg border-2 border-white/20 shrink-0">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-emerald-800 text-white font-extrabold text-2xl sm:text-3xl flex items-center justify-center shadow-md border border-emerald-700 shrink-0">
                 {companyUser.avatar || 'VS'}
               </div>
               <div>
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="bg-amber-500/20 text-amber-300 border border-amber-400/30 text-[11px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider flex items-center gap-1">
-                    <Building2 className="w-3.5 h-3.5" /> Verified Corporate Partner
+                  <span className="bg-amber-50 text-amber-800 border border-amber-200 text-[11px] font-bold px-3 py-1 rounded-full uppercase tracking-wider flex items-center gap-1">
+                    <Building2 className="w-3.5 h-3.5 text-amber-700" /> Verified Corporate Partner
                   </span>
-                  <span className="bg-white/10 text-white text-[11px] font-bold px-3 py-1 rounded-full border border-white/10">
+                  <span className="bg-slate-100 text-slate-700 text-[11px] font-bold px-3 py-1 rounded-full border border-slate-200">
                     Partner ID: {companyUser.id}
                   </span>
                 </div>
-                <h1 className="text-2xl sm:text-4xl font-extrabold mt-2 tracking-tight">
+                <h1 className="text-2xl sm:text-4xl font-extrabold text-slate-900 mt-2 tracking-tight font-serif">
                   {companyUser.institution}
                 </h1>
-                <p className="text-emerald-100 text-xs sm:text-sm mt-1 max-w-2xl">
+                <p className="text-slate-600 text-xs sm:text-sm mt-1 max-w-2xl">
                   {companyUser.name} · {companyUser.role}
                 </p>
               </div>
@@ -142,9 +138,9 @@ export function CompanyPage({ onNavigate, onOpenAuthModal, currentUser }) {
             <div className="flex items-center gap-3 w-full md:w-auto">
               <button
                 onClick={() => setIsPostModalOpen(true)}
-                className="w-full md:w-auto px-5 py-3 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs sm:text-sm rounded-2xl shadow-lg transition-all cursor-pointer flex items-center justify-center gap-2"
+                className="w-full md:w-auto px-5 py-3 bg-emerald-800 hover:bg-emerald-900 text-white font-bold text-xs sm:text-sm rounded-xl shadow-xs transition-all cursor-pointer flex items-center justify-center gap-2"
               >
-                <PlusCircle className="w-4 h-4 text-slate-950" />
+                <PlusCircle className="w-4 h-4 text-emerald-300" />
                 <span>Post Micro-Sprint Role</span>
               </button>
             </div>

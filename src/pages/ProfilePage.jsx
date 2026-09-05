@@ -981,51 +981,51 @@ export function ProfilePage({ onNavigate, currentUser, activePortalId }) {
           {activeTab === 'posts' && (
             <div className="space-y-6">
               
-              {/* Analytics Card (Harmonized to Emerald, No Dark Slate Blocks) */}
-              <div className="bg-gradient-to-br from-emerald-900 to-teal-950 text-white rounded-3xl p-5 sm:p-6 shadow-md border border-emerald-800">
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-emerald-800/80">
+              {/* Analytics Card */}
+              <div className="bg-white rounded-3xl p-5 sm:p-6 border border-slate-200/90 element-glow-shadow">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-slate-100">
                   <div>
-                    <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider flex items-center gap-1.5 w-fit">
-                      <TrendingUp className="w-3.5 h-3.5" />
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-50 border border-emerald-200/80 rounded-full text-[10px] font-bold text-emerald-800 uppercase tracking-wider w-fit">
+                      <TrendingUp className="w-3.5 h-3.5 text-emerald-700" />
                       Post Analytics & Reach Overview
                     </span>
-                    <h3 className="text-lg sm:text-xl font-bold text-white mt-2">
+                    <h3 className="text-lg sm:text-xl font-bold text-slate-900 mt-2">
                       4,280 Total Post Impressions
                     </h3>
-                    <p className="text-xs text-emerald-200/80 mt-0.5">
+                    <p className="text-xs text-slate-600 mt-0.5">
                       Your clinical case posts reached +24% more preceptors & recruiters this month.
                     </p>
                   </div>
 
-                  <span className="bg-emerald-500 text-emerald-950 text-xs font-bold px-3 py-1.5 rounded-xl shadow-xs">
+                  <span className="bg-emerald-50 text-emerald-900 border border-emerald-200 text-xs font-bold px-3 py-1.5 rounded-xl shadow-xs">
                     Top 5% Ayush Scholar Content
                   </span>
                 </div>
 
                 {/* Performance Metric Grid */}
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4">
-                  <div className="bg-emerald-950/60 border border-emerald-700/50 p-3 rounded-2xl">
-                    <span className="text-[11px] text-emerald-300/80 font-semibold block">Total Views</span>
-                    <span className="text-lg sm:text-xl font-bold text-white">4,280</span>
-                    <span className="text-[10px] text-emerald-300 font-semibold block mt-0.5">↑ +18% this week</span>
+                  <div className="bg-slate-50 border border-slate-200/80 p-3 rounded-2xl">
+                    <span className="text-[11px] text-slate-500 font-semibold block">Total Views</span>
+                    <span className="text-lg sm:text-xl font-bold text-slate-900">4,280</span>
+                    <span className="text-[10px] text-emerald-700 font-semibold block mt-0.5">+18% this week</span>
                   </div>
 
-                  <div className="bg-emerald-950/60 border border-emerald-700/50 p-3 rounded-2xl">
-                    <span className="text-[11px] text-emerald-300/80 font-semibold block">Post Engagements</span>
-                    <span className="text-lg sm:text-xl font-bold text-white">399</span>
-                    <span className="text-[10px] text-emerald-200 font-semibold block mt-0.5">9.3% engagement</span>
+                  <div className="bg-slate-50 border border-slate-200/80 p-3 rounded-2xl">
+                    <span className="text-[11px] text-slate-500 font-semibold block">Post Engagements</span>
+                    <span className="text-lg sm:text-xl font-bold text-slate-900">399</span>
+                    <span className="text-[10px] text-emerald-700 font-semibold block mt-0.5">9.3% engagement</span>
                   </div>
 
-                  <div className="bg-emerald-950/60 border border-emerald-700/50 p-3 rounded-2xl">
-                    <span className="text-[11px] text-emerald-300/80 font-semibold block">Faculty Comments</span>
-                    <span className="text-lg sm:text-xl font-bold text-white">9</span>
-                    <span className="text-[10px] text-emerald-300 font-semibold block mt-0.5">3 preceptor threads</span>
+                  <div className="bg-slate-50 border border-slate-200/80 p-3 rounded-2xl">
+                    <span className="text-[11px] text-slate-500 font-semibold block">Faculty Comments</span>
+                    <span className="text-lg sm:text-xl font-bold text-slate-900">9</span>
+                    <span className="text-[10px] text-emerald-700 font-semibold block mt-0.5">3 preceptor threads</span>
                   </div>
 
-                  <div className="bg-emerald-950/60 border border-emerald-700/50 p-3 rounded-2xl">
-                    <span className="text-[11px] text-emerald-300/80 font-semibold block">Recruiter Views</span>
-                    <span className="text-lg sm:text-xl font-bold text-white">128</span>
-                    <span className="text-[10px] text-emerald-300 font-semibold block mt-0.5">Via posted cases</span>
+                  <div className="bg-slate-50 border border-slate-200/80 p-3 rounded-2xl">
+                    <span className="text-[11px] text-slate-500 font-semibold block">Recruiter Views</span>
+                    <span className="text-lg sm:text-xl font-bold text-slate-900">128</span>
+                    <span className="text-[10px] text-emerald-700 font-semibold block mt-0.5">Via posted cases</span>
                   </div>
                 </div>
               </div>

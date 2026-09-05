@@ -122,17 +122,16 @@ export function Features() {
         <div className="mt-16 pt-12 border-t border-outline-variant/30">
           
           {/* Executive Key USP Callout Banner */}
-          <div className="bg-gradient-to-br from-emerald-950 via-teal-900 to-emerald-900 text-white rounded-3xl p-6 sm:p-10 shadow-xl relative overflow-hidden mb-12 border border-emerald-700/40">
-            <div className="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 bg-emerald-400/10 rounded-full blur-3xl pointer-events-none" />
+          <div className="bg-white border border-slate-200/90 text-slate-900 rounded-3xl p-6 sm:p-10 element-glow-shadow relative overflow-hidden mb-12">
             <div className="relative z-10">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1 bg-emerald-500/20 border border-emerald-400/30 rounded-full text-xs font-extrabold text-emerald-300 uppercase tracking-wider mb-4">
-                <span className="material-symbols-outlined text-sm">verified_user</span>
+              <div className="inline-flex items-center gap-2 px-3.5 py-1 bg-emerald-50 border border-emerald-200/80 rounded-full text-xs font-extrabold text-emerald-800 uppercase tracking-wider mb-4">
+                <span className="material-symbols-outlined text-sm text-emerald-700">verified_user</span>
                 Strategic Architectural USP
               </div>
-              <h3 className="text-xl sm:text-3xl font-extrabold text-white tracking-tight leading-snug mb-3">
+              <h3 className="text-xl sm:text-3xl font-extrabold text-slate-900 tracking-tight leading-snug mb-3">
                 Learning + Mentorship + Research + Internships/Jobs + Networking
               </h3>
-              <p className="text-emerald-100/90 text-sm sm:text-base font-medium max-w-3xl leading-relaxed">
+              <p className="text-slate-600 text-sm sm:text-base font-medium max-w-3xl leading-relaxed">
                 Doximity pioneered professional healthcare networking for doctors, while Handshake built student career recruitment. SkillSetu synthesizes the best of both into one specialized national Ayush ecosystem—closing the clinical skill deficit across 42,000+ scholars and 7,345+ licensed pharma units.
               </p>
             </div>
@@ -227,7 +226,7 @@ export function Features() {
                         </span>
                         {isSkillSetu && (
                           <span className="text-[11px] font-extrabold text-emerald-800 bg-emerald-100/80 px-2.5 py-0.5 rounded-md">
-                            ★ Unified Platform
+                            Unified Platform
                           </span>
                         )}
                       </div>

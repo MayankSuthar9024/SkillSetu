@@ -127,15 +127,15 @@ export const StakeholderDashboard = ({
       case 'jobs':
         return (
           <div className="space-y-6">
-            <div className="bg-gradient-to-r from-emerald-900 to-teal-900 text-white p-6 sm:p-8 rounded-3xl shadow-md">
+            <div className="bg-white border border-slate-200/90 text-slate-900 p-6 sm:p-8 rounded-3xl element-glow-shadow">
               <div className="max-w-3xl">
-                <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 text-xs font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 border border-emerald-200/80 rounded-full text-xs font-bold text-emerald-800 uppercase tracking-wider">
                   Verified Ayush Clinical Career Desk
                 </span>
-                <h1 className="text-2xl sm:text-3xl font-extrabold mt-3">
+                <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-3 tracking-tight">
                   Verified Opportunities & Clinical Fellowships
                 </h1>
-                <p className="text-emerald-100 text-xs sm:text-sm mt-2">
+                <p className="text-slate-600 text-xs sm:text-sm mt-2 leading-relaxed">
                   Apply with 1-click using your verified SkillSetu Readiness Score ({user.readiness || '88%'}).
                 </p>
               </div>
@@ -457,8 +457,8 @@ export const StakeholderDashboard = ({
         {renderActiveView()}
       </main>
 
-      {/* Main Platform Desktop Website Footer (Visible on Desktop / Laptop mode) */}
-      {!isMobile && (
+      {/* Main Platform Desktop Website Footer (Visible on Desktop / Laptop mode, except on Feed tab) */}
+      {!isMobile && activeTab !== 'feed' && (
         <footer className="border-t border-slate-200 bg-white py-8 mt-12 text-slate-600">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs">
             <div className="flex items-center gap-3">
@@ -498,65 +498,67 @@ export const StakeholderDashboard = ({
 
       {/* Mobile App Bottom Navigation Bar (Auto-detected on Mobile screens) */}
       {isMobile && (
-        <div className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-xl border-t border-slate-200 shadow-2xl px-4 py-2.5 flex items-center justify-between rounded-t-3xl">
-          
-          {/* 1. Home */}
-          <button
-            onClick={() => { setActiveTab('feed'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-            className={`flex flex-col items-center justify-center py-1 px-3 text-xs transition-all cursor-pointer ${
-              activeTab === 'feed' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-medium'
-            }`}
-          >
-            <Home className={`w-5 h-5 shrink-0 ${activeTab === 'feed' ? 'text-emerald-700' : 'text-slate-500'}`} />
-            <span className="text-[10px] mt-0.5 font-bold">Home</span>
-          </button>
+        <div className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-xl border-t border-slate-200 shadow-2xl px-2 py-2 rounded-t-3xl">
+          <div className="grid grid-cols-5 items-center w-full max-w-lg mx-auto">
+            
+            {/* 1. Home */}
+            <button
+              onClick={() => { setActiveTab('feed'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+              className={`flex flex-col items-center justify-center py-1 w-full text-xs transition-all cursor-pointer ${
+                activeTab === 'feed' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-medium'
+              }`}
+            >
+              <Home className={`w-5 h-5 shrink-0 ${activeTab === 'feed' ? 'text-emerald-700' : 'text-slate-500'}`} />
+              <span className="text-[10px] mt-0.5 font-bold">Home</span>
+            </button>
 
-          {/* 2. Skills */}
-          <button
-            onClick={() => { setActiveTab('skills'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-            className={`flex flex-col items-center justify-center py-1 px-3 text-xs transition-all cursor-pointer ${
-              activeTab === 'skills' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-medium'
-            }`}
-          >
-            <BarChart3 className={`w-5 h-5 shrink-0 ${activeTab === 'skills' ? 'text-emerald-700' : 'text-slate-500'}`} />
-            <span className="text-[10px] mt-0.5 font-bold">Skills</span>
-          </button>
+            {/* 2. Skills */}
+            <button
+              onClick={() => { setActiveTab('skills'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+              className={`flex flex-col items-center justify-center py-1 w-full text-xs transition-all cursor-pointer ${
+                activeTab === 'skills' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-medium'
+              }`}
+            >
+              <BarChart3 className={`w-5 h-5 shrink-0 ${activeTab === 'skills' ? 'text-emerald-700' : 'text-slate-500'}`} />
+              <span className="text-[10px] mt-0.5 font-bold">Skills</span>
+            </button>
 
-          {/* 3. Center Elevated Floating Green (+) Button */}
-          <div className="relative -mt-9 flex items-center justify-center shrink-0">
-            <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center shadow-lg border border-slate-100 p-1">
-              <button
-                onClick={handleOpenCreatePost}
-                className="w-14 h-14 rounded-full bg-gradient-to-br from-emerald-800 to-teal-900 hover:from-emerald-900 hover:to-teal-950 active:scale-95 text-white flex items-center justify-center shadow-md hover:shadow-lg transition-all cursor-pointer group"
-                title="Create Post"
-              >
-                <Plus className="w-7 h-7 stroke-[2.5] group-hover:rotate-90 transition-transform duration-300" />
-              </button>
+            {/* 3. Center Elevated Floating Green (+) Button (Perfect 50% Horizontal Center) */}
+            <div className="flex items-center justify-center relative -mt-7 w-full">
+              <div className="w-14 h-14 rounded-full bg-white flex items-center justify-center shadow-lg border border-slate-100 p-1">
+                <button
+                  onClick={handleOpenCreatePost}
+                  className="w-12 h-12 rounded-full bg-emerald-800 hover:bg-emerald-900 active:scale-95 text-white flex items-center justify-center shadow-md hover:shadow-lg transition-all cursor-pointer group"
+                  title="Create Post"
+                >
+                  <Plus className="w-6 h-6 stroke-[2.5] group-hover:rotate-90 transition-transform duration-300" />
+                </button>
+              </div>
             </div>
+
+            {/* 4. Messages */}
+            <button
+              onClick={() => { setActiveTab('messages'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+              className={`flex flex-col items-center justify-center py-1 w-full text-xs transition-all cursor-pointer ${
+                activeTab === 'messages' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-medium'
+              }`}
+            >
+              <MessageSquare className={`w-5 h-5 shrink-0 ${activeTab === 'messages' ? 'text-emerald-700' : 'text-slate-500'}`} />
+              <span className="text-[10px] mt-0.5 font-bold">Messages</span>
+            </button>
+
+            {/* 5. Industry */}
+            <button
+              onClick={() => { setActiveTab('network'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+              className={`flex flex-col items-center justify-center py-1 w-full text-xs transition-all cursor-pointer ${
+                activeTab === 'network' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-medium'
+              }`}
+            >
+              <Building2 className={`w-5 h-5 shrink-0 ${activeTab === 'network' ? 'text-emerald-700' : 'text-slate-500'}`} />
+              <span className="text-[10px] mt-0.5 font-bold">Industry</span>
+            </button>
+
           </div>
-
-          {/* 4. Messages */}
-          <button
-            onClick={() => { setActiveTab('messages'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-            className={`flex flex-col items-center justify-center py-1 px-3 text-xs transition-all cursor-pointer ${
-              activeTab === 'messages' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-medium'
-            }`}
-          >
-            <MessageSquare className={`w-5 h-5 shrink-0 ${activeTab === 'messages' ? 'text-emerald-700' : 'text-slate-500'}`} />
-            <span className="text-[10px] mt-0.5 font-bold">Messages</span>
-          </button>
-
-          {/* 5. Industry */}
-          <button
-            onClick={() => { setActiveTab('network'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-            className={`flex flex-col items-center justify-center py-1 px-3 text-xs transition-all cursor-pointer ${
-              activeTab === 'network' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-medium'
-            }`}
-          >
-            <Building2 className={`w-5 h-5 shrink-0 ${activeTab === 'network' ? 'text-emerald-700' : 'text-slate-500'}`} />
-            <span className="text-[10px] mt-0.5 font-bold">Industry</span>
-          </button>
-
         </div>
       )}
 

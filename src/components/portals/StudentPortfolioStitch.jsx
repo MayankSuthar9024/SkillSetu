@@ -825,36 +825,36 @@ export const StudentPortfolioStitch = ({ user }) => {
 
       {/* TAB 6: CRYPTOGRAPHIC LEDGER */}
       {activeTab === 'ledger' && (
-        <div className="bg-emerald-950 text-white rounded-3xl p-6 sm:p-8 border border-emerald-800 shadow-2xl space-y-6 font-mono">
-          <div className="flex items-center justify-between pb-4 border-b border-emerald-800/80">
+        <div className="bg-white text-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-200 element-glow-shadow space-y-6 font-mono">
+          <div className="flex items-center justify-between pb-4 border-b border-slate-100">
             <div>
-              <h2 className="text-base font-bold text-emerald-400 flex items-center gap-2">
-                <Lock className="w-5 h-5 text-emerald-400" />
+              <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
+                <Lock className="w-5 h-5 text-emerald-700" />
                 SkillSetu Immutable Credential Ledger
               </h2>
-              <p className="text-xs text-emerald-200/80 font-sans mt-0.5">Public Key Cryptographic Proof for {profileData.name}</p>
+              <p className="text-xs text-slate-500 font-sans mt-0.5">Public Key Cryptographic Proof for {profileData.name}</p>
             </div>
-            <span className="bg-emerald-500/20 text-emerald-400 px-3 py-1 rounded-full text-xs font-bold border border-emerald-500/30">
+            <span className="bg-emerald-50 text-emerald-800 px-3 py-1 rounded-full text-xs font-bold border border-emerald-200">
               LEDGER VERIFIED
             </span>
           </div>
 
-          <div className="bg-emerald-900/40 p-4 rounded-2xl border border-emerald-800/80 space-y-3 text-xs">
-            <div className="flex justify-between border-b border-emerald-800/60 pb-2">
-              <span className="text-emerald-300/70">Student Reg Hash:</span>
-              <span className="text-emerald-400 font-bold">{profileData.metrics.verificationHash}</span>
+          <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-3 text-xs">
+            <div className="flex justify-between border-b border-slate-200/80 pb-2">
+              <span className="text-slate-500">Student Reg Hash:</span>
+              <span className="text-emerald-800 font-bold">{profileData.metrics.verificationHash}</span>
             </div>
-            <div className="flex justify-between border-b border-emerald-800/60 pb-2">
-              <span className="text-emerald-300/70">AYUSH Registration:</span>
-              <span className="text-slate-200">{profileData.regNo}</span>
+            <div className="flex justify-between border-b border-slate-200/80 pb-2">
+              <span className="text-slate-500">AYUSH Registration:</span>
+              <span className="text-slate-800 font-semibold">{profileData.regNo}</span>
             </div>
-            <div className="flex justify-between border-b border-emerald-800/60 pb-2">
-              <span className="text-emerald-300/70">Consensus Engine:</span>
-              <span className="text-slate-200">Proof-of-Competency (PoC v2.4)</span>
+            <div className="flex justify-between border-b border-slate-200/80 pb-2">
+              <span className="text-slate-500">Consensus Engine:</span>
+              <span className="text-slate-800 font-semibold">Proof-of-Competency (PoC v2.4)</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-emerald-300/70">Timestamp:</span>
-              <span className="text-slate-200">2026-09-02 T16:43:00 UTC</span>
+              <span className="text-slate-500">Timestamp:</span>
+              <span className="text-slate-800 font-semibold">2026-09-02 T16:43:00 UTC</span>
             </div>
           </div>
         </div>

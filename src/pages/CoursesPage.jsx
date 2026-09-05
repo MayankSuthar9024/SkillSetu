@@ -15,7 +15,8 @@ import {
   PlayCircle,
   Eye,
   UserCheck,
-  ShoppingBag
+  ShoppingBag,
+  Star
 } from 'lucide-react';
 
 import courseGmpPoster from '../assets/images/course_gmp_poster.jpg';
@@ -43,7 +44,7 @@ export function CoursesPage({ currentUser, activePortalId }) {
       category: 'Manufacturing & GMP',
       duration: '90 mins', 
       enrolled: 142, 
-      rating: '4.9 ★', 
+      rating: '4.9', 
       price: '₹499',
       posterImage: courseGmpPoster,
       author: 'Prof. Meenakshi Joshi',
@@ -58,7 +59,7 @@ export function CoursesPage({ currentUser, activePortalId }) {
       category: 'Clinical Research',
       duration: '120 mins', 
       enrolled: 198, 
-      rating: '4.9 ★', 
+      rating: '4.9', 
       price: '₹499',
       posterImage: courseGcpPoster,
       author: 'Prof. Meenakshi Joshi',
@@ -73,7 +74,7 @@ export function CoursesPage({ currentUser, activePortalId }) {
       category: 'Quality Assurance / QA',
       duration: '90 mins', 
       enrolled: 112, 
-      rating: '4.8 ★', 
+      rating: '4.8', 
       price: 'Free Access',
       posterImage: ayushHeroBanner,
       author: 'Dr. Rajesh Vaidya',
@@ -88,7 +89,7 @@ export function CoursesPage({ currentUser, activePortalId }) {
       category: 'Regulatory Compliance',
       duration: '90 mins', 
       enrolled: 85, 
-      rating: '4.7 ★', 
+      rating: '4.7', 
       price: '₹499',
       posterImage: courseGcpPoster,
       author: 'Prof. S. K. Sharma',
@@ -103,7 +104,7 @@ export function CoursesPage({ currentUser, activePortalId }) {
       category: 'Pharmacovigilance',
       duration: '90 mins', 
       enrolled: 156, 
-      rating: '4.9 ★', 
+      rating: '4.9', 
       price: '₹499',
       posterImage: courseGmpPoster,
       author: 'Prof. Meenakshi Joshi',
@@ -214,7 +215,7 @@ export function CoursesPage({ currentUser, activePortalId }) {
       category: courseForm.category,
       duration: courseForm.duration,
       enrolled: 0,
-      rating: 'New ★',
+      rating: 'New',
       price: courseForm.price || '₹499',
       posterImage: courseGmpPoster,
       author: courseForm.author || 'Prof. Meenakshi Joshi',
@@ -351,7 +352,10 @@ export function CoursesPage({ currentUser, activePortalId }) {
                     <span>•</span>
                     <span className="text-slate-700 font-extrabold">{course.enrolled} Enrolled</span>
                     <span>•</span>
-                    <span className="text-amber-600 font-extrabold">{course.rating}</span>
+                    <span className="text-amber-700 font-extrabold flex items-center gap-1">
+                      <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-500" />
+                      <span>{course.rating}</span>
+                    </span>
                   </div>
 
                   {/* Competencies Tags */}

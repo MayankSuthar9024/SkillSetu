@@ -31,37 +31,37 @@ export function Footer({ onNavigate, onSeeHowItWorks }) {
       </div>
 
       {/* Main Footer Columns */}
-      <div className="max-w-container-max mx-auto px-4 md:px-margin-desktop py-12 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-8 items-start">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-8 items-start">
         
         {/* Brand Info (Spans 2 columns on desktop) */}
         <div className="col-span-1 sm:col-span-2 md:col-span-2 space-y-4">
           <div className="flex items-center gap-2">
-            <div className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center text-on-primary font-bold shadow-soft">
+            <div className="w-9 h-9 rounded-xl bg-emerald-800 flex items-center justify-center text-white font-bold shadow-xs">
               <span className="material-symbols-outlined text-xl">spa</span>
             </div>
             <div className="text-2xl font-extrabold text-slate-900 tracking-tight">
-              Skill<span className="text-primary font-accent font-normal text-3xl ml-0.5">Setu</span>
+              Skill<span className="text-emerald-800 font-serif font-normal text-3xl ml-0.5">Setu</span>
             </div>
           </div>
-          <p className="font-body-md text-xs sm:text-sm text-on-surface-variant leading-relaxed max-w-sm">
+          <p className="text-xs sm:text-sm text-slate-600 leading-relaxed max-w-sm">
             National Ayush academia-industry collaboration ecosystem for skill assessment, gap mapping, practical micro-sprints, verified student portfolios, and industry placements.
           </p>
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-surface-container border border-outline-variant/30 rounded-lg text-xs font-semibold text-outline">
-            <span className="material-symbols-outlined text-sm text-primary">verified</span>
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-50 border border-emerald-200/80 rounded-lg text-xs font-semibold text-emerald-800">
+            <span className="material-symbols-outlined text-sm text-emerald-700">verified</span>
             <span>National Ayush Professional Platform · Ministry of Ayush & AIIA</span>
           </div>
         </div>
 
         {/* Column 1: Pages */}
         <div className="space-y-3">
-          <h4 className="font-headline-md text-sm font-bold text-on-surface uppercase tracking-wider text-primary">
+          <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
             Pages
           </h4>
           <ul className="space-y-2 text-xs sm:text-sm">
             <li>
               <button 
                 onClick={() => onNavigate('home')} 
-                className="text-on-surface-variant hover:text-primary transition-colors font-medium hover:underline"
+                className="text-slate-600 hover:text-emerald-800 transition-colors font-medium hover:underline cursor-pointer"
               >
                 Home
               </button>
@@ -69,7 +69,7 @@ export function Footer({ onNavigate, onSeeHowItWorks }) {
             <li>
               <button 
                 onClick={() => onNavigate('features')} 
-                className="text-on-surface-variant hover:text-primary transition-colors font-medium hover:underline"
+                className="text-slate-600 hover:text-emerald-800 transition-colors font-medium hover:underline cursor-pointer"
               >
                 Features
               </button>
@@ -77,7 +77,7 @@ export function Footer({ onNavigate, onSeeHowItWorks }) {
             <li>
               <button 
                 onClick={onSeeHowItWorks} 
-                className="text-on-surface-variant hover:text-primary transition-colors font-medium hover:underline"
+                className="text-slate-600 hover:text-emerald-800 transition-colors font-medium hover:underline cursor-pointer"
               >
                 How It Works
               </button>
@@ -85,7 +85,7 @@ export function Footer({ onNavigate, onSeeHowItWorks }) {
             <li>
               <button 
                 onClick={() => onNavigate('about')} 
-                className="text-on-surface-variant hover:text-primary transition-colors font-medium hover:underline"
+                className="text-slate-600 hover:text-emerald-800 transition-colors font-medium hover:underline cursor-pointer"
               >
                 About Us
               </button>
@@ -93,7 +93,7 @@ export function Footer({ onNavigate, onSeeHowItWorks }) {
             <li>
               <button 
                 onClick={() => onNavigate('opportunities')} 
-                className="text-on-surface-variant hover:text-primary transition-colors font-medium hover:underline"
+                className="text-slate-600 hover:text-emerald-800 transition-colors font-medium hover:underline cursor-pointer"
               >
                 Opportunities
               </button>
@@ -103,27 +103,27 @@ export function Footer({ onNavigate, onSeeHowItWorks }) {
 
         {/* Column 2: Policies & Terms */}
         <div className="space-y-3">
-          <h4 className="font-headline-md text-sm font-bold text-on-surface uppercase tracking-wider text-primary">
+          <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
             Policies & Terms
           </h4>
           <ul className="space-y-2 text-xs sm:text-sm">
             <li>
-              <a href="#" className="text-on-surface-variant hover:text-primary transition-colors font-medium hover:underline">
+              <a href="#" className="text-slate-600 hover:text-emerald-800 transition-colors font-medium hover:underline">
                 Privacy Policy
               </a>
             </li>
             <li>
-              <a href="#" className="text-on-surface-variant hover:text-primary transition-colors font-medium hover:underline">
+              <a href="#" className="text-slate-600 hover:text-emerald-800 transition-colors font-medium hover:underline">
                 Terms of Service
               </a>
             </li>
             <li>
-              <a href="#" className="text-on-surface-variant hover:text-primary transition-colors font-medium hover:underline">
+              <a href="#" className="text-slate-600 hover:text-emerald-800 transition-colors font-medium hover:underline">
                 Cookie Policy
               </a>
             </li>
             <li>
-              <a href="#" className="text-on-surface-variant hover:text-primary transition-colors font-medium hover:underline">
+              <a href="#" className="text-slate-600 hover:text-emerald-800 transition-colors font-medium hover:underline">
                 Academic Compliance
               </a>
             </li>
@@ -132,27 +132,27 @@ export function Footer({ onNavigate, onSeeHowItWorks }) {
 
         {/* Column 3: Support, Feedback & Contact */}
         <div className="space-y-3">
-          <h4 className="font-headline-md text-sm font-bold text-on-surface uppercase tracking-wider text-primary">
+          <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
             Support & Contact
           </h4>
           <ul className="space-y-2 text-xs sm:text-sm">
             <li>
-              <a href="#" className="text-on-surface-variant hover:text-primary transition-colors font-medium hover:underline">
+              <a href="#" className="text-slate-600 hover:text-emerald-800 transition-colors font-medium hover:underline">
                 Support Center
               </a>
             </li>
             <li>
-              <a href="#" className="text-on-surface-variant hover:text-primary transition-colors font-medium hover:underline">
+              <a href="#" className="text-slate-600 hover:text-emerald-800 transition-colors font-medium hover:underline">
                 Send Feedback
               </a>
             </li>
             <li>
-              <a href="#" className="text-on-surface-variant hover:text-primary transition-colors font-medium hover:underline">
+              <a href="#" className="text-slate-600 hover:text-emerald-800 transition-colors font-medium hover:underline">
                 Contact Us
               </a>
             </li>
             <li>
-              <a href="#" className="text-on-surface-variant hover:text-primary transition-colors font-medium hover:underline">
+              <a href="#" className="text-slate-600 hover:text-emerald-800 transition-colors font-medium hover:underline">
                 FAQ & Help
               </a>
             </li>
@@ -162,7 +162,7 @@ export function Footer({ onNavigate, onSeeHowItWorks }) {
       </div>
 
       {/* Copyright Bar */}
-      <div className="border-t border-outline-variant/20 py-4 text-center text-xs text-outline font-medium">
+      <div className="border-t border-slate-200 py-4 text-center text-xs text-slate-500 font-medium">
         © 2026 SkillSetu National Ayush Platform · Ministry of Ayush & All India Institute of Ayurveda. All rights reserved.
       </div>
     </footer>

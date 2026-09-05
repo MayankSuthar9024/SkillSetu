@@ -49,16 +49,16 @@ export function IndustryPage({ onNavigate }) {
     <div className="min-h-screen bg-[#f7faf8] text-slate-900 pb-16">
       
       {/* Header Banner */}
-      <div className="bg-gradient-to-r from-slate-900 via-emerald-950 to-slate-900 text-white py-10 px-6 rounded-3xl shadow-md mb-8">
+      <div className="bg-white border border-slate-200/90 text-slate-900 py-8 px-6 sm:px-8 rounded-3xl element-glow-shadow mb-8">
         <div className="max-w-6xl mx-auto">
-          <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 text-xs font-extrabold px-3 py-1 rounded-full uppercase tracking-wider flex items-center gap-1.5 w-max mb-2">
-            <Building2 className="w-3.5 h-3.5" />
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 border border-emerald-200/80 rounded-full text-xs font-bold text-emerald-800 uppercase tracking-wider mb-2">
+            <Building2 className="w-3.5 h-3.5 text-emerald-700" />
             Ayush Corporate & R&D Network
           </span>
-          <h1 className="font-serif text-3xl sm:text-4xl font-bold tracking-tight">
+          <h1 className="font-serif text-3xl sm:text-4xl font-bold tracking-tight text-slate-900">
             Industry Partners & R&D Laboratories
           </h1>
-          <p className="text-slate-300 text-xs sm:text-sm max-w-2xl mt-1.5">
+          <p className="text-slate-600 text-xs sm:text-sm max-w-2xl mt-1.5 leading-relaxed">
             Connect directly with verified Ayush enterprise recruiters, research facilities, and apex hospital networks hiring top SkillSetu scholars.
           </p>
         </div>

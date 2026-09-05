@@ -51,29 +51,6 @@ export function Hero({ onGetStarted }) {
 
   return (
     <section className="relative pt-8 sm:pt-12 lg:pt-16 pb-14 sm:pb-20 hero-grid-bg border-b border-outline-variant/30 overflow-hidden w-full max-w-full">
-      
-      {/* Dynamic Animated Motion Graphics Mesh Orbs in Background */}
-      <motion.div 
-        animate={{ 
-          scale: [1, 1.08, 1],
-          opacity: [0.15, 0.25, 0.15],
-          x: [0, 10, 0],
-          y: [0, -10, 0]
-        }}
-        transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
-        className="absolute top-10 right-10 w-96 h-96 bg-gradient-to-br from-emerald-200/20 via-teal-100/15 to-transparent rounded-full blur-3xl pointer-events-none -z-10"
-      />
-      <motion.div 
-        animate={{ 
-          scale: [1, 1.08, 1],
-          opacity: [0.12, 0.2, 0.12],
-          x: [0, -12, 0],
-          y: [0, 12, 0]
-        }}
-        transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
-        className="absolute bottom-10 left-10 w-[420px] h-[420px] bg-gradient-to-tr from-amber-100/15 via-emerald-100/15 to-transparent rounded-full blur-3xl pointer-events-none -z-10"
-      />
-
       <div className="max-w-container-max mx-auto px-4 sm:px-6 md:px-margin-desktop grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center relative z-10 w-full max-w-full">
         
         {/* Left Column: Hero Content with Staggered Motion */}

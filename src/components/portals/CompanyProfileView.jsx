@@ -21,7 +21,8 @@ import {
   ArrowRight,
   FlaskConical,
   Beaker,
-  Check
+  Check,
+  X
 } from 'lucide-react';
 
 export const CompanyProfileView = ({ user, onNavigate }) => {
@@ -313,12 +314,12 @@ export const CompanyProfileView = ({ user, onNavigate }) => {
             </div>
 
             {/* Micro-Sprint Hiring Model Explanation */}
-            <div className="bg-gradient-to-r from-emerald-900 to-teal-950 text-white p-6 rounded-3xl shadow-md space-y-3">
-              <span className="bg-white/20 text-emerald-200 text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">
+            <div className="bg-white border border-slate-200/90 text-slate-900 p-6 rounded-3xl element-glow-shadow space-y-3">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 border border-emerald-200/80 rounded-full text-[10px] font-extrabold text-emerald-800 uppercase tracking-wider">
                 SkillSetu Employer Partner Program
               </span>
-              <h3 className="text-xl font-extrabold">No Generic Resumes. 100% Practical Evaluation.</h3>
-              <p className="text-xs text-emerald-100 leading-relaxed">
+              <h3 className="text-xl font-extrabold text-slate-900 tracking-tight">No Generic Resumes. 100% Practical Evaluation.</h3>
+              <p className="text-xs text-slate-600 leading-relaxed">
                 Instead of screening hundreds of static resumes, Dabur posts 2-week Micro-Sprint Challenges (e.g. HPTLC Marker Fingerprinting, GMP QC Protocols). Students submit verified laboratory reports, allowing us to shortlist candidates based on audited capability.
               </p>
             </div>
@@ -530,9 +531,10 @@ export const CompanyProfileView = ({ user, onNavigate }) => {
               </div>
               <button 
                 onClick={() => setIsPostModalOpen(false)}
-                className="text-slate-400 hover:text-slate-600 text-xs font-bold p-1"
+                className="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-100 cursor-pointer"
+                title="Close modal"
               >
-                ✕
+                <X className="w-4 h-4" />
               </button>
             </div>
 
