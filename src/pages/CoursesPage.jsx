@@ -23,7 +23,8 @@ import courseGcpPoster from '../assets/images/course_gcp_poster.jpg';
 import ayushHeroBanner from '../assets/images/ayush_hero_banner.jpg';
 
 export function CoursesPage({ currentUser, activePortalId }) {
-  const isFacultyPortal = activePortalId === 'faculty' || currentUser?.role?.toLowerCase().includes('prof') || currentUser?.role?.toLowerCase().includes('faculty');
+  // Only faculty members can post courses; students can only view and buy/watch posted courses
+  const isFacultyPortal = activePortalId === 'faculty';
   
   const [isPostingOpen, setIsPostingOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('All');
@@ -276,14 +277,16 @@ export function CoursesPage({ currentUser, activePortalId }) {
             />
           </div>
 
-          {/* Right Side: + Post Course Button */}
-          <button
-            onClick={() => setIsPostingOpen(true)}
-            className="w-full sm:w-auto px-5 py-2.5 bg-emerald-800 hover:bg-emerald-900 text-white font-extrabold text-xs rounded-xl shadow-md transition-all cursor-pointer flex items-center justify-center gap-2 shrink-0 active:scale-95"
-          >
-            <PlusCircle className="w-4 h-4 text-emerald-300" />
-            <span>+ Post Course</span>
-          </button>
+          {/* Right Side: + Post Course Button (Rendered ONLY for Faculty, Removed from Student Page) */}
+          {isFacultyPortal && (
+            <button
+              onClick={() => setIsPostingOpen(true)}
+              className="w-full sm:w-auto px-5 py-2.5 bg-emerald-800 hover:bg-emerald-900 text-white font-extrabold text-xs rounded-xl shadow-md transition-all cursor-pointer flex items-center justify-center gap-2 shrink-0 active:scale-95"
+            >
+              <PlusCircle className="w-4 h-4 text-emerald-300" />
+              <span>+ Post Course</span>
+            </button>
+          )}
 
         </div>
 
@@ -397,8 +400,8 @@ export function CoursesPage({ currentUser, activePortalId }) {
 
       </div>
 
-      {/* FACULTY: Simple "+ Post Course" Modal Dialog */}
-      {isPostingOpen && (
+      {/* FACULTY ONLY: Simple "+ Post Course" Modal Dialog */}
+      {isFacultyPortal && isPostingOpen && (
         <div className="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto animate-fadeIn">
           <div className="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl border border-slate-200 space-y-6 relative my-8">
             

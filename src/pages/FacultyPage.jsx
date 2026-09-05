@@ -23,7 +23,8 @@ import {
   Layers,
   AlertCircle,
   Tag,
-  Video
+  Video,
+  X
 } from 'lucide-react';
 
 export function FacultyPage({ onNavigate, onOpenReadinessModal, currentUser }) {
@@ -138,6 +139,7 @@ export function FacultyPage({ onNavigate, onOpenReadinessModal, currentUser }) {
   });
 
   const [publishSuccess, setPublishSuccess] = useState(false);
+  const [isPostingModalOpen, setIsPostingModalOpen] = useState(false);
 
   // Task 5 PDF Recommended Presets for 1-Click Auto-Fill
   const coursePresets = [
@@ -230,6 +232,7 @@ export function FacultyPage({ onNavigate, onOpenReadinessModal, currentUser }) {
     setPublishSuccess(true);
     setTimeout(() => {
       setPublishSuccess(false);
+      setIsPostingModalOpen(false);
       setCourseForm({
         title: '',
         category: 'Manufacturing & GMP',
@@ -509,6 +512,13 @@ export function FacultyPage({ onNavigate, onOpenReadinessModal, currentUser }) {
                     Design and monitor industry-oriented training modules mapped to NCISM, CDSCO, and WHO-GMP benchmarks.
                   </p>
                 </div>
+                <button
+                  onClick={() => setIsPostingModalOpen(true)}
+                  className="px-5 py-2.5 bg-emerald-800 hover:bg-emerald-900 text-white font-extrabold text-xs rounded-xl shadow-md transition-all cursor-pointer flex items-center justify-center gap-2 shrink-0 active:scale-95"
+                >
+                  <PlusCircle className="w-4 h-4 text-emerald-300" />
+                  <span>+ Post Course</span>
+                </button>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -619,6 +629,201 @@ export function FacultyPage({ onNavigate, onOpenReadinessModal, currentUser }) {
         )}
 
       </div>
+
+      {/* FACULTY POST COURSE MODAL */}
+      {isPostingModalOpen && (
+        <div className="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto animate-fadeIn">
+          <div className="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl border border-slate-200 space-y-6 relative my-8">
+            
+            <div className="flex justify-between items-center border-b border-slate-100 pb-4">
+              <div>
+                <span className="text-xs font-extrabold uppercase tracking-wider text-emerald-800 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
+                  Faculty Micro-Course Desk
+                </span>
+                <h2 className="text-xl font-extrabold text-slate-900 mt-2">
+                  + Post New Micro-Course
+                </h2>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Publish a new training module mapped to NCISM, CDSCO, and WHO-GMP benchmarks.
+                </p>
+              </div>
+
+              <button
+                onClick={() => setIsPostingModalOpen(false)}
+                className="p-2 text-slate-400 hover:text-slate-600 rounded-xl hover:bg-slate-100 cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Success Toast */}
+            {publishSuccess && (
+              <div className="p-4 bg-emerald-600 text-white rounded-2xl shadow-lg flex items-center justify-between animate-bounce">
+                <div className="flex items-center gap-3">
+                  <CheckCircle2 className="w-6 h-6 text-emerald-200" />
+                  <div>
+                    <h4 className="font-extrabold text-sm">Course Module Published Successfully!</h4>
+                    <p className="text-xs text-emerald-100">Live for student enrollment and verified cohort tracking.</p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Quick 1-Click Topic Presets */}
+            <div className="bg-emerald-50/70 p-4 rounded-2xl border border-emerald-200/80 space-y-2.5">
+              <span className="text-[11px] font-extrabold text-emerald-950 uppercase tracking-wider block">
+                Quick 1-Click Curriculum Presets:
+              </span>
+              <div className="flex flex-wrap gap-2">
+                {coursePresets.map((preset, idx) => (
+                  <button
+                    key={idx}
+                    type="button"
+                    onClick={() => handleApplyPreset(preset)}
+                    className="px-3 py-1.5 bg-white hover:bg-emerald-800 hover:text-white text-slate-800 font-bold text-xs rounded-xl border border-slate-200 transition-all cursor-pointer"
+                  >
+                    + {preset.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Form Fields */}
+            <div className="space-y-4">
+              <div>
+                <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-1">
+                  Course Title *
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g. Schedule T Basics & Manufacturing Compliance"
+                  value={courseForm.title}
+                  onChange={(e) => setCourseForm({ ...courseForm, title: e.target.value })}
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-900 focus:ring-2 focus:ring-emerald-700 focus:bg-white"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div>
+                  <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-1">
+                    Domain / Track
+                  </label>
+                  <select
+                    value={courseForm.category}
+                    onChange={(e) => setCourseForm({ ...courseForm, category: e.target.value })}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-900 focus:ring-2 focus:ring-emerald-700"
+                  >
+                    <option value="Manufacturing & GMP">Manufacturing & GMP</option>
+                    <option value="Clinical Research">Clinical Research (GCP)</option>
+                    <option value="Regulatory Compliance">Regulatory Compliance</option>
+                    <option value="Pharmacovigilance">Pharmacovigilance</option>
+                    <option value="Quality Assurance / QA">Quality Assurance / QA</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-1">
+                    Target Cohort
+                  </label>
+                  <select
+                    value={courseForm.targetCohort}
+                    onChange={(e) => setCourseForm({ ...courseForm, targetCohort: e.target.value })}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-900 focus:ring-2 focus:ring-emerald-700"
+                  >
+                    <option value="BAMS Final Year">BAMS Final Year</option>
+                    <option value="MD Dravyaguna Scholars">MD Dravyaguna Scholars</option>
+                    <option value="BAMS 3rd Year">BAMS 3rd Year</option>
+                    <option value="All Ayush Scholars">All Ayush Scholars</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-1">
+                    Duration
+                  </label>
+                  <select
+                    value={courseForm.duration}
+                    onChange={(e) => setCourseForm({ ...courseForm, duration: e.target.value })}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-900 focus:ring-2 focus:ring-emerald-700"
+                  >
+                    <option value="60 mins">60 mins</option>
+                    <option value="90 mins">90 mins</option>
+                    <option value="120 mins">120 mins</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-1">
+                  Target Skill Gap Addressed
+                </label>
+                <textarea
+                  rows="2"
+                  placeholder="e.g. Schedule M/T compliance, premises hygiene, QA record-keeping..."
+                  value={courseForm.skillGap}
+                  onChange={(e) => setCourseForm({ ...courseForm, skillGap: e.target.value })}
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-medium text-slate-900 focus:ring-2 focus:ring-emerald-700 focus:bg-white"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-1">
+                  Target Competencies (Comma separated)
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g. Schedule T Rules, Cleanroom SOP, GMP Audits"
+                  value={courseForm.competencies}
+                  onChange={(e) => setCourseForm({ ...courseForm, competencies: e.target.value })}
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-medium text-slate-900 focus:ring-2 focus:ring-emerald-700 focus:bg-white"
+                />
+              </div>
+
+              {/* Syllabus / Module Material Attachment */}
+              <div className="p-3 bg-slate-50 rounded-xl border border-dashed border-slate-300 flex items-center justify-between">
+                <div className="flex items-center gap-2.5">
+                  <UploadCloud className="w-5 h-5 text-emerald-800" />
+                  <div>
+                    <p className="text-xs font-bold text-slate-800">
+                      {courseForm.attachedFileName || 'Course SOP & Curriculum Attached'}
+                    </p>
+                    <p className="text-[10px] text-slate-500">PDF / Video Modules Ready for Student Portal</p>
+                  </div>
+                </div>
+                <span className="text-[10px] font-bold text-emerald-800 bg-emerald-100 px-2.5 py-1 rounded-md">
+                  Verified
+                </span>
+              </div>
+            </div>
+
+            {/* Modal Actions */}
+            <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
+              <button
+                type="button"
+                onClick={() => setIsPostingModalOpen(false)}
+                className="px-5 py-2.5 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded-xl cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={() => handlePublishCourse(true)}
+                className="px-5 py-2.5 text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl cursor-pointer"
+              >
+                Save as Draft
+              </button>
+              <button
+                type="button"
+                onClick={() => handlePublishCourse(false)}
+                className="px-6 py-2.5 text-xs font-bold text-white bg-emerald-800 hover:bg-emerald-900 rounded-xl shadow-md cursor-pointer transition-all active:scale-95"
+              >
+                Publish Course Module
+              </button>
+            </div>
+
+          </div>
+        </div>
+      )}
     </div>
   );
 }
