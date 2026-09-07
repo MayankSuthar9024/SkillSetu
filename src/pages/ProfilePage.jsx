@@ -10,6 +10,8 @@ import {
   ShieldCheck, 
   Sparkles, 
   ChevronRight,
+  ChevronDown,
+  ChevronUp,
   Activity,
   Heart,
   MessageSquare,
@@ -62,6 +64,11 @@ export function ProfilePage({ onNavigate, currentUser, activePortalId }) {
   const [isEditingBio, setIsEditingBio] = useState(false);
   const [saveSuccessToast, setSaveSuccessToast] = useState(false);
   const [downloadSuccessToast, setDownloadSuccessToast] = useState(false);
+
+  // Mobile-only section expand states (shows 1 item by default on mobile, all on desktop)
+  const [showAllCoursesMobile, setShowAllCoursesMobile] = useState(false);
+  const [showAllDegreesMobile, setShowAllDegreesMobile] = useState(false);
+  const [showAllBadgesMobile, setShowAllBadgesMobile] = useState(false);
   
   // Media Upload Modal state ('pfp' | 'banner' | null)
   const [activeMediaModal, setActiveMediaModal] = useState(null);
@@ -901,8 +908,13 @@ export function ProfilePage({ onNavigate, currentUser, activePortalId }) {
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 pt-1">
-                    {facultyHighlightedCourses.map((course) => (
-                      <div key={course.id} className="p-4 bg-slate-50 hover:bg-slate-100/80 rounded-2xl border border-slate-200/80 space-y-2.5 transition-all flex flex-col justify-between">
+                    {facultyHighlightedCourses.map((course, idx) => (
+                      <div 
+                        key={course.id} 
+                        className={`p-4 bg-slate-50 hover:bg-slate-100/80 rounded-2xl border border-slate-200/80 space-y-2.5 transition-all flex-col justify-between ${
+                          idx > 0 && !showAllCoursesMobile ? 'hidden sm:flex' : 'flex'
+                        }`}
+                      >
                         <div className="space-y-1.5">
                           <div className="flex justify-between items-start gap-1 flex-wrap">
                             <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-emerald-100 text-emerald-900 border border-emerald-200">
@@ -937,6 +949,28 @@ export function ProfilePage({ onNavigate, currentUser, activePortalId }) {
                     ))}
                   </div>
 
+                  {/* Mobile-only View More / Show Less button */}
+                  {facultyHighlightedCourses.length > 1 && (
+                    <div className="sm:hidden pt-1">
+                      <button
+                        type="button"
+                        onClick={() => setShowAllCoursesMobile(!showAllCoursesMobile)}
+                        className="w-full py-2.5 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 active:scale-98 text-emerald-900 font-bold text-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer border border-slate-200/80 shadow-2xs"
+                      >
+                        <span>
+                          {showAllCoursesMobile
+                            ? 'Show Less Courses'
+                            : `View More Courses (+${facultyHighlightedCourses.length - 1})`}
+                        </span>
+                        {showAllCoursesMobile ? (
+                          <ChevronUp className="w-4 h-4 text-emerald-700" />
+                        ) : (
+                          <ChevronDown className="w-4 h-4 text-emerald-700" />
+                        )}
+                      </button>
+                    </div>
+                  )}
+
                   <div className="pt-3 border-t border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 text-xs">
                     <span className="text-slate-500">Syllabus validated against CDSCO, WHO-GMP, and AYUSH Pharmacopoeia standards</span>
                     <button
@@ -967,8 +1001,13 @@ export function ProfilePage({ onNavigate, currentUser, activePortalId }) {
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 pt-1">
-                    {facultyDegrees.map((deg) => (
-                      <div key={deg.id} className="p-4 rounded-2xl bg-slate-50 hover:bg-slate-100/80 border border-slate-200/80 space-y-2 transition-all">
+                    {facultyDegrees.map((deg, idx) => (
+                      <div 
+                        key={deg.id} 
+                        className={`p-4 rounded-2xl bg-slate-50 hover:bg-slate-100/80 border border-slate-200/80 space-y-2 transition-all flex-col justify-between ${
+                          idx > 0 && !showAllDegreesMobile ? 'hidden sm:flex' : 'flex'
+                        }`}
+                      >
                         <div className="flex items-center justify-between">
                           <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-emerald-100 text-emerald-900 border border-emerald-200">
                             {deg.field}
@@ -985,6 +1024,28 @@ export function ProfilePage({ onNavigate, currentUser, activePortalId }) {
                       </div>
                     ))}
                   </div>
+
+                  {/* Mobile-only View More / Show Less button */}
+                  {facultyDegrees.length > 1 && (
+                    <div className="sm:hidden pt-1">
+                      <button
+                        type="button"
+                        onClick={() => setShowAllDegreesMobile(!showAllDegreesMobile)}
+                        className="w-full py-2.5 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 active:scale-98 text-emerald-900 font-bold text-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer border border-slate-200/80 shadow-2xs"
+                      >
+                        <span>
+                          {showAllDegreesMobile
+                            ? 'Show Less Degrees'
+                            : `View More Degrees (+${facultyDegrees.length - 1})`}
+                        </span>
+                        {showAllDegreesMobile ? (
+                          <ChevronUp className="w-4 h-4 text-emerald-700" />
+                        ) : (
+                          <ChevronDown className="w-4 h-4 text-emerald-700" />
+                        )}
+                      </button>
+                    </div>
+                  )}
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-slate-100 text-xs">
                     <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/60">
@@ -1023,8 +1084,13 @@ export function ProfilePage({ onNavigate, currentUser, activePortalId }) {
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 pt-1">
-                    {facultyBadges.map((badge) => (
-                      <div key={badge.id} className="p-4 rounded-2xl bg-slate-50 hover:bg-slate-100/80 border border-slate-200/80 space-y-2.5 transition-all flex flex-col justify-between">
+                    {facultyBadges.map((badge, idx) => (
+                      <div 
+                        key={badge.id} 
+                        className={`p-4 rounded-2xl bg-slate-50 hover:bg-slate-100/80 border border-slate-200/80 space-y-2.5 transition-all flex-col justify-between ${
+                          idx > 0 && !showAllBadgesMobile ? 'hidden sm:flex' : 'flex'
+                        }`}
+                      >
                         <div>
                           <div className="flex items-center justify-between gap-1 mb-2">
                             <span className="w-8 h-8 rounded-xl bg-emerald-800 text-emerald-200 flex items-center justify-center font-bold shadow-2xs shrink-0">
@@ -1045,6 +1111,28 @@ export function ProfilePage({ onNavigate, currentUser, activePortalId }) {
                       </div>
                     ))}
                   </div>
+
+                  {/* Mobile-only View More / Show Less button */}
+                  {facultyBadges.length > 1 && (
+                    <div className="sm:hidden pt-1">
+                      <button
+                        type="button"
+                        onClick={() => setShowAllBadgesMobile(!showAllBadgesMobile)}
+                        className="w-full py-2.5 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 active:scale-98 text-emerald-900 font-bold text-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer border border-slate-200/80 shadow-2xs"
+                      >
+                        <span>
+                          {showAllBadgesMobile
+                            ? 'Show Less Badges'
+                            : `View More Badges (+${facultyBadges.length - 1})`}
+                        </span>
+                        {showAllBadgesMobile ? (
+                          <ChevronUp className="w-4 h-4 text-emerald-700" />
+                        ) : (
+                          <ChevronDown className="w-4 h-4 text-emerald-700" />
+                        )}
+                      </button>
+                    </div>
+                  )}
 
                   <div className="pt-3 border-t border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 text-xs">
                     <span className="text-slate-500">Authorized under Drugs Rules 1945 & ICH E6(R3) Preceptor Framework</span>
