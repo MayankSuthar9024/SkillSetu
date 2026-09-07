@@ -38,7 +38,7 @@ import rajeshwarAvatar from '../assets/images/rajeshwar_avatar.jpg';
 import sanjayAvatar from '../assets/images/sanjay_avatar.jpg';
 import priyaAvatar from '../assets/images/priya_avatar.jpg';
 import ananyaAvatar from '../assets/images/ananya_avatar.jpg';
-
+import { INITIAL_FEED_POSTS } from '../data/feedPostsData';
 
 export function FeedPage({ onNavigate, currentUser, openCreatePostModal, onCloseCreatePostModal }) {
   const [activeFilter, setActiveFilter] = useState('all');
@@ -80,465 +80,8 @@ export function FeedPage({ onNavigate, currentUser, openCreatePostModal, onClose
     }, 4000);
   };
 
-  // Concise dataset of 15 short, punchy posts (12 Intensive Internships + 3 Clinical/Research updates)
-  const [posts, setPosts] = useState([
-    {
-      id: 1,
-      isInternship: true,
-      category: 'Internship',
-      author: {
-        name: 'Dabur Ayush R&D Center',
-        avatarImage: vikramAvatar,
-        role: 'Enterprise Partner & Recruiter',
-        institution: 'Ghaziabad, Delhi NCR',
-        avatar: 'DR',
-        avatarBg: 'bg-emerald-900',
-        verified: true
-      },
-      time: '2 hours ago',
-      title: 'Summer 2026 Intensive R&D Internship: Phytochemical Standardization & HPTLC QC',
-      stipend: '₹25,000 / month',
-      duration: '6 Months Intensive',
-      location: 'Ghaziabad (On-site Lab)',
-      openings: '15 Positions',
-      eligibility: 'BAMS / B.Pharm with min 80% SkillSetu Score',
-      skillsRequired: ['HPTLC Fingerprinting', 'Schedule T GMP', 'Heavy Metal Assay', 'Phytochemistry'],
-      content: 'Hands-on 6-month laboratory fellowship working on chromatographic standardization of Ashwagandha & Guduchi extracts using automated CAMAG HPTLC systems. Direct fast-track hiring into Junior QC Officer roles upon completion.',
-      tags: ['DaburInternship', 'HPTLC', 'PhytoChemistry', 'ScheduleTGMP'],
-      image: 'https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?auto=format&fit=crop&w=1200&q=80',
-      imageCaption: 'Dabur Phyto-Analytical Instrumentation Facility — CAMAG HPTLC Suite',
-      likes: 342,
-      isLiked: false,
-      comments: [
-        { id: 101, user: 'Aarav Sharma', avatar: 'AS', avatarImage: aaravAvatar, text: 'Submitted my verified Level 3 HPLC badge with application.', time: '1 hr ago' }
-      ],
-      showComments: false,
-      shares: 89,
-      views: '4.2k'
-    },
-    {
-      id: 2,
-      isInternship: true,
-      category: 'Internship',
-      author: {
-        name: 'All India Institute of Ayurveda (AIIA)',
-        avatarImage: meenakshiAvatar,
-        role: 'Apex Academic & Clinical Institute',
-        institution: 'Sarita Vihar, New Delhi',
-        avatar: 'AI',
-        avatarBg: 'bg-emerald-800',
-        verified: true
-      },
-      time: '4 hours ago',
-      title: 'Clinical Residency Internship: Inpatient Panchakarma & Metabolic Disorders Unit',
-      stipend: '₹30,000 / month + Housing',
-      duration: '4 Months Rotation',
-      location: 'New Delhi (200-Bed IPD/OPD)',
-      openings: '12 Slots',
-      eligibility: 'BAMS Final Year / Interns with min 82% Diagnostic Score',
-      skillsRequired: ['Nadi Pariksha', 'Snehan-Swedan', 'Panchakarma Dietetics', 'ABDM EHR'],
-      content: 'Clinical immersion managing inpatient care, precision Vamana/Virechana protocols, and digital pulse-wave diagnostics under senior hospital preceptors across 400+ daily OPD patient cases.',
-      tags: ['AIIAInternship', 'ClinicalAyurveda', 'Panchakarma', 'NadiPariksha'],
-      image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=1200&q=80',
-      imageCaption: 'AIIA Clinical Diagnostic Wing & Pulse Mapping Lab',
-      likes: 418,
-      isLiked: false,
-      comments: [],
-      showComments: false,
-      shares: 124,
-      views: '5.8k'
-    },
-    {
-      id: 3,
-      isInternship: true,
-      category: 'Internship',
-      author: {
-        name: 'Patanjali Research Foundation',
-        avatarImage: rajeshwarAvatar,
-        role: 'Botanical Division & QC Centre',
-        institution: 'Haridwar, Uttarakhand',
-        avatar: 'PR',
-        avatarBg: 'bg-amber-800',
-        verified: true
-      },
-      time: '6 hours ago',
-      title: 'Industrial Apprentice Internship: Large-Scale GMP Extraction & Botanicals QC',
-      stipend: '₹22,000 / month + Boarding',
-      duration: '3 Months Practicum',
-      location: 'Haridwar (Divya Pharmacy)',
-      openings: '20 Openings',
-      eligibility: 'BAMS / B.Pharm (Ayurveda) / BUMS / BSMS',
-      skillsRequired: ['GMP Cleanroom', 'Microbiology Assay', 'Solvent Extraction', 'Batch QC'],
-      content: 'Apprentice training covering supercritical extraction, Kwath spray drying, tablet compression, and heavy metal testing at Asia\'s largest herbal manufacturing complex.',
-      tags: ['PatanjaliApprentice', 'IndustrialAyurveda', 'GMPCleanroom', 'BatchQC'],
-      image: 'https://images.unsplash.com/photo-1581093458791-9f3c3900df4b?auto=format&fit=crop&w=1200&q=80',
-      imageCaption: 'Divya Pharmacy High-Capacity Botanicals Extraction Plant',
-      likes: 295,
-      isLiked: false,
-      comments: [],
-      showComments: false,
-      shares: 77,
-      views: '3.9k'
-    },
-    {
-      id: 4,
-      isInternship: true,
-      category: 'Internship',
-      author: {
-        name: 'Kottakkal Arya Vaidya Sala (AVS)',
-        avatarImage: sanjayAvatar,
-        role: 'Heritage Center & Clinical Directorate',
-        institution: 'Kottakkal, Malappuram, Kerala',
-        avatar: 'KV',
-        avatarBg: 'bg-teal-900',
-        verified: true
-      },
-      time: '10 hours ago',
-      title: 'Keraleeya Panchakarma & Classical Dravyaguna Clinical Residency',
-      stipend: '₹28,000 / month + Stay',
-      duration: '6 Months Immersion',
-      location: 'Kottakkal & Kochi, Kerala',
-      openings: '10 Positions',
-      eligibility: 'BAMS Final Year & Interns (Score 80%+)',
-      skillsRequired: ['Keraleeya Panchakarma', 'Bhasma Assessment', 'Herbarium Curation', 'Case Workups'],
-      content: 'Shadow senior physicians handling complex neurological and rheumatological cases. Includes authentic Western Ghats medicinal plant identification and classical therapy procedures.',
-      tags: ['KottakkalAVS', 'KeraleeyaPanchakarma', 'ClinicalImmersion', 'AyushHeritage'],
-      image: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=1200&q=80',
-      imageCaption: 'AVS Classical Therapy Suites & Botanical Garden',
-      likes: 520,
-      isLiked: false,
-      comments: [],
-      showComments: false,
-      shares: 160,
-      views: '7.1k'
-    },
-    {
-      id: 5,
-      isInternship: true,
-      category: 'Internship',
-      author: {
-        name: 'The Himalaya Wellness Company',
-        avatarImage: priyaAvatar,
-        role: 'Discovery Research & Formulation',
-        institution: 'Makali R&D Campus, Bengaluru',
-        avatar: 'HW',
-        avatarBg: 'bg-emerald-950',
-        verified: true
-      },
-      time: '12 hours ago',
-      title: 'Phyto-Formulation & Preclinical Pharmacology Research Internship',
-      stipend: '₹26,000 / month + Transport',
-      duration: '4 Months Project',
-      location: 'Bengaluru (Hybrid Available)',
-      openings: '8 Positions',
-      eligibility: 'BAMS, BHMS, BSMS, M.Pharm (Ayush)',
-      skillsRequired: ['Phyto-chemistry', 'In Vitro Assay', 'Stability Testing', 'Ayush GCP'],
-      content: 'Assist the Discovery Team in screening herbal fractions for cellular anti-inflammatory biomarkers and syrup formulations with access to LC-MS/MS and high-content imaging labs.',
-      tags: ['HimalayaWellness', 'PhytoPharma', 'PreclinicalResearch', 'Biotech'],
-      image: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=80',
-      imageCaption: 'Himalaya Discovery Laboratory — High Resolution Mass Spec',
-      likes: 310,
-      isLiked: false,
-      comments: [],
-      showComments: false,
-      shares: 65,
-      views: '3.6k'
-    },
-    {
-      id: 6,
-      isInternship: true,
-      category: 'Internship',
-      author: {
-        name: 'Central Council for Research in Homoeopathy (CCRH)',
-        avatarImage: ananyaAvatar,
-        role: 'Autonomous Body, Ministry of Ayush',
-        institution: 'New Delhi & NIH Kolkata',
-        avatar: 'CH',
-        avatarBg: 'bg-sky-900',
-        verified: true
-      },
-      time: '1 day ago',
-      title: 'Homoeopathic Drug Proving & Clinical Trial Research Fellowship',
-      stipend: '₹32,000 / month',
-      duration: '6 Months Research',
-      location: 'New Delhi & Kolkata Units',
-      openings: '14 Seats',
-      eligibility: 'BHMS Final Year & Interns (Score 78%+)',
-      skillsRequired: ['Repertorization', 'Drug Proving', 'Clinical Data Management', 'GCP Compliance'],
-      content: 'Participate in evidence-based Homoeopathic clinical trials for chronic lifestyle disorders, modern computer repertory analysis, and adverse event monitoring.',
-      tags: ['HomoeopathyResearch', 'CCRH', 'BHMSInternship', 'DrugProving'],
-      image: 'https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=1200&q=80',
-      imageCaption: 'CCRH Clinical Trial Documentation and Patient Assessment Wing',
-      likes: 264,
-      isLiked: false,
-      comments: [],
-      showComments: false,
-      shares: 52,
-      views: '3.1k'
-    },
-    {
-      id: 7,
-      isInternship: true,
-      category: 'Internship',
-      author: {
-        name: 'Central Council for Research in Unani Medicine (CCRUM)',
-        role: 'Apex Research Organization',
-        institution: 'NRIUM, Hyderabad',
-        avatar: 'CU',
-        avatarBg: 'bg-teal-800',
-        verified: true
-      },
-      time: '1 day ago',
-      title: 'Regimental Therapy (Ilaj-bit-Tadbeer) & Ilmul Advia Clinical Internship',
-      stipend: '₹28,000 / month',
-      duration: '4 Months Rotation',
-      location: 'Hyderabad & Srinagar Units',
-      openings: '9 Slots',
-      eligibility: 'BUMS Scholars & Postgraduates',
-      skillsRequired: ['Hijama (Cupping)', 'Daluk (Massage)', 'Nabz Diagnosis', 'Mufradat Testing'],
-      content: 'Clinical and pharmacological training in classical Unani regimental therapies for pain management, chronic musculoskeletal care, and compound formulation testing.',
-      tags: ['UnaniMedicine', 'IlajBitTadbeer', 'BUMSInternship', 'CCRUM'],
-      image: 'https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&w=1200&q=80',
-      imageCaption: 'CCRUM Regimental Therapy & Clinical Procedure Unit',
-      likes: 198,
-      isLiked: false,
-      comments: [],
-      showComments: false,
-      shares: 44,
-      views: '2.5k'
-    },
-    {
-      id: 8,
-      isInternship: true,
-      category: 'Internship',
-      author: {
-        name: 'National Institute of Siddha (NIS)',
-        role: 'Autonomous Institute, Ministry of Ayush',
-        institution: 'Tambaram Sanatorium, Chennai',
-        avatar: 'NS',
-        avatarBg: 'bg-indigo-900',
-        verified: true
-      },
-      time: '2 days ago',
-      title: 'Siddha Maruthuvam & Gunapadam Standardization Internship',
-      stipend: '₹27,000 / month',
-      duration: '5 Months Rotation',
-      location: 'Chennai, Tamil Nadu',
-      openings: '7 Openings',
-      eligibility: 'BSMS Scholars & Interns (Score 75%+)',
-      skillsRequired: ['Naadi Thervu', 'Thailam Formulation', 'Heavy Metal Safety', 'Siddha Protocols'],
-      content: 'Hospital OPD/IPD rotations and Gunapadam laboratory training covering standardized herbal-mineral drug preparations, pulse diagnosis, and outreach camps.',
-      tags: ['SiddhaMedicine', 'BSMSInternship', 'Gunapadam', 'NISChennai'],
-      image: 'https://images.unsplash.com/photo-1512069772995-ec65ed45afd6?auto=format&fit=crop&w=1200&q=80',
-      imageCaption: 'NIS Gunapadam Pharmacy and Quality Assurance Lab',
-      likes: 223,
-      isLiked: false,
-      comments: [],
-      showComments: false,
-      shares: 49,
-      views: '2.8k'
-    },
-    {
-      id: 9,
-      isInternship: true,
-      category: 'Internship',
-      author: {
-        name: 'Soukya Holistic Health Center',
-        role: 'Integrative Medical Hospital',
-        institution: 'Whitefield, Bengaluru',
-        avatar: 'SK',
-        avatarBg: 'bg-emerald-800',
-        verified: true
-      },
-      time: '2 days ago',
-      title: 'Integrative Medicine & Clinical Naturopathy Residential Fellowship',
-      stipend: '₹35,000 / month + Cottage Stay',
-      duration: '3 Months Immersion',
-      location: 'Whitefield, Bengaluru',
-      openings: '6 Positions',
-      eligibility: 'BNYS, BAMS, BHMS Interns',
-      skillsRequired: ['Hydrotherapy', 'Medical Yoga', 'Dietary Detox', 'Lifestyle Counseling'],
-      content: 'Collaborate with multidisciplinary physicians, Naturopaths, and Yoga therapists in designing holistic detoxification, organic nutrition, and clinical wellness protocols.',
-      tags: ['SoukyaFellowship', 'IntegrativeHealth', 'BNYSInternship', 'HolisticCare'],
-      image: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1200&q=80',
-      imageCaption: 'Soukya Integrative Treatment & Healing Centre',
-      likes: 467,
-      isLiked: false,
-      comments: [],
-      showComments: false,
-      shares: 135,
-      views: '6.2k'
-    },
-    {
-      id: 10,
-      isInternship: true,
-      category: 'Internship',
-      author: {
-        name: 'Charak Pharma & Vedistry',
-        role: 'Herbal Healthcare Exporters',
-        institution: 'Mumbai HQ & Silvassa Plant',
-        avatar: 'CP',
-        avatarBg: 'bg-teal-900',
-        verified: true
-      },
-      time: '3 days ago',
-      title: 'Global Herbal Regulatory Affairs & Quality Assurance Internship',
-      stipend: '₹24,000 / month',
-      duration: '4 Months Project',
-      location: 'Mumbai / Silvassa Plant',
-      openings: '10 Openings',
-      eligibility: 'BAMS / B.Pharm / Life Sciences',
-      skillsRequired: ['USFDA Guidelines', 'EU Directives', 'Regulatory Documentation', 'Stability Testing'],
-      content: 'Learn export compliance, US FDA cGMP (21 CFR Part 111), EU Herbal Directives, heavy metal limits validation, and stability testing protocols.',
-      tags: ['CharakPharma', 'AyushExports', 'RegulatoryAffairs', 'GMPCompliance'],
-      image: 'https://images.unsplash.com/photo-1563213126-a4273aed2016?auto=format&fit=crop&w=1200&q=80',
-      imageCaption: 'Charak Pharma Export Compliance & Documentation Center',
-      likes: 288,
-      isLiked: false,
-      comments: [],
-      showComments: false,
-      shares: 61,
-      views: '3.4k'
-    },
-    {
-      id: 11,
-      isInternship: true,
-      category: 'Internship',
-      author: {
-        name: 'AVP Research Foundation',
-        role: 'Clinical Epidemiology Unit',
-        institution: 'Ramanathapuram, Coimbatore',
-        avatar: 'AR',
-        avatarBg: 'bg-emerald-900',
-        verified: true
-      },
-      time: '3 days ago',
-      title: 'Digital Tele-Ayurveda & Clinical Documentation Internship',
-      stipend: '₹22,500 / month + Allowance',
-      duration: '3 Months Hybrid',
-      location: 'Coimbatore / Remote Hybrid',
-      openings: '16 Slots',
-      eligibility: 'BAMS 3rd/4th Year & Interns',
-      skillsRequired: ['Tele-OPD Triage', 'NAMASTE Portal EHR', 'Prakriti Assessment', 'Case Logs'],
-      content: 'Gain practical experience in telemedicine triage, NAMASTE standardized morbidity terminology data logging, and assisting senior physicians with remote consultations.',
-      tags: ['TeleAyurveda', 'AVPResearch', 'DigitalHealth', 'BAMS2026'],
-      image: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=1200&q=80',
-      imageCaption: 'AVP Tele-Ayurveda Command Center and Diagnostic Hub',
-      likes: 350,
-      isLiked: false,
-      comments: [],
-      showComments: false,
-      shares: 78,
-      views: '4.1k'
-    },
-    {
-      id: 12,
-      isInternship: true,
-      category: 'Internship',
-      author: {
-        name: 'Shree Baidyanath Ayurved Bhawan',
-        role: 'Rasa Shastra & Formulations',
-        institution: 'Jhansi & Naini Plants',
-        avatar: 'BA',
-        avatarBg: 'bg-amber-900',
-        verified: true
-      },
-      time: '4 days ago',
-      title: 'Classical Rasa Shastra & Herbomineral Processing Internship',
-      stipend: '₹21,000 / month + Quarters',
-      duration: '3 Months Practicum',
-      location: 'Jhansi / Patna Plants',
-      openings: '12 Positions',
-      eligibility: 'BAMS & B.Pharm (Ayurveda)',
-      skillsRequired: ['Bhasma Pariksha', 'Puta Heating', 'Shodhana Cleansing', 'Metal Limits Assay'],
-      content: 'Hands-on practical training in classical purification (Shodhana), calcination (Marana), and ICP-MS safety verification of Bhasmas and Rasayanas.',
-      tags: ['Baidyanath', 'RasaShastra', 'BhasmaQC', 'ClassicalFormulation'],
-      image: 'https://images.unsplash.com/photo-1507668077129-56e32842fceb?auto=format&fit=crop&w=1200&q=80',
-      imageCaption: 'Baidyanath Traditional Puta Heating Kilns & Testing Suite',
-      likes: 314,
-      isLiked: false,
-      comments: [],
-      showComments: false,
-      shares: 70,
-      views: '3.7k'
-    },
-    {
-      id: 13,
-      isInternship: false,
-      category: 'Skill Achievement',
-      author: {
-        name: 'Aarav Sharma',
-        role: 'BAMS Final Year Scholar (Score: 88%)',
-        avatarImage: aaravAvatar,
-        institution: 'National Institute of Ayurveda, Jaipur',
-        avatar: 'AS',
-        avatarBg: 'bg-teal-700',
-        verified: true
-      },
-      time: '4 days ago',
-      title: 'Earned Level 3 Certification in Herbal Standardization & HPLC QC',
-      content: 'Completed the 4-week micro-sprint on Chromatographic Fingerprinting for Ashwagandha & Guduchi extracts under Dabur R&D Mentorship with verified blockchain accreditation.',
-      tags: ['SkillBadge', 'Dravyaguna', 'QualityControl', 'PhytoChemistry'],
-      image: 'https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?auto=format&fit=crop&w=1200&q=80',
-      imageCaption: 'HPLC Chromatogram report verified via SkillSetu node',
-      likes: 215,
-      isLiked: true,
-      comments: [],
-      showComments: false,
-      shares: 54,
-      views: '2.8k'
-    },
-    {
-      id: 14,
-      isInternship: false,
-      category: 'Clinical Case',
-      author: {
-        name: 'Dr. Ananya Vaidya',
-        role: 'Senior Clinical Researcher & Faculty',
-        institution: 'AIIA, New Delhi',
-        avatar: 'AV',
-        avatarBg: 'bg-emerald-700',
-        verified: true
-      },
-      time: '5 days ago',
-      title: 'Standardized Nadi Pariksha Protocol for Chronic Metabolic Care',
-      content: 'Concluded 12-week study comparing digital pulse wave analysis with classical Nadi Pariksha parameters in 120 metabolic syndrome patients (91.4% correlation). Open protocol available for interns.',
-      tags: ['NadiPariksha', 'AyushResearch', 'MetabolicHealth', 'BAMS'],
-      image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=1200&q=80',
-      imageCaption: 'Pulse wave mapping correlated with Tridosha markers',
-      likes: 142,
-      isLiked: false,
-      comments: [],
-      showComments: false,
-      shares: 38,
-      views: '1.4k'
-    },
-    {
-      id: 15,
-      isInternship: false,
-      category: 'Research',
-      author: {
-        name: 'CCRAS Research Directorate',
-        role: 'Apex Ministry Body',
-        institution: 'Ministry of Ayush, New Delhi',
-        avatar: 'CC',
-        avatarBg: 'bg-emerald-800',
-        verified: true
-      },
-      time: '5 days ago',
-      title: 'National Ayush Pharmacovigilance & Clinical Trial Directive Released',
-      content: 'Revised GCP safety monitoring framework for polyherbal compounds is integrated into the SkillSetu Diagnostic Engine. Enrolled hospital interns receive automatic digital case accreditation.',
-      tags: ['Pharmacovigilance', 'MinistryOfAyush', 'PolyherbalSafety', 'Policy'],
-      image: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=1200&q=80',
-      imageCaption: 'CCRAS Official Document Release',
-      likes: 512,
-      isLiked: false,
-      comments: [],
-      showComments: false,
-      shares: 204,
-      views: '8.1k'
-    }
-  ]);
+  // 15 rich posts initialized with verified profiles across all stakeholder roles
+  const [posts, setPosts] = useState(INITIAL_FEED_POSTS);
 
   const categories = [
     { id: 'all', label: 'All Posts (15)', icon: Flame },
@@ -635,17 +178,30 @@ export function FeedPage({ onNavigate, currentUser, openCreatePostModal, onClose
     const authorRole = currentUser?.role || 'BAMS Final Year Scholar';
     const authorInst = currentUser?.institution || 'National Institute of Ayurveda, Jaipur';
     const authorAvatar = currentUser?.avatar || 'AS';
+    
+    // Auto-detect roleType for newly created post
+    const roleType = currentUser?.roleType || (
+      currentUser?.role?.toLowerCase().includes('recruiter') || currentUser?.institution?.toLowerCase().includes('dabur') ? 'company' :
+      currentUser?.role?.toLowerCase().includes('professor') || currentUser?.role?.toLowerCase().includes('faculty') ? 'faculty' :
+      currentUser?.role?.toLowerCase().includes('dean') ? 'college' :
+      currentUser?.role?.toLowerCase().includes('admin') ? 'admin' : 'student'
+    );
 
     const newPostObj = {
       id: Date.now(),
       isInternship: newPostCategory === 'Internship',
       author: {
+        id: currentUser?.id || `user-${Date.now()}`,
         name: authorName,
+        brandName: currentUser?.brandName || (roleType === 'company' ? authorInst : authorName),
         role: authorRole,
+        roleType: roleType,
         institution: authorInst,
+        location: currentUser?.location || authorInst,
+        bio: currentUser?.bio || `${authorName} - ${authorRole} at ${authorInst}`,
         avatar: authorAvatar,
         avatarImage: currentUser?.avatarImage || aaravAvatar,
-        avatarBg: 'bg-emerald-700',
+        avatarBg: roleType === 'company' ? 'bg-emerald-950' : 'bg-emerald-700',
         verified: true
       },
       time: 'Just now',
@@ -688,14 +244,14 @@ export function FeedPage({ onNavigate, currentUser, openCreatePostModal, onClose
       
       {/* Toast Notification Banner */}
       {toastMessage && (
-        <div className="fixed bottom-6 right-4 sm:right-6 z-50 bg-slate-900 text-white text-xs font-semibold px-4 py-3 rounded-2xl shadow-xl border border-slate-700 flex items-center gap-3 animate-in fade-in max-w-sm sm:max-w-md">
-          <div className="w-6 h-6 rounded-lg bg-emerald-600/30 text-emerald-400 flex items-center justify-center shrink-0">
+        <div className="fixed bottom-6 right-4 sm:right-6 z-50 bg-white text-slate-900 text-xs font-semibold px-4 py-3 rounded-2xl shadow-xl border border-slate-200/90 flex items-center gap-3 animate-in fade-in max-w-sm sm:max-w-md">
+          <div className="w-6 h-6 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
             <Check className="w-3.5 h-3.5" />
           </div>
           <p className="flex-1 leading-snug">{toastMessage}</p>
           <button 
             onClick={() => setToastMessage(null)}
-            className="text-slate-400 hover:text-white p-1 rounded-lg"
+            className="text-slate-400 hover:text-slate-700 p-1 rounded-lg"
           >
             <X className="w-3.5 h-3.5" />
           </button>
@@ -859,7 +415,7 @@ export function FeedPage({ onNavigate, currentUser, openCreatePostModal, onClose
                         {/* Author Info */}
                         <div className="flex items-center gap-2.5 sm:gap-3 min-w-0 max-w-full">
                           <div 
-                            onClick={() => onNavigate('profile')}
+                            onClick={() => onNavigate('profile', post.author)}
                             className={`w-9 h-9 sm:w-10 sm:h-10 rounded-full ${post.author.avatarBg} text-white font-extrabold text-xs flex items-center justify-center cursor-pointer border border-white shrink-0 overflow-hidden`}
                             title="View Author Profile"
                           >
@@ -873,7 +429,7 @@ export function FeedPage({ onNavigate, currentUser, openCreatePostModal, onClose
                           <div className="min-w-0 flex-1">
                             <div className="flex items-center gap-1 min-w-0">
                               <span 
-                                onClick={() => onNavigate('profile')}
+                                onClick={() => onNavigate('profile', post.author)}
                                 className="font-extrabold text-slate-900 text-xs sm:text-sm hover:text-emerald-800 cursor-pointer truncate"
                               >
                                 {post.author.name}
@@ -1058,7 +614,11 @@ export function FeedPage({ onNavigate, currentUser, openCreatePostModal, onClose
                           ) : (
                             post.comments.map((comment) => (
                               <div key={comment.id} className="flex gap-2 bg-white p-2 rounded-lg border border-slate-200">
-                                <div className="w-6 h-6 rounded-full bg-emerald-800 text-white font-bold text-[10px] flex items-center justify-center shrink-0 overflow-hidden">
+                                <div 
+                                  onClick={() => onNavigate('profile', { name: comment.user, avatarImage: comment.avatarImage, avatar: comment.avatar, roleType: 'student' })}
+                                  className="w-6 h-6 rounded-full bg-emerald-800 text-white font-bold text-[10px] flex items-center justify-center shrink-0 overflow-hidden cursor-pointer"
+                                  title={`View Profile (${comment.user})`}
+                                >
                                   {comment.avatarImage ? (
                                     <img src={comment.avatarImage} alt={comment.user} className="w-full h-full object-cover" />
                                   ) : (
@@ -1067,7 +627,12 @@ export function FeedPage({ onNavigate, currentUser, openCreatePostModal, onClose
                                 </div>
                                 <div className="flex-grow min-w-0">
                                   <div className="flex justify-between items-center">
-                                    <span className="font-bold text-[11px] text-slate-900 truncate">{comment.user}</span>
+                                    <span 
+                                      onClick={() => onNavigate('profile', { name: comment.user, avatarImage: comment.avatarImage, avatar: comment.avatar, roleType: 'student' })}
+                                      className="font-bold text-[11px] text-slate-900 truncate cursor-pointer hover:text-emerald-800"
+                                    >
+                                      {comment.user}
+                                    </span>
                                     <span className="text-[9px] text-slate-400 shrink-0">{comment.time}</span>
                                   </div>
                                   <p className="text-xs text-slate-700 mt-0.5 break-words">{comment.text}</p>

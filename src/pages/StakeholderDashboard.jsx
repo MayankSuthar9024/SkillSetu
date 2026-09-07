@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   LogOut, 
   RefreshCw, 
@@ -50,6 +50,41 @@ export const StakeholderDashboard = ({
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [openCreatePostModal, setOpenCreatePostModal] = useState(false);
+  const [viewingProfileUser, setViewingProfileUser] = useState(null);
+
+  const profileDropdownRef = useRef(null);
+  const notificationsRef = useRef(null);
+
+  // Auto-close dropdowns on click outside or Escape key
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (profileDropdownRef.current && !profileDropdownRef.current.contains(event.target)) {
+        setProfileDropdownOpen(false);
+      }
+      if (notificationsRef.current && !notificationsRef.current.contains(event.target)) {
+        setNotificationsOpen(false);
+      }
+    };
+
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        setProfileDropdownOpen(false);
+        setNotificationsOpen(false);
+      }
+    };
+
+    if (profileDropdownOpen || notificationsOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('touchstart', handleClickOutside);
+      document.addEventListener('keydown', handleKeyDown);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [profileDropdownOpen, notificationsOpen]);
 
   // Automatically default to 'console' when logging in or switching to any non-student portal
   React.useEffect(() => {
@@ -90,8 +125,11 @@ export const StakeholderDashboard = ({
       case 'feed':
         return (
           <FeedPage
-            onNavigate={(page) => {
-              if (page === 'profile') setActiveTab('profile');
+            onNavigate={(page, targetUser) => {
+              if (page === 'profile') {
+                setViewingProfileUser(targetUser || null);
+                setActiveTab('profile');
+              }
               else if (page === 'messages') setActiveTab('messages');
               else if (page === 'opportunities') setActiveTab('jobs');
               else if (page === 'skill') setActiveTab('skills');
@@ -104,8 +142,11 @@ export const StakeholderDashboard = ({
       case 'messages':
         return (
           <MessagePage
-            onNavigate={(page) => {
-              if (page === 'profile') setActiveTab('profile');
+            onNavigate={(page, targetUser) => {
+              if (page === 'profile') {
+                setViewingProfileUser(targetUser || null);
+                setActiveTab('profile');
+              }
               else if (page === 'feed') setActiveTab('feed');
             }}
             currentUser={user}
@@ -114,14 +155,26 @@ export const StakeholderDashboard = ({
       case 'profile':
         return (
           <ProfilePage
-            onNavigate={(page) => {
-              if (page === 'feed') setActiveTab('feed');
+            onNavigate={(page, targetUser) => {
+              if (page === 'feed') {
+                setViewingProfileUser(null);
+                setActiveTab('feed');
+              }
+              else if (page === 'profile') {
+                setViewingProfileUser(targetUser || null);
+                setActiveTab('profile');
+              }
               else if (page === 'messages') setActiveTab('messages');
               else if (page === 'opportunities') setActiveTab('jobs');
               else if (page === 'skill') setActiveTab('skills');
             }}
             currentUser={user}
             activePortalId={activePortalId}
+            viewingUser={viewingProfileUser}
+            onBack={() => {
+              setViewingProfileUser(null);
+              setActiveTab('feed');
+            }}
           />
         );
       case 'jobs':
@@ -387,7 +440,10 @@ export const StakeholderDashboard = ({
             {/* User Profile PFP Avatar Button */}
             <div className="relative">
               <button
-                onClick={() => setActiveTab('profile')}
+                onClick={() => {
+                  setViewingProfileUser(null);
+                  setActiveTab('profile');
+                }}
                 onMouseEnter={() => setProfileDropdownOpen(true)}
                 className="w-9 h-9 rounded-xl bg-emerald-800 text-white font-extrabold text-xs flex items-center justify-center shadow-xs hover:ring-2 hover:ring-emerald-600 transition-all cursor-pointer shrink-0 overflow-hidden border border-emerald-900/20"
                 title={`View Profile Page (${user.name})`}
@@ -419,27 +475,15 @@ export const StakeholderDashboard = ({
                   </div>
 
                   <button
-                    onClick={() => { setActiveTab('profile'); setProfileDropdownOpen(false); }}
+                    onClick={() => { 
+                      setViewingProfileUser(null);
+                      setActiveTab('profile'); 
+                      setProfileDropdownOpen(false); 
+                    }}
                     className="w-full text-left px-4 py-2 text-xs font-bold text-slate-800 hover:bg-emerald-50 hover:text-emerald-900 flex items-center gap-2"
                   >
                     <User className="w-4 h-4 text-emerald-700" />
                     <span>View Profile Page</span>
-                  </button>
-
-                  <button
-                    onClick={() => { setActiveTab('messages'); setProfileDropdownOpen(false); }}
-                    className="w-full text-left px-4 py-2 text-xs font-bold text-slate-800 hover:bg-emerald-50 hover:text-emerald-900 flex items-center gap-2"
-                  >
-                    <MessageSquare className="w-4 h-4 text-teal-700" />
-                    <span>Messages & Connections</span>
-                  </button>
-
-                  <button
-                    onClick={() => { setActiveTab('console'); setProfileDropdownOpen(false); }}
-                    className="w-full text-left px-4 py-2 text-xs font-bold text-slate-800 hover:bg-emerald-50 hover:text-emerald-900 flex items-center gap-2"
-                  >
-                    <Layers className="w-4 h-4 text-teal-700" />
-                    <span>Operational Console ({currentPortalConfig.title})</span>
                   </button>
 
                   <div className="pt-1 mt-1 border-t border-slate-100">
@@ -493,7 +537,7 @@ export const StakeholderDashboard = ({
               <button onClick={() => { setActiveTab('network'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-emerald-800 transition-colors cursor-pointer">
                 Industry Network
               </button>
-              <button onClick={() => { setActiveTab('profile'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-emerald-800 transition-colors cursor-pointer text-emerald-800 font-bold">
+              <button onClick={() => { setViewingProfileUser(null); setActiveTab('profile'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-emerald-800 transition-colors cursor-pointer text-emerald-800 font-bold">
                 My Profile
               </button>
             </div>

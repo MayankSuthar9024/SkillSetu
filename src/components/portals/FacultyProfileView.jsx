@@ -107,10 +107,11 @@ export const FacultyProfileView = ({ user, onNavigate, onBack }) => {
           {onBack && (
             <button
               onClick={onBack}
-              className="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs flex items-center gap-1.5 transition-colors cursor-pointer"
+              className="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-emerald-800 font-bold text-xs flex items-center gap-1.5 transition-colors cursor-pointer active:scale-95"
+              title="Go Back"
             >
-              <ArrowLeft className="w-3.5 h-3.5" />
-              <span>Back to Feed</span>
+              <ArrowLeft className="w-3.5 h-3.5 text-emerald-700" />
+              <span>Back</span>
             </button>
           )}
 
