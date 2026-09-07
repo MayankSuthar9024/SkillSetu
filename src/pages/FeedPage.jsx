@@ -28,7 +28,9 @@ import {
   ShieldCheck,
   Zap,
   ArrowRight,
-  Flame
+  Flame,
+  GraduationCap,
+  UserCheck
 } from 'lucide-react';
 
 import aaravAvatar from '../assets/images/aarav_avatar.jpg';
@@ -40,7 +42,7 @@ import priyaAvatar from '../assets/images/priya_avatar.jpg';
 import ananyaAvatar from '../assets/images/ananya_avatar.jpg';
 
 
-export function FeedPage({ onNavigate, currentUser, openCreatePostModal, onCloseCreatePostModal }) {
+export function FeedPage({ onNavigate, currentUser, activePortalId, openCreatePostModal, onCloseCreatePostModal }) {
   const [activeFilter, setActiveFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [newPostText, setNewPostText] = useState('');
@@ -48,16 +50,37 @@ export function FeedPage({ onNavigate, currentUser, openCreatePostModal, onClose
   const [showCreatePost, setShowCreatePost] = useState(Boolean(openCreatePostModal));
   const [bookmarkedIds, setBookmarkedIds] = useState([1, 2]);
   
-  // Track applied internship post IDs
+  // Track applied internship post IDs (for student scholars)
   const [appliedPostIds, setAppliedPostIds] = useState([]);
+
+  // Track nominated internship post IDs (for faculty preceptors)
+  const [nominatedPostIds, setNominatedPostIds] = useState([]);
+  const [selectedInternshipForNomination, setSelectedInternshipForNomination] = useState(null);
+  const [selectedStudentForNomination, setSelectedStudentForNomination] = useState(
+    'Aarav Sharma (BAMS Final Year · Diagnostic Score: 88% · Schedule T GMP Certified)'
+  );
+  const [nominationEndorsement, setNominationEndorsement] = useState('');
+  const [isSubmittingNomination, setIsSubmittingNomination] = useState(false);
   
-  // Modal state for applying to an internship
+  // Modal state for applying to an internship (for students)
   const [selectedInternship, setSelectedInternship] = useState(null);
   const [applyCoverNote, setApplyCoverNote] = useState('');
   const [isSubmittingApplication, setIsSubmittingApplication] = useState(false);
   const [toastMessage, setToastMessage] = useState(null);
   const [visibleCount, setVisibleCount] = useState(5);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
+
+  // Check if current logged-in user is a faculty member / preceptor / professor
+  const isFacultyUser = Boolean(
+    activePortalId === 'faculty' ||
+    currentUser?.role?.toLowerCase().includes('faculty') ||
+    currentUser?.role?.toLowerCase().includes('professor') ||
+    currentUser?.role?.toLowerCase().includes('preceptor') ||
+    currentUser?.role?.toLowerCase().includes('hod') ||
+    currentUser?.id?.toLowerCase().includes('fac-') ||
+    currentUser?.coursesAuthored !== undefined ||
+    currentUser?.menteeCount !== undefined
+  );
 
   const handleLoadMore = () => {
     setIsLoadingMore(true);
@@ -606,13 +629,43 @@ export function FeedPage({ onNavigate, currentUser, openCreatePostModal, onClose
     }
   };
 
-  // Open the Apply Internship Modal
+  // Open the Apply Internship Modal (for students) or redirect to Nominate (for faculty)
   const handleOpenApplyModal = (post) => {
+    if (isFacultyUser) {
+      handleOpenNominateModal(post);
+      return;
+    }
     setSelectedInternship(post);
-    setApplyCoverNote(`Dear ${post.author.name} Recruiting Team,\n\nI am eager to apply for this intensive internship. My SkillSetu verified diagnostic score is 88%, and I have completed accredited micro-sprints in Schedule T GMP and HPLC Standardization.`);
+    setApplyCoverNote(`Dear ${post.author.name} Recruiting Team,\n\nI am eager to apply for this intensive internship. My SkillSetu verified diagnostic score is ${currentUser?.readiness || '88%'}, and I have completed accredited micro-sprints in Schedule T GMP and HPLC Standardization.`);
   };
 
-  // Submit Internship Application
+  // Open the Preceptor Scholar Nomination Modal (for faculty preceptors)
+  const handleOpenNominateModal = (post) => {
+    setSelectedInternshipForNomination(post);
+    const facultyRole = currentUser?.role || 'Professor & HOD (Dravyaguna)';
+    const facultyInst = currentUser?.institution || 'All India Institute of Ayurveda (AIIA), New Delhi';
+    setNominationEndorsement(
+      `As ${facultyRole} at ${facultyInst}, I formally endorse and nominate this scholar for the ${post.title} position at ${post.author.name}. The candidate has demonstrated exemplary lab discipline, analytical method compliance, and verifiable clinical skill readiness.`
+    );
+  };
+
+  // Submit Preceptor Scholar Nomination
+  const handleConfirmNomination = (e) => {
+    e.preventDefault();
+    if (!selectedInternshipForNomination) return;
+
+    setIsSubmittingNomination(true);
+    setTimeout(() => {
+      setNominatedPostIds(prev => [...prev, selectedInternshipForNomination.id]);
+      setIsSubmittingNomination(false);
+      const companyName = selectedInternshipForNomination.author.name;
+      const scholarName = selectedStudentForNomination.split('(')[0].trim();
+      setSelectedInternshipForNomination(null);
+      showToast(`Scholar ${scholarName} nominated to ${companyName} with official Preceptor Endorsement & NCISM seal.`);
+    }, 450);
+  };
+
+  // Submit Student Internship Application
   const handleConfirmApplication = (e) => {
     e.preventDefault();
     if (!selectedInternship) return;
@@ -623,7 +676,7 @@ export function FeedPage({ onNavigate, currentUser, openCreatePostModal, onClose
       setIsSubmittingApplication(false);
       const internshipName = selectedInternship.author.name;
       setSelectedInternship(null);
-      showToast(`Application submitted to ${internshipName}. Your verified SkillSetu score (88%) has been sent.`);
+      showToast(`Application submitted to ${internshipName}. Your verified SkillSetu score (${currentUser?.readiness || '88%'}) has been sent.`);
     }, 450);
   };
 
@@ -849,6 +902,7 @@ export function FeedPage({ onNavigate, currentUser, openCreatePostModal, onClose
               filteredPosts.slice(0, visibleCount).map((post) => {
                 const isBookmarked = bookmarkedIds.includes(post.id);
                 const isApplied = appliedPostIds.includes(post.id);
+                const isNominated = nominatedPostIds.includes(post.id);
 
                 return (
                   <article key={post.id} className="bg-white rounded-2xl border border-slate-200/90 element-glow-shadow-hover overflow-hidden transition-all">
@@ -917,8 +971,8 @@ export function FeedPage({ onNavigate, currentUser, openCreatePostModal, onClose
                           {post.title}
                         </h2>
                         
-                        {/* Internship Specs Grid Card */}
-                        {post.isInternship && (
+                        {/* Internship Specs Grid Card (Visible only to students, hidden on faculty portal feed) */}
+                        {post.isInternship && !isFacultyUser && (
                           <div className="my-3 p-3 bg-slate-50 border border-slate-200/90 rounded-xl space-y-2.5">
                             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
                               <div className="bg-white p-2 rounded-lg border border-slate-200 shadow-2xs">
@@ -945,7 +999,7 @@ export function FeedPage({ onNavigate, currentUser, openCreatePostModal, onClose
                                 <span className="font-medium text-slate-700">{post.eligibility}</span>
                               </div>
 
-                              {/* Prominent Apply Internship Action Button */}
+                              {/* Prominent Action Button: Apply for Student */}
                               <div className="w-full sm:w-auto">
                                 {isApplied ? (
                                   <button
@@ -1034,7 +1088,7 @@ export function FeedPage({ onNavigate, currentUser, openCreatePostModal, onClose
                       </div>
 
                       <div className="flex items-center gap-2">
-                        {post.isInternship && !isApplied && (
+                        {post.isInternship && !isFacultyUser && !isApplied && (
                           <button
                             onClick={() => handleOpenApplyModal(post)}
                             className="text-emerald-900 bg-emerald-50 hover:bg-emerald-100 font-bold text-[11px] px-2.5 py-1 rounded border border-emerald-200 transition-all cursor-pointer flex items-center gap-1"
@@ -1195,11 +1249,13 @@ export function FeedPage({ onNavigate, currentUser, openCreatePostModal, onClose
                   SkillSetu Portfolio Attached
                 </span>
                 <span className="text-xs font-bold text-emerald-900 bg-white px-2 py-0.5 rounded border border-emerald-300">
-                  Score: 88%
+                  Score: {currentUser?.readiness || '88%'}
                 </span>
               </div>
               <p className="text-xs font-bold text-slate-900">{currentUser?.name || 'Aarav Sharma'}</p>
-              <p className="text-[11px] text-slate-600">BAMS Scholar • National Institute of Ayurveda, Jaipur</p>
+              <p className="text-[11px] text-slate-600">
+                {currentUser?.degree || 'BAMS Scholar'} • {currentUser?.institution || 'National Institute of Ayurveda, Jaipur'}
+              </p>
               <div className="flex flex-wrap gap-1 mt-2">
                 <span className="text-[9px] font-bold text-emerald-900 bg-white px-1.5 py-0.5 rounded border border-emerald-200">
                   Schedule T GMP Certified
@@ -1248,6 +1304,150 @@ export function FeedPage({ onNavigate, currentUser, openCreatePostModal, onClose
                     <>
                       <Briefcase className="w-3.5 h-3.5" />
                       <span>Submit 1-Click Application</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </form>
+
+          </div>
+        </div>
+      )}
+
+      {/* PRECEPTOR SCHOLAR NOMINATION MODAL (FOR FACULTY) */}
+      {selectedInternshipForNomination && (
+        <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
+          <div className="bg-white rounded-2xl sm:rounded-3xl max-w-lg w-full p-4 sm:p-6 shadow-2xl border border-slate-200 animate-in fade-in max-h-[92vh] overflow-y-auto">
+            
+            {/* Modal Header */}
+            <div className="flex justify-between items-start pb-3 border-b border-slate-100">
+              <div className="flex items-center gap-2.5">
+                <div className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl ${selectedInternshipForNomination.author.avatarBg} text-white font-extrabold text-xs sm:text-sm flex items-center justify-center shrink-0`}>
+                  {selectedInternshipForNomination.author.avatar}
+                </div>
+                <div>
+                  <span className="text-[10px] font-bold text-emerald-800 uppercase tracking-wider bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 flex items-center gap-1 w-fit">
+                    <UserCheck className="w-3 h-3 text-emerald-700" />
+                    Official Preceptor Nomination Desk
+                  </span>
+                  <h3 className="font-bold text-sm sm:text-base text-slate-900 leading-snug mt-0.5">
+                    {selectedInternshipForNomination.author.name}
+                  </h3>
+                </div>
+              </div>
+
+              <button
+                onClick={() => setSelectedInternshipForNomination(null)}
+                className="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-100 cursor-pointer"
+                title="Close modal"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Position Summary */}
+            <div className="mt-3 p-3 bg-slate-50 rounded-xl border border-slate-200">
+              <span className="text-[9px] uppercase font-bold text-slate-400 block">Target Internship Role</span>
+              <h4 className="font-bold text-xs text-slate-900 mb-1">{selectedInternshipForNomination.title}</h4>
+              <div className="grid grid-cols-2 gap-2 mt-2 text-[11px]">
+                <div className="flex items-center gap-1.5 text-slate-600">
+                  <DollarSign className="w-3.5 h-3.5 text-emerald-800 shrink-0" />
+                  <span className="font-bold text-slate-900">{selectedInternshipForNomination.stipend}</span>
+                </div>
+                <div className="flex items-center gap-1.5 text-slate-600">
+                  <Clock className="w-3.5 h-3.5 text-slate-600 shrink-0" />
+                  <span>{selectedInternshipForNomination.duration}</span>
+                </div>
+                <div className="flex items-center gap-1.5 text-slate-600">
+                  <MapPin className="w-3.5 h-3.5 text-slate-600 shrink-0" />
+                  <span className="truncate">{selectedInternshipForNomination.location}</span>
+                </div>
+                <div className="flex items-center gap-1.5 text-slate-600">
+                  <Users className="w-3.5 h-3.5 text-slate-600 shrink-0" />
+                  <span>{selectedInternshipForNomination.openings}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Nominating Preceptor Credentials */}
+            <div className="mt-3 p-3 bg-emerald-50/70 border border-emerald-200 rounded-xl">
+              <div className="flex items-center justify-between mb-1.5">
+                <span className="text-[10px] font-bold uppercase text-emerald-900 tracking-wider flex items-center gap-1">
+                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-700" />
+                  Nominating Preceptor Credentials
+                </span>
+                <span className="text-[10px] font-bold text-emerald-900 bg-white px-2 py-0.5 rounded border border-emerald-300 font-mono">
+                  NCISM/FAC/DL/2012/8842
+                </span>
+              </div>
+              <p className="text-xs font-bold text-slate-900">{currentUser?.name || 'Prof. Meenakshi Joshi'}</p>
+              <p className="text-[11px] text-slate-600">
+                {currentUser?.role || 'Professor & HOD (Dravyaguna)'} • {currentUser?.institution || 'All India Institute of Ayurveda (AIIA), New Delhi'}
+              </p>
+            </div>
+
+            {/* Nomination Form */}
+            <form onSubmit={handleConfirmNomination} className="mt-3 space-y-3">
+              <div>
+                <label className="block text-xs font-bold uppercase text-slate-600 mb-1">
+                  Select Department Scholar to Nominate
+                </label>
+                <select
+                  value={selectedStudentForNomination}
+                  onChange={(e) => setSelectedStudentForNomination(e.target.value)}
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs text-slate-900 font-semibold focus:outline-none focus:ring-1 focus:ring-emerald-600"
+                >
+                  <option value="Aarav Sharma (BAMS Final Year · Diagnostic Score: 88% · Schedule T GMP Certified)">
+                    Aarav Sharma (BAMS Final Year · Diagnostic Score: 88% · Schedule T GMP Certified)
+                  </option>
+                  <option value="Sunita Patel (BAMS 3rd Year · Diagnostic Score: 89% · Cleanroom Hygiene & SOPs)">
+                    Sunita Patel (BAMS 3rd Year · Diagnostic Score: 89% · Cleanroom Hygiene & SOPs)
+                  </option>
+                  <option value="Karan Malhotra (MD Ayurveda · Diagnostic Score: 96% · NABL Heavy Metals Validation)">
+                    Karan Malhotra (MD Ayurveda · Diagnostic Score: 96% · NABL Heavy Metals Validation)
+                  </option>
+                  <option value="Pooja Deshmukh (BAMS Final Year · Diagnostic Score: 91% · Clinical Pharmacology)">
+                    Pooja Deshmukh (BAMS Final Year · Diagnostic Score: 91% · Clinical Pharmacology)
+                  </option>
+                </select>
+                <p className="text-[10px] text-slate-400 mt-1">
+                  *Only students from your mentored cohort who satisfy Schedule T GMP and prerequisite clinical benchmarks are selectable.
+                </p>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase text-slate-600 mb-1">
+                  Preceptor Recommendation & Letter of Support
+                </label>
+                <textarea
+                  rows={3}
+                  value={nominationEndorsement}
+                  onChange={(e) => setNominationEndorsement(e.target.value)}
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs text-slate-900 focus:outline-none focus:ring-1 focus:ring-emerald-600"
+                  required
+                ></textarea>
+              </div>
+
+              <div className="flex items-center justify-between pt-2">
+                <button
+                  type="button"
+                  onClick={() => setSelectedInternshipForNomination(null)}
+                  className="px-3.5 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded-xl cursor-pointer"
+                >
+                  Cancel
+                </button>
+
+                <button
+                  type="submit"
+                  disabled={isSubmittingNomination}
+                  className="bg-emerald-800 hover:bg-emerald-700 text-white font-bold text-xs px-4 py-2 rounded-xl shadow-xs transition-all flex items-center gap-1.5 cursor-pointer disabled:opacity-70"
+                >
+                  {isSubmittingNomination ? (
+                    <span>Submitting Nomination...</span>
+                  ) : (
+                    <>
+                      <ShieldCheck className="w-3.5 h-3.5" />
+                      <span>Submit Official Nomination</span>
                     </>
                   )}
                 </button>
