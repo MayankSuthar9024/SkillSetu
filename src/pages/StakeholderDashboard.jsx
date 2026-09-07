@@ -45,7 +45,9 @@ export const StakeholderDashboard = ({
   contrastMode,
   onToggleContrast
 }) => {
-  const [activeTab, setActiveTab] = useState(activePortalId !== 'student' ? 'console' : 'feed'); // 'feed' | 'messages' | 'jobs' | 'skills' | 'network' | 'console' | 'profile'
+  const [activeTab, setActiveTab] = useState(
+    (activePortalId === 'student' || activePortalId === 'faculty') ? 'feed' : 'console'
+  ); // 'feed' | 'messages' | 'jobs' | 'skills' | 'network' | 'console' | 'profile'
   const [roleDropdownOpen, setRoleDropdownOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
@@ -86,10 +88,14 @@ export const StakeholderDashboard = ({
     };
   }, [profileDropdownOpen, notificationsOpen]);
 
-  // Automatically default to 'console' when logging in or switching to any non-student portal
+  // Default to 'feed' for student and faculty portals, and 'console' for other institutional portals
   React.useEffect(() => {
-    if (activePortalId && activePortalId !== 'student') {
-      setActiveTab('console');
+    if (activePortalId) {
+      if (activePortalId === 'student' || activePortalId === 'faculty') {
+        setActiveTab('feed');
+      } else {
+        setActiveTab('console');
+      }
     }
   }, [activePortalId]);
 
@@ -167,6 +173,8 @@ export const StakeholderDashboard = ({
               else if (page === 'messages') setActiveTab('messages');
               else if (page === 'opportunities') setActiveTab('jobs');
               else if (page === 'skill') setActiveTab('skills');
+              else if (page === 'courses') setActiveTab('courses');
+              else if (page === 'console') setActiveTab('console');
             }}
             currentUser={user}
             activePortalId={activePortalId}
@@ -197,6 +205,13 @@ export const StakeholderDashboard = ({
           </div>
         );
       case 'skills':
+        if (activePortalId === 'faculty') {
+          return (
+            <div className="space-y-6">
+              <FacultyPage currentUser={user} onOpenReadinessModal={() => {}} />
+            </div>
+          );
+        }
         return (
           <SkillPage
             onNavigate={(page) => {
@@ -534,6 +549,7 @@ export const StakeholderDashboard = ({
             </div>
 
             <div className="flex items-center gap-6 text-xs text-slate-600 font-medium">
+<<<<<<< HEAD
               <button onClick={() => { setActiveTab('feed'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-emerald-800 transition-colors cursor-pointer">
                 Community Feed
               </button>
@@ -549,6 +565,45 @@ export const StakeholderDashboard = ({
               <button onClick={() => { setViewingProfileUser(null); setActiveTab('profile'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-emerald-800 transition-colors cursor-pointer text-emerald-800 font-bold">
                 My Profile
               </button>
+=======
+              {activePortalId === 'faculty' ? (
+                <>
+                  <button onClick={() => { setActiveTab('feed'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className={`hover:text-emerald-800 transition-colors cursor-pointer ${activeTab === 'feed' ? 'text-emerald-800 font-bold' : ''}`}>
+                    Feed
+                  </button>
+                  <button onClick={() => { setActiveTab('courses'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className={`hover:text-emerald-800 transition-colors cursor-pointer ${activeTab === 'courses' ? 'text-emerald-800 font-bold' : ''}`}>
+                    Courses
+                  </button>
+                  <button onClick={() => { setActiveTab('console'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className={`hover:text-emerald-800 transition-colors cursor-pointer ${activeTab === 'console' ? 'text-emerald-800 font-bold' : ''}`}>
+                    Faculty Console
+                  </button>
+                  <button onClick={() => { setActiveTab('skills'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className={`hover:text-emerald-800 transition-colors cursor-pointer ${activeTab === 'skills' ? 'text-emerald-800 font-bold' : ''}`}>
+                    Department Radar
+                  </button>
+                  <button onClick={() => { setActiveTab('profile'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className={`hover:text-emerald-800 transition-colors cursor-pointer ${activeTab === 'profile' ? 'text-emerald-800 font-bold' : ''}`}>
+                    My Profile
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button onClick={() => { setActiveTab('feed'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-emerald-800 transition-colors cursor-pointer">
+                    Community Feed
+                  </button>
+                  <button onClick={() => { setActiveTab('skills'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-emerald-800 transition-colors cursor-pointer">
+                    6-Axis Radar
+                  </button>
+                  <button onClick={() => { setActiveTab('jobs'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-emerald-800 transition-colors cursor-pointer">
+                    Placements
+                  </button>
+                  <button onClick={() => { setActiveTab('network'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-emerald-800 transition-colors cursor-pointer">
+                    Industry Network
+                  </button>
+                  <button onClick={() => { setActiveTab('profile'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-emerald-800 transition-colors cursor-pointer text-emerald-800 font-bold">
+                    My Profile
+                  </button>
+                </>
+              )}
+>>>>>>> 3aa27105a327a80c9218db2ab20f6d09a8d0faf3
             </div>
 
             <div className="text-[11px] text-slate-400">
@@ -558,71 +613,120 @@ export const StakeholderDashboard = ({
         </footer>
       )}
 
-      {/* Mobile App Bottom Navigation Bar (Auto-detected on Mobile screens) */}
-      {isMobile && (
-        <div className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-xl border-t border-slate-200 shadow-2xl px-2 py-2 rounded-t-3xl">
-          <div className="grid grid-cols-5 items-center w-full max-w-lg mx-auto">
+      {/* Mobile App Bottom Navigation Bar (Visible on Mobile screens) */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-xl border-t border-slate-200 shadow-2xl px-2 py-2">
+        {activePortalId === 'faculty' ? (
+          /* Faculty Member Bottom Navigation: Feed | Courses | Faculty Console | Department Radar */
+          <div className="grid grid-cols-4 items-center w-full max-w-lg mx-auto">
             
-            {/* 1. Home */}
+            {/* 1. Feed */}
             <button
               onClick={() => { setActiveTab('feed'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-              className={`flex flex-col items-center justify-center py-1 w-full text-xs transition-all cursor-pointer ${
-                activeTab === 'feed' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-medium'
+              className={`flex flex-col items-center justify-center py-1.5 w-full text-xs transition-all cursor-pointer ${
+                activeTab === 'feed' ? 'text-emerald-800 font-extrabold' : 'text-[#3B627D] hover:text-slate-900 font-medium'
               }`}
             >
-              <Home className={`w-5 h-5 shrink-0 ${activeTab === 'feed' ? 'text-emerald-700' : 'text-slate-500'}`} />
-              <span className="text-[10px] mt-0.5 font-bold">Home</span>
+              <Home className={`w-5 h-5 shrink-0 ${activeTab === 'feed' ? 'text-emerald-700' : 'text-[#3B627D]'}`} />
+              <span className="text-[10px] mt-1 font-semibold">Feed</span>
             </button>
 
-            {/* 2. Skills */}
+            {/* 2. Courses */}
+            <button
+              onClick={() => { setActiveTab('courses'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+              className={`flex flex-col items-center justify-center py-1.5 w-full text-xs transition-all cursor-pointer ${
+                activeTab === 'courses' ? 'text-emerald-800 font-extrabold' : 'text-[#3B627D] hover:text-slate-900 font-medium'
+              }`}
+            >
+              <BookOpen className={`w-5 h-5 shrink-0 ${activeTab === 'courses' ? 'text-emerald-700' : 'text-[#3B627D]'}`} />
+              <span className="text-[10px] mt-1 font-semibold">Courses</span>
+            </button>
+
+            {/* 3. Faculty Console */}
+            <button
+              onClick={() => { setActiveTab('console'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+              className={`flex flex-col items-center justify-center py-1.5 w-full text-xs transition-all cursor-pointer ${
+                activeTab === 'console' ? 'text-emerald-800 font-extrabold' : 'text-[#3B627D] hover:text-slate-900 font-medium'
+              }`}
+            >
+              <Layers className={`w-5 h-5 shrink-0 ${activeTab === 'console' ? 'text-emerald-700' : 'text-[#3B627D]'}`} />
+              <span className="text-[10px] mt-1 font-semibold whitespace-nowrap">Faculty Console</span>
+            </button>
+
+            {/* 4. Department Radar */}
             <button
               onClick={() => { setActiveTab('skills'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-              className={`flex flex-col items-center justify-center py-1 w-full text-xs transition-all cursor-pointer ${
-                activeTab === 'skills' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-medium'
+              className={`flex flex-col items-center justify-center py-1.5 w-full text-xs transition-all cursor-pointer ${
+                activeTab === 'skills' ? 'text-emerald-800 font-extrabold' : 'text-[#3B627D] hover:text-slate-900 font-medium'
               }`}
             >
-              <BarChart3 className={`w-5 h-5 shrink-0 ${activeTab === 'skills' ? 'text-emerald-700' : 'text-slate-500'}`} />
-              <span className="text-[10px] mt-0.5 font-bold">Skills</span>
-            </button>
-
-            {/* 3. Center Elevated Floating Green (+) Button (Perfect 50% Horizontal Center) */}
-            <div className="flex items-center justify-center relative -mt-7 w-full">
-              <div className="w-14 h-14 rounded-full bg-white flex items-center justify-center shadow-lg border border-slate-100 p-1">
-                <button
-                  onClick={handleOpenCreatePost}
-                  className="w-12 h-12 rounded-full bg-emerald-800 hover:bg-emerald-900 active:scale-95 text-white flex items-center justify-center shadow-md hover:shadow-lg transition-all cursor-pointer group"
-                  title="Create Post"
-                >
-                  <Plus className="w-6 h-6 stroke-[2.5] group-hover:rotate-90 transition-transform duration-300" />
-                </button>
-              </div>
-            </div>
-
-            {/* 4. Messages */}
-            <button
-              onClick={() => { setActiveTab('messages'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-              className={`flex flex-col items-center justify-center py-1 w-full text-xs transition-all cursor-pointer ${
-                activeTab === 'messages' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-medium'
-              }`}
-            >
-              <MessageSquare className={`w-5 h-5 shrink-0 ${activeTab === 'messages' ? 'text-emerald-700' : 'text-slate-500'}`} />
-              <span className="text-[10px] mt-0.5 font-bold">Messages</span>
-            </button>
-
-            {/* 5. Industry */}
-            <button
-              onClick={() => { setActiveTab('network'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-              className={`flex flex-col items-center justify-center py-1 w-full text-xs transition-all cursor-pointer ${
-                activeTab === 'network' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-medium'
-              }`}
-            >
-              <Building2 className={`w-5 h-5 shrink-0 ${activeTab === 'network' ? 'text-emerald-700' : 'text-slate-500'}`} />
-              <span className="text-[10px] mt-0.5 font-bold">Industry</span>
+              <BarChart3 className={`w-5 h-5 shrink-0 ${activeTab === 'skills' ? 'text-emerald-700' : 'text-[#3B627D]'}`} />
+              <span className="text-[10px] mt-1 font-semibold whitespace-nowrap">Department Radar</span>
             </button>
 
           </div>
+        ) : (
+            <div className="grid grid-cols-5 items-center w-full max-w-lg mx-auto">
+              
+              {/* 1. Home */}
+              <button
+                onClick={() => { setActiveTab('feed'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                className={`flex flex-col items-center justify-center py-1 w-full text-xs transition-all cursor-pointer ${
+                  activeTab === 'feed' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-medium'
+                }`}
+              >
+                <Home className={`w-5 h-5 shrink-0 ${activeTab === 'feed' ? 'text-emerald-700' : 'text-slate-500'}`} />
+                <span className="text-[10px] mt-0.5 font-bold">Home</span>
+              </button>
+
+              {/* 2. Skills */}
+              <button
+                onClick={() => { setActiveTab('skills'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                className={`flex flex-col items-center justify-center py-1 w-full text-xs transition-all cursor-pointer ${
+                  activeTab === 'skills' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-medium'
+                }`}
+              >
+                <BarChart3 className={`w-5 h-5 shrink-0 ${activeTab === 'skills' ? 'text-emerald-700' : 'text-slate-500'}`} />
+                <span className="text-[10px] mt-0.5 font-bold">Skills</span>
+              </button>
+
+              {/* 3. Center Elevated Floating Green (+) Button (Perfect 50% Horizontal Center) */}
+              <div className="flex items-center justify-center relative -mt-7 w-full">
+                <div className="w-14 h-14 rounded-full bg-white flex items-center justify-center shadow-lg border border-slate-100 p-1">
+                  <button
+                    onClick={handleOpenCreatePost}
+                    className="w-12 h-12 rounded-full bg-emerald-800 hover:bg-emerald-900 active:scale-95 text-white flex items-center justify-center shadow-md hover:shadow-lg transition-all cursor-pointer group"
+                    title="Create Post"
+                  >
+                    <Plus className="w-6 h-6 stroke-[2.5] group-hover:rotate-90 transition-transform duration-300" />
+                  </button>
+                </div>
+              </div>
+
+              {/* 4. Messages */}
+              <button
+                onClick={() => { setActiveTab('messages'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                className={`flex flex-col items-center justify-center py-1 w-full text-xs transition-all cursor-pointer ${
+                  activeTab === 'messages' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-medium'
+                }`}
+              >
+                <MessageSquare className={`w-5 h-5 shrink-0 ${activeTab === 'messages' ? 'text-emerald-700' : 'text-slate-500'}`} />
+                <span className="text-[10px] mt-0.5 font-bold">Messages</span>
+              </button>
+
+              {/* 5. Industry */}
+              <button
+                onClick={() => { setActiveTab('network'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                className={`flex flex-col items-center justify-center py-1 w-full text-xs transition-all cursor-pointer ${
+                  activeTab === 'network' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-medium'
+                }`}
+              >
+                <Building2 className={`w-5 h-5 shrink-0 ${activeTab === 'network' ? 'text-emerald-700' : 'text-slate-500'}`} />
+                <span className="text-[10px] mt-0.5 font-bold">Industry</span>
+              </button>
+
+            </div>
+          )}
         </div>
-      )}
 
     </div>
   );

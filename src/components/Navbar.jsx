@@ -6,6 +6,8 @@ import {
   ChevronDown, 
   ChevronRight, 
   Home, 
+  BookOpen,
+  Layers,
   BarChart3, 
   Plus, 
   MessageSquare, 
@@ -342,66 +344,117 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
       {/* Mobile App Bottom Footer Navigation Bar (Hidden on Landing/Home page) */}
       {activePage !== 'home' && (
         <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-xl border-t border-slate-200 shadow-2xl px-2 py-2 rounded-t-3xl">
-          <div className="grid grid-cols-5 items-center w-full max-w-lg mx-auto">
+          {(currentUser?.role?.toLowerCase().includes('faculty') || currentUser?.role?.toLowerCase().includes('professor') || currentUser?.id?.toLowerCase().includes('fac') || activePage === 'faculty') ? (
+            /* Faculty Member Bottom Navigation: Feed | Courses | Faculty Console | Department Radar */
+            <div className="grid grid-cols-4 items-center w-full max-w-lg mx-auto">
+              
+              {/* 1. Feed */}
+              <button
+                onClick={() => handleNavClick('feed')}
+                className={`flex flex-col items-center justify-center py-1.5 w-full text-xs transition-all cursor-pointer ${
+                  activePage === 'feed' ? 'text-emerald-800 font-extrabold' : 'text-[#3B627D] hover:text-slate-900 font-medium'
+                }`}
+              >
+                <Home className={`w-5 h-5 shrink-0 ${activePage === 'feed' ? 'text-emerald-700' : 'text-[#3B627D]'}`} />
+                <span className="text-[10px] mt-1 font-semibold">Feed</span>
+              </button>
 
-            {/* 1. Home */}
-            <button
-              onClick={() => handleNavClick('home')}
-              className={`flex flex-col items-center justify-center py-1 w-full text-xs transition-all cursor-pointer ${
-                activePage === 'home' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-semibold'
-              }`}
-            >
-              <Home className={`w-5 h-5 shrink-0 ${activePage === 'home' ? 'text-emerald-700' : 'text-slate-500'}`} />
-              <span className="text-[10px] mt-1 font-bold">Home</span>
-            </button>
+              {/* 2. Courses */}
+              <button
+                onClick={() => handleNavClick('courses')}
+                className={`flex flex-col items-center justify-center py-1.5 w-full text-xs transition-all cursor-pointer ${
+                  activePage === 'courses' ? 'text-emerald-800 font-extrabold' : 'text-[#3B627D] hover:text-slate-900 font-medium'
+                }`}
+              >
+                <BookOpen className={`w-5 h-5 shrink-0 ${activePage === 'courses' ? 'text-emerald-700' : 'text-[#3B627D]'}`} />
+                <span className="text-[10px] mt-1 font-semibold">Courses</span>
+              </button>
 
-            {/* 2. Skills */}
-            <button
-              onClick={() => handleNavClick('skill')}
-              className={`flex flex-col items-center justify-center py-1 w-full text-xs transition-all cursor-pointer ${
-                activePage === 'skill' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-semibold'
-              }`}
-            >
-              <BarChart3 className={`w-5 h-5 shrink-0 ${activePage === 'skill' ? 'text-emerald-700' : 'text-slate-500'}`} />
-              <span className="text-[10px] mt-1 font-bold">Skills</span>
-            </button>
+              {/* 3. Faculty Console */}
+              <button
+                onClick={() => handleNavClick('dashboard')}
+                className={`flex flex-col items-center justify-center py-1.5 w-full text-xs transition-all cursor-pointer ${
+                  activePage === 'dashboard' || activePage === 'faculty' || activePage === 'console' ? 'text-emerald-800 font-extrabold' : 'text-[#3B627D] hover:text-slate-900 font-medium'
+                }`}
+              >
+                <Layers className={`w-5 h-5 shrink-0 ${activePage === 'dashboard' || activePage === 'faculty' || activePage === 'console' ? 'text-emerald-700' : 'text-[#3B627D]'}`} />
+                <span className="text-[10px] mt-1 font-semibold whitespace-nowrap">Faculty Console</span>
+              </button>
 
-            {/* 3. Center Elevated Floating Green (+) Button (Perfect 50% Horizontal Center) */}
-            <div className="flex items-center justify-center relative -mt-7 w-full">
-              <div className="w-14 h-14 rounded-full bg-white flex items-center justify-center shadow-lg border border-slate-100 p-1">
-                <button
-                  onClick={() => onOpenAuthModal('login')}
-                  className="w-12 h-12 rounded-full bg-emerald-800 hover:bg-emerald-900 active:scale-95 text-white flex items-center justify-center shadow-md hover:shadow-lg transition-all cursor-pointer group"
-                  title="Access Platform"
-                >
-                  <Plus className="w-6 h-6 stroke-[2.5] group-hover:rotate-90 transition-transform duration-300" />
-                </button>
-              </div>
+              {/* 4. Department Radar */}
+              <button
+                onClick={() => handleNavClick('skill')}
+                className={`flex flex-col items-center justify-center py-1.5 w-full text-xs transition-all cursor-pointer ${
+                  activePage === 'skill' || activePage === 'skills' ? 'text-emerald-800 font-extrabold' : 'text-[#3B627D] hover:text-slate-900 font-medium'
+                }`}
+              >
+                <BarChart3 className={`w-5 h-5 shrink-0 ${activePage === 'skill' || activePage === 'skills' ? 'text-emerald-700' : 'text-[#3B627D]'}`} />
+                <span className="text-[10px] mt-1 font-semibold whitespace-nowrap">Department Radar</span>
+              </button>
+
             </div>
+          ) : (
+            <div className="grid grid-cols-5 items-center w-full max-w-lg mx-auto">
 
-            {/* 4. Messages */}
-            <button
-              onClick={() => handleNavClick('messages')}
-              className={`flex flex-col items-center justify-center py-1 w-full text-xs transition-all cursor-pointer ${
-                activePage === 'messages' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-semibold'
-              }`}
-            >
-              <MessageSquare className={`w-5 h-5 shrink-0 ${activePage === 'messages' ? 'text-emerald-700' : 'text-slate-500'}`} />
-              <span className="text-[10px] mt-1 font-bold">Messages</span>
-            </button>
+              {/* 1. Home */}
+              <button
+                onClick={() => handleNavClick('home')}
+                className={`flex flex-col items-center justify-center py-1 w-full text-xs transition-all cursor-pointer ${
+                  activePage === 'home' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-semibold'
+                }`}
+              >
+                <Home className={`w-5 h-5 shrink-0 ${activePage === 'home' ? 'text-emerald-700' : 'text-slate-500'}`} />
+                <span className="text-[10px] mt-1 font-bold">Home</span>
+              </button>
 
-            {/* 5. Industry */}
-            <button
-              onClick={() => handleNavClick('industry')}
-              className={`flex flex-col items-center justify-center py-1 w-full text-xs transition-all cursor-pointer ${
-                activePage === 'industry' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-semibold'
-              }`}
-            >
-              <Building2 className={`w-5 h-5 shrink-0 ${activePage === 'industry' ? 'text-emerald-700' : 'text-slate-500'}`} />
-              <span className="text-[10px] mt-1 font-bold">Industry</span>
-            </button>
+              {/* 2. Skills */}
+              <button
+                onClick={() => handleNavClick('skill')}
+                className={`flex flex-col items-center justify-center py-1 w-full text-xs transition-all cursor-pointer ${
+                  activePage === 'skill' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-semibold'
+                }`}
+              >
+                <BarChart3 className={`w-5 h-5 shrink-0 ${activePage === 'skill' ? 'text-emerald-700' : 'text-slate-500'}`} />
+                <span className="text-[10px] mt-1 font-bold">Skills</span>
+              </button>
 
-          </div>
+              {/* 3. Center Elevated Floating Green (+) Button (Perfect 50% Horizontal Center) */}
+              <div className="flex items-center justify-center relative -mt-7 w-full">
+                <div className="w-14 h-14 rounded-full bg-white flex items-center justify-center shadow-lg border border-slate-100 p-1">
+                  <button
+                    onClick={() => onOpenAuthModal('login')}
+                    className="w-12 h-12 rounded-full bg-emerald-800 hover:bg-emerald-900 active:scale-95 text-white flex items-center justify-center shadow-md hover:shadow-lg transition-all cursor-pointer group"
+                    title="Access Platform"
+                  >
+                    <Plus className="w-6 h-6 stroke-[2.5] group-hover:rotate-90 transition-transform duration-300" />
+                  </button>
+                </div>
+              </div>
+
+              {/* 4. Messages */}
+              <button
+                onClick={() => handleNavClick('messages')}
+                className={`flex flex-col items-center justify-center py-1 w-full text-xs transition-all cursor-pointer ${
+                  activePage === 'messages' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-semibold'
+                }`}
+              >
+                <MessageSquare className={`w-5 h-5 shrink-0 ${activePage === 'messages' ? 'text-emerald-700' : 'text-slate-500'}`} />
+                <span className="text-[10px] mt-1 font-bold">Messages</span>
+              </button>
+
+              {/* 5. Industry */}
+              <button
+                onClick={() => handleNavClick('industry')}
+                className={`flex flex-col items-center justify-center py-1 w-full text-xs transition-all cursor-pointer ${
+                  activePage === 'industry' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-semibold'
+                }`}
+              >
+                <Building2 className={`w-5 h-5 shrink-0 ${activePage === 'industry' ? 'text-emerald-700' : 'text-slate-500'}`} />
+                <span className="text-[10px] mt-1 font-bold">Industry</span>
+              </button>
+
+            </div>
+          )}
         </div>
       )}
     </>
