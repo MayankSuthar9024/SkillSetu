@@ -45,7 +45,7 @@ export function CoursesPage({ currentUser, activePortalId }) {
       duration: '90 mins', 
       enrolled: 142, 
       rating: '4.9', 
-      price: '₹499',
+      price: 'Free Access',
       posterImage: courseGmpPoster,
       author: 'Prof. Meenakshi Joshi',
       authorRole: 'HOD Dravyaguna, AIIA New Delhi',
@@ -60,7 +60,7 @@ export function CoursesPage({ currentUser, activePortalId }) {
       duration: '120 mins', 
       enrolled: 198, 
       rating: '4.9', 
-      price: '₹499',
+      price: 'Free Access',
       posterImage: courseGcpPoster,
       author: 'Prof. Meenakshi Joshi',
       authorRole: 'NCISM Preceptor',
@@ -90,7 +90,7 @@ export function CoursesPage({ currentUser, activePortalId }) {
       duration: '90 mins', 
       enrolled: 85, 
       rating: '4.7', 
-      price: '₹499',
+      price: 'Free Access',
       posterImage: courseGcpPoster,
       author: 'Prof. S. K. Sharma',
       authorRole: 'CDSCO Regulatory Advisor',
@@ -105,7 +105,7 @@ export function CoursesPage({ currentUser, activePortalId }) {
       duration: '90 mins', 
       enrolled: 156, 
       rating: '4.9', 
-      price: '₹499',
+      price: 'Free Access',
       posterImage: courseGmpPoster,
       author: 'Prof. Meenakshi Joshi',
       authorRole: 'HOD Dravyaguna, AIIA New Delhi',
@@ -119,7 +119,7 @@ export function CoursesPage({ currentUser, activePortalId }) {
   const [courseForm, setCourseForm] = useState({
     title: '',
     category: 'Manufacturing & GMP',
-    price: '₹499',
+    price: 'Free Access',
     duration: '90 mins',
     targetCohort: 'BAMS Final Year',
     skillGap: '',
@@ -137,7 +137,7 @@ export function CoursesPage({ currentUser, activePortalId }) {
       tag: 'Manufacturing',
       title: 'Schedule T Basics & Manufacturing Compliance',
       category: 'Manufacturing & GMP',
-      price: '₹499',
+      price: 'Free Access',
       duration: '90 mins',
       targetCohort: 'BAMS Final Year',
       skillGap: 'Understanding Indian pharmaceutical manufacturing requirements, premises, equipment, hygiene, and documentation under Drugs Rules 1945.',
@@ -148,7 +148,7 @@ export function CoursesPage({ currentUser, activePortalId }) {
       tag: 'Clinical Research',
       title: 'Good Clinical Practice (GCP) – ICH E6(R3)',
       category: 'Clinical Research',
-      price: '₹499',
+      price: 'Free Access',
       duration: '120 mins',
       targetCohort: 'MD Dravyaguna Scholars',
       skillGap: 'International ethical, scientific, and quality standards for clinical trials. Emphasis on participant protection, data reliability, and risk-based quality thinking.',
@@ -170,7 +170,7 @@ export function CoursesPage({ currentUser, activePortalId }) {
       tag: 'Regulatory',
       title: 'Regulatory Affairs Basics & CDSCO Framework',
       category: 'Regulatory Compliance',
-      price: '₹499',
+      price: 'Free Access',
       duration: '90 mins',
       targetCohort: 'BAMS 3rd Year',
       skillGap: 'CDSCO regulatory framework, Drugs and Cosmetics Act/Rules, and New Drugs and Clinical Trials Rules high-level drug approval pathways.',
@@ -181,7 +181,7 @@ export function CoursesPage({ currentUser, activePortalId }) {
       tag: 'Medicine Safety',
       title: 'Pharmacovigilance Basics & ADR Safety Monitoring',
       category: 'Pharmacovigilance',
-      price: '₹499',
+      price: 'Free Access',
       duration: '90 mins',
       targetCohort: 'All Ayush Scholars',
       skillGap: 'Detection, assessment, understanding and prevention of adverse drug effects. Real-world ADR reporting workflows and safety signal processing.',
@@ -503,9 +503,9 @@ export function CoursesPage({ currentUser, activePortalId }) {
                     onChange={(e) => setCourseForm({ ...courseForm, price: e.target.value })}
                     className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-900 focus:ring-2 focus:ring-emerald-700"
                   >
-                    <option value="₹499">₹499 (Standard)</option>
-                    <option value="₹799">₹799 (Advanced)</option>
+                    <option value="Free Access">Free Access (Ministry Subsidized)</option>
                     <option value="Free Access">Free for Scholars</option>
+                    <option value="₹499">₹499 (Standard)</option>
                   </select>
                 </div>
 
