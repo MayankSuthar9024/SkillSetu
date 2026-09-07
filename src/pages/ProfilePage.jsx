@@ -33,6 +33,11 @@ import {
   Layers
 } from 'lucide-react';
 
+import aaravAvatar from '../assets/images/aarav_avatar.jpg';
+import meenakshiAvatar from '../assets/images/meenakshi_avatar.jpg';
+import vikramAvatar from '../assets/images/vikram_avatar.jpg';
+
+
 import { CompanyProfileView } from '../components/portals/CompanyProfileView';
 import { FacultyProfileView } from '../components/portals/FacultyProfileView';
 
@@ -98,6 +103,7 @@ export function ProfilePage({ onNavigate, currentUser, activePortalId }) {
         institution: currentUser.institution || prev.institution,
         degree: currentUser.degree || prev.degree,
         avatar: currentUser.avatar || prev.avatar,
+        avatarImage: currentUser.avatarImage || prev.avatarImage,
         readinessScore: currentUser.readiness ? parseInt(currentUser.readiness) : prev.readinessScore
       }));
       setEditForm(prev => ({
@@ -108,7 +114,8 @@ export function ProfilePage({ onNavigate, currentUser, activePortalId }) {
         email: currentUser.email || prev.email,
         institution: currentUser.institution || prev.institution,
         degree: currentUser.degree || prev.degree,
-        avatar: currentUser.avatar || prev.avatar
+        avatar: currentUser.avatar || prev.avatar,
+        avatarImage: currentUser.avatarImage || prev.avatarImage
       }));
     }
   }, [currentUser, isFacultyUser]);
@@ -402,14 +409,16 @@ export function ProfilePage({ onNavigate, currentUser, activePortalId }) {
       designation: 'Professor & HOD (Dravyaguna), AIIA New Delhi',
       date: 'Feb 2026',
       quote: 'Aarav shows rigorous diagnostic discipline in Nadi Pariksha and possesses exceptional laboratory command over herbal standardized extracts. Consistently top decile in clinical rotations.',
-      avatar: 'MJ'
+      avatar: 'MJ',
+      avatarImage: meenakshiAvatar
     },
     {
       name: 'Dr. Vikram Sethi',
       designation: 'Director of Formulations & R&D, Dabur India Ltd',
       date: 'Jan 2026',
       quote: 'Demonstrated outstanding grasp of Schedule T cleanroom practices and HPLC validation workflows during our industry talent evaluation sprint.',
-      avatar: 'VS'
+      avatar: 'VS',
+      avatarImage: vikramAvatar
     }
   ];
 

@@ -22,27 +22,67 @@ import {
   FlaskConical,
   Beaker,
   Check,
-  X
+  X,
+  ArrowLeft,
+  Calendar,
+  Share2,
+  Heart,
+  MessageSquare,
+  Bookmark,
+  Clock,
+  Send
 } from 'lucide-react';
 
-export const CompanyProfileView = ({ user, onNavigate }) => {
-  const [activeTab, setActiveTab] = useState('overview'); // 'overview' | 'jobs' | 'candidates' | 'certifications'
+import vikramAvatar from '../../assets/images/vikram_avatar.jpg';
+import aaravAvatar from '../../assets/images/aarav_avatar.jpg';
+import { getPostsByAuthor } from '../../data/feedPostsData';
+
+export const CompanyProfileView = ({ user, onNavigate, onBack, isPublicView = false }) => {
+  const [activeTab, setActiveTab] = useState('overview'); // 'overview' | 'posts' | 'jobs' | 'candidates' | 'certifications'
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
+  const [selectedJobForApply, setSelectedJobForApply] = useState(null);
+  const [applySuccessToast, setApplySuccessToast] = useState(false);
+  const [isFollowing, setIsFollowing] = useState(false);
+  
   const [newRole, setNewRole] = useState({
     title: '',
     department: 'QC & Standardization',
     stipend: '₹35,000 - ₹45,000 / month',
     skills: 'HPTLC, GMP, Ayush Pharmacopoeia',
-    location: 'Ghaziabad R&D Center (Hybrid)'
+    location: 'Research & Development Facility'
   });
   const [postSuccess, setPostSuccess] = useState(false);
 
-  const activePostings = [
+  // Normalize company details
+  const companyName = user?.brandName || user?.name || user?.institution || 'Dabur Research & Development Center';
+  const roleSubtitle = user?.role || 'Ayurvedic Pharmaceuticals & Phytochemistry Division';
+  const partnerId = user?.partnerId || user?.id || 'AYUSH-ENT-2026-902';
+  const location = user?.location || 'Ghaziabad, Delhi NCR & New Delhi, India';
+  const website = user?.website || 'https://www.dabur.com/ayush-rd';
+  const employeeCount = user?.employees || '10,000+ Worldwide';
+  const bio = user?.bio || `${companyName} is India’s premier herbal science research facility, pioneering standardizations for classical Ayurvedic formulations, HPLC marker profiling, phytopharmaceutical extraction, and clinical trial validation under Ministry of Ayush guidelines.`;
+  const coverImage = user?.coverImage || 'https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?auto=format&fit=crop&w=1600&q=80';
+  const avatarImage = user?.avatarImage || vikramAvatar;
+
+  // Retrieve corporate recruiter details
+  const recruiter = user?.recruiter || {
+    name: 'Dr. Vikram Sethi',
+    title: 'Industry Recruiter & R&D Lead',
+    email: 'recruitment.rd@dabur.com',
+    phone: '+91 120 3982000 (Ext 402)',
+    id: 'EMP-DABUR-QC-89',
+    avatarImage: vikramAvatar
+  };
+
+  // Retrieve all posts authored by this company
+  const companyPosts = getPostsByAuthor(user?.id || user?.name || companyName);
+
+  const [activePostings, setActivePostings] = useState([
     {
       id: 'job-1',
       title: 'Junior Ayurvedic QC Officer (HPTLC Fingerprinting)',
       department: 'Phytochemistry & Standardization',
-      location: 'Ghaziabad R&D Facility',
+      location: location,
       type: 'Full-time / Fellow',
       stipend: '₹35,000 - ₹45,000 / mo',
       matchedCandidates: 12,
@@ -54,7 +94,7 @@ export const CompanyProfileView = ({ user, onNavigate }) => {
       id: 'job-2',
       title: 'MD Dravyaguna Research Fellow (Polyherbal Formulations)',
       department: 'Ayurvedic R&D Division',
-      location: 'New Delhi / Hybrid',
+      location: `${location} (Hybrid)`,
       type: 'Research Fellowship',
       stipend: '₹50,000 - ₹65,000 / mo',
       matchedCandidates: 8,
@@ -65,8 +105,8 @@ export const CompanyProfileView = ({ user, onNavigate }) => {
     {
       id: 'job-3',
       title: 'GMP Cleanroom Operations Specialist',
-      department: 'Avaleha & Churna Production',
-      location: 'Sahibabad Facility',
+      department: 'Formulations & Manufacturing Plant',
+      location: location,
       type: 'Full-time',
       stipend: '₹30,000 - ₹40,000 / mo',
       matchedCandidates: 15,
@@ -74,7 +114,7 @@ export const CompanyProfileView = ({ user, onNavigate }) => {
       postedDate: '1 week ago',
       status: 'Active'
     }
-  ];
+  ]);
 
   const shortlistedCandidates = [
     {
@@ -96,11 +136,35 @@ export const CompanyProfileView = ({ user, onNavigate }) => {
       sprintScore: '91/100',
       skills: ['Heavy Metal Assay', 'Phytopharmacy'],
       status: 'Under Review'
+    },
+    {
+      id: 'cand-3',
+      name: 'Rohan Deshmukh',
+      institution: 'Government Ayurvedic College, Pune',
+      degree: 'BAMS Graduate',
+      match: 89,
+      sprintScore: '89/100',
+      skills: ['GMP Cleanroom Ops', 'Schedule T'],
+      status: 'Under Review'
     }
   ];
 
   const handlePostJob = (e) => {
     e.preventDefault();
+    const createdJob = {
+      id: `job-${Date.now()}`,
+      title: newRole.title,
+      department: newRole.department,
+      location: newRole.location,
+      type: 'Full-time / Micro-Sprint',
+      stipend: newRole.stipend,
+      matchedCandidates: 5,
+      requiredSkills: newRole.skills.split(',').map(s => s.trim()),
+      postedDate: 'Just now',
+      status: 'Active'
+    };
+
+    setActivePostings(prev => [createdJob, ...prev]);
     setPostSuccess(true);
     setTimeout(() => {
       setPostSuccess(false);
@@ -110,25 +174,81 @@ export const CompanyProfileView = ({ user, onNavigate }) => {
         department: 'QC & Standardization',
         stipend: '₹35,000 - ₹45,000 / month',
         skills: 'HPTLC, GMP, Ayush Pharmacopoeia',
-        location: 'Ghaziabad R&D Center (Hybrid)'
+        location: 'Research & Development Facility'
       });
     }, 1200);
   };
 
+  const handleConfirmApply = (e) => {
+    e.preventDefault();
+    setApplySuccessToast(true);
+    setTimeout(() => {
+      setApplySuccessToast(false);
+      setSelectedJobForApply(null);
+    }, 2500);
+  };
+
   return (
-    <div className="space-y-6">
-      
+    <div className="space-y-6 pb-12 font-sans max-w-7xl mx-auto">
+
+      {/* Top Header / Back Navigation Bar */}
+      <div className="flex flex-wrap items-center justify-between gap-3 bg-white p-3.5 px-5 rounded-2xl border border-slate-200/80 shadow-2xs">
+        <div className="flex items-center gap-3">
+          {onBack && (
+            <button
+              onClick={onBack}
+              className="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs flex items-center gap-1.5 transition-colors cursor-pointer"
+            >
+              <ArrowLeft className="w-3.5 h-3.5" />
+              <span>Back to Feed</span>
+            </button>
+          )}
+
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+              Corporate Brand Profile
+            </span>
+            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-50 text-emerald-800 border border-emerald-200">
+              <ShieldCheck className="w-3 h-3 text-emerald-600" />
+              Verified Industry Partner
+            </span>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setIsFollowing(!isFollowing)}
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
+              isFollowing 
+                ? 'bg-emerald-100 text-emerald-900 border border-emerald-300' 
+                : 'bg-emerald-800 hover:bg-emerald-900 text-white shadow-xs'
+            }`}
+          >
+            {isFollowing ? <Check className="w-3.5 h-3.5" /> : <Sparkles className="w-3.5 h-3.5" />}
+            <span>{isFollowing ? 'Following Brand' : 'Follow Company'}</span>
+          </button>
+
+          <button
+            onClick={() => setIsPostModalOpen(true)}
+            className="px-3.5 py-1.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-xs transition-all cursor-pointer"
+          >
+            <PlusCircle className="w-3.5 h-3.5" />
+            <span>Post Opening</span>
+          </button>
+        </div>
+      </div>
+
       {/* Corporate Header Card with Cover Image */}
       <div className="bg-white rounded-3xl border border-slate-200/90 shadow-soft overflow-hidden">
         
         {/* Cover Photo */}
         <div className="h-48 sm:h-64 w-full bg-gradient-to-r from-emerald-950 via-teal-900 to-emerald-900 relative">
           <img 
-            src="https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?auto=format&fit=crop&w=1600&q=80" 
-            alt="Dabur R&D Laboratory" 
-            className="w-full h-full object-cover opacity-35 mix-blend-overlay"
+            src={coverImage} 
+            alt={companyName} 
+            className="w-full h-full object-cover opacity-40 mix-blend-overlay"
           />
-          <div className="absolute top-4 right-4 bg-emerald-950/80 backdrop-blur-md text-emerald-200 border border-emerald-500/30 px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1.5 shadow-sm">
+          <div className="absolute top-4 right-4 bg-emerald-950/85 backdrop-blur-md text-emerald-200 border border-emerald-500/30 px-3.5 py-1.5 rounded-full text-xs font-bold flex items-center gap-1.5 shadow-sm">
             <ShieldCheck className="w-4 h-4 text-emerald-400" />
             <span>Ministry of Ayush Verified Corporate Partner</span>
           </div>
@@ -140,35 +260,49 @@ export const CompanyProfileView = ({ user, onNavigate }) => {
             
             {/* Logo Avatar */}
             <div className="flex items-end gap-4">
-              <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-3xl bg-white p-2 border-4 border-white shadow-xl relative z-10">
-                <div className="w-full h-full rounded-2xl bg-gradient-to-br from-emerald-800 to-teal-950 text-white font-extrabold text-3xl flex items-center justify-center border border-emerald-400/30 shadow-inner">
-                  <span>DR</span>
+              <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-3xl bg-white p-2 border-4 border-white shadow-xl relative z-10 shrink-0">
+                <div className="w-full h-full rounded-2xl bg-gradient-to-br from-emerald-800 to-teal-950 text-white font-extrabold text-3xl flex items-center justify-center border border-emerald-400/30 shadow-inner overflow-hidden">
+                  <img src={avatarImage} alt={companyName} className="w-full h-full object-cover" />
                 </div>
               </div>
 
               <div className="pt-2 md:pt-0">
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 flex-wrap">
                   <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-                    Dabur Research & Development Center
+                    {companyName}
                   </h1>
                   <CheckCircle2 className="w-6 h-6 text-emerald-600 fill-emerald-100 shrink-0" />
                 </div>
                 <p className="text-xs sm:text-sm font-semibold text-slate-600 mt-1 flex flex-wrap items-center gap-2">
-                  <span>Ayurvedic Pharmaceuticals & Phytochemistry Division</span>
+                  <span>{roleSubtitle}</span>
                   <span>•</span>
-                  <span className="text-emerald-800 font-bold">ID: AYUSH-ENT-2026-902</span>
+                  <span className="text-emerald-800 font-bold font-mono">ID: {partnerId}</span>
                 </p>
               </div>
             </div>
 
-            {/* Actions */}
-            <div className="flex items-center gap-3 shrink-0">
-              <button
-                onClick={() => setIsPostModalOpen(true)}
-                className="px-4 py-2.5 bg-emerald-800 hover:bg-emerald-900 text-white rounded-xl text-xs font-bold flex items-center gap-2 shadow-xs transition-all cursor-pointer"
+            {/* Quick CTAs */}
+            <div className="flex items-center gap-3 shrink-0 pt-2 md:pt-0">
+              <a
+                href={website}
+                target="_blank"
+                rel="noreferrer"
+                className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all"
               >
-                <PlusCircle className="w-4 h-4" />
-                <span>Post Micro-Sprint Role</span>
+                <ExternalLink className="w-3.5 h-3.5 text-slate-600" />
+                <span>Visit Portal</span>
+              </a>
+
+              <button
+                onClick={() => {
+                  setActiveTab('jobs');
+                  const el = document.getElementById('company-tabs-nav');
+                  if (el) el.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className="px-4 py-2 bg-emerald-800 hover:bg-emerald-900 text-white rounded-xl text-xs font-bold flex items-center gap-2 shadow-xs transition-all cursor-pointer"
+              >
+                <Briefcase className="w-3.5 h-3.5" />
+                <span>View {activePostings.length} Live Openings</span>
               </button>
             </div>
           </div>
@@ -176,18 +310,18 @@ export const CompanyProfileView = ({ user, onNavigate }) => {
           {/* Quick Info Tags */}
           <div className="flex flex-wrap items-center gap-4 pt-3 border-t border-slate-100 text-xs text-slate-600 font-medium">
             <span className="flex items-center gap-1.5">
-              <MapPin className="w-4 h-4 text-emerald-700" />
-              Ghaziabad & New Delhi, India
+              <MapPin className="w-4 h-4 text-emerald-700 shrink-0" />
+              {location}
             </span>
             <span className="flex items-center gap-1.5">
-              <Globe className="w-4 h-4 text-emerald-700" />
-              <a href="https://dabur.com" target="_blank" rel="noreferrer" className="hover:underline text-emerald-800 font-semibold">
-                www.dabur.com/ayush-rd
+              <Globe className="w-4 h-4 text-emerald-700 shrink-0" />
+              <a href={website} target="_blank" rel="noreferrer" className="hover:underline text-emerald-800 font-semibold truncate max-w-xs">
+                {website.replace('https://', '')}
               </a>
             </span>
             <span className="flex items-center gap-1.5">
-              <Users className="w-4 h-4 text-emerald-700" />
-              10,000+ Employees Worldwide
+              <Users className="w-4 h-4 text-emerald-700 shrink-0" />
+              {employeeCount}
             </span>
             <span className="flex items-center gap-1.5 text-amber-800 font-bold bg-amber-50 px-2.5 py-0.5 rounded-md border border-amber-200">
               <Award className="w-3.5 h-3.5" />
@@ -203,8 +337,8 @@ export const CompanyProfileView = ({ user, onNavigate }) => {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-soft">
           <span className="text-xs text-slate-500 font-bold uppercase tracking-wider block">Active Openings</span>
-          <div className="text-3xl font-extrabold text-slate-900 mt-1">5</div>
-          <span className="text-[11px] text-emerald-700 font-semibold mt-1 block">3 Micro-Sprints Live</span>
+          <div className="text-3xl font-extrabold text-slate-900 mt-1">{activePostings.length}</div>
+          <span className="text-[11px] text-emerald-700 font-semibold mt-1 block">Clinical Micro-Sprints Live</span>
         </div>
 
         <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-soft">
@@ -227,7 +361,7 @@ export const CompanyProfileView = ({ user, onNavigate }) => {
       </div>
 
       {/* Corporate Tabs Navigation */}
-      <div className="bg-white rounded-2xl p-2 border border-slate-200/80 shadow-xs flex flex-wrap gap-2">
+      <div id="company-tabs-nav" className="bg-white rounded-2xl p-2 border border-slate-200/80 shadow-xs flex flex-wrap gap-2">
         <button
           onClick={() => setActiveTab('overview')}
           className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
@@ -236,7 +370,21 @@ export const CompanyProfileView = ({ user, onNavigate }) => {
               : 'text-slate-600 hover:text-emerald-800 hover:bg-slate-50'
           }`}
         >
-          Overview
+          Company Overview
+        </button>
+
+        <button
+          onClick={() => setActiveTab('posts')}
+          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+            activeTab === 'posts'
+              ? 'bg-emerald-800 text-white shadow-xs'
+              : 'text-slate-600 hover:text-emerald-800 hover:bg-slate-50'
+          }`}
+        >
+          <span>Posts & Updates</span>
+          <span className="px-2 py-0.5 rounded-full text-[10px] bg-emerald-100 text-emerald-900 font-extrabold">
+            {companyPosts.length}
+          </span>
         </button>
 
         <button
@@ -261,7 +409,7 @@ export const CompanyProfileView = ({ user, onNavigate }) => {
               : 'text-slate-600 hover:text-emerald-800 hover:bg-slate-50'
           }`}
         >
-          <span>Candidates</span>
+          <span>Candidate Talent Pool</span>
           <span className="px-2 py-0.5 rounded-full text-[10px] bg-amber-100 text-amber-900 font-extrabold">
             {shortlistedCandidates.length}
           </span>
@@ -275,23 +423,23 @@ export const CompanyProfileView = ({ user, onNavigate }) => {
               : 'text-slate-600 hover:text-emerald-800 hover:bg-slate-50'
           }`}
         >
-          Compliance
+          Compliance & Certifications
         </button>
       </div>
 
       {/* TAB 1: OVERVIEW */}
       {activeTab === 'overview' && (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-fadeIn">
           
           {/* Main Description */}
           <div className="lg:col-span-2 space-y-6">
             <div className="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-soft space-y-4">
-              <h3 className="text-lg font-extrabold text-slate-900">About Dabur Ayush R&D Division</h3>
-              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                Dabur Research & Development Center is India’s premier herbal science research facility, pioneering standardizations for classical Ayurvedic formulations, HPLC marker profiling, phytopharmaceutical extraction, and clinical trial validation under Ministry of Ayush guidelines.
+              <h3 className="text-lg font-extrabold text-slate-900">About {companyName}</h3>
+              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed whitespace-pre-line">
+                {bio}
               </p>
               <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                Through SkillSetu, Dabur directly connects with top BAMS and MD scholars from premier institutes (NIA Jaipur, AIIA New Delhi, GAC Pune) to sponsor micro-sprint challenges, evaluate real-world laboratory proof of work, and fast-track hiring for quality control and research roles.
+                Through SkillSetu, our recruitment engine directly evaluates verifiable clinical competencies, Schedule T GMP cleanroom compliance, and chromatographic standardization data submitted by candidate scholars nationwide.
               </p>
 
               <div className="pt-4 border-t border-slate-100 grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -299,7 +447,7 @@ export const CompanyProfileView = ({ user, onNavigate }) => {
                   <FlaskConical className="w-5 h-5 text-emerald-800 shrink-0 mt-0.5" />
                   <div>
                     <h4 className="text-xs font-extrabold text-emerald-950">Phytochemistry & HPTLC Lab</h4>
-                    <p className="text-[11px] text-slate-600 mt-0.5">High-performance thin-layer chromatography and chemical standardization for 200+ botanicals.</p>
+                    <p className="text-[11px] text-slate-600 mt-0.5">High-performance thin-layer chromatography and chemical standardization for botanicals.</p>
                   </div>
                 </div>
 
@@ -318,9 +466,9 @@ export const CompanyProfileView = ({ user, onNavigate }) => {
               <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 border border-emerald-200/80 rounded-full text-[10px] font-extrabold text-emerald-800 uppercase tracking-wider">
                 SkillSetu Employer Partner Program
               </span>
-              <h3 className="text-xl font-extrabold text-slate-900 tracking-tight">No Generic Resumes. 100% Practical Evaluation.</h3>
+              <h3 className="text-xl font-extrabold text-slate-900 tracking-tight">Verified Proof-of-Work Recruitment</h3>
               <p className="text-xs text-slate-600 leading-relaxed">
-                Instead of screening hundreds of static resumes, Dabur posts 2-week Micro-Sprint Challenges (e.g. HPTLC Marker Fingerprinting, GMP QC Protocols). Students submit verified laboratory reports, allowing us to shortlist candidates based on audited capability.
+                Instead of screening hundreds of static unverified resumes, {companyName} evaluates candidates based on verified micro-sprints and practical laboratory audits. Candidates with verified SkillSetu scores can apply with a single click.
               </p>
             </div>
           </div>
@@ -335,24 +483,28 @@ export const CompanyProfileView = ({ user, onNavigate }) => {
               </h4>
 
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-2xl bg-emerald-800 text-white font-extrabold text-lg flex items-center justify-center shadow-xs">
-                  VS
+                <div className="w-12 h-12 rounded-2xl bg-emerald-800 text-white font-extrabold text-lg flex items-center justify-center shadow-xs overflow-hidden shrink-0">
+                  {recruiter.avatarImage ? (
+                    <img src={recruiter.avatarImage} alt={recruiter.name} className="w-full h-full object-cover" />
+                  ) : (
+                    recruiter.name.split(' ').map(n => n[0]).join('')
+                  )}
                 </div>
                 <div>
-                  <h4 className="text-sm font-extrabold text-slate-900">Dr. Vikram Sethi</h4>
-                  <p className="text-xs text-slate-500">Industry Recruiter & R&D QC Head</p>
-                  <p className="text-[10px] text-emerald-800 font-semibold mt-0.5">emp-dabur-qc-89</p>
+                  <h4 className="text-sm font-extrabold text-slate-900">{recruiter.name}</h4>
+                  <p className="text-xs text-slate-500">{recruiter.title}</p>
+                  <p className="text-[10px] text-emerald-800 font-semibold mt-0.5">{recruiter.id}</p>
                 </div>
               </div>
 
               <div className="space-y-2 pt-2 border-t border-slate-100 text-xs text-slate-600">
                 <div className="flex items-center gap-2">
-                  <Mail className="w-3.5 h-3.5 text-slate-400" />
-                  <span>recruitment.rd@dabur.com</span>
+                  <Mail className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                  <span className="truncate">{recruiter.email}</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Phone className="w-3.5 h-3.5 text-slate-400" />
-                  <span>+91 120 3982000 (Ext 402)</span>
+                  <Phone className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                  <span>{recruiter.phone}</span>
                 </div>
               </div>
             </div>
@@ -384,16 +536,147 @@ export const CompanyProfileView = ({ user, onNavigate }) => {
         </div>
       )}
 
-      {/* TAB 2: ACTIVE JOBS */}
+      {/* TAB 2: POSTS & UPDATES */}
+      {activeTab === 'posts' && (
+        <div className="space-y-5 animate-fadeIn">
+          <div className="bg-white p-4 rounded-2xl border border-slate-200/80 flex justify-between items-center">
+            <div>
+              <h3 className="font-extrabold text-sm text-slate-900">
+                Posts & Research Announcements by {companyName}
+              </h3>
+              <p className="text-xs text-slate-500 mt-0.5">Verified clinical fellowships, internship calls, and laboratory updates</p>
+            </div>
+
+            <span className="text-xs font-bold text-emerald-800 bg-emerald-50 px-3 py-1 rounded-xl border border-emerald-200">
+              {companyPosts.length} Published Updates
+            </span>
+          </div>
+
+          {companyPosts.length === 0 ? (
+            <div className="bg-white p-8 rounded-3xl border border-slate-200 text-center space-y-2">
+              <FileText className="w-10 h-10 text-slate-300 mx-auto" />
+              <h4 className="font-bold text-sm text-slate-800">No feed posts published yet</h4>
+              <p className="text-xs text-slate-500">Posts and internship openings published by this brand will appear here.</p>
+            </div>
+          ) : (
+            companyPosts.map(post => (
+              <article key={post.id} className="bg-white rounded-3xl border border-slate-200/90 shadow-soft overflow-hidden p-6 space-y-4">
+                
+                {/* Post Header */}
+                <div className="flex justify-between items-start">
+                  <div className="flex items-center gap-3">
+                    <div className="w-11 h-11 rounded-2xl bg-emerald-900 text-white font-extrabold text-xs flex items-center justify-center overflow-hidden shrink-0 border border-slate-200">
+                      <img src={post.author.avatarImage || avatarImage} alt={post.author.name} className="w-full h-full object-cover" />
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-1.5">
+                        <span className="font-extrabold text-slate-900 text-sm">{post.author.name}</span>
+                        <CheckCircle2 className="w-4 h-4 text-emerald-600 fill-emerald-100 shrink-0" />
+                        <span className="text-[10px] font-bold bg-emerald-50 text-emerald-800 px-2 py-0.5 rounded-md border border-emerald-200">
+                          Brand
+                        </span>
+                      </div>
+                      <div className="text-[11px] text-slate-500 flex items-center gap-2 mt-0.5">
+                        <span className="flex items-center gap-1">
+                          <Clock className="w-3 h-3 text-slate-400" />
+                          {post.time}
+                        </span>
+                        <span>•</span>
+                        <span>{post.author.institution}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <span className="bg-emerald-100 text-emerald-900 text-xs font-extrabold px-3 py-1 rounded-full">
+                    {post.category}
+                  </span>
+                </div>
+
+                {/* Title & Body */}
+                <div className="space-y-2">
+                  <h4 className="font-extrabold text-base text-slate-900 leading-snug">{post.title}</h4>
+                  <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">{post.content}</p>
+                </div>
+
+                {/* Internship Spec Card if applicable */}
+                {post.isInternship && (
+                  <div className="p-4 bg-slate-50 border border-slate-200/90 rounded-2xl grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+                    <div className="bg-white p-2.5 rounded-xl border border-slate-200 shadow-2xs">
+                      <span className="text-[10px] text-slate-400 font-bold block uppercase">Stipend</span>
+                      <strong className="text-emerald-900 text-sm font-extrabold">{post.stipend}</strong>
+                    </div>
+                    <div className="bg-white p-2.5 rounded-xl border border-slate-200 shadow-2xs">
+                      <span className="text-[10px] text-slate-400 font-bold block uppercase">Duration</span>
+                      <strong className="text-slate-800 text-xs font-bold">{post.duration}</strong>
+                    </div>
+                    <div className="bg-white p-2.5 rounded-xl border border-slate-200 shadow-2xs">
+                      <span className="text-[10px] text-slate-400 font-bold block uppercase">Location</span>
+                      <strong className="text-slate-800 text-xs font-bold">{post.location}</strong>
+                    </div>
+                    <div className="bg-white p-2.5 rounded-xl border border-slate-200 shadow-2xs">
+                      <span className="text-[10px] text-slate-400 font-bold block uppercase">Openings</span>
+                      <strong className="text-emerald-800 text-xs font-bold">{post.openings}</strong>
+                    </div>
+                  </div>
+                )}
+
+                {/* Post Image */}
+                {post.image && (
+                  <div className="rounded-2xl overflow-hidden border border-slate-200 max-h-80">
+                    <img src={post.image} alt={post.title} className="w-full h-full object-cover" />
+                  </div>
+                )}
+
+                {/* Tags */}
+                {post.tags && (
+                  <div className="flex flex-wrap gap-1.5 pt-1">
+                    {post.tags.map((t, idx) => (
+                      <span key={idx} className="text-[11px] font-semibold text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded-md border border-emerald-100">
+                        #{t}
+                      </span>
+                    ))}
+                  </div>
+                )}
+
+                {/* Social Actions */}
+                <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+                  <div className="flex items-center gap-4">
+                    <span className="flex items-center gap-1.5 text-slate-700 font-semibold">
+                      <Heart className="w-4 h-4 text-rose-500 fill-rose-500" />
+                      {post.likes} Likes
+                    </span>
+                    <span className="flex items-center gap-1.5 text-slate-700 font-semibold">
+                      <MessageSquare className="w-4 h-4 text-slate-400" />
+                      {post.comments?.length || 0} Comments
+                    </span>
+                  </div>
+
+                  {post.isInternship && (
+                    <button
+                      onClick={() => setSelectedJobForApply({ title: post.title, stipend: post.stipend, location: post.location })}
+                      className="px-4 py-1.5 bg-emerald-800 hover:bg-emerald-900 text-white rounded-xl font-bold text-xs shadow-xs transition-all cursor-pointer"
+                    >
+                      Apply for Internship
+                    </button>
+                  )}
+                </div>
+
+              </article>
+            ))
+          )}
+        </div>
+      )}
+
+      {/* TAB 3: ACTIVE JOBS */}
       {activeTab === 'jobs' && (
-        <div className="space-y-4">
+        <div className="space-y-4 animate-fadeIn">
           <div className="flex justify-between items-center bg-white p-4 rounded-2xl border border-slate-200/80">
             <span className="text-xs font-extrabold text-slate-900">
               Active Job Openings & Sponsored Micro-Sprints ({activePostings.length})
             </span>
             <button
               onClick={() => setIsPostModalOpen(true)}
-              className="px-3.5 py-1.5 bg-emerald-800 hover:bg-emerald-900 text-white rounded-xl text-xs font-bold flex items-center gap-1.5"
+              className="px-3.5 py-1.5 bg-emerald-800 hover:bg-emerald-900 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 cursor-pointer shadow-xs"
             >
               <PlusCircle className="w-3.5 h-3.5" />
               <span>Post New Role</span>
@@ -432,11 +715,12 @@ export const CompanyProfileView = ({ user, onNavigate }) => {
                   <span className="text-xs text-slate-500 font-semibold">
                     <strong className="text-slate-900">{job.matchedCandidates}</strong> candidates matched
                   </span>
+                  
                   <button 
-                    onClick={() => setActiveTab('candidates')}
-                    className="px-3.5 py-1.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold flex items-center gap-1 cursor-pointer"
+                    onClick={() => setSelectedJobForApply(job)}
+                    className="px-3.5 py-1.5 bg-emerald-800 hover:bg-emerald-900 text-white rounded-xl text-xs font-bold flex items-center gap-1 cursor-pointer shadow-xs"
                   >
-                    <span>View Candidates</span>
+                    <span>1-Click Apply</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </button>
                 </div>
@@ -446,9 +730,9 @@ export const CompanyProfileView = ({ user, onNavigate }) => {
         </div>
       )}
 
-      {/* TAB 3: CANDIDATES */}
+      {/* TAB 4: CANDIDATES */}
       {activeTab === 'candidates' && (
-        <div className="space-y-4">
+        <div className="space-y-4 animate-fadeIn">
           <div className="bg-white p-4 rounded-2xl border border-slate-200/80 flex justify-between items-center">
             <span className="text-xs font-extrabold text-slate-900">
               Shortlisted Candidates with Verified Proof of Work ({shortlistedCandidates.length})
@@ -462,7 +746,7 @@ export const CompanyProfileView = ({ user, onNavigate }) => {
             <div key={cand.id} className="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-soft space-y-4">
               <div className="flex justify-between items-start">
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-2xl bg-emerald-800 text-white font-extrabold text-lg flex items-center justify-center">
+                  <div className="w-12 h-12 rounded-2xl bg-emerald-800 text-white font-extrabold text-lg flex items-center justify-center shrink-0">
                     {cand.name.split(' ').map(n => n[0]).join('')}
                   </div>
                   <div>
@@ -476,12 +760,12 @@ export const CompanyProfileView = ({ user, onNavigate }) => {
                 </span>
               </div>
 
-              <div className="p-3 bg-slate-50 rounded-xl border border-slate-200/60 flex justify-between items-center text-xs">
+              <div className="p-3 bg-slate-50 rounded-xl border border-slate-200/60 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 text-xs">
                 <div>
                   <span className="text-slate-400 uppercase font-bold text-[10px] block">Practical Sprint Score</span>
                   <strong className="text-emerald-800 font-extrabold">{cand.sprintScore}</strong>
                 </div>
-                <div className="flex gap-1.5">
+                <div className="flex flex-wrap gap-1.5">
                   {cand.skills.map((s, idx) => (
                     <span key={idx} className="px-2 py-0.5 bg-white border border-slate-200 rounded text-[11px] font-semibold text-slate-700">
                       {s}
@@ -494,9 +778,9 @@ export const CompanyProfileView = ({ user, onNavigate }) => {
         </div>
       )}
 
-      {/* TAB 4: CERTIFICATIONS */}
+      {/* TAB 5: CERTIFICATIONS */}
       {activeTab === 'certifications' && (
-        <div className="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-soft space-y-4">
+        <div className="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-soft space-y-4 animate-fadeIn">
           <h3 className="text-lg font-extrabold text-slate-900">Ministry Accreditation & Quality Audits</h3>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
@@ -504,7 +788,7 @@ export const CompanyProfileView = ({ user, onNavigate }) => {
               <ShieldCheck className="w-6 h-6 text-emerald-700 shrink-0" />
               <div>
                 <h4 className="font-extrabold text-slate-900">Ministry of Ayush Corporate License</h4>
-                <p className="text-slate-500 text-[11px] mt-0.5">License No: AYUSH-ENT-2026-902 (Valid thru 2030)</p>
+                <p className="text-slate-500 text-[11px] mt-0.5">License No: {partnerId} (Active &amp; Compliant)</p>
               </div>
             </div>
 
@@ -512,22 +796,38 @@ export const CompanyProfileView = ({ user, onNavigate }) => {
               <CheckCircle2 className="w-6 h-6 text-teal-700 shrink-0" />
               <div>
                 <h4 className="font-extrabold text-slate-900">Schedule T GMP Certification</h4>
-                <p className="text-slate-500 text-[11px] mt-0.5">Certified for Herbal Extraction & Formulations</p>
+                <p className="text-slate-500 text-[11px] mt-0.5">Certified for Botanical Extraction &amp; Classical Formulations</p>
+              </div>
+            </div>
+
+            <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 flex items-start gap-3">
+              <Award className="w-6 h-6 text-amber-700 shrink-0" />
+              <div>
+                <h4 className="font-extrabold text-slate-900">NABL Analytical Testing Laboratory</h4>
+                <p className="text-slate-500 text-[11px] mt-0.5">Accredited for Heavy Metals, Pesticide Residue &amp; HPTLC Marker Assays</p>
+              </div>
+            </div>
+
+            <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 flex items-start gap-3">
+              <FileText className="w-6 h-6 text-indigo-700 shrink-0" />
+              <div>
+                <h4 className="font-extrabold text-slate-900">SkillSetu Talent Pipeline Node</h4>
+                <p className="text-slate-500 text-[11px] mt-0.5">SHA-256 Verifiable Candidate Practical Sprint Accreditation</p>
               </div>
             </div>
           </div>
         </div>
       )}
 
-      {/* POST NEW SPRINT MODAL */}
+      {/* POST NEW ROLE MODAL */}
       {isPostModalOpen && (
-        <div className="fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in">
+        <div className="fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-sm flex items-center justify-center p-4 animate-fadeIn">
           <div className="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 space-y-4">
             
             <div className="flex justify-between items-center pb-3 border-b border-slate-100">
               <div className="flex items-center gap-2">
                 <PlusCircle className="w-5 h-5 text-emerald-700" />
-                <h3 className="text-base font-extrabold text-slate-900">Post Micro-Sprint Role</h3>
+                <h3 className="text-base font-extrabold text-slate-900">Post Micro-Sprint Opening</h3>
               </div>
               <button 
                 onClick={() => setIsPostModalOpen(false)}
@@ -544,7 +844,7 @@ export const CompanyProfileView = ({ user, onNavigate }) => {
                   <Check className="w-6 h-6 stroke-[3]" />
                 </div>
                 <h4 className="text-base font-extrabold text-slate-900">Micro-Sprint Role Published!</h4>
-                <p className="text-xs text-slate-500">Matching candidates with vector similarity &gt; 85% will receive notifications.</p>
+                <p className="text-xs text-slate-500">Matching candidate scholars with verified skill scores will be notified.</p>
               </div>
             ) : (
               <form onSubmit={handlePostJob} className="space-y-3 text-xs">
@@ -598,15 +898,84 @@ export const CompanyProfileView = ({ user, onNavigate }) => {
                   <button
                     type="button"
                     onClick={() => setIsPostModalOpen(false)}
-                    className="px-4 py-2 bg-slate-100 text-slate-700 rounded-xl font-bold hover:bg-slate-200"
+                    className="px-4 py-2 bg-slate-100 text-slate-700 rounded-xl font-bold hover:bg-slate-200 cursor-pointer"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="px-4 py-2 bg-emerald-800 text-white rounded-xl font-bold hover:bg-emerald-900 shadow-xs"
+                    className="px-4 py-2 bg-emerald-800 text-white rounded-xl font-bold hover:bg-emerald-900 shadow-xs cursor-pointer"
                   >
                     Publish Role Challenge
+                  </button>
+                </div>
+              </form>
+            )}
+
+          </div>
+        </div>
+      )}
+
+      {/* 1-CLICK APPLY MODAL */}
+      {selectedJobForApply && (
+        <div className="fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-sm flex items-center justify-center p-4 animate-fadeIn">
+          <div className="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 space-y-4">
+            <div className="flex justify-between items-center pb-3 border-b border-slate-100">
+              <div className="flex items-center gap-2">
+                <Briefcase className="w-5 h-5 text-emerald-700" />
+                <h3 className="text-base font-extrabold text-slate-900">1-Click Apply with Score</h3>
+              </div>
+              <button 
+                onClick={() => setSelectedJobForApply(null)}
+                className="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-100 cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {applySuccessToast ? (
+              <div className="py-6 text-center space-y-2">
+                <div className="w-12 h-12 rounded-full bg-emerald-100 text-emerald-800 mx-auto flex items-center justify-center">
+                  <Check className="w-6 h-6 stroke-[3]" />
+                </div>
+                <h4 className="text-base font-extrabold text-slate-900">Application Submitted!</h4>
+                <p className="text-xs text-slate-500">Your verified diagnostic score and micro-sprint credentials were submitted to {companyName}.</p>
+              </div>
+            ) : (
+              <form onSubmit={handleConfirmApply} className="space-y-3.5 text-xs">
+                <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-2xl space-y-1">
+                  <h4 className="font-extrabold text-emerald-950 text-sm">{selectedJobForApply.title}</h4>
+                  <p className="text-xs text-emerald-800 font-semibold">{companyName} • {selectedJobForApply.stipend}</p>
+                </div>
+
+                <div className="p-3 bg-slate-50 rounded-2xl border border-slate-200 space-y-2">
+                  <div className="flex justify-between items-center text-xs">
+                    <span className="text-slate-500 font-medium">Verified Candidate Profile</span>
+                    <strong className="text-slate-900 font-bold">Aarav Sharma (BAMS Final Year)</strong>
+                  </div>
+                  <div className="flex justify-between items-center text-xs">
+                    <span className="text-slate-500 font-medium">Diagnostic Readiness Score</span>
+                    <strong className="text-emerald-800 font-extrabold">88% (Verified High Decile)</strong>
+                  </div>
+                  <div className="flex justify-between items-center text-xs">
+                    <span className="text-slate-500 font-medium">Accredited Badges Attached</span>
+                    <strong className="text-slate-900 font-bold">6 SHA-256 Credentials</strong>
+                  </div>
+                </div>
+
+                <div className="pt-2 flex justify-end gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setSelectedJobForApply(null)}
+                    className="px-4 py-2 bg-slate-100 text-slate-700 rounded-xl font-bold hover:bg-slate-200 cursor-pointer"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-5 py-2 bg-emerald-800 text-white rounded-xl font-bold hover:bg-emerald-900 shadow-xs cursor-pointer"
+                  >
+                    Confirm &amp; Send Application
                   </button>
                 </div>
               </form>

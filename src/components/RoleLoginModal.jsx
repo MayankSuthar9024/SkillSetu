@@ -85,9 +85,6 @@ export const RoleLoginModal = ({ isOpen, onClose, portal, onLoginSuccess }) => {
                   Official
                 </span>
               </div>
-              <p className="text-xs text-slate-500 mt-0.5">
-                {portal.subtitle} · {PLATFORM_METADATA.ministry}
-              </p>
             </div>
           </div>
 
@@ -188,7 +185,7 @@ export const RoleLoginModal = ({ isOpen, onClose, portal, onLoginSuccess }) => {
                 <span>Authenticating with National Ayush Gateway...</span>
               ) : (
                 <>
-                  <span>Sign In to {portal.title} Portal</span>
+                  <span>Sign In</span>
                   <ArrowRight className="w-4 h-4 text-emerald-300" />
                 </>
               )}

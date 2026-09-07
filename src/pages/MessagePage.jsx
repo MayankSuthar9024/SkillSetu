@@ -8,6 +8,11 @@ import {
   ShieldCheck
 } from 'lucide-react';
 
+import meenakshiAvatar from '../assets/images/meenakshi_avatar.jpg';
+import vikramAvatar from '../assets/images/vikram_avatar.jpg';
+import priyaAvatar from '../assets/images/priya_avatar.jpg';
+import sanjayAvatar from '../assets/images/sanjay_avatar.jpg';
+
 export function MessagePage({ onNavigate, currentUser }) {
   const [conversations, setConversations] = useState([
     {
@@ -15,6 +20,7 @@ export function MessagePage({ onNavigate, currentUser }) {
       name: 'Prof. Meenakshi Joshi',
       role: 'HOD Dravyaguna, AIIA New Delhi',
       avatar: 'MJ',
+      avatarImage: meenakshiAvatar,
       avatarBg: 'bg-emerald-800',
       online: true,
       unreadCount: 1,
@@ -31,6 +37,7 @@ export function MessagePage({ onNavigate, currentUser }) {
       name: 'Dr. Vikram Sethi',
       role: 'R&D Director, Dabur Research Center',
       avatar: 'VS',
+      avatarImage: vikramAvatar,
       avatarBg: 'bg-teal-800',
       online: true,
       unreadCount: 2,
@@ -45,6 +52,7 @@ export function MessagePage({ onNavigate, currentUser }) {
       name: 'Dr. Priya Nair',
       role: 'BAMS Final Year Scholar, Amrita School of Ayurveda',
       avatar: 'PN',
+      avatarImage: priyaAvatar,
       avatarBg: 'bg-emerald-700',
       online: false,
       unreadCount: 0,
@@ -59,6 +67,7 @@ export function MessagePage({ onNavigate, currentUser }) {
       name: 'Central Ayush Research Helpdesk',
       role: 'CCRAS Ministry of Ayush',
       avatar: 'CC',
+      avatarImage: sanjayAvatar,
       avatarBg: 'bg-emerald-900',
       online: true,
       unreadCount: 0,
@@ -190,8 +199,12 @@ export function MessagePage({ onNavigate, currentUser }) {
               >
                 {/* Avatar with Online Badge */}
                 <div className="relative shrink-0">
-                  <div className={`w-11 h-11 rounded-2xl ${chat.avatarBg} text-white font-extrabold text-xs flex items-center justify-center shadow-xs border-2 border-white`}>
-                    {chat.avatar}
+                  <div className={`w-11 h-11 rounded-2xl ${chat.avatarBg} text-white font-extrabold text-xs flex items-center justify-center shadow-xs border-2 border-white overflow-hidden`}>
+                    {chat.avatarImage ? (
+                      <img src={chat.avatarImage} alt={chat.name} className="w-full h-full object-cover" />
+                    ) : (
+                      chat.avatar
+                    )}
                   </div>
                   {chat.online && (
                     <span className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-500 rounded-full border-2 border-white"></span>
@@ -247,8 +260,12 @@ export function MessagePage({ onNavigate, currentUser }) {
                   className="flex items-center gap-3 cursor-pointer group min-w-0"
                   title={`View ${activeChat.name}'s Profile`}
                 >
-                  <div className={`w-10 h-10 rounded-2xl ${activeChat.avatarBg} text-white font-extrabold text-xs flex items-center justify-center shadow-xs shrink-0 group-hover:scale-105 transition-transform`}>
-                    {activeChat.avatar}
+                  <div className={`w-10 h-10 rounded-2xl ${activeChat.avatarBg} text-white font-extrabold text-xs flex items-center justify-center shadow-xs shrink-0 group-hover:scale-105 transition-transform overflow-hidden`}>
+                    {activeChat.avatarImage ? (
+                      <img src={activeChat.avatarImage} alt={activeChat.name} className="w-full h-full object-cover" />
+                    ) : (
+                      activeChat.avatar
+                    )}
                   </div>
 
                   <div className="min-w-0">

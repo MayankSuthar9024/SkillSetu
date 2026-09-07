@@ -31,6 +31,8 @@ import {
   GraduationCap
 } from 'lucide-react';
 
+import aaravAvatar from '../../assets/images/aarav_avatar.jpg';
+
 export const StudentPortfolioStitch = ({ user }) => {
   const [activeTab, setActiveTab] = useState('overview'); // 'overview' | 'skills' | 'certifications' | 'sprints' | 'timeline' | 'ledger'
   const [filterCategory, setFilterCategory] = useState('all');
@@ -57,8 +59,8 @@ export const StudentPortfolioStitch = ({ user }) => {
     title: user?.degree || 'BAMS Final Year Practitioner & Researcher',
     institution: 'Ayush National Institute of Ayurveda, Jaipur',
     regNo: 'AYUSH-RJ-2024-88412',
-    avatarUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCQks4DVd0uos47KvnV6m1gIt_hAR4p1Z4QKSWScUJ8PbuRrKhJAJHCZIOVmGNk-yjc5O2xMliCnChxUoZ2QhsBHNjm2JFB1wu0P64DYxE_zEuFHJsAMyzIHU3tsaaVXZ0O7s_xdOsAE38CtzL7oA8X8CAoxYeU6kNVEnN8zBmLyPiFAJm4LGCvLFEUwJAKc5MpKqe9slqohipRTHrx4tC_WNQjfogEE5kQ9qC6i2493gpow2PPuis',
-    avatarFallback: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=400',
+    avatarUrl: user?.avatarImage || aaravAvatar,
+    avatarFallback: aaravAvatar,
     verified: true,
     matchScore: 88,
     targetRole: 'Junior Ayurvedic Consultant / Clinical Researcher',
