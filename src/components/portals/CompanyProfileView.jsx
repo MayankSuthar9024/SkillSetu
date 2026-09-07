@@ -197,10 +197,11 @@ export const CompanyProfileView = ({ user, onNavigate, onBack, isPublicView = fa
           {onBack && (
             <button
               onClick={onBack}
-              className="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs flex items-center gap-1.5 transition-colors cursor-pointer"
+              className="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-emerald-800 font-bold text-xs flex items-center gap-1.5 transition-colors cursor-pointer active:scale-95"
+              title="Go Back"
             >
-              <ArrowLeft className="w-3.5 h-3.5" />
-              <span>Back to Feed</span>
+              <ArrowLeft className="w-3.5 h-3.5 text-emerald-700" />
+              <span>Back</span>
             </button>
           )}
 
@@ -302,7 +303,7 @@ export const CompanyProfileView = ({ user, onNavigate, onBack, isPublicView = fa
                 className="px-4 py-2 bg-emerald-800 hover:bg-emerald-900 text-white rounded-xl text-xs font-bold flex items-center gap-2 shadow-xs transition-all cursor-pointer"
               >
                 <Briefcase className="w-3.5 h-3.5" />
-                <span>View {activePostings.length} Live Openings</span>
+                <span>View {activePostings.length} Live Roles</span>
               </button>
             </div>
           </div>
@@ -336,7 +337,7 @@ export const CompanyProfileView = ({ user, onNavigate, onBack, isPublicView = fa
       {/* Recruiter Dashboard Metrics Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-soft">
-          <span className="text-xs text-slate-500 font-bold uppercase tracking-wider block">Active Openings</span>
+          <span className="text-xs text-slate-500 font-bold uppercase tracking-wider block">Active Roles</span>
           <div className="text-3xl font-extrabold text-slate-900 mt-1">{activePostings.length}</div>
           <span className="text-[11px] text-emerald-700 font-semibold mt-1 block">Clinical Micro-Sprints Live</span>
         </div>
@@ -395,7 +396,7 @@ export const CompanyProfileView = ({ user, onNavigate, onBack, isPublicView = fa
               : 'text-slate-600 hover:text-emerald-800 hover:bg-slate-50'
           }`}
         >
-          <span>Active Openings</span>
+          <span>Active Roles</span>
           <span className="px-2 py-0.5 rounded-full text-[10px] bg-emerald-100 text-emerald-900 font-extrabold">
             {activePostings.length}
           </span>
@@ -614,7 +615,7 @@ export const CompanyProfileView = ({ user, onNavigate, onBack, isPublicView = fa
                       <strong className="text-slate-800 text-xs font-bold">{post.location}</strong>
                     </div>
                     <div className="bg-white p-2.5 rounded-xl border border-slate-200 shadow-2xs">
-                      <span className="text-[10px] text-slate-400 font-bold block uppercase">Openings</span>
+                      <span className="text-[10px] text-slate-400 font-bold block uppercase">Role</span>
                       <strong className="text-emerald-800 text-xs font-bold">{post.openings}</strong>
                     </div>
                   </div>
@@ -672,7 +673,7 @@ export const CompanyProfileView = ({ user, onNavigate, onBack, isPublicView = fa
         <div className="space-y-4 animate-fadeIn">
           <div className="flex justify-between items-center bg-white p-4 rounded-2xl border border-slate-200/80">
             <span className="text-xs font-extrabold text-slate-900">
-              Active Job Openings & Sponsored Micro-Sprints ({activePostings.length})
+              Active Job Roles & Sponsored Micro-Sprints ({activePostings.length})
             </span>
             <button
               onClick={() => setIsPostModalOpen(true)}

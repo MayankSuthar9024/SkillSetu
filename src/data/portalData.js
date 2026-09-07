@@ -24,6 +24,7 @@ export const PORTALS_DATA = [
     profileUser: {
       name: "Aarav Sharma",
       role: "Student Scholar",
+      roleType: "student",
       id: "NIA/AY/2026/0491",
       email: "aarav.sharma@nia.ac.in",
       institution: "National Institute of Ayurveda (NIA), Jaipur",
@@ -49,7 +50,7 @@ export const PORTALS_DATA = [
     id: "company",
     title: "Company",
     subtitle: "Partner & Hire",
-    description: "Post openings with skill thresholds (Schedule T GMP, HPTLC) to hire pre-vetted, job-ready talent.",
+    description: "Post dedicated roles with skill thresholds (Schedule T GMP, HPTLC) to hire pre-vetted, job-ready talent.",
     buttonText: "Select Company",
     iconName: "Building2",
     accentBg: "bg-emerald-50",
@@ -59,6 +60,7 @@ export const PORTALS_DATA = [
     profileUser: {
       name: "Dr. Vikram Sethi",
       role: "Industry Recruiter & R&D Lead",
+      roleType: "company",
       id: "EMP-DABUR-QC-89",
       email: "recruitment.rd@dabur.com",
       institution: "Dabur Research & Development Center",
@@ -93,6 +95,7 @@ export const PORTALS_DATA = [
     profileUser: {
       name: "Prof. Meenakshi Joshi",
       role: "Professor & HOD (Dravyaguna)",
+      roleType: "faculty",
       id: "FAC-AIIA-7712",
       email: "prof.mjoshi@aiia.gov.in",
       institution: "All India Institute of Ayurveda (AIIA), New Delhi",
@@ -127,6 +130,7 @@ export const PORTALS_DATA = [
     profileUser: {
       name: "Dr. Rajeshwar Pant",
       role: "Dean of Academic Affairs & Placement Head",
+      roleType: "college",
       id: "AISHE-C-24901",
       email: "dean.academics@nia.ac.in",
       institution: "National Institute of Ayurveda (Deemed to be University)",
@@ -161,6 +165,7 @@ export const PORTALS_DATA = [
     profileUser: {
       name: "Shri Sanjay K. Verma",
       role: "Director General & National Admin",
+      roleType: "admin",
       id: "GOI-AYUSH-SEC-01",
       email: "director.skill@ayush.gov.in",
       institution: "Ministry of Ayush, Government of India",

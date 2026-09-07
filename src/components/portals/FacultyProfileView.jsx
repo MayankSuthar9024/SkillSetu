@@ -21,10 +21,11 @@ import {
   Users, 
   ExternalLink,
   ChevronRight,
-  BarChart3
+  BarChart3,
+  ArrowLeft
 } from 'lucide-react';
 
-export const FacultyProfileView = ({ user, onNavigate }) => {
+export const FacultyProfileView = ({ user, onNavigate, onBack }) => {
   const [activeTab, setActiveTab] = useState('overview'); // 'overview' | 'courses' | 'scholars' | 'grants'
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState(null);
@@ -178,12 +179,36 @@ export const FacultyProfileView = ({ user, onNavigate }) => {
   ];
 
   return (
-    <div className="space-y-6 animate-fadeIn pb-12">
+    <div className="space-y-6 animate-fadeIn pb-12 font-sans max-w-7xl mx-auto">
       {/* Toast Notification */}
       {toastMessage && (
         <div className="fixed top-20 right-6 z-50 bg-emerald-800 text-white px-5 py-3 rounded-2xl shadow-xl border border-emerald-700 flex items-center gap-3 animate-bounce">
           <CheckCircle2 className="w-5 h-5 text-emerald-300" />
           <span className="text-xs font-bold">{toastMessage}</span>
+        </div>
+      )}
+
+      {/* Top Header / Back Navigation Bar */}
+      {onBack && (
+        <div className="flex items-center justify-between gap-3 bg-white p-3.5 px-5 rounded-2xl border border-slate-200/80 shadow-2xs">
+          <button
+            onClick={onBack}
+            className="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-emerald-800 font-bold text-xs flex items-center gap-1.5 transition-colors cursor-pointer active:scale-95"
+            title="Go Back"
+          >
+            <ArrowLeft className="w-3.5 h-3.5 text-emerald-700" />
+            <span>Back</span>
+          </button>
+
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+              Faculty Scholar Profile
+            </span>
+            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-50 text-emerald-800 border border-emerald-200">
+              <UserCheck className="w-3 h-3 text-emerald-600" />
+              Senior Academic Preceptor
+            </span>
+          </div>
         </div>
       )}
 

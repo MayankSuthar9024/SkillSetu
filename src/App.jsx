@@ -398,6 +398,7 @@ export function App() {
             <ProfilePage
               onNavigate={handleNavigate}
               currentUser={activeUser}
+              onBack={() => handleNavigate('home')}
             />
           </div>
         )}
