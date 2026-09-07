@@ -466,11 +466,27 @@ export function ProfilePage({ onNavigate, currentUser, activePortalId, viewingUs
 
           </div>
 
-          {/* Bio Summary text */}
+          {/* About Section */}
           <div className="mt-5 pt-5 border-t border-slate-100">
-            <h3 className="text-xs font-bold uppercase text-slate-400 tracking-wider mb-1">Scholar Summary / Professional Statement</h3>
-            <p className="text-xs sm:text-sm text-slate-700 leading-relaxed font-medium">
-              "{profileData.bio}"
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-sm sm:text-base font-extrabold text-slate-900 flex items-center gap-2">
+                <User className="w-4 h-4 text-emerald-700" />
+                <span>About</span>
+              </h3>
+              {!viewingUser && (
+                <button
+                  type="button"
+                  onClick={() => setIsEditingBio(true)}
+                  className="text-emerald-800 hover:text-emerald-950 font-bold text-xs flex items-center gap-1 cursor-pointer transition-colors"
+                  title="Edit About Bio"
+                >
+                  <Edit3 className="w-3.5 h-3.5" />
+                  <span>Edit</span>
+                </button>
+              )}
+            </div>
+            <p className="text-xs sm:text-sm text-slate-700 leading-relaxed font-normal">
+              {profileData.bio}
             </p>
           </div>
 
@@ -686,46 +702,8 @@ export function ProfilePage({ onNavigate, currentUser, activePortalId, viewingUs
           </div>
         )}
 
-        {/* Responsive Section Jump Navigation (No horizontal scrolling) */}
-        <div className="mt-8 mb-8 flex flex-wrap items-center gap-2 border-b border-slate-200 pb-3.5">
-          <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-400 mr-1 flex items-center gap-1.5">
-            <Sparkles className="w-3.5 h-3.5 text-emerald-700" />
-            Scholar Portfolio:
-          </span>
-          <button
-            type="button"
-            onClick={() => {
-              document.getElementById('section-radar')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }}
-            className="px-3.5 py-1.5 rounded-xl bg-slate-100 hover:bg-emerald-50 text-slate-700 hover:text-emerald-800 font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer border border-slate-200/80 active:scale-95"
-          >
-            <Award className="w-3.5 h-3.5 text-emerald-700" />
-            <span>6-Axis Radar &amp; Academics</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              document.getElementById('section-badges')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }}
-            className="px-3.5 py-1.5 rounded-xl bg-slate-100 hover:bg-emerald-50 text-slate-700 hover:text-emerald-800 font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer border border-slate-200/80 active:scale-95"
-          >
-            <ShieldCheck className="w-3.5 h-3.5 text-emerald-700" />
-            <span>Verified Certifications ({badges.length})</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              document.getElementById('section-posts')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }}
-            className="px-3.5 py-1.5 rounded-xl bg-slate-100 hover:bg-emerald-50 text-slate-700 hover:text-emerald-800 font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer border border-slate-200/80 active:scale-95"
-          >
-            <User className="w-3.5 h-3.5 text-emerald-700" />
-            <span>Posts &amp; Reach Analytics</span>
-          </button>
-        </div>
-
         {/* Vertically Scrollable Content Sections (All visible, smooth vertical scrolling) */}
-        <div className="space-y-12">
+        <div className="mt-8 space-y-12">
           
           {/* SECTION 1: 6-AXIS AYUSH RADAR, ACADEMIC QUALIFICATIONS & VERIFIED IDENTITY */}
           <section id="section-radar" className="scroll-mt-6 space-y-5">

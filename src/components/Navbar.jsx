@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { 
   User, 
@@ -22,6 +22,35 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('hero');
+
+  const profileDropdownRef = useRef(null);
+
+  // Auto-close profile dropdown on click outside or Escape key
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (profileDropdownRef.current && !profileDropdownRef.current.contains(event.target)) {
+        setProfileDropdownOpen(false);
+      }
+    };
+
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        setProfileDropdownOpen(false);
+      }
+    };
+
+    if (profileDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('touchstart', handleClickOutside);
+      document.addEventListener('keydown', handleKeyDown);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [profileDropdownOpen]);
 
   const navItems = [
     { id: 'hero', label: 'Home' },
@@ -157,12 +186,12 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
           <div className="hidden md:flex gap-3 items-center">
             {currentUser ? (
               /* Profile PFP Avatar Button (Only when user is signed in) */
-              <div className="relative">
+              <div className="relative" ref={profileDropdownRef}>
                 <button
-                  onClick={() => handleNavClick('profile')}
-                  onMouseEnter={() => setProfileDropdownOpen(true)}
+                  onClick={() => setProfileDropdownOpen(prev => !prev)}
                   className="flex items-center gap-2.5 bg-white hover:bg-emerald-50/80 border border-slate-200/80 rounded-2xl p-1.5 pr-3.5 shadow-xs transition-all cursor-pointer group active:scale-95"
-                  title="Click to view your Profile Page"
+                  title="Profile Menu"
+                  aria-expanded={profileDropdownOpen}
                 >
                   <div className="relative w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-700 to-teal-900 text-white font-extrabold text-xs flex items-center justify-center shadow-xs border-2 border-emerald-100 group-hover:scale-105 transition-transform shrink-0 overflow-hidden">
                     {currentUser.avatarImage ? (
@@ -186,7 +215,6 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
 
                 {profileDropdownOpen && (
                   <div
-                    onMouseLeave={() => setProfileDropdownOpen(false)}
                     className="absolute right-0 mt-2 w-56 bg-white rounded-2xl shadow-xl border border-slate-200 py-2 z-50 animate-in fade-in zoom-in-95"
                   >
                     <div className="px-4 py-2 border-b border-slate-100">
@@ -195,16 +223,22 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
                     </div>
 
                     <button
-                      onClick={() => handleNavClick('profile')}
-                      className="w-full text-left px-4 py-2 text-xs font-bold text-slate-800 hover:bg-emerald-50 hover:text-emerald-900 flex items-center gap-2"
+                      onClick={() => {
+                        setProfileDropdownOpen(false);
+                        handleNavClick('profile');
+                      }}
+                      className="w-full text-left px-4 py-2 text-xs font-bold text-slate-800 hover:bg-emerald-50 hover:text-emerald-900 flex items-center gap-2 cursor-pointer transition-colors"
                     >
                       <User className="w-4 h-4 text-emerald-700" />
                       <span>My Profile Page</span>
                     </button>
 
                     <button
-                      onClick={() => handleNavClick('feed')}
-                      className="w-full text-left px-4 py-2 text-xs font-bold text-slate-800 hover:bg-emerald-50 hover:text-emerald-900 flex items-center gap-2"
+                      onClick={() => {
+                        setProfileDropdownOpen(false);
+                        handleNavClick('feed');
+                      }}
+                      className="w-full text-left px-4 py-2 text-xs font-bold text-slate-800 hover:bg-emerald-50 hover:text-emerald-900 flex items-center gap-2 cursor-pointer transition-colors"
                     >
                       <Flame className="w-4 h-4 text-rose-500" />
                       <span>Community Feed</span>
@@ -212,8 +246,11 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
 
                     <div className="pt-1 mt-1 border-t border-slate-100">
                       <button
-                        onClick={() => onOpenAuthModal('login')}
-                        className="w-full text-left px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-50"
+                        onClick={() => {
+                          setProfileDropdownOpen(false);
+                          onOpenAuthModal('login');
+                        }}
+                        className="w-full text-left px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-50 cursor-pointer transition-colors"
                       >
                         Role Portals
                       </button>
