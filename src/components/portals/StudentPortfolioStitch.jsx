@@ -1085,7 +1085,7 @@ export const StudentPortfolioStitch = ({ user }) => {
             </div>
 
             <div className="space-y-3">
-              <h4 className="text-xs font-extrabold text-slate-800 uppercase tracking-wider">Recommended Micro-Courses to reach 95%+</h4>
+              <h4 className="text-xs font-extrabold text-slate-800 uppercase tracking-wider">Recommended Courses to reach 95%+</h4>
               
               <div className="p-3.5 rounded-xl border border-slate-200 bg-slate-50 flex items-center justify-between">
                 <div>

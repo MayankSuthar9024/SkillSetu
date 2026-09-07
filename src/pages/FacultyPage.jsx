@@ -85,7 +85,12 @@ export function FacultyPage({ onNavigate, onOpenReadinessModal, currentUser }) {
       status: 'Published',
       targetCohort: 'BAMS Final Year',
       skillGap: 'Translating Drugs Rules 1945 Schedule T requirements into cleanroom premises & hygiene.',
-      competencies: ['Schedule T Rules', 'GMP Protocol', 'Cleanroom Airflow']
+      competencies: ['Schedule T Rules', 'GMP Protocol', 'Cleanroom Airflow'],
+      regulatoryCitation: 'CDSCO Drugs Rules 1945',
+      preScoreAvg: 42,
+      postScoreAvg: 88,
+      deltaBoost: '+46%',
+      checklistCompletion: '94% Schedule T Inspection Checklist'
     },
     { 
       id: 'mc-2', 
@@ -97,7 +102,12 @@ export function FacultyPage({ onNavigate, onOpenReadinessModal, currentUser }) {
       status: 'Published',
       targetCohort: 'MD Dravyaguna Scholars',
       skillGap: 'Risk-based quality thinking, informed consent & essential clinical trial records.',
-      competencies: ['ICH E6(R3)', 'Trial Ethics', 'Data Integrity']
+      competencies: ['ICH E6(R3)', 'Trial Ethics', 'Data Integrity'],
+      regulatoryCitation: 'ICH E6(R3) Step 4 (Jan 2025)',
+      preScoreAvg: 48,
+      postScoreAvg: 92,
+      deltaBoost: '+44%',
+      checklistCompletion: '91% Informed Consent Audit'
     },
     { 
       id: 'mc-3', 
@@ -109,19 +119,29 @@ export function FacultyPage({ onNavigate, onOpenReadinessModal, currentUser }) {
       status: 'Published',
       targetCohort: 'All Ayush Scholars',
       skillGap: 'Real-world adverse drug reaction (ADR) monitoring and CDSCO safety submission.',
-      competencies: ['ADR Detection', 'WHO-UMC Causality', 'Signal Safety']
+      competencies: ['ADR Detection', 'WHO-UMC Causality', 'Signal Safety'],
+      regulatoryCitation: 'WHO-UMC ADR Guidelines',
+      preScoreAvg: 38,
+      postScoreAvg: 86,
+      deltaBoost: '+48%',
+      checklistCompletion: '88% Yellow Card Reporting Form'
     },
     { 
       id: 'mc-4', 
       title: 'HPTLC Mobile Phase Selection & Marker Fingerprinting', 
       category: 'Quality Control / QA',
       duration: '45 mins', 
-      enrolled: 0, 
-      rating: 'New', 
-      status: 'Draft',
+      enrolled: 88, 
+      rating: '4.9/5', 
+      status: 'Published',
       targetCohort: 'BAMS 3rd Year',
       skillGap: 'Spectrophotometric botanical marker extraction and chromatographic assay.',
-      competencies: ['HPTLC Assay', 'Botanical Markers', 'Lab SOPs']
+      competencies: ['HPTLC Assay', 'Botanical Markers', 'Lab SOPs'],
+      regulatoryCitation: 'Ayurvedic Pharmacopoeia (API)',
+      preScoreAvg: 40,
+      postScoreAvg: 89,
+      deltaBoost: '+49%',
+      checklistCompletion: '92% HPTLC Assay SOP'
     },
   ]);
 
@@ -133,7 +153,8 @@ export function FacultyPage({ onNavigate, onOpenReadinessModal, currentUser }) {
     targetCohort: 'BAMS Final Year',
     skillGap: '',
     competencies: '',
-    learningDesign: 'Standard 6-Module Blueprint (Pre-test, Lesson, Case Study, Activity, Assessment, Badge)',
+    regulatoryCitation: 'CDSCO Drugs Rules 1945',
+    learningDesign: 'Standard 6-Step Blueprint (Pre-test, Lesson, Case Study, Activity, Quiz, Badge)',
     videoUrl: '',
     attachedFileName: ''
   });
@@ -150,6 +171,7 @@ export function FacultyPage({ onNavigate, onOpenReadinessModal, currentUser }) {
       category: 'Manufacturing & GMP',
       duration: '90 mins',
       targetCohort: 'BAMS Final Year',
+      regulatoryCitation: 'CDSCO Drugs Rules 1945',
       skillGap: 'Understanding Indian pharmaceutical manufacturing requirements, premises, equipment, hygiene, and documentation under Drugs Rules 1945.',
       competencies: 'Schedule T Rules, Premises Hygiene, GMP Compliance, QA Documentation'
     },
@@ -160,6 +182,7 @@ export function FacultyPage({ onNavigate, onOpenReadinessModal, currentUser }) {
       category: 'Clinical Research',
       duration: '120 mins',
       targetCohort: 'MD Dravyaguna Scholars',
+      regulatoryCitation: 'ICH E6(R3) Step 4 (Jan 2025)',
       skillGap: 'International ethical, scientific, and quality standards for clinical trials. Emphasis on participant protection, data reliability, and risk-based quality thinking.',
       competencies: 'ICH E6(R3), Informed Consent, Trial Lifecycle, Data Integrity'
     },
@@ -170,6 +193,7 @@ export function FacultyPage({ onNavigate, onOpenReadinessModal, currentUser }) {
       category: 'Quality Assurance / QA',
       duration: '90 mins',
       targetCohort: 'All Ayush Scholars',
+      regulatoryCitation: 'WHO-GMP Quality Systems',
       skillGap: 'Quality-management framework for consistently producing and controlling medicines. Covers validation, documentation, and contamination control.',
       competencies: 'WHO-GMP Standards, Quality Systems, Contamination Control, Validation SOPs'
     },
@@ -180,6 +204,7 @@ export function FacultyPage({ onNavigate, onOpenReadinessModal, currentUser }) {
       category: 'Regulatory Compliance',
       duration: '90 mins',
       targetCohort: 'BAMS 3rd Year',
+      regulatoryCitation: 'CDSCO & CTRI Rules',
       skillGap: 'CDSCO regulatory framework, Drugs and Cosmetics Act/Rules, and New Drugs and Clinical Trials Rules high-level drug approval pathways.',
       competencies: 'CDSCO Regulatory Pathway, Submission Checklist, CTRI Rules, Compliance'
     },
@@ -190,6 +215,7 @@ export function FacultyPage({ onNavigate, onOpenReadinessModal, currentUser }) {
       category: 'Pharmacovigilance',
       duration: '90 mins',
       targetCohort: 'All Ayush Scholars',
+      regulatoryCitation: 'WHO-UMC ADR Guidelines',
       skillGap: 'Detection, assessment, understanding and prevention of adverse drug effects. Real-world ADR reporting workflows and safety signal processing.',
       competencies: 'ADR Detection, WHO-UMC Causality, Safety Reporting, Signal Assessment'
     }
@@ -270,7 +296,7 @@ export function FacultyPage({ onNavigate, onOpenReadinessModal, currentUser }) {
           {[
             { id: 'radar', label: 'Department Cohort Radar', icon: BarChart3, badge: '142 Scholars' },
             { id: 'review', label: 'Evaluation & Digital Signature', icon: CheckCircle2, badge: `${pendingSubmissions.filter(s => s.status.includes('Pending')).length} Pending` },
-            { id: 'author', label: 'Micro-Course Studio', icon: BookOpen, badge: `${microCourses.length} Modules` },
+            { id: 'author', label: 'Course Studio', icon: BookOpen, badge: `${microCourses.length} Modules` },
             { id: 'grants', label: 'CCRAS SPARK-4.0 & FDPs', icon: Award, badge: '300+ Grants' },
           ].map((tab) => {
             const Icon = tab.icon;
@@ -506,7 +532,7 @@ export function FacultyPage({ onNavigate, onOpenReadinessModal, currentUser }) {
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
                   <h2 className="text-xl font-extrabold text-slate-900">
-                    Micro-Course Authoring Studio & Active Modules
+                    Course Authoring Studio & Active Modules
                   </h2>
                   <p className="text-xs text-slate-500 mt-1">
                     Design and monitor industry-oriented training modules mapped to NCISM, CDSCO, and WHO-GMP benchmarks.
@@ -538,15 +564,35 @@ export function FacultyPage({ onNavigate, onOpenReadinessModal, currentUser }) {
 
                       <h3 className="font-extrabold text-sm text-slate-900 mt-3 leading-snug">{course.title}</h3>
                       
+                      {course.regulatoryCitation && (
+                        <span className="text-[10px] font-extrabold text-teal-900 bg-teal-50 px-2 py-0.5 rounded-md border border-teal-200 inline-block mt-1.5">
+                          Citation: {course.regulatoryCitation}
+                        </span>
+                      )}
+
                       {course.skillGap && (
                         <p className="text-xs text-slate-600 mt-2 line-clamp-2 leading-relaxed">
                           {course.skillGap}
                         </p>
                       )}
 
+                      {/* Pre vs Post Delta Score Jump & 6-Step Blueprint Badge */}
+                      <div className="mt-3 p-2.5 bg-emerald-50/70 rounded-xl border border-emerald-200/80 space-y-1 text-[11px]">
+                        <div className="flex justify-between items-center font-bold">
+                          <span className="text-slate-600">Cohort Skill Readiness:</span>
+                          <span className="text-emerald-900 font-extrabold">{course.preScoreAvg}% → {course.postScoreAvg}% ({course.deltaBoost})</span>
+                        </div>
+                        {course.checklistCompletion && (
+                          <div className="text-[10px] text-emerald-800 font-medium">
+                            ✓ {course.checklistCompletion}
+                          </div>
+                        )}
+                      </div>
+
                       <div className="flex flex-wrap items-center gap-1.5 mt-3">
-                        <span className="text-[10px] font-semibold bg-emerald-50 text-emerald-800 px-2 py-0.5 rounded-md border border-emerald-100">
-                          Target: {course.targetCohort || 'All Students'}
+                        <span className="text-[10px] font-extrabold bg-emerald-100 text-emerald-900 px-2 py-0.5 rounded-md border border-emerald-200 flex items-center gap-1">
+                          <CheckCircle2 className="w-3 h-3 text-emerald-700" />
+                          6-Step Blueprint
                         </span>
                         <span className="text-[10px] font-semibold bg-slate-100 text-slate-700 px-2 py-0.5 rounded-md">
                           {course.duration}
@@ -638,10 +684,10 @@ export function FacultyPage({ onNavigate, onOpenReadinessModal, currentUser }) {
             <div className="flex justify-between items-center border-b border-slate-100 pb-4">
               <div>
                 <span className="text-xs font-extrabold uppercase tracking-wider text-emerald-800 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
-                  Faculty Micro-Course Desk
+                  Faculty Course Desk
                 </span>
                 <h2 className="text-xl font-extrabold text-slate-900 mt-2">
-                  + Post New Micro-Course
+                  + Post New Course
                 </h2>
                 <p className="text-xs text-slate-500 mt-0.5">
                   Publish a new training module mapped to NCISM, CDSCO, and WHO-GMP benchmarks.
@@ -668,6 +714,38 @@ export function FacultyPage({ onNavigate, onOpenReadinessModal, currentUser }) {
                 </div>
               </div>
             )}
+
+            {/* 6-Step Pedagogical Blueprint Visual Indicator */}
+            <div className="p-4 bg-slate-900 text-white rounded-2xl space-y-2 border border-slate-800">
+              <div className="flex justify-between items-center text-xs">
+                <span className="font-extrabold text-emerald-300 uppercase tracking-wider text-[10px]">
+                  Official 6-Step Pedagogical Blueprint Packaging
+                </span>
+                <span className="text-[10px] font-bold text-emerald-400 bg-emerald-950 px-2 py-0.5 rounded border border-emerald-800">
+                  Research Framework Verified
+                </span>
+              </div>
+              <div className="grid grid-cols-2 sm:grid-cols-6 gap-1.5 pt-1 text-[10px] font-bold text-center">
+                <div className="p-2 bg-emerald-900/60 rounded-xl border border-emerald-700/50 text-emerald-200">
+                  1. Pre-Test
+                </div>
+                <div className="p-2 bg-slate-800 rounded-xl border border-slate-700 text-slate-200">
+                  2. Core Lesson
+                </div>
+                <div className="p-2 bg-slate-800 rounded-xl border border-slate-700 text-slate-200">
+                  3. Applied Case
+                </div>
+                <div className="p-2 bg-emerald-900/60 rounded-xl border border-emerald-700/50 text-emerald-200">
+                  4. Checklist SOP
+                </div>
+                <div className="p-2 bg-slate-800 rounded-xl border border-slate-700 text-slate-200">
+                  5. Post-Quiz
+                </div>
+                <div className="p-2 bg-emerald-900/60 rounded-xl border border-emerald-700/50 text-emerald-200">
+                  6. Badge
+                </div>
+              </div>
+            </div>
 
             {/* Quick 1-Click Topic Presets */}
             <div className="bg-emerald-50/70 p-4 rounded-2xl border border-emerald-200/80 space-y-2.5">

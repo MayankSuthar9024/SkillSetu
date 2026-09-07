@@ -65,7 +65,7 @@ export const FacultyPortalView = ({ user }) => {
         <div className="flex flex-wrap items-center gap-3">
           <div className="bg-emerald-50 border border-emerald-200 px-4 py-2 rounded-2xl text-center">
             <span className="text-[10px] uppercase font-bold text-emerald-700 block">Authored Modules</span>
-            <span className="text-xl font-extrabold text-emerald-900">4 Micro-Courses</span>
+            <span className="text-xl font-extrabold text-emerald-900">4 Courses</span>
           </div>
           <div className="bg-blue-50 border border-blue-200 px-4 py-2 rounded-2xl text-center">
             <span className="text-[10px] uppercase font-bold text-blue-700 block">Mentored Scholars</span>
@@ -109,7 +109,7 @@ export const FacultyPortalView = ({ user }) => {
           }`}
         >
           <BookOpen className="w-4 h-4" />
-          <span>03 · Micro-Course Studio & Industry FDPs</span>
+          <span>03 · Course Studio & Industry FDPs</span>
         </button>
       </div>
 
@@ -212,7 +212,7 @@ export const FacultyPortalView = ({ user }) => {
       {activeTab === 'author' && (
         <div className="space-y-6">
           <div className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-soft space-y-4">
-            <h3 className="text-base font-extrabold text-slate-900">Micro-Course Authoring Studio</h3>
+            <h3 className="text-base font-extrabold text-slate-900">Course Authoring Studio</h3>
             <p className="text-xs text-slate-500">
               Create interactive 15-minute micro-sprints aligned with 12 HSSC NQR Qualification Packs and NCISM curricula.
             </p>
