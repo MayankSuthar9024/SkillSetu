@@ -19,6 +19,7 @@ import {
   Download
 } from 'lucide-react';
 import { PLATFORM_METADATA } from '../data/portalData';
+import sanjayAvatar from '../assets/images/sanjay_avatar.jpg';
 
 export function MinistryPage({ onNavigate, currentUser }) {
   const [selectedState, setSelectedState] = useState('Rajasthan');
@@ -30,7 +31,8 @@ export function MinistryPage({ onNavigate, currentUser }) {
     id: "GOI-AYUSH-SEC-01",
     email: "director.skill@ayush.gov.in",
     institution: "Ministry of Ayush, Government of India",
-    avatar: "SV"
+    avatar: "SV",
+    avatarImage: sanjayAvatar
   };
 
   const stateData = {
@@ -63,8 +65,12 @@ export function MinistryPage({ onNavigate, currentUser }) {
         <div className="relative overflow-hidden bg-white border border-slate-200/90 text-slate-900 rounded-3xl p-6 sm:p-10 element-glow-shadow">
           <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
             <div className="flex items-center gap-5">
-              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-emerald-800 text-white font-extrabold text-2xl sm:text-3xl flex items-center justify-center shadow-md border border-emerald-700 shrink-0">
-                {adminUser.avatar || 'SV'}
+              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-emerald-800 text-white font-extrabold text-2xl sm:text-3xl flex items-center justify-center shadow-md border border-emerald-700 shrink-0 overflow-hidden">
+                {adminUser.avatarImage ? (
+                  <img src={adminUser.avatarImage} alt={adminUser.name} className="w-full h-full object-cover" />
+                ) : (
+                  adminUser.avatar || 'SV'
+                )}
               </div>
               <div>
                 <div className="flex flex-wrap items-center gap-2">

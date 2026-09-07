@@ -29,6 +29,11 @@ import {
   Check
 } from 'lucide-react';
 
+import aaravAvatar from '../assets/images/aarav_avatar.jpg';
+import meenakshiAvatar from '../assets/images/meenakshi_avatar.jpg';
+import vikramAvatar from '../assets/images/vikram_avatar.jpg';
+
+
 import { CompanyProfileView } from '../components/portals/CompanyProfileView';
 
 export function ProfilePage({ onNavigate, currentUser, activePortalId }) {
@@ -67,7 +72,7 @@ export function ProfilePage({ onNavigate, currentUser, activePortalId }) {
     batch: '2021 - 2026',
     preceptor: 'Prof. Meenakshi Joshi (HOD Dravyaguna)',
     avatar: currentUser?.avatar || 'AS',
-    avatarImage: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=400&q=80',
+    avatarImage: currentUser?.avatarImage || aaravAvatar,
     coverImage: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=1400&q=80',
     verificationHash: 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855'
   });
@@ -84,6 +89,7 @@ export function ProfilePage({ onNavigate, currentUser, activePortalId }) {
         institution: currentUser.institution || prev.institution,
         degree: currentUser.degree || prev.degree,
         avatar: currentUser.avatar || prev.avatar,
+        avatarImage: currentUser.avatarImage || prev.avatarImage,
         readinessScore: currentUser.readiness ? parseInt(currentUser.readiness) : prev.readinessScore
       }));
       setEditForm(prev => ({
@@ -94,7 +100,8 @@ export function ProfilePage({ onNavigate, currentUser, activePortalId }) {
         email: currentUser.email || prev.email,
         institution: currentUser.institution || prev.institution,
         degree: currentUser.degree || prev.degree,
-        avatar: currentUser.avatar || prev.avatar
+        avatar: currentUser.avatar || prev.avatar,
+        avatarImage: currentUser.avatarImage || prev.avatarImage
       }));
     }
   }, [currentUser]);
@@ -191,14 +198,16 @@ export function ProfilePage({ onNavigate, currentUser, activePortalId }) {
       designation: 'Professor & HOD (Dravyaguna), AIIA New Delhi',
       date: 'Feb 2026',
       quote: 'Aarav shows rigorous diagnostic discipline in Nadi Pariksha and possesses exceptional laboratory command over herbal standardized extracts. Consistently top decile in clinical rotations.',
-      avatar: 'MJ'
+      avatar: 'MJ',
+      avatarImage: meenakshiAvatar
     },
     {
       name: 'Dr. Vikram Sethi',
       designation: 'Director of Formulations & R&D, Dabur India Ltd',
       date: 'Jan 2026',
       quote: 'Demonstrated outstanding grasp of Schedule T cleanroom practices and HPLC validation workflows during our industry talent evaluation sprint.',
-      avatar: 'VS'
+      avatar: 'VS',
+      avatarImage: vikramAvatar
     }
   ];
 
@@ -956,8 +965,12 @@ export function ProfilePage({ onNavigate, currentUser, activePortalId }) {
                 <div key={idx} className="bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-6 shadow-xs space-y-4 flex flex-col justify-between">
                   <div>
                     <div className="flex items-center gap-3 mb-3">
-                      <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-emerald-800 to-teal-900 text-white font-bold flex items-center justify-center shadow-xs">
-                        {end.avatar}
+                      <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-emerald-800 to-teal-900 text-white font-bold flex items-center justify-center shadow-xs overflow-hidden shrink-0">
+                        {end.avatarImage ? (
+                          <img src={end.avatarImage} alt={end.name} className="w-full h-full object-cover" />
+                        ) : (
+                          end.avatar
+                        )}
                       </div>
                       <div>
                         <h4 className="font-bold text-sm text-slate-900">{end.name}</h4>

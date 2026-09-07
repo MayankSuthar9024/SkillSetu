@@ -404,9 +404,18 @@ export const StakeholderDashboard = ({
                   onMouseLeave={() => setProfileDropdownOpen(false)}
                   className="absolute right-0 mt-2 w-56 bg-white rounded-2xl shadow-2xl border border-slate-200 py-2 z-50 animate-in fade-in"
                 >
-                  <div className="px-4 py-2 border-b border-slate-100">
-                    <span className="font-extrabold text-xs text-slate-900 block truncate">{user.name}</span>
-                    <span className="text-[10px] text-slate-500 font-medium block truncate">{user.role}</span>
+                  <div className="px-4 py-2.5 border-b border-slate-100 flex items-center gap-2.5">
+                    <div className="w-8 h-8 rounded-lg bg-emerald-800 text-white font-extrabold text-xs flex items-center justify-center shrink-0 overflow-hidden shadow-2xs">
+                      {user.avatarImage ? (
+                        <img src={user.avatarImage} alt={user.name} className="w-full h-full object-cover" />
+                      ) : (
+                        <span>{user.avatar || 'AS'}</span>
+                      )}
+                    </div>
+                    <div className="min-w-0">
+                      <span className="font-extrabold text-xs text-slate-900 block truncate">{user.name}</span>
+                      <span className="text-[10px] text-slate-500 font-medium block truncate">{user.role}</span>
+                    </div>
                   </div>
 
                   <button

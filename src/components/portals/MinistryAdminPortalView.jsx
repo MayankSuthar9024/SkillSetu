@@ -36,8 +36,12 @@ export const MinistryAdminPortalView = ({ user }) => {
       {/* Ministry Command Center Banner */}
       <div className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-soft flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
         <div className="flex items-center gap-4">
-          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#063A2B] to-[#03241B] text-white font-extrabold text-2xl flex items-center justify-center shadow-md border-2 border-emerald-400/40">
-            {user.avatar || 'SV'}
+          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#063A2B] to-[#03241B] text-white font-extrabold text-2xl flex items-center justify-center shadow-md border-2 border-emerald-400/40 shrink-0 overflow-hidden">
+            {user.avatarImage ? (
+              <img src={user.avatarImage} alt={user.name} className="w-full h-full object-cover" />
+            ) : (
+              user.avatar || 'SV'
+            )}
           </div>
           <div>
             <div className="flex flex-wrap items-center gap-2">

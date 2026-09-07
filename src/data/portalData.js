@@ -3,6 +3,12 @@
  * Production Stakeholder Configurations & Workflows.
  */
 
+import aaravAvatar from '../assets/images/aarav_avatar.jpg';
+import vikramAvatar from '../assets/images/vikram_avatar.jpg';
+import meenakshiAvatar from '../assets/images/meenakshi_avatar.jpg';
+import rajeshwarAvatar from '../assets/images/rajeshwar_avatar.jpg';
+import sanjayAvatar from '../assets/images/sanjay_avatar.jpg';
+
 export const PORTALS_DATA = [
   {
     id: "student",
@@ -24,7 +30,8 @@ export const PORTALS_DATA = [
       degree: "BAMS (Final Year)",
       readiness: "88%",
       verifiedBadges: 6,
-      avatar: "AS"
+      avatar: "AS",
+      avatarImage: aaravAvatar
     },
     defaultCredentials: {
       identifier: "aarav.sharma@nia.ac.in",
@@ -32,8 +39,8 @@ export const PORTALS_DATA = [
       otp: "529182"
     },
     authFields: {
-      idLabel: "Student Roll No / ABHA ID / Email",
-      idPlaceholder: "e.g., NIA/AY/2026/0491 or ABHA-9921-3412",
+      idLabel: "Student Email",
+      idPlaceholder: "e.g., aarav.sharma@nia.ac.in",
       secretLabel: "Password / Security PIN",
       secretPlaceholder: "••••••••••••"
     }
@@ -57,7 +64,8 @@ export const PORTALS_DATA = [
       institution: "Dabur Research & Development Center",
       activeListings: 5,
       shortlistedCandidates: 28,
-      avatar: "VS"
+      avatar: "VS",
+      avatarImage: vikramAvatar
     },
     defaultCredentials: {
       identifier: "recruitment.rd@dabur.com",
@@ -90,7 +98,8 @@ export const PORTALS_DATA = [
       institution: "All India Institute of Ayurveda (AIIA), New Delhi",
       coursesAuthored: 4,
       menteeCount: 142,
-      avatar: "MJ"
+      avatar: "MJ",
+      avatarImage: meenakshiAvatar
     },
     defaultCredentials: {
       identifier: "prof.mjoshi@aiia.gov.in",
@@ -123,7 +132,8 @@ export const PORTALS_DATA = [
       institution: "National Institute of Ayurveda (Deemed to be University)",
       enrolledScholars: 680,
       placementRate: "91.4%",
-      avatar: "RP"
+      avatar: "RP",
+      avatarImage: rajeshwarAvatar
     },
     defaultCredentials: {
       identifier: "AISHE-C-24901",
@@ -156,7 +166,8 @@ export const PORTALS_DATA = [
       institution: "Ministry of Ayush, Government of India",
       activeStates: "28 States & 8 UTs",
       verifiedNodes: "14 Apex Nodes",
-      avatar: "SV"
+      avatar: "SV",
+      avatarImage: sanjayAvatar
     },
     defaultCredentials: {
       identifier: "director.skill@ayush.gov.in",

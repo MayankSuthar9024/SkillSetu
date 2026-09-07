@@ -109,8 +109,12 @@ export const StudentPortalView = ({ user }) => {
       {/* Student Profile & Verification Banner */}
       <div className="bg-white rounded-3xl p-5 sm:p-6 border border-slate-200/80 shadow-soft flex flex-col md:flex-row items-start md:items-center justify-between gap-6 min-w-0 max-w-full">
         <div className="flex items-center gap-4 min-w-0 max-w-full">
-          <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br from-emerald-800 to-emerald-950 text-white font-extrabold text-xl sm:text-2xl flex items-center justify-center shadow-md border-2 border-emerald-400/40 shrink-0">
-            {user.avatar || 'AS'}
+          <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br from-emerald-800 to-emerald-950 text-white font-extrabold text-xl sm:text-2xl flex items-center justify-center shadow-md border-2 border-emerald-400/40 shrink-0 overflow-hidden">
+            {user.avatarImage ? (
+              <img src={user.avatarImage} alt={user.name} className="w-full h-full object-cover" />
+            ) : (
+              user.avatar || 'AS'
+            )}
           </div>
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2 min-w-0">
