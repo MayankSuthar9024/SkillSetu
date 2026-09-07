@@ -78,19 +78,21 @@ export function MessagePage({ onNavigate, currentUser }) {
     }
   ]);
 
-  const [activeChatId, setActiveChatId] = useState(1);
+  const [activeChatId, setActiveChatId] = useState(null);
   const [inputText, setInputText] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const messagesEndRef = React.useRef(null);
 
-  const activeChat = conversations.find(c => c.id === activeChatId) || conversations[0];
+  const activeChat = activeChatId ? (conversations.find(c => c.id === activeChatId) || null) : null;
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
   React.useEffect(() => {
-    scrollToBottom();
+    if (activeChat) {
+      scrollToBottom();
+    }
   }, [activeChat?.messages]);
 
   const handleSelectChat = (chatId) => {
@@ -250,9 +252,10 @@ export function MessagePage({ onNavigate, currentUser }) {
               <div className="flex items-center gap-3 min-w-0">
                 <button
                   onClick={() => setActiveChatId(null)}
-                  className="md:hidden text-slate-500 hover:text-slate-800 font-bold text-xs p-1"
+                  className="text-slate-500 hover:text-emerald-800 hover:bg-slate-100 font-bold text-xs px-2.5 py-1.5 rounded-xl transition-colors flex items-center gap-1 cursor-pointer shrink-0"
+                  title="Back to conversation list"
                 >
-                  ← Back
+                  ← <span className="hidden sm:inline">All Messages</span><span className="sm:hidden">Back</span>
                 </button>
 
                 <div 
@@ -350,10 +353,18 @@ export function MessagePage({ onNavigate, currentUser }) {
             </form>
           </>
         ) : (
-          <div className="flex-1 flex flex-col items-center justify-center p-8 text-center bg-slate-50">
-            <MessageSquare className="w-12 h-12 text-slate-300 mb-3" />
-            <h3 className="font-extrabold text-slate-800 text-base">Select a conversation to start chatting</h3>
-            <p className="text-xs text-slate-500 max-w-xs mt-1">Connect with doctors, preceptors, and fellow scholars on SkillSetu.</p>
+          <div className="flex-1 flex flex-col items-center justify-center p-8 text-center bg-slate-50/50">
+            <div className="w-16 h-16 rounded-3xl bg-emerald-100/70 border border-emerald-200/80 flex items-center justify-center mb-4 text-emerald-800 shadow-2xs">
+              <MessageSquare className="w-8 h-8" />
+            </div>
+            <h3 className="font-extrabold text-slate-800 text-base">Select a conversation</h3>
+            <p className="text-xs text-slate-500 max-w-xs mt-1.5 leading-relaxed">
+              Choose someone from the list on the left to view messages and discuss clinical cases, assignments, or interviews.
+            </p>
+            <div className="mt-5 flex items-center gap-1.5 text-[11px] font-semibold text-emerald-800 bg-white px-3 py-1.5 rounded-xl border border-slate-200/80 shadow-2xs">
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+              <span>Direct messages encrypted & authenticated</span>
+            </div>
           </div>
         )}
 

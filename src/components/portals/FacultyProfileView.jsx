@@ -21,10 +21,11 @@ import {
   Users, 
   ExternalLink,
   ChevronRight,
-  BarChart3
+  BarChart3,
+  ArrowLeft
 } from 'lucide-react';
 
-export const FacultyProfileView = ({ user, onNavigate }) => {
+export const FacultyProfileView = ({ user, onNavigate, onBack }) => {
   const [activeTab, setActiveTab] = useState('overview'); // 'overview' | 'courses' | 'scholars' | 'grants'
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState(null);
@@ -178,22 +179,26 @@ export const FacultyProfileView = ({ user, onNavigate }) => {
   ];
 
   return (
-<<<<<<< HEAD
-    <div className="space-y-6 pb-12 font-sans max-w-7xl mx-auto">
-      
+    <div className="space-y-6 animate-fadeIn pb-12 font-sans max-w-7xl mx-auto">
+      {/* Toast Notification */}
+      {toastMessage && (
+        <div className="fixed top-20 right-6 z-50 bg-emerald-800 text-white px-5 py-3 rounded-2xl shadow-xl border border-emerald-700 flex items-center gap-3 animate-bounce">
+          <CheckCircle2 className="w-5 h-5 text-emerald-300" />
+          <span className="text-xs font-bold">{toastMessage}</span>
+        </div>
+      )}
+
       {/* Top Header / Back Navigation Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-3 bg-white p-3.5 px-5 rounded-2xl border border-slate-200/80 shadow-2xs">
-        <div className="flex items-center gap-3">
-          {onBack && (
-            <button
-              onClick={onBack}
-              className="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-emerald-800 font-bold text-xs flex items-center gap-1.5 transition-colors cursor-pointer active:scale-95"
-              title="Go Back"
-            >
-              <ArrowLeft className="w-3.5 h-3.5 text-emerald-700" />
-              <span>Back</span>
-            </button>
-          )}
+      {onBack && (
+        <div className="flex items-center justify-between gap-3 bg-white p-3.5 px-5 rounded-2xl border border-slate-200/80 shadow-2xs">
+          <button
+            onClick={onBack}
+            className="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-emerald-800 font-bold text-xs flex items-center gap-1.5 transition-colors cursor-pointer active:scale-95"
+            title="Go Back"
+          >
+            <ArrowLeft className="w-3.5 h-3.5 text-emerald-700" />
+            <span>Back</span>
+          </button>
 
           <div className="flex items-center gap-2">
             <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
@@ -204,204 +209,6 @@ export const FacultyProfileView = ({ user, onNavigate }) => {
               Senior Academic Preceptor
             </span>
           </div>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => setIsFollowing(!isFollowing)}
-            className={`px-3.5 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
-              isFollowing 
-                ? 'bg-emerald-100 text-emerald-900 border border-emerald-300' 
-                : 'bg-emerald-800 hover:bg-emerald-900 text-white shadow-xs'
-            }`}
-          >
-            {isFollowing ? <Check className="w-3.5 h-3.5" /> : <Sparkles className="w-3.5 h-3.5" />}
-            <span>{isFollowing ? 'Following Faculty' : 'Follow Preceptor'}</span>
-          </button>
-        </div>
-      </div>
-
-      {/* Faculty Header Card */}
-      <div className="bg-white rounded-3xl border border-slate-200/90 shadow-soft overflow-hidden">
-        <div className="h-44 sm:h-56 w-full bg-gradient-to-r from-emerald-950 via-slate-900 to-teal-950 relative">
-          <img 
-            src={coverImage} 
-            alt={facultyName} 
-            className="w-full h-full object-cover opacity-35 mix-blend-overlay"
-          />
-          <div className="absolute top-4 right-4 bg-emerald-950/85 backdrop-blur-md text-emerald-200 border border-emerald-500/30 px-3.5 py-1.5 rounded-full text-xs font-bold flex items-center gap-1.5 shadow-sm">
-            <ShieldCheck className="w-4 h-4 text-emerald-400" />
-            <span>NCISM Verified Academic Preceptor</span>
-          </div>
-        </div>
-
-        <div className="px-6 pb-6 pt-0 relative">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 -mt-16 md:-mt-20 mb-4">
-            <div className="flex items-end gap-4">
-              <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-3xl bg-white p-2 border-4 border-white shadow-xl relative z-10 shrink-0">
-                <div className="w-full h-full rounded-2xl bg-gradient-to-br from-emerald-800 to-teal-950 text-white font-extrabold text-3xl flex items-center justify-center overflow-hidden">
-                  <img src={avatarImage} alt={facultyName} className="w-full h-full object-cover" />
-                </div>
-              </div>
-
-              <div className="pt-2 md:pt-0">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-                    {facultyName}
-                  </h1>
-                  <CheckCircle2 className="w-6 h-6 text-emerald-600 fill-emerald-100 shrink-0" />
-                </div>
-                <p className="text-xs sm:text-sm font-semibold text-slate-600 mt-1">
-                  {roleTitle} • <span className="text-emerald-800 font-bold">{institution}</span>
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3 shrink-0 pt-2 md:pt-0">
-              <span className="text-xs font-mono font-bold text-slate-500 bg-slate-100 px-3 py-1.5 rounded-xl">
-                Faculty ID: {facultyId}
-              </span>
-            </div>
-          </div>
-
-          {/* Quick Info Tags */}
-          <div className="flex flex-wrap items-center gap-4 pt-3 border-t border-slate-100 text-xs text-slate-600 font-medium">
-            <span className="flex items-center gap-1.5">
-              <MapPin className="w-4 h-4 text-emerald-700 shrink-0" />
-              New Delhi, India
-            </span>
-            <span className="flex items-center gap-1.5">
-              <GraduationCap className="w-4 h-4 text-emerald-700 shrink-0" />
-              MD (Ayurveda), Ph.D. Dravyaguna
-            </span>
-            <span className="flex items-center gap-1.5">
-              <Award className="w-4 h-4 text-emerald-700 shrink-0" />
-              Reg: {ncismReg}
-            </span>
-          </div>
-        </div>
-      </div>
-
-      {/* Metrics Bar */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-soft">
-          <span className="text-xs text-slate-500 font-bold uppercase tracking-wider block">Mentees Guided</span>
-          <div className="text-3xl font-extrabold text-slate-900 mt-1">142+</div>
-          <span className="text-[11px] text-emerald-700 font-semibold mt-1 block">Active Scholars in Cohort</span>
-        </div>
-
-        <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-soft">
-          <span className="text-xs text-slate-500 font-bold uppercase tracking-wider block">Authored Modules</span>
-          <div className="text-3xl font-extrabold text-emerald-800 mt-1">{authoredCourses.length}</div>
-          <span className="text-[11px] text-slate-500 mt-1 block">Accredited Micro-Bridge Courses</span>
-        </div>
-
-        <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-soft">
-          <span className="text-xs text-slate-500 font-bold uppercase tracking-wider block">Research Papers</span>
-          <div className="text-3xl font-extrabold text-amber-700 mt-1">28</div>
-          <span className="text-[11px] text-amber-800 font-semibold mt-1 block">Peer-Reviewed Publications</span>
-        </div>
-
-        <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-soft">
-          <span className="text-xs text-slate-500 font-bold uppercase tracking-wider block">Active Grants</span>
-          <div className="text-3xl font-extrabold text-teal-800 mt-1">₹48L</div>
-          <span className="text-[11px] text-teal-700 font-semibold mt-1 block">CCRAS SPARK-4.0 Funded</span>
-        </div>
-      </div>
-
-      {/* Tabs */}
-      <div className="bg-white rounded-2xl p-2 border border-slate-200/80 shadow-xs flex flex-wrap gap-2">
-        <button
-          onClick={() => setActiveTab('overview')}
-          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-            activeTab === 'overview' ? 'bg-emerald-800 text-white shadow-xs' : 'text-slate-600 hover:bg-slate-50'
-          }`}
-        >
-          Academic Overview
-        </button>
-
-        <button
-          onClick={() => setActiveTab('posts')}
-          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
-            activeTab === 'posts' ? 'bg-emerald-800 text-white shadow-xs' : 'text-slate-600 hover:bg-slate-50'
-          }`}
-        >
-          <span>Posts & Clinical Cases</span>
-          <span className="px-2 py-0.5 rounded-full text-[10px] bg-emerald-100 text-emerald-900 font-extrabold">
-            {facultyPosts.length}
-          </span>
-        </button>
-
-        <button
-          onClick={() => setActiveTab('courses')}
-          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
-            activeTab === 'courses' ? 'bg-emerald-800 text-white shadow-xs' : 'text-slate-600 hover:bg-slate-50'
-          }`}
-        >
-          <span>Authored Courses</span>
-          <span className="px-2 py-0.5 rounded-full text-[10px] bg-emerald-100 text-emerald-900 font-extrabold">
-            {authoredCourses.length}
-          </span>
-        </button>
-
-        <button
-          onClick={() => setActiveTab('publications')}
-          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-            activeTab === 'publications' ? 'bg-emerald-800 text-white shadow-xs' : 'text-slate-600 hover:bg-slate-50'
-          }`}
-        >
-          Research Publications ({publications.length})
-        </button>
-
-        <button
-          onClick={() => setActiveTab('mentees')}
-          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-            activeTab === 'mentees' ? 'bg-emerald-800 text-white shadow-xs' : 'text-slate-600 hover:bg-slate-50'
-          }`}
-        >
-          Mentored Scholars
-        </button>
-      </div>
-
-      {/* TAB 1: OVERVIEW */}
-      {activeTab === 'overview' && (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-fadeIn">
-          <div className="lg:col-span-2 space-y-6">
-            <div className="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-soft space-y-4">
-              <h3 className="text-lg font-extrabold text-slate-900">Academic & Research Biography</h3>
-              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed whitespace-pre-line">
-                {bio}
-              </p>
-              <div className="p-4 bg-emerald-50 rounded-2xl border border-emerald-200 space-y-1">
-                <span className="text-xs font-extrabold text-emerald-950 block">Key Clinical & Diagnostic Focus</span>
-                <p className="text-xs text-emerald-800">Standardizing botanical fractions via automated HPTLC systems and integrating pulse waveform analytics into clinical teaching OPDs.</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="space-y-6">
-            <div className="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-soft space-y-3">
-              <h4 className="text-xs font-extrabold text-slate-400 uppercase tracking-wider">Faculty Institutional Details</h4>
-              <div className="space-y-2 text-xs text-slate-600">
-                <div className="p-2.5 bg-slate-50 rounded-xl border border-slate-200/60">
-                  <span className="text-slate-400 block text-[10px] uppercase font-bold">Institution</span>
-                  <strong className="text-slate-800 text-xs">{institution}</strong>
-                </div>
-                <div className="p-2.5 bg-slate-50 rounded-xl border border-slate-200/60">
-                  <span className="text-slate-400 block text-[10px] uppercase font-bold">Department</span>
-                  <strong className="text-slate-800 text-xs">{department}</strong>
-                </div>
-              </div>
-            </div>
-          </div>
-=======
-    <div className="space-y-6 animate-fadeIn pb-12">
-      {/* Toast Notification */}
-      {toastMessage && (
-        <div className="fixed top-20 right-6 z-50 bg-emerald-800 text-white px-5 py-3 rounded-2xl shadow-xl border border-emerald-700 flex items-center gap-3 animate-bounce">
-          <CheckCircle2 className="w-5 h-5 text-emerald-300" />
-          <span className="text-xs font-bold">{toastMessage}</span>
->>>>>>> 3aa27105a327a80c9218db2ab20f6d09a8d0faf3
         </div>
       )}
 

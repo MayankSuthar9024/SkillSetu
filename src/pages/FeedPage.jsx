@@ -490,8 +490,8 @@ export function FeedPage({ onNavigate, currentUser, openCreatePostModal, onClose
                                 <span className="font-semibold text-slate-800 text-xs truncate block">{post.location}</span>
                               </div>
                               <div className="bg-white p-2 rounded-lg border border-slate-200 shadow-2xs">
-                                <span className="text-[9px] text-slate-400 font-bold block uppercase">Openings</span>
-                                <span className="font-semibold text-slate-800 text-xs">{post.openings}</span>
+                                <span className="text-[9px] text-slate-400 font-bold block uppercase">Role</span>
+                                <span className="font-semibold text-emerald-800 text-xs">{post.openings}</span>
                               </div>
                             </div>
 
@@ -525,31 +525,10 @@ export function FeedPage({ onNavigate, currentUser, openCreatePostModal, onClose
                           </div>
                         )}
 
-                        {/* Short Punchy Post Content */}
-                        <p className="text-slate-700 text-xs sm:text-sm leading-relaxed mt-1">
+                        {/* Post Content - kept short */}
+                        <p className="text-slate-600 text-xs leading-relaxed mt-1 line-clamp-2">
                           {post.content}
                         </p>
-                      </div>
-
-                      {/* Required Skills Chips */}
-                      {post.skillsRequired && (
-                        <div className="flex flex-wrap items-center gap-1 mt-2.5 pt-2 border-t border-slate-100">
-                          <span className="text-[9px] font-bold uppercase text-slate-400 mr-1">Skills:</span>
-                          {post.skillsRequired.map((skill, sIdx) => (
-                            <span key={sIdx} className="text-[10px] font-semibold text-slate-800 bg-slate-100 px-2 py-0.5 rounded border border-slate-200">
-                              {skill}
-                            </span>
-                          ))}
-                        </div>
-                      )}
-
-                      {/* Tags */}
-                      <div className="flex flex-wrap gap-1 mt-2">
-                        {post.tags.map((tag, idx) => (
-                          <span key={idx} className="text-[10px] font-medium text-emerald-800 bg-emerald-50 px-1.5 py-0.5 rounded">
-                            #{tag}
-                          </span>
-                        ))}
                       </div>
                     </div>
 
@@ -590,15 +569,6 @@ export function FeedPage({ onNavigate, currentUser, openCreatePostModal, onClose
                       </div>
 
                       <div className="flex items-center gap-2">
-                        {post.isInternship && !isApplied && (
-                          <button
-                            onClick={() => handleOpenApplyModal(post)}
-                            className="text-emerald-900 bg-emerald-50 hover:bg-emerald-100 font-bold text-[11px] px-2.5 py-1 rounded border border-emerald-200 transition-all cursor-pointer flex items-center gap-1"
-                          >
-                            <span>Apply</span>
-                            <ArrowRight className="w-3 h-3 text-emerald-800" />
-                          </button>
-                        )}
                         <span className="text-[10px] text-slate-400">
                           {post.views} views
                         </span>
@@ -746,8 +716,8 @@ export function FeedPage({ onNavigate, currentUser, openCreatePostModal, onClose
                   <span className="truncate">{selectedInternship.location}</span>
                 </div>
                 <div className="flex items-center gap-1.5 text-slate-600">
-                  <Users className="w-3.5 h-3.5 text-slate-600 shrink-0" />
-                  <span>{selectedInternship.openings}</span>
+                  <User className="w-3.5 h-3.5 text-slate-600 shrink-0" />
+                  <span>Role: {selectedInternship.openings}</span>
                 </div>
               </div>
             </div>

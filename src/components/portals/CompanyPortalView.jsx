@@ -123,7 +123,7 @@ export const CompanyPortalView = ({ user }) => {
         </div>
         <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-soft text-center">
           <span className="text-2xl font-extrabold text-amber-700">5</span>
-          <span className="text-xs text-slate-500 block mt-0.5">Active Job Openings</span>
+          <span className="text-xs text-slate-500 block mt-0.5">Active Dedicated Roles</span>
         </div>
         <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-soft text-center">
           <span className="text-2xl font-extrabold text-blue-700">0% Noise</span>

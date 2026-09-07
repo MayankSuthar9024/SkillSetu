@@ -549,23 +549,6 @@ export const StakeholderDashboard = ({
             </div>
 
             <div className="flex items-center gap-6 text-xs text-slate-600 font-medium">
-<<<<<<< HEAD
-              <button onClick={() => { setActiveTab('feed'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-emerald-800 transition-colors cursor-pointer">
-                Community Feed
-              </button>
-              <button onClick={() => { setActiveTab('skills'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-emerald-800 transition-colors cursor-pointer">
-                6-Axis Radar
-              </button>
-              <button onClick={() => { setActiveTab('jobs'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-emerald-800 transition-colors cursor-pointer">
-                Placements
-              </button>
-              <button onClick={() => { setActiveTab('network'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-emerald-800 transition-colors cursor-pointer">
-                Industry Network
-              </button>
-              <button onClick={() => { setViewingProfileUser(null); setActiveTab('profile'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-emerald-800 transition-colors cursor-pointer text-emerald-800 font-bold">
-                My Profile
-              </button>
-=======
               {activePortalId === 'faculty' ? (
                 <>
                   <button onClick={() => { setActiveTab('feed'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className={`hover:text-emerald-800 transition-colors cursor-pointer ${activeTab === 'feed' ? 'text-emerald-800 font-bold' : ''}`}>
@@ -580,7 +563,7 @@ export const StakeholderDashboard = ({
                   <button onClick={() => { setActiveTab('skills'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className={`hover:text-emerald-800 transition-colors cursor-pointer ${activeTab === 'skills' ? 'text-emerald-800 font-bold' : ''}`}>
                     Department Radar
                   </button>
-                  <button onClick={() => { setActiveTab('profile'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className={`hover:text-emerald-800 transition-colors cursor-pointer ${activeTab === 'profile' ? 'text-emerald-800 font-bold' : ''}`}>
+                  <button onClick={() => { setViewingProfileUser(null); setActiveTab('profile'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className={`hover:text-emerald-800 transition-colors cursor-pointer ${activeTab === 'profile' ? 'text-emerald-800 font-bold' : ''}`}>
                     My Profile
                   </button>
                 </>
@@ -598,12 +581,11 @@ export const StakeholderDashboard = ({
                   <button onClick={() => { setActiveTab('network'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-emerald-800 transition-colors cursor-pointer">
                     Industry Network
                   </button>
-                  <button onClick={() => { setActiveTab('profile'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-emerald-800 transition-colors cursor-pointer text-emerald-800 font-bold">
+                  <button onClick={() => { setViewingProfileUser(null); setActiveTab('profile'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-emerald-800 transition-colors cursor-pointer text-emerald-800 font-bold">
                     My Profile
                   </button>
                 </>
               )}
->>>>>>> 3aa27105a327a80c9218db2ab20f6d09a8d0faf3
             </div>
 
             <div className="text-[11px] text-slate-400">

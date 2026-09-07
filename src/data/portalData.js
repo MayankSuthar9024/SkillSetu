@@ -50,7 +50,7 @@ export const PORTALS_DATA = [
     id: "company",
     title: "Company",
     subtitle: "Partner & Hire",
-    description: "Post openings with skill thresholds (Schedule T GMP, HPTLC) to hire pre-vetted, job-ready talent.",
+    description: "Post dedicated roles with skill thresholds (Schedule T GMP, HPTLC) to hire pre-vetted, job-ready talent.",
     buttonText: "Select Company",
     iconName: "Building2",
     accentBg: "bg-emerald-50",

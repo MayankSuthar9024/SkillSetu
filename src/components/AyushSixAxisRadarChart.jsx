@@ -63,26 +63,14 @@ export const AyushSixAxisRadarChart = ({ skillMatrix }) => {
     <div className="bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-7 shadow-xs space-y-6">
       
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-slate-100">
-        <div>
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center">
-              <Award className="w-4 h-4" />
-            </div>
-            <h3 className="font-extrabold text-base sm:text-lg text-slate-900 tracking-tight">
-              6-Axis Ayush Competency Radar
-            </h3>
-          </div>
-          <p className="text-xs text-slate-500 mt-1">
-            Real-time multi-dimensional vector mapped to HSSC National Occupational Standards &amp; Ayush Pharmacopoeia
-          </p>
-        </div>
-
+      <div className="flex items-center justify-between gap-2 pb-4 border-b border-slate-100">
         <div className="flex items-center gap-2">
-          <span className="text-xs font-bold px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 flex items-center gap-1.5">
-            <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-            Verified Diagnostic Radar
-          </span>
+          <div className="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center">
+            <Award className="w-4 h-4" />
+          </div>
+          <h3 className="font-extrabold text-base sm:text-lg text-slate-900 tracking-tight">
+            6-Axis Ayush Competency Radar
+          </h3>
         </div>
       </div>
 
@@ -337,26 +325,8 @@ export const AyushSixAxisRadarChart = ({ skillMatrix }) => {
             </div>
 
           </div>
-
-          <div className="p-3.5 bg-emerald-50/70 rounded-2xl border border-emerald-200/80 flex items-start gap-2.5 text-xs text-emerald-900">
-            <Sparkles className="w-4 h-4 text-emerald-700 shrink-0 mt-0.5" />
-            <div>
-              <strong className="block font-bold">Verified Level 3 Ready</strong>
-              <p className="text-[11px] text-emerald-800 leading-snug mt-0.5">
-                Exceeds industry standard in Schedule T Cleanroom &amp; Pulse Diagnostics. Qualified for 1-click clinical recruitment.
-              </p>
-            </div>
-          </div>
         </div>
 
-      </div>
-
-      {/* Footer NOS link */}
-      <div className="pt-4 border-t border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 text-xs text-slate-500">
-        <span className="font-medium">Mapped to Healthcare Sector Skill Council (HSSC) National Occupational Standards</span>
-        <span className="text-emerald-800 font-bold bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200">
-          SHA-256 Benchmark Hash: 0x8F42...9E01
-        </span>
       </div>
 
     </div>

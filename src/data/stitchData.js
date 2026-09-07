@@ -103,7 +103,7 @@ export const HOW_IT_WORKS_STEPS = [
     icon: 'fact_check',
     badge: 'Step 4: Smart Match',
     color: 'teal',
-    description: 'Browse verified openings in top Ayush hospitals and pharma companies. See your exact % matching score and clear highlights of any missing skill.',
+    description: 'Browse verified roles in top Ayush hospitals and pharma companies. See your exact % matching score and clear highlights of any missing skill.',
     highlights: [
       'Instant Match Score (e.g. 88% Match)',
       'Clear alert showing which skill is missing for the role',
