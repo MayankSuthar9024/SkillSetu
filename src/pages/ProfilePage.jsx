@@ -9,25 +9,30 @@ import {
   Edit3, 
   ShieldCheck, 
   Sparkles, 
-  ChevronRight, 
-  Activity, 
-  Heart, 
-  MessageSquare, 
-  Camera, 
-  Image as ImageIcon, 
-  Upload, 
-  X, 
-  TrendingUp, 
-  BarChart3, 
-  Eye, 
-  FileText, 
-  Download, 
-  Lock, 
-  GraduationCap, 
-  Calendar, 
-  Share2, 
-  Check, 
-  ArrowLeft
+  ChevronRight,
+  ChevronDown,
+  ChevronUp,
+  Activity,
+  Heart,
+  MessageSquare,
+  Camera,
+  Image as ImageIcon,
+  Upload,
+  X,
+  TrendingUp,
+  BarChart3,
+  Eye,
+  FileText,
+  Download,
+  Lock,
+  GraduationCap,
+  Calendar,
+  Share2,
+  Check,
+  Star,
+  Clock,
+  ArrowUpRight,
+  Layers
 } from 'lucide-react';
 
 import aaravAvatar from '../assets/images/aarav_avatar.jpg';
@@ -115,6 +120,11 @@ export function ProfilePage({ onNavigate, currentUser, activePortalId, viewingUs
   const [isEditingBio, setIsEditingBio] = useState(false);
   const [saveSuccessToast, setSaveSuccessToast] = useState(false);
   const [downloadSuccessToast, setDownloadSuccessToast] = useState(false);
+
+  // Mobile-only section expand states (shows 1 item by default on mobile, all on desktop)
+  const [showAllCoursesMobile, setShowAllCoursesMobile] = useState(false);
+  const [showAllDegreesMobile, setShowAllDegreesMobile] = useState(false);
+  const [showAllBadgesMobile, setShowAllBadgesMobile] = useState(false);
   
   // Media Upload Modal state ('pfp' | 'banner' | null)
   const [activeMediaModal, setActiveMediaModal] = useState(null);
@@ -722,26 +732,143 @@ export function ProfilePage({ onNavigate, currentUser, activePortalId, viewingUs
                 {/* Real 6-Axis Radar Chart Component */}
                 <AyushSixAxisRadarChart skillMatrix={skillMatrix} />
 
-                {/* Academic Background & Qualifications */}
-                <div className="bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-6 shadow-xs">
-                  <h3 className="font-bold text-base text-slate-900 flex items-center gap-2 mb-4">
-                    <GraduationCap className="w-5 h-5 text-emerald-700" />
-                    Academic Profile &amp; Institutional Records
-                  </h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 pt-1">
+                    {facultyHighlightedCourses.map((course, idx) => (
+                      <div 
+                        key={course.id} 
+                        className={`p-4 bg-slate-50 hover:bg-slate-100/80 rounded-2xl border border-slate-200/80 space-y-2.5 transition-all flex-col justify-between ${
+                          idx > 0 && !showAllCoursesMobile ? 'hidden sm:flex' : 'flex'
+                        }`}
+                      >
+                        <div className="space-y-1.5">
+                          <div className="flex justify-between items-start gap-1 flex-wrap">
+                            <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-emerald-100 text-emerald-900 border border-emerald-200">
+                              {course.category}
+                            </span>
+                            <div className="flex items-center gap-1.5">
+                              <span className="text-[10px] font-extrabold bg-teal-100 text-teal-900 px-2 py-0.5 rounded border border-teal-200">
+                                {course.price}
+                              </span>
+                              <span className="text-[10px] font-bold text-slate-500">{course.duration}</span>
+                            </div>
+                          </div>
+                          <h4 className="font-extrabold text-xs text-slate-900 leading-snug line-clamp-2">
+                            {course.title}
+                          </h4>
+                          <p className="text-[11px] text-slate-600 line-clamp-2 leading-relaxed">
+                            {course.skillGap}
+                          </p>
+                        </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-                    <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/60">
-                      <span className="text-slate-400 font-semibold block text-[11px]">Degree Program</span>
-                      <span className="font-bold text-slate-900 text-sm mt-0.5 block">{profileData.degree}</span>
-                      <span className="text-slate-500 mt-1 block">Batch: {profileData.batch}</span>
+                        <div className="pt-2 border-t border-slate-200/70 space-y-1.5 text-[11px]">
+                          <div className="flex items-center justify-between text-slate-500">
+                            <span>Pre → Post Avg</span>
+                            <span className="font-bold text-emerald-800">{course.preScore} → {course.postScore} ({course.delta})</span>
+                          </div>
+                          <div className="flex items-center justify-between text-slate-500">
+                            <span>Enrolled Scholars</span>
+                            <span className="font-bold text-slate-800">{course.enrolled}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Mobile-only View More / Show Less button */}
+                  {facultyHighlightedCourses.length > 1 && (
+                    <div className="sm:hidden pt-1">
+                      <button
+                        type="button"
+                        onClick={() => setShowAllCoursesMobile(!showAllCoursesMobile)}
+                        className="w-full py-2.5 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 active:scale-98 text-emerald-900 font-bold text-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer border border-slate-200/80 shadow-2xs"
+                      >
+                        <span>
+                          {showAllCoursesMobile
+                            ? 'Show Less Courses'
+                            : `View More Courses (+${facultyHighlightedCourses.length - 1})`}
+                        </span>
+                        {showAllCoursesMobile ? (
+                          <ChevronUp className="w-4 h-4 text-emerald-700" />
+                        ) : (
+                          <ChevronDown className="w-4 h-4 text-emerald-700" />
+                        )}
+                      </button>
+                    </div>
+                  )}
+
+                  <div className="pt-3 border-t border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 text-xs">
+                    <span className="text-slate-500">Syllabus validated against CDSCO, WHO-GMP, and AYUSH Pharmacopoeia standards</span>
+                    <button
+                      onClick={() => setActiveTab('courses')}
+                      className="text-emerald-800 hover:text-emerald-900 font-bold flex items-center gap-1 cursor-pointer"
+                    >
+                      <span>View All Authored Courses ({facultyHighlightedCourses.length})</span>
+                      <ChevronRight className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+
+                {/* 2. Doctoral & Academic Degrees */}
+                <div className="bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-6 shadow-xs space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="font-bold text-base text-slate-900 flex items-center gap-2">
+                        <GraduationCap className="w-5 h-5 text-emerald-700" />
+                        Doctoral & Academic Degrees
+                      </h3>
+                      <p className="text-xs text-slate-500 mt-0.5">
+                        Doctorate degrees, postgraduate research, and statutory preceptor licensure credentials.
+                      </p>
                     </div>
 
-                    <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/60">
-                      <span className="text-slate-400 font-semibold block text-[11px]">Academic Standing</span>
-                      <span className="font-bold text-slate-900 text-sm mt-0.5 block">{profileData.cgpa}</span>
-                      <span className="text-slate-500 mt-1 block">Institutional Guide: {profileData.preceptor}</span>
-                    </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 pt-1">
+                    {facultyDegrees.map((deg, idx) => (
+                      <div 
+                        key={deg.id} 
+                        className={`p-4 rounded-2xl bg-slate-50 hover:bg-slate-100/80 border border-slate-200/80 space-y-2 transition-all flex-col justify-between ${
+                          idx > 0 && !showAllDegreesMobile ? 'hidden sm:flex' : 'flex'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-emerald-100 text-emerald-900 border border-emerald-200">
+                            {deg.field}
+                          </span>
+                          <span className="text-[10px] font-bold text-slate-500">{deg.year}</span>
+                        </div>
+                        <h4 className="font-extrabold text-xs text-slate-900">{deg.degree}</h4>
+                        <p className="text-[11px] font-medium text-slate-600">{deg.institution}</p>
+                        <p className="text-[10px] text-slate-500 italic">{deg.thesis}</p>
+                        <div className="pt-2 border-t border-slate-200/60 flex items-center justify-between text-[10px]">
+                          <span className="font-bold text-emerald-800">{deg.grade}</span>
+                          <span className="font-mono text-slate-400">{deg.regNumber}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
 
+                  {/* Mobile-only View More / Show Less button */}
+                  {facultyDegrees.length > 1 && (
+                    <div className="sm:hidden pt-1">
+                      <button
+                        type="button"
+                        onClick={() => setShowAllDegreesMobile(!showAllDegreesMobile)}
+                        className="w-full py-2.5 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 active:scale-98 text-emerald-900 font-bold text-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer border border-slate-200/80 shadow-2xs"
+                      >
+                        <span>
+                          {showAllDegreesMobile
+                            ? 'Show Less Degrees'
+                            : `View More Degrees (+${facultyDegrees.length - 1})`}
+                        </span>
+                        {showAllDegreesMobile ? (
+                          <ChevronUp className="w-4 h-4 text-emerald-700" />
+                        ) : (
+                          <ChevronDown className="w-4 h-4 text-emerald-700" />
+                        )}
+                      </button>
+                    </div>
+                  )}
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-slate-100 text-xs">
                     <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/60">
                       <span className="text-slate-400 font-semibold block text-[11px]">NCISM Registration</span>
                       <span className="font-mono font-bold text-slate-900 text-xs mt-0.5 block">{profileData.ncismReg}</span>
@@ -751,6 +878,86 @@ export function ProfilePage({ onNavigate, currentUser, activePortalId, viewingUs
                       <span className="text-slate-400 font-semibold block text-[11px]">National ABHA Health ID</span>
                       <span className="font-mono font-bold text-slate-900 text-xs mt-0.5 block">{profileData.abhaId}</span>
                     </div>
+                  </div>
+                </div>
+
+                {/* 3. Preceptor Badges & Certifications Showcase */}
+                <div className="bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-6 shadow-xs space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="font-bold text-base text-slate-900 flex items-center gap-2">
+                        <ShieldCheck className="w-5 h-5 text-emerald-700" />
+                        Preceptor Badges & Certifications
+                      </h3>
+                      <p className="text-xs text-slate-500 mt-0.5">
+                        Statutory accreditations issued by NCISM, CDSCO, and Ministry of Ayush.
+                      </p>
+                    </div>
+                    <span className="text-[11px] font-bold text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200 shrink-0 hidden sm:inline-block">
+                      {facultyBadges.length} Verified Badges
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 pt-1">
+                    {facultyBadges.map((badge, idx) => (
+                      <div 
+                        key={badge.id} 
+                        className={`p-4 rounded-2xl bg-slate-50 hover:bg-slate-100/80 border border-slate-200/80 space-y-2.5 transition-all flex-col justify-between ${
+                          idx > 0 && !showAllBadgesMobile ? 'hidden sm:flex' : 'flex'
+                        }`}
+                      >
+                        <div>
+                          <div className="flex items-center justify-between gap-1 mb-2">
+                            <span className="w-8 h-8 rounded-xl bg-emerald-800 text-emerald-200 flex items-center justify-center font-bold shadow-2xs shrink-0">
+                              <Award className="w-4 h-4" />
+                            </span>
+                            <span className="text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-900 border border-emerald-200">
+                              {badge.status}
+                            </span>
+                          </div>
+                          <h4 className="font-extrabold text-xs text-slate-900 leading-snug">{badge.title}</h4>
+                          <p className="text-[11px] text-slate-500 font-medium mt-1">{badge.issuer}</p>
+                          <p className="text-[11px] text-slate-600 mt-1 leading-relaxed line-clamp-2">{badge.description}</p>
+                        </div>
+                        <div className="pt-2 border-t border-slate-200/60 flex items-center justify-between text-[10px] text-slate-400 font-mono">
+                          <span>Issued {badge.date}</span>
+                          <span className="text-emerald-700 font-bold">{badge.code}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Mobile-only View More / Show Less button */}
+                  {facultyBadges.length > 1 && (
+                    <div className="sm:hidden pt-1">
+                      <button
+                        type="button"
+                        onClick={() => setShowAllBadgesMobile(!showAllBadgesMobile)}
+                        className="w-full py-2.5 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 active:scale-98 text-emerald-900 font-bold text-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer border border-slate-200/80 shadow-2xs"
+                      >
+                        <span>
+                          {showAllBadgesMobile
+                            ? 'Show Less Badges'
+                            : `View More Badges (+${facultyBadges.length - 1})`}
+                        </span>
+                        {showAllBadgesMobile ? (
+                          <ChevronUp className="w-4 h-4 text-emerald-700" />
+                        ) : (
+                          <ChevronDown className="w-4 h-4 text-emerald-700" />
+                        )}
+                      </button>
+                    </div>
+                  )}
+
+                  <div className="pt-3 border-t border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 text-xs">
+                    <span className="text-slate-500">Authorized under Drugs Rules 1945 & ICH E6(R3) Preceptor Framework</span>
+                    <button
+                      onClick={() => setActiveTab('badges')}
+                      className="text-emerald-800 hover:text-emerald-900 font-bold flex items-center gap-1 cursor-pointer"
+                    >
+                      <span>View Ledger Credentials</span>
+                      <ChevronRight className="w-4 h-4" />
+                    </button>
                   </div>
                 </div>
 

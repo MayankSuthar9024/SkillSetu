@@ -142,6 +142,7 @@ export const StakeholderDashboard = ({
               else if (page === 'industry') setActiveTab('network');
             }}
             currentUser={user}
+            activePortalId={activePortalId}
             openCreatePostModal={openCreatePostModal}
           />
         );
@@ -186,6 +187,26 @@ export const StakeholderDashboard = ({
           />
         );
       case 'jobs':
+        if (activePortalId === 'faculty') {
+          return (
+            <div className="space-y-6">
+              <div className="bg-white border border-slate-200/90 text-slate-900 p-6 sm:p-8 rounded-3xl element-glow-shadow">
+                <div className="max-w-3xl">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 border border-emerald-200/80 rounded-full text-xs font-bold text-emerald-800 uppercase tracking-wider">
+                    Academic Preceptor Opportunities & Grants Desk
+                  </span>
+                  <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-3 tracking-tight">
+                    Preceptor Research Grants & Scholar Nominations
+                  </h1>
+                  <p className="text-slate-600 text-xs sm:text-sm mt-2 leading-relaxed">
+                    Faculty members hold permanent academic appointments and do not apply for student internships. Below you can nominate top scholars from your department for clinical internships and access faculty research grants (CCRAS SPARK, Pharma FDPs).
+                  </p>
+                </div>
+              </div>
+              <FacultyPage currentUser={user} onOpenReadinessModal={() => {}} />
+            </div>
+          );
+        }
         return (
           <div className="space-y-6">
             <div className="bg-white border border-slate-200/90 text-slate-900 p-6 sm:p-8 rounded-3xl element-glow-shadow">
@@ -300,7 +321,7 @@ export const StakeholderDashboard = ({
           </div>
         );
       default:
-        return <FeedPage onNavigate={() => {}} currentUser={user} />;
+        return <FeedPage onNavigate={() => {}} currentUser={user} activePortalId={activePortalId} />;
     }
   };
 

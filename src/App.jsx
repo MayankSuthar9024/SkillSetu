@@ -387,6 +387,7 @@ export function App() {
             <FeedPage
               onNavigate={handleNavigate}
               currentUser={activeUser}
+              activePortalId={activePortalId}
             />
           </div>
         )}
