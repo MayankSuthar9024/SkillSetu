@@ -9,16 +9,18 @@ import {
   BarChart3, 
   Plus, 
   MessageSquare, 
+  Briefcase,
   Building2, 
   ArrowRight, 
   LogIn, 
+  LogOut, 
   Sparkles, 
   Menu, 
   X, 
   Flame 
 } from 'lucide-react';
 
-export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpenAuthModal, currentUser }) {
+export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpenAuthModal, currentUser, onLogout }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('hero');
@@ -204,11 +206,15 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
 
                     <div className="pt-1 mt-1 border-t border-slate-100">
                       <button
-                        onClick={() => onOpenAuthModal('login')}
-                        className="w-full text-left px-4 py-2 text-xs font-semibold text-emerald-800 hover:bg-emerald-50 flex items-center gap-2 cursor-pointer"
+                        onClick={() => {
+                          setProfileDropdownOpen(false);
+                          if (onLogout) onLogout();
+                          else onOpenAuthModal('login');
+                        }}
+                        className="w-full text-left px-4 py-2 text-xs font-semibold text-rose-700 hover:bg-rose-50 flex items-center gap-2 cursor-pointer transition-colors"
                       >
-                        <LogIn className="w-3.5 h-3.5 text-emerald-700" />
-                        <span>Sign In</span>
+                        <LogOut className="w-3.5 h-3.5 text-rose-600" />
+                        <span>Sign Out</span>
                       </button>
                     </div>
                   </div>
@@ -216,14 +222,16 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
               </div>
             ) : null}
 
-            {/* Sign In / Role Selection CTA */}
-            <button
-              onClick={() => onOpenAuthModal('login')}
-              className="bg-emerald-800 hover:bg-emerald-900 text-white font-label-sm text-xs font-bold py-2.5 px-5 rounded-xl active:scale-95 hover:shadow-md transition-all flex items-center gap-2 cursor-pointer shrink-0"
-            >
-              <span>Sign In</span>
-              <ArrowRight className="w-3.5 h-3.5 text-emerald-300" />
-            </button>
+            {/* Sign In / Role Selection CTA - Only shown when user is not signed in */}
+            {!currentUser && (
+              <button
+                onClick={() => onOpenAuthModal('login')}
+                className="bg-emerald-800 hover:bg-emerald-900 text-white font-label-sm text-xs font-bold py-2.5 px-5 rounded-xl active:scale-95 hover:shadow-md transition-all flex items-center gap-2 cursor-pointer shrink-0"
+              >
+                <span>Sign In</span>
+                <ArrowRight className="w-3.5 h-3.5 text-emerald-300" />
+              </button>
+            )}
           </div>
 
           {/* Mobile Action Controls */}
@@ -279,17 +287,43 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
               );
             })}
 
-            <div className="pt-4 border-t border-slate-200">
-              <button
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  onOpenAuthModal('login');
-                }}
-                className="w-full py-3 bg-emerald-800 hover:bg-emerald-900 text-white font-bold rounded-xl text-sm flex items-center justify-center gap-2"
-              >
-                <LogIn className="w-4 h-4 text-emerald-300" />
-                <span>Sign In to Portal</span>
-              </button>
+            <div className="pt-4 border-t border-slate-200 space-y-2">
+              {currentUser ? (
+                <>
+                  <button
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      handleNavClick('profile');
+                    }}
+                    className="w-full py-3 bg-emerald-50 text-emerald-900 font-bold rounded-xl text-sm flex items-center justify-center gap-2 border border-emerald-200 cursor-pointer"
+                  >
+                    <User className="w-4 h-4 text-emerald-700" />
+                    <span>View Profile ({userName})</span>
+                  </button>
+                  <button
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      if (onLogout) onLogout();
+                      else onOpenAuthModal('login');
+                    }}
+                    className="w-full py-2.5 bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold rounded-xl text-xs flex items-center justify-center gap-2 border border-rose-200 cursor-pointer transition-colors"
+                  >
+                    <LogOut className="w-4 h-4 text-rose-600" />
+                    <span>Sign Out</span>
+                  </button>
+                </>
+              ) : (
+                <button
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    onOpenAuthModal('login');
+                  }}
+                  className="w-full py-3 bg-emerald-800 hover:bg-emerald-900 text-white font-bold rounded-xl text-sm flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  <LogIn className="w-4 h-4 text-emerald-300" />
+                  <span>Sign In to Portal</span>
+                </button>
+              )}
             </div>
           </div>
         )}
@@ -346,15 +380,15 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
               <span className="text-[10px] mt-1 font-bold">Messages</span>
             </button>
 
-            {/* 5. Industry */}
+            {/* 5. Jobs */}
             <button
-              onClick={() => handleNavClick('industry')}
+              onClick={() => handleNavClick('jobs')}
               className={`flex flex-col items-center justify-center py-1 w-full text-xs transition-all cursor-pointer ${
-                activePage === 'industry' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-semibold'
+                activePage === 'jobs' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-semibold'
               }`}
             >
-              <Building2 className={`w-5 h-5 shrink-0 ${activePage === 'industry' ? 'text-emerald-700' : 'text-slate-500'}`} />
-              <span className="text-[10px] mt-1 font-bold">Industry</span>
+              <Briefcase className={`w-5 h-5 shrink-0 ${activePage === 'jobs' ? 'text-emerald-700' : 'text-slate-500'}`} />
+              <span className="text-[10px] mt-1 font-bold">Jobs</span>
             </button>
 
           </div>

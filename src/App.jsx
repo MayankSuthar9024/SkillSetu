@@ -18,6 +18,7 @@ import { FeedPage } from './pages/FeedPage';
 import { ProfilePage } from './pages/ProfilePage';
 import { MessagePage } from './pages/MessagePage';
 import { CoursesPage } from './pages/CoursesPage';
+import { JobsPage } from './pages/JobsPage';
 
 export function App() {
   const [activePage, setActivePage] = useState('home'); // 'home' | 'features' | 'about' | 'opportunities' | 'skill' | 'industry' | 'courses' | 'feed' | 'profile' | 'messages' | 'login' | 'portals' | 'dashboard'
@@ -203,6 +204,7 @@ export function App() {
         onOpenReadinessModal={() => setIsReadinessModalOpen(true)}
         onOpenAuthModal={handleOpenAuth}
         currentUser={currentUser}
+        onLogout={handleLogout}
       />
 
       {/* Main Content Area Based on Active Page */}
@@ -365,6 +367,16 @@ export function App() {
             <SkillPage
               onNavigate={handleNavigate}
               onOpenReadinessModal={() => setIsReadinessModalOpen(true)}
+            />
+          </div>
+        )}
+
+        {/* JOBS & APPLICATIONS PAGE */}
+        {activePage === 'jobs' && (
+          <div className="animate-fadeIn py-6 px-4 max-w-7xl mx-auto">
+            <JobsPage
+              currentUser={activeUser}
+              onNavigate={handleNavigate}
             />
           </div>
         )}
