@@ -55,10 +55,10 @@ export const StudentPortfolioStitch = ({ user }) => {
 
   // Comprehensive Student Profile Data
   const profileData = {
-    name: user?.name || 'Priya Sharma',
+    name: user?.name || 'Aarav Sharma',
     title: user?.degree || 'BAMS Final Year Practitioner & Researcher',
-    institution: 'Ayush National Institute of Ayurveda, Jaipur',
-    regNo: 'AYUSH-RJ-2024-88412',
+    institution: user?.institution || 'National Institute of Ayurveda (NIA), Jaipur',
+    regNo: user?.id || 'NIA/AY/2026/0491',
     avatarUrl: user?.avatarImage || aaravAvatar,
     avatarFallback: aaravAvatar,
     verified: true,
