@@ -343,23 +343,19 @@ export function ProfilePage({ onNavigate, currentUser, activePortalId }) {
                     {profileData.name}
                   </h1>
                   <span className="bg-emerald-50 text-emerald-800 border border-emerald-200/80 text-[10px] sm:text-xs font-bold px-2.5 py-0.5 rounded-full flex items-center gap-1 shrink-0">
-                    <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-                    ABHA Verified
-                  </span>
-                  <span className="bg-teal-50 text-teal-800 border border-teal-200/80 text-[10px] sm:text-xs font-bold px-2.5 py-0.5 rounded-full flex items-center gap-1 shrink-0">
-                    <GraduationCap className="w-3.5 h-3.5 text-teal-600" />
-                    NCISM Accredited
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                    Verified Scholar
                   </span>
                 </div>
                 <p className="text-xs sm:text-sm font-semibold text-slate-600 mt-1 break-words">
                   {profileData.role}
                 </p>
                 <div className="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-4 text-xs text-slate-500 font-medium mt-2 min-w-0 max-w-full">
-                  <span className="flex items-center gap-1 min-w-0 max-w-full">
+                  <span className="flex items-center gap-1.5 min-w-0 max-w-full">
                     <Building className="w-3.5 h-3.5 text-slate-400 shrink-0" />
                     <span className="break-words max-w-full">{profileData.institution}</span>
                   </span>
-                  <span className="flex items-center gap-1 shrink-0">
+                  <span className="flex items-center gap-1.5 shrink-0">
                     <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
                     <span>{profileData.location}</span>
                   </span>
@@ -707,19 +703,18 @@ export function ProfilePage({ onNavigate, currentUser, activePortalId }) {
                     <GraduationCap className="w-5 h-5 text-emerald-700" />
                     Academic Profile & Institutional Records
                   </h3>
+                  <p className="text-xs text-slate-500 mt-0.5 font-normal">
+                    Core competency benchmarks, institutional records &amp; verified identities
+                  </p>
+                </div>
+              </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-                    <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/60">
-                      <span className="text-slate-400 font-semibold block text-[11px]">Degree Program</span>
-                      <span className="font-bold text-slate-900 text-sm mt-0.5 block">{profileData.degree}</span>
-                      <span className="text-slate-500 mt-1 block">Batch: {profileData.batch}</span>
-                    </div>
-
-                    <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/60">
-                      <span className="text-slate-400 font-semibold block text-[11px]">Academic Standing</span>
-                      <span className="font-bold text-slate-900 text-sm mt-0.5 block">{profileData.cgpa}</span>
-                      <span className="text-slate-500 mt-1 block">Institutional Guide: {profileData.preceptor}</span>
-                    </div>
+              <div className="flex items-center gap-2">
+                <span className="px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-emerald-50 text-emerald-800 border border-emerald-200">
+                  6 Evaluated Axes
+                </span>
+              </div>
+            </div>
 
                     <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/60">
                       <span className="text-slate-400 font-semibold block text-[11px]">NCISM Registration</span>
@@ -737,7 +732,6 @@ export function ProfilePage({ onNavigate, currentUser, activePortalId }) {
                       </span>
                     </div>
                   </div>
-                </div>
 
               </div>
 
@@ -764,8 +758,8 @@ export function ProfilePage({ onNavigate, currentUser, activePortalId }) {
                       <span className="text-slate-400 font-semibold block">Clinical Campus Location</span>
                       <span className="font-bold text-slate-800">{profileData.location}</span>
                     </div>
+
                   </div>
-                </div>
 
                 {/* Industry Placement Match */}
                 <div className="bg-gradient-to-br from-emerald-800 to-teal-900 text-white rounded-3xl p-5 sm:p-6 shadow-xs">
@@ -804,8 +798,10 @@ export function ProfilePage({ onNavigate, currentUser, activePortalId }) {
                     <span>Download Cryptographic Portfolio</span>
                   </button>
                 </div>
+              </div>
 
               </div>
+            </div>
 
             </div>
           )}
@@ -825,6 +821,7 @@ export function ProfilePage({ onNavigate, currentUser, activePortalId }) {
                     <p className="text-xs text-slate-500 mt-0.5">Formal rotatory clinical training supervised by senior Ayush preceptors.</p>
                   </div>
                 </div>
+              </div>
 
                 <div className="overflow-x-auto">
                   <table className="w-full text-xs text-left">
