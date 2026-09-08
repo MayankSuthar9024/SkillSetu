@@ -406,6 +406,7 @@ export function App() {
             <ProfilePage
               onNavigate={handleNavigate}
               currentUser={activeUser}
+              activePortalId={activePortalId}
               onBack={() => handleNavigate('home')}
             />
           </div>

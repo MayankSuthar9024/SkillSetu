@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { 
   User, 
@@ -6,8 +6,6 @@ import {
   ChevronDown, 
   ChevronRight, 
   Home, 
-  BookOpen,
-  Layers,
   BarChart3, 
   Plus, 
   MessageSquare, 
@@ -24,35 +22,6 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('hero');
-
-  const profileDropdownRef = useRef(null);
-
-  // Auto-close profile dropdown on click outside or Escape key
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (profileDropdownRef.current && !profileDropdownRef.current.contains(event.target)) {
-        setProfileDropdownOpen(false);
-      }
-    };
-
-    const handleKeyDown = (event) => {
-      if (event.key === 'Escape') {
-        setProfileDropdownOpen(false);
-      }
-    };
-
-    if (profileDropdownOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-      document.addEventListener('touchstart', handleClickOutside);
-      document.addEventListener('keydown', handleKeyDown);
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-      document.removeEventListener('touchstart', handleClickOutside);
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [profileDropdownOpen]);
 
   const navItems = [
     { id: 'hero', label: 'Home' },
@@ -110,14 +79,6 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
       if (activePage !== 'home') {
         setActivePage('home');
       }
-      window.location.hash = '';
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      return;
-    }
-
-    if (['profile', 'feed', 'courses', 'skill', 'industry', 'messages'].includes(id)) {
-      setActivePage(id);
-      window.location.hash = id;
       window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
@@ -196,12 +157,12 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
           <div className="hidden md:flex gap-3 items-center">
             {currentUser ? (
               /* Profile PFP Avatar Button (Only when user is signed in) */
-              <div className="relative" ref={profileDropdownRef}>
+              <div className="relative">
                 <button
-                  onClick={() => setProfileDropdownOpen(prev => !prev)}
+                  onClick={() => handleNavClick('profile')}
+                  onMouseEnter={() => setProfileDropdownOpen(true)}
                   className="flex items-center gap-2.5 bg-white hover:bg-emerald-50/80 border border-slate-200/80 rounded-2xl p-1.5 pr-3.5 shadow-xs transition-all cursor-pointer group active:scale-95"
-                  title="Profile Menu"
-                  aria-expanded={profileDropdownOpen}
+                  title="Click to view your Profile Page"
                 >
                   <div className="relative w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-700 to-teal-900 text-white font-extrabold text-xs flex items-center justify-center shadow-xs border-2 border-emerald-100 group-hover:scale-105 transition-transform shrink-0 overflow-hidden">
                     {currentUser.avatarImage ? (
@@ -225,6 +186,7 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
 
                 {profileDropdownOpen && (
                   <div
+                    onMouseLeave={() => setProfileDropdownOpen(false)}
                     className="absolute right-0 mt-2 w-56 bg-white rounded-2xl shadow-xl border border-slate-200 py-2 z-50 animate-in fade-in zoom-in-95"
                   >
                     <div className="px-4 py-2 border-b border-slate-100">
@@ -233,36 +195,20 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
                     </div>
 
                     <button
-                      onClick={() => {
-                        setProfileDropdownOpen(false);
-                        handleNavClick('profile');
-                      }}
-                      className="w-full text-left px-4 py-2 text-xs font-bold text-slate-800 hover:bg-emerald-50 hover:text-emerald-900 flex items-center gap-2 cursor-pointer transition-colors"
+                      onClick={() => handleNavClick('profile')}
+                      className="w-full text-left px-4 py-2 text-xs font-bold text-slate-800 hover:bg-emerald-50 hover:text-emerald-900 flex items-center gap-2 cursor-pointer"
                     >
                       <User className="w-4 h-4 text-emerald-700" />
-                      <span>My Profile Page</span>
-                    </button>
-
-                    <button
-                      onClick={() => {
-                        setProfileDropdownOpen(false);
-                        handleNavClick('feed');
-                      }}
-                      className="w-full text-left px-4 py-2 text-xs font-bold text-slate-800 hover:bg-emerald-50 hover:text-emerald-900 flex items-center gap-2 cursor-pointer transition-colors"
-                    >
-                      <Flame className="w-4 h-4 text-rose-500" />
-                      <span>Community Feed</span>
+                      <span>View Profile Page</span>
                     </button>
 
                     <div className="pt-1 mt-1 border-t border-slate-100">
                       <button
-                        onClick={() => {
-                          setProfileDropdownOpen(false);
-                          onOpenAuthModal('login');
-                        }}
-                        className="w-full text-left px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-50 cursor-pointer transition-colors"
+                        onClick={() => onOpenAuthModal('login')}
+                        className="w-full text-left px-4 py-2 text-xs font-semibold text-emerald-800 hover:bg-emerald-50 flex items-center gap-2 cursor-pointer"
                       >
-                        Role Portals
+                        <LogIn className="w-3.5 h-3.5 text-emerald-700" />
+                        <span>Sign In</span>
                       </button>
                     </div>
                   </div>
@@ -351,118 +297,67 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
 
       {/* Mobile App Bottom Footer Navigation Bar (Hidden on Landing/Home page) */}
       {activePage !== 'home' && (
-        <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-xl border-t border-slate-200 shadow-2xl px-2 py-2 rounded-t-3xl">
-          {(currentUser?.role?.toLowerCase().includes('faculty') || currentUser?.role?.toLowerCase().includes('professor') || currentUser?.id?.toLowerCase().includes('fac') || activePage === 'faculty') ? (
-            /* Faculty Member Bottom Navigation: Feed | Courses | Faculty Console | Department Radar */
-            <div className="grid grid-cols-4 items-center w-full max-w-lg mx-auto">
-              
-              {/* 1. Feed */}
-              <button
-                onClick={() => handleNavClick('feed')}
-                className={`flex flex-col items-center justify-center py-1.5 w-full text-xs transition-all cursor-pointer ${
-                  activePage === 'feed' ? 'text-emerald-800 font-extrabold' : 'text-[#3B627D] hover:text-slate-900 font-medium'
-                }`}
-              >
-                <Home className={`w-5 h-5 shrink-0 ${activePage === 'feed' ? 'text-emerald-700' : 'text-[#3B627D]'}`} />
-                <span className="text-[10px] mt-1 font-semibold">Feed</span>
-              </button>
+        <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-xl border-t border-slate-200 shadow-2xl px-2 py-2 rounded-t-3xl">
+          <div className="grid grid-cols-5 items-center w-full max-w-lg mx-auto">
 
-              {/* 2. Courses */}
-              <button
-                onClick={() => handleNavClick('courses')}
-                className={`flex flex-col items-center justify-center py-1.5 w-full text-xs transition-all cursor-pointer ${
-                  activePage === 'courses' ? 'text-emerald-800 font-extrabold' : 'text-[#3B627D] hover:text-slate-900 font-medium'
-                }`}
-              >
-                <BookOpen className={`w-5 h-5 shrink-0 ${activePage === 'courses' ? 'text-emerald-700' : 'text-[#3B627D]'}`} />
-                <span className="text-[10px] mt-1 font-semibold">Courses</span>
-              </button>
+            {/* 1. Home */}
+            <button
+              onClick={() => handleNavClick('home')}
+              className={`flex flex-col items-center justify-center py-1 w-full text-xs transition-all cursor-pointer ${
+                activePage === 'home' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-semibold'
+              }`}
+            >
+              <Home className={`w-5 h-5 shrink-0 ${activePage === 'home' ? 'text-emerald-700' : 'text-slate-500'}`} />
+              <span className="text-[10px] mt-1 font-bold">Home</span>
+            </button>
 
-              {/* 3. Faculty Console */}
-              <button
-                onClick={() => handleNavClick('dashboard')}
-                className={`flex flex-col items-center justify-center py-1.5 w-full text-xs transition-all cursor-pointer ${
-                  activePage === 'dashboard' || activePage === 'faculty' || activePage === 'console' ? 'text-emerald-800 font-extrabold' : 'text-[#3B627D] hover:text-slate-900 font-medium'
-                }`}
-              >
-                <Layers className={`w-5 h-5 shrink-0 ${activePage === 'dashboard' || activePage === 'faculty' || activePage === 'console' ? 'text-emerald-700' : 'text-[#3B627D]'}`} />
-                <span className="text-[10px] mt-1 font-semibold whitespace-nowrap">Faculty Console</span>
-              </button>
+            {/* 2. Skills */}
+            <button
+              onClick={() => handleNavClick('skill')}
+              className={`flex flex-col items-center justify-center py-1 w-full text-xs transition-all cursor-pointer ${
+                activePage === 'skill' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-semibold'
+              }`}
+            >
+              <BarChart3 className={`w-5 h-5 shrink-0 ${activePage === 'skill' ? 'text-emerald-700' : 'text-slate-500'}`} />
+              <span className="text-[10px] mt-1 font-bold">Skills</span>
+            </button>
 
-              {/* 4. Department Radar */}
-              <button
-                onClick={() => handleNavClick('skill')}
-                className={`flex flex-col items-center justify-center py-1.5 w-full text-xs transition-all cursor-pointer ${
-                  activePage === 'skill' || activePage === 'skills' ? 'text-emerald-800 font-extrabold' : 'text-[#3B627D] hover:text-slate-900 font-medium'
-                }`}
-              >
-                <BarChart3 className={`w-5 h-5 shrink-0 ${activePage === 'skill' || activePage === 'skills' ? 'text-emerald-700' : 'text-[#3B627D]'}`} />
-                <span className="text-[10px] mt-1 font-semibold whitespace-nowrap">Department Radar</span>
-              </button>
-
-            </div>
-          ) : (
-            <div className="grid grid-cols-5 items-center w-full max-w-lg mx-auto">
-
-              {/* 1. Home */}
-              <button
-                onClick={() => handleNavClick('home')}
-                className={`flex flex-col items-center justify-center py-1 w-full text-xs transition-all cursor-pointer ${
-                  activePage === 'home' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-semibold'
-                }`}
-              >
-                <Home className={`w-5 h-5 shrink-0 ${activePage === 'home' ? 'text-emerald-700' : 'text-slate-500'}`} />
-                <span className="text-[10px] mt-1 font-bold">Home</span>
-              </button>
-
-              {/* 2. Skills */}
-              <button
-                onClick={() => handleNavClick('skill')}
-                className={`flex flex-col items-center justify-center py-1 w-full text-xs transition-all cursor-pointer ${
-                  activePage === 'skill' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-semibold'
-                }`}
-              >
-                <BarChart3 className={`w-5 h-5 shrink-0 ${activePage === 'skill' ? 'text-emerald-700' : 'text-slate-500'}`} />
-                <span className="text-[10px] mt-1 font-bold">Skills</span>
-              </button>
-
-              {/* 3. Center Elevated Floating Green (+) Button (Perfect 50% Horizontal Center) */}
-              <div className="flex items-center justify-center relative -mt-7 w-full">
-                <div className="w-14 h-14 rounded-full bg-white flex items-center justify-center shadow-lg border border-slate-100 p-1">
-                  <button
-                    onClick={() => onOpenAuthModal('login')}
-                    className="w-12 h-12 rounded-full bg-emerald-800 hover:bg-emerald-900 active:scale-95 text-white flex items-center justify-center shadow-md hover:shadow-lg transition-all cursor-pointer group"
-                    title="Access Platform"
-                  >
-                    <Plus className="w-6 h-6 stroke-[2.5] group-hover:rotate-90 transition-transform duration-300" />
-                  </button>
-                </div>
+            {/* 3. Center Elevated Floating Green (+) Button (Perfect 50% Horizontal Center) */}
+            <div className="flex items-center justify-center relative -mt-7 w-full">
+              <div className="w-14 h-14 rounded-full bg-white flex items-center justify-center shadow-lg border border-slate-100 p-1">
+                <button
+                  onClick={() => onOpenAuthModal('login')}
+                  className="w-12 h-12 rounded-full bg-emerald-800 hover:bg-emerald-900 active:scale-95 text-white flex items-center justify-center shadow-md hover:shadow-lg transition-all cursor-pointer group"
+                  title="Access Platform"
+                >
+                  <Plus className="w-6 h-6 stroke-[2.5] group-hover:rotate-90 transition-transform duration-300" />
+                </button>
               </div>
-
-              {/* 4. Messages */}
-              <button
-                onClick={() => handleNavClick('messages')}
-                className={`flex flex-col items-center justify-center py-1 w-full text-xs transition-all cursor-pointer ${
-                  activePage === 'messages' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-semibold'
-                }`}
-              >
-                <MessageSquare className={`w-5 h-5 shrink-0 ${activePage === 'messages' ? 'text-emerald-700' : 'text-slate-500'}`} />
-                <span className="text-[10px] mt-1 font-bold">Messages</span>
-              </button>
-
-              {/* 5. Industry */}
-              <button
-                onClick={() => handleNavClick('industry')}
-                className={`flex flex-col items-center justify-center py-1 w-full text-xs transition-all cursor-pointer ${
-                  activePage === 'industry' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-semibold'
-                }`}
-              >
-                <Building2 className={`w-5 h-5 shrink-0 ${activePage === 'industry' ? 'text-emerald-700' : 'text-slate-500'}`} />
-                <span className="text-[10px] mt-1 font-bold">Industry</span>
-              </button>
-
             </div>
-          )}
+
+            {/* 4. Messages */}
+            <button
+              onClick={() => handleNavClick('messages')}
+              className={`flex flex-col items-center justify-center py-1 w-full text-xs transition-all cursor-pointer ${
+                activePage === 'messages' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-semibold'
+              }`}
+            >
+              <MessageSquare className={`w-5 h-5 shrink-0 ${activePage === 'messages' ? 'text-emerald-700' : 'text-slate-500'}`} />
+              <span className="text-[10px] mt-1 font-bold">Messages</span>
+            </button>
+
+            {/* 5. Industry */}
+            <button
+              onClick={() => handleNavClick('industry')}
+              className={`flex flex-col items-center justify-center py-1 w-full text-xs transition-all cursor-pointer ${
+                activePage === 'industry' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-semibold'
+              }`}
+            >
+              <Building2 className={`w-5 h-5 shrink-0 ${activePage === 'industry' ? 'text-emerald-700' : 'text-slate-500'}`} />
+              <span className="text-[10px] mt-1 font-bold">Industry</span>
+            </button>
+
+          </div>
         </div>
       )}
     </>
