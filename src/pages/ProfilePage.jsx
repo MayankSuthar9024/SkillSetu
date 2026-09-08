@@ -699,27 +699,24 @@ export function ProfilePage({ onNavigate, currentUser, activePortalId }) {
 
                 {/* Academic Background & Qualifications */}
                 <div className="bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-6 shadow-xs">
-                  <h3 className="font-bold text-base text-slate-900 flex items-center gap-2 mb-4">
-                    <GraduationCap className="w-5 h-5 text-emerald-700" />
-                    Academic Profile & Institutional Records
-                  </h3>
-                  <p className="text-xs text-slate-500 mt-0.5 font-normal">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="font-bold text-base text-slate-900 flex items-center gap-2">
+                      <GraduationCap className="w-5 h-5 text-emerald-700" />
+                      Academic Profile &amp; Institutional Records
+                    </h3>
+                    <span className="px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-emerald-50 text-emerald-800 border border-emerald-200">
+                      NCISM Regulated
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-500 mt-0.5 font-normal mb-4">
                     Core competency benchmarks, institutional records &amp; verified identities
                   </p>
-                </div>
-              </div>
 
-              <div className="flex items-center gap-2">
-                <span className="px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-emerald-50 text-emerald-800 border border-emerald-200">
-                  6 Evaluated Axes
-                </span>
-              </div>
-            </div>
-
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                     <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/60">
                       <span className="text-slate-400 font-semibold block text-[11px]">NCISM Registration</span>
                       <span className="font-mono font-bold text-slate-900 text-xs mt-0.5 block">{profileData.ncismReg}</span>
-                      <span className="text-emerald-700 font-semibold mt-1 block flex items-center gap-1">
+                      <span className="text-emerald-700 font-semibold mt-1 flex items-center gap-1 text-[11px]">
                         <CheckCircle2 className="w-3.5 h-3.5" /> License Active
                       </span>
                     </div>
@@ -727,11 +724,12 @@ export function ProfilePage({ onNavigate, currentUser, activePortalId }) {
                     <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/60">
                       <span className="text-slate-400 font-semibold block text-[11px]">ABHA Healthcare ID</span>
                       <span className="font-mono font-bold text-slate-900 text-xs mt-0.5 block">{profileData.abhaId}</span>
-                      <span className="text-teal-700 font-semibold mt-1 block flex items-center gap-1">
+                      <span className="text-teal-700 font-semibold mt-1 flex items-center gap-1 text-[11px]">
                         <ShieldCheck className="w-3.5 h-3.5" /> DigiLocker Verified
                       </span>
                     </div>
                   </div>
+                </div>
 
               </div>
 
@@ -740,7 +738,7 @@ export function ProfilePage({ onNavigate, currentUser, activePortalId }) {
                 
                 {/* Official Contacts */}
                 <div className="bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-6 shadow-xs">
-                  <h3 className="font-bold text-slate-900 text-sm mb-3">Verified Contact & Identity</h3>
+                  <h3 className="font-bold text-slate-900 text-sm mb-3">Verified Contact &amp; Identity</h3>
                   <div className="space-y-3 text-xs">
                     <div>
                       <span className="text-slate-400 font-semibold block">University Enrollment Roll</span>
@@ -758,15 +756,15 @@ export function ProfilePage({ onNavigate, currentUser, activePortalId }) {
                       <span className="text-slate-400 font-semibold block">Clinical Campus Location</span>
                       <span className="font-bold text-slate-800">{profileData.location}</span>
                     </div>
-
                   </div>
+                </div>
 
                 {/* Industry Placement Match */}
                 <div className="bg-gradient-to-br from-emerald-800 to-teal-900 text-white rounded-3xl p-5 sm:p-6 shadow-xs">
                   <Sparkles className="w-5 h-5 text-emerald-300 mb-2" />
                   <h3 className="font-bold text-base">Match Score for R&D Fellowship</h3>
                   <p className="text-xs text-emerald-100 mt-1 leading-relaxed">
-                    Your verified Schedule T GMP and HPLC skills match 94% of criteria for Dabur, Himalaya & AIIA Fellow postings.
+                    Your verified Schedule T GMP and HPLC skills match 94% of criteria for Dabur, Himalaya &amp; AIIA Fellow postings.
                   </p>
                   <button
                     onClick={() => onNavigate('opportunities')}
@@ -800,9 +798,6 @@ export function ProfilePage({ onNavigate, currentUser, activePortalId }) {
                 </div>
               </div>
 
-              </div>
-            </div>
-
             </div>
           )}
 
@@ -816,12 +811,11 @@ export function ProfilePage({ onNavigate, currentUser, activePortalId }) {
                   <div>
                     <h3 className="font-bold text-base text-slate-900 flex items-center gap-2">
                       <BookOpen className="w-5 h-5 text-emerald-700" />
-                      Completed Clinical Rotations & Postings
+                      Completed Clinical Rotations &amp; Postings
                     </h3>
                     <p className="text-xs text-slate-500 mt-0.5">Formal rotatory clinical training supervised by senior Ayush preceptors.</p>
                   </div>
                 </div>
-              </div>
 
                 <div className="overflow-x-auto">
                   <table className="w-full text-xs text-left">
