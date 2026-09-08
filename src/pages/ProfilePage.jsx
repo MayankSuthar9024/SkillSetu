@@ -9,6 +9,7 @@ import {
   ShieldCheck, 
   Sparkles, 
   ChevronRight,
+  ChevronLeft,
   MessageSquare, 
   Camera, 
   Image as ImageIcon, 
@@ -41,6 +42,31 @@ export function StudentProfileView({ user, onNavigate, onBack, isPublicView }) {
   const [isEditingBio, setIsEditingBio] = useState(false);
   const [saveSuccessToast, setSaveSuccessToast] = useState(false);
   const [downloadSuccessToast, setDownloadSuccessToast] = useState(false);
+
+  // Collapsible Sections state (true = open, false = minimized)
+  const [openSections, setOpenSections] = useState({
+    about: true,
+    radar: true,
+    badges: true,
+    posts: true
+  });
+
+  const toggleSection = (key) => {
+    setOpenSections(prev => ({
+      ...prev,
+      [key]: !prev[key]
+    }));
+  };
+
+  const expandAll = () => {
+    setOpenSections({ about: true, radar: true, badges: true, posts: true });
+  };
+
+  const collapseAll = () => {
+    setOpenSections({ about: false, radar: false, badges: false, posts: false });
+  };
+
+  const areAllOpen = openSections.radar && openSections.badges && openSections.posts;
 
   // Media Upload Modal state ('pfp' | 'banner' | null)
   const [activeMediaModal, setActiveMediaModal] = useState(null);
@@ -392,10 +418,31 @@ export function StudentProfileView({ user, onNavigate, onBack, isPublicView }) {
           {/* About Section */}
           <div className="mt-5 pt-5 border-t border-slate-100">
             <div className="flex items-center justify-between mb-2">
-              <h3 className="text-sm sm:text-base font-extrabold text-slate-900 flex items-center gap-2">
-                <User className="w-4 h-4 text-emerald-700" />
-                <span>About</span>
-              </h3>
+              <div 
+                onClick={() => toggleSection('about')}
+                className="flex items-center gap-2 cursor-pointer group select-none"
+                title={openSections.about ? "Minimize About section" : "Expand About section"}
+              >
+                <h3 className="text-sm sm:text-base font-extrabold text-slate-900 group-hover:text-emerald-800 flex items-center gap-2 transition-colors">
+                  <User className="w-4 h-4 text-emerald-700" />
+                  <span>About</span>
+                </h3>
+                <span className="p-1 rounded-lg bg-slate-100 group-hover:bg-emerald-50 text-slate-500 group-hover:text-emerald-700 transition-colors flex items-center gap-1">
+                  <span className="text-[10px] font-bold text-slate-500 group-hover:text-emerald-800">
+                    {openSections.about ? 'Minimize' : 'Expand'}
+                  </span>
+                  <ChevronLeft 
+                    className={`w-3.5 h-3.5 transition-transform duration-300 transform text-emerald-700 ${
+                      openSections.about ? 'rotate-0' : '-rotate-90'
+                    }`} 
+                  />
+                </span>
+                {!openSections.about && (
+                  <span className="text-[11px] text-slate-400 font-medium italic">
+                    (minimized)
+                  </span>
+                )}
+              </div>
               {!isPublicView && (
                 <button
                   type="button"
@@ -408,9 +455,11 @@ export function StudentProfileView({ user, onNavigate, onBack, isPublicView }) {
                 </button>
               )}
             </div>
-            <p className="text-xs sm:text-sm text-slate-700 leading-relaxed font-normal">
-              {profileData.bio}
-            </p>
+            {openSections.about && (
+              <p className="text-xs sm:text-sm text-slate-700 leading-relaxed font-normal animate-in fade-in duration-200">
+                {profileData.bio}
+              </p>
+            )}
           </div>
 
           {/* Key Quick Indices */}
@@ -626,235 +675,387 @@ export function StudentProfileView({ user, onNavigate, onBack, isPublicView }) {
         )}
 
         {/* Vertically Scrollable Content Sections */}
-        <div className="mt-8 space-y-12">
+        <div className="mt-8 space-y-6">
+
+          {/* Quick Expand / Minimize All Control Bar */}
+          <div className="flex items-center justify-between px-1">
+            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+              Profile Sections
+            </span>
+            <button
+              type="button"
+              onClick={areAllOpen ? collapseAll : expandAll}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white hover:bg-emerald-50 active:scale-95 text-slate-700 hover:text-emerald-900 text-xs font-bold border border-slate-200/90 shadow-2xs transition-all cursor-pointer group"
+              title={areAllOpen ? "Minimize all sections" : "Expand all sections"}
+            >
+              <ChevronLeft 
+                className={`w-3.5 h-3.5 transition-transform duration-300 text-emerald-700 ${
+                  areAllOpen ? 'rotate-0' : '-rotate-90'
+                }`} 
+              />
+              <span>{areAllOpen ? 'Minimize All' : 'Expand All'}</span>
+            </button>
+          </div>
           
           {/* SECTION 1: 6-AXIS AYUSH RADAR, ACADEMIC QUALIFICATIONS & VERIFIED IDENTITY */}
-          <section id="section-radar" className="scroll-mt-6 space-y-5">
-            <div className="pb-2 border-b border-slate-200/80">
-              <h3 className="font-bold text-base sm:text-lg text-slate-900 flex items-center gap-2">
-                <Award className="w-5 h-5 text-emerald-700" />
-                Ayush 6-Axis Competency Radar &amp; Qualifications
-              </h3>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-              
-              {/* Left Column: Real 6-Axis Ayush Radar Chart & Academic Records */}
-              <div className="lg:col-span-8 space-y-6">
-                
-                {/* Real 6-Axis Radar Chart Component */}
-                <AyushSixAxisRadarChart skillMatrix={skillMatrix} />
-
-                {/* Academic Profile & Institutional Records */}
-                <div className="bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-6 shadow-xs">
-                  <h3 className="font-bold text-base text-slate-900 flex items-center gap-2 mb-4">
-                    <GraduationCap className="w-5 h-5 text-emerald-700" />
-                    Academic Profile &amp; Institutional Records
+          <section id="section-radar" className="scroll-mt-6 rounded-3xl bg-white border border-slate-200/80 p-5 sm:p-7 shadow-xs transition-all">
+            <div 
+              onClick={() => toggleSection('radar')}
+              className="flex items-center justify-between cursor-pointer group select-none transition-colors"
+              title={openSections.radar ? "Click to minimize section" : "Click to expand section"}
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-2xl bg-emerald-50 text-emerald-800 flex items-center justify-center font-bold border border-emerald-200/60 shadow-2xs group-hover:scale-105 transition-transform">
+                  <Award className="w-4 h-4 text-emerald-700" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-base sm:text-lg text-slate-900 group-hover:text-emerald-800 transition-colors flex items-center gap-2">
+                    Ayush 6-Axis Competency Radar &amp; Qualifications
                   </h3>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-                    <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/60">
-                      <span className="text-slate-400 font-semibold block text-[11px]">Degree Program</span>
-                      <span className="font-bold text-slate-900 text-sm mt-0.5 block">{profileData.degree}</span>
-                      <span className="text-slate-500 mt-1 block">Batch: {profileData.batch}</span>
-                    </div>
-
-                    <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/60">
-                      <span className="text-slate-400 font-semibold block text-[11px]">Academic Standing</span>
-                      <span className="font-bold text-slate-900 text-sm mt-0.5 block">{profileData.cgpa}</span>
-                      <span className="text-slate-500 mt-1 block">Institutional Guide: {profileData.preceptor}</span>
-                    </div>
-
-                    <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/60">
-                      <span className="text-slate-400 font-semibold block text-[11px]">NCISM Registration</span>
-                      <span className="font-mono font-bold text-slate-900 text-xs mt-0.5 block">{profileData.ncismReg}</span>
-                      <span className="text-emerald-700 font-semibold mt-1 block flex items-center gap-1">
-                        <CheckCircle2 className="w-3.5 h-3.5" /> Validated Practitioner
-                      </span>
-                    </div>
-
-                    <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/60">
-                      <span className="text-slate-400 font-semibold block text-[11px]">National ABHA Health ID</span>
-                      <span className="font-mono font-bold text-slate-900 text-xs mt-0.5 block">{profileData.abhaId}</span>
-                      <span className="text-teal-700 font-semibold mt-1 block flex items-center gap-1">
-                        <ShieldCheck className="w-3.5 h-3.5" /> DigiLocker Verified
-                      </span>
-                    </div>
-                  </div>
+                  {!openSections.radar && (
+                    <p className="text-xs text-slate-500 mt-0.5 font-normal">
+                      6 Evaluated Axes · CGPA 8.94 (Honors) · NCISM Validated · Click to expand
+                    </p>
+                  )}
                 </div>
-
               </div>
 
-              {/* Sidebar Credentials */}
-              <div className="lg:col-span-4 space-y-6">
-                
-                {/* Official Contacts */}
-                <div className="bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-6 shadow-xs">
-                  <h3 className="font-bold text-slate-900 text-sm mb-3">Verified Contact &amp; Identity</h3>
-                  <div className="space-y-3 text-xs">
-                    <div>
-                      <span className="text-slate-400 font-semibold block">University Enrollment Roll</span>
-                      <span className="font-bold font-mono text-slate-800">{profileData.id}</span>
-                    </div>
-                    <div>
-                      <span className="text-slate-400 font-semibold block">Official Institutional Email</span>
-                      <span className="font-bold text-slate-800 break-all">{profileData.email}</span>
-                    </div>
-                    <div>
-                      <span className="text-slate-400 font-semibold block">Contact Number</span>
-                      <span className="font-bold text-slate-800">{profileData.phone}</span>
-                    </div>
-                    <div>
-                      <span className="text-slate-400 font-semibold block">Clinical Campus Location</span>
-                      <span className="font-bold text-slate-800">{profileData.location}</span>
-                    </div>
-                  </div>
-                </div>
-
+              <div className="flex items-center gap-2">
+                <span className="px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-emerald-50 text-emerald-800 border border-emerald-200 hidden sm:inline-block">
+                  6 Evaluated Axes
+                </span>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleSection('radar');
+                  }}
+                  className="p-2 rounded-xl bg-slate-100 group-hover:bg-emerald-100/80 text-slate-700 group-hover:text-emerald-900 transition-all border border-slate-200/80 shadow-2xs cursor-pointer flex items-center gap-1.5"
+                  title={openSections.radar ? "Minimize section" : "Expand section"}
+                >
+                  <span className="text-[11px] font-bold px-1 hidden md:inline text-slate-500 group-hover:text-emerald-800">
+                    {openSections.radar ? 'Minimize' : 'Expand'}
+                  </span>
+                  <ChevronLeft 
+                    className={`w-4 h-4 transition-transform duration-300 transform text-emerald-700 ${
+                      openSections.radar ? 'rotate-0' : '-rotate-90'
+                    }`} 
+                  />
+                </button>
               </div>
-
             </div>
+
+            {/* Collapsible Content */}
+            {openSections.radar && (
+              <div className="mt-6 pt-5 border-t border-slate-100 animate-in fade-in duration-300 space-y-6">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                  
+                  {/* Left Column: Real 6-Axis Ayush Radar Chart & Academic Records */}
+                  <div className="lg:col-span-8 space-y-6">
+                    
+                    {/* Real 6-Axis Radar Chart Component */}
+                    <AyushSixAxisRadarChart skillMatrix={skillMatrix} />
+
+                    {/* Academic Profile & Institutional Records */}
+                    <div className="bg-slate-50/70 rounded-3xl border border-slate-200/80 p-5 sm:p-6 shadow-xs">
+                      <h3 className="font-bold text-base text-slate-900 flex items-center gap-2 mb-4">
+                        <GraduationCap className="w-5 h-5 text-emerald-700" />
+                        Academic Profile &amp; Institutional Records
+                      </h3>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                        <div className="p-3.5 rounded-2xl bg-white border border-slate-200/60 shadow-2xs">
+                          <span className="text-slate-400 font-semibold block text-[11px]">Degree Program</span>
+                          <span className="font-bold text-slate-900 text-sm mt-0.5 block">{profileData.degree}</span>
+                          <span className="text-slate-500 mt-1 block">Batch: {profileData.batch}</span>
+                        </div>
+
+                        <div className="p-3.5 rounded-2xl bg-white border border-slate-200/60 shadow-2xs">
+                          <span className="text-slate-400 font-semibold block text-[11px]">Academic Standing</span>
+                          <span className="font-bold text-slate-900 text-sm mt-0.5 block">{profileData.cgpa}</span>
+                          <span className="text-slate-500 mt-1 block">Institutional Guide: {profileData.preceptor}</span>
+                        </div>
+
+                        <div className="p-3.5 rounded-2xl bg-white border border-slate-200/60 shadow-2xs">
+                          <span className="text-slate-400 font-semibold block text-[11px]">NCISM Registration</span>
+                          <span className="font-mono font-bold text-slate-900 text-xs mt-0.5 block">{profileData.ncismReg}</span>
+                          <span className="text-emerald-700 font-semibold mt-1 block flex items-center gap-1">
+                            <CheckCircle2 className="w-3.5 h-3.5" /> Validated Practitioner
+                          </span>
+                        </div>
+
+                        <div className="p-3.5 rounded-2xl bg-white border border-slate-200/60 shadow-2xs">
+                          <span className="text-slate-400 font-semibold block text-[11px]">National ABHA Health ID</span>
+                          <span className="font-mono font-bold text-slate-900 text-xs mt-0.5 block">{profileData.abhaId}</span>
+                          <span className="text-teal-700 font-semibold mt-1 block flex items-center gap-1">
+                            <ShieldCheck className="w-3.5 h-3.5" /> DigiLocker Verified
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+
+                  {/* Sidebar Credentials */}
+                  <div className="lg:col-span-4 space-y-6">
+                    
+                    {/* Official Contacts */}
+                    <div className="bg-slate-50/70 rounded-3xl border border-slate-200/80 p-5 sm:p-6 shadow-xs">
+                      <h3 className="font-bold text-slate-900 text-sm mb-3">Verified Contact &amp; Identity</h3>
+                      <div className="space-y-3 text-xs">
+                        <div>
+                          <span className="text-slate-400 font-semibold block">University Enrollment Roll</span>
+                          <span className="font-bold font-mono text-slate-800">{profileData.id}</span>
+                        </div>
+                        <div>
+                          <span className="text-slate-400 font-semibold block">Official Institutional Email</span>
+                          <span className="font-bold text-slate-800 break-all">{profileData.email}</span>
+                        </div>
+                        <div>
+                          <span className="text-slate-400 font-semibold block">Contact Number</span>
+                          <span className="font-bold text-slate-800">{profileData.phone}</span>
+                        </div>
+                        <div>
+                          <span className="text-slate-400 font-semibold block">Clinical Campus Location</span>
+                          <span className="font-bold text-slate-800">{profileData.location}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+
+                </div>
+              </div>
+            )}
           </section>
 
           {/* SECTION 2: VERIFIED CERTIFICATIONS & DIGITAL BADGES */}
-          <section id="section-badges" className="scroll-mt-6 space-y-5 pt-6 border-t border-slate-200/80">
-            <div className="pb-2 border-b border-slate-200/80">
-              <h3 className="font-bold text-base sm:text-lg text-slate-900 flex items-center gap-2">
-                <ShieldCheck className="w-5 h-5 text-emerald-700" />
-                Verified Certifications &amp; Digital Skill Badges
-              </h3>
+          <section id="section-badges" className="scroll-mt-6 rounded-3xl bg-white border border-slate-200/80 p-5 sm:p-7 shadow-xs transition-all">
+            <div 
+              onClick={() => toggleSection('badges')}
+              className="flex items-center justify-between cursor-pointer group select-none transition-colors"
+              title={openSections.badges ? "Click to minimize section" : "Click to expand section"}
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-2xl bg-emerald-50 text-emerald-800 flex items-center justify-center font-bold border border-emerald-200/60 shadow-2xs group-hover:scale-105 transition-transform">
+                  <ShieldCheck className="w-4 h-4 text-emerald-700" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-base sm:text-lg text-slate-900 group-hover:text-emerald-800 transition-colors flex items-center gap-2">
+                    Verified Certifications &amp; Digital Skill Badges
+                  </h3>
+                  {!openSections.badges && (
+                    <p className="text-xs text-slate-500 mt-0.5 font-normal">
+                      {badges.length} Verified Credentials · AIIA, Dabur, CCRAS, NHA · Click to expand
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <span className="px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-emerald-50 text-emerald-800 border border-emerald-200 hidden sm:inline-block">
+                  {badges.length} Badges
+                </span>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleSection('badges');
+                  }}
+                  className="p-2 rounded-xl bg-slate-100 group-hover:bg-emerald-100/80 text-slate-700 group-hover:text-emerald-900 transition-all border border-slate-200/80 shadow-2xs cursor-pointer flex items-center gap-1.5"
+                  title={openSections.badges ? "Minimize section" : "Expand section"}
+                >
+                  <span className="text-[11px] font-bold px-1 hidden md:inline text-slate-500 group-hover:text-emerald-800">
+                    {openSections.badges ? 'Minimize' : 'Expand'}
+                  </span>
+                  <ChevronLeft 
+                    className={`w-4 h-4 transition-transform duration-300 transform text-emerald-700 ${
+                      openSections.badges ? 'rotate-0' : '-rotate-90'
+                    }`} 
+                  />
+                </button>
+              </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {badges.map((b, idx) => (
-                <div key={idx} className="bg-white p-5 rounded-3xl border border-slate-200/80 shadow-xs space-y-3 hover:shadow-md transition-shadow">
-                  <div className="flex justify-between items-start">
-                    <span className="p-2.5 bg-emerald-50 text-emerald-800 rounded-2xl">
-                      <ShieldCheck className="w-5 h-5" />
-                    </span>
-                    <span className="text-[10px] font-bold bg-emerald-100 text-emerald-900 px-2 py-0.5 rounded-md">
-                      {b.status}
-                    </span>
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-sm text-slate-900">{b.title}</h4>
-                    <p className="text-xs text-slate-500 mt-0.5">{b.issuer}</p>
-                  </div>
-                  <div className="pt-2 border-t border-slate-100 flex justify-between items-center text-[10px] text-slate-400 font-mono">
-                    <span>{b.code}</span>
-                    <span>{b.date}</span>
-                  </div>
+            {/* Collapsible Content */}
+            {openSections.badges && (
+              <div className="mt-6 pt-5 border-t border-slate-100 animate-in fade-in duration-300">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {badges.map((b, idx) => (
+                    <div key={idx} className="bg-slate-50/70 p-5 rounded-3xl border border-slate-200/80 shadow-2xs space-y-3 hover:shadow-md transition-shadow">
+                      <div className="flex justify-between items-start">
+                        <span className="p-2.5 bg-emerald-50 text-emerald-800 rounded-2xl border border-emerald-100">
+                          <ShieldCheck className="w-5 h-5" />
+                        </span>
+                        <span className="text-[10px] font-bold bg-emerald-100 text-emerald-900 px-2 py-0.5 rounded-md">
+                          {b.status}
+                        </span>
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-sm text-slate-900">{b.title}</h4>
+                        <p className="text-xs text-slate-500 mt-0.5">{b.issuer}</p>
+                      </div>
+                      <div className="pt-2 border-t border-slate-200/60 flex justify-between items-center text-[10px] text-slate-400 font-mono">
+                        <span>{b.code}</span>
+                        <span>{b.date}</span>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
+              </div>
+            )}
           </section>
 
           {/* SECTION 3: SCHOLAR COMMUNITY POSTS & CASE ANALYTICS */}
-          <section id="section-posts" className="scroll-mt-6 space-y-6 pt-6 border-t border-slate-200/80">
-            <div className="pb-2 border-b border-slate-200/80">
-              <h3 className="font-bold text-base sm:text-lg text-slate-900 flex items-center gap-2">
-                <User className="w-5 h-5 text-emerald-700" />
-                Scholar Posts, Clinical Insights &amp; Reach Analytics
-              </h3>
-            </div>
-
-            {/* Analytics Card */}
-            <div className="bg-white rounded-3xl p-5 sm:p-6 border border-slate-200/90 shadow-soft">
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-slate-100">
+          <section id="section-posts" className="scroll-mt-6 rounded-3xl bg-white border border-slate-200/80 p-5 sm:p-7 shadow-xs transition-all">
+            <div 
+              onClick={() => toggleSection('posts')}
+              className="flex items-center justify-between cursor-pointer group select-none transition-colors"
+              title={openSections.posts ? "Click to minimize section" : "Click to expand section"}
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-2xl bg-emerald-50 text-emerald-800 flex items-center justify-center font-bold border border-emerald-200/60 shadow-2xs group-hover:scale-105 transition-transform">
+                  <User className="w-4 h-4 text-emerald-700" />
+                </div>
                 <div>
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-50 border border-emerald-200/80 rounded-full text-[10px] font-bold text-emerald-800 uppercase tracking-wider w-fit">
-                    <TrendingUp className="w-3.5 h-3.5 text-emerald-700" />
-                    Post Analytics &amp; Reach Overview
-                  </span>
-                  <h3 className="text-lg sm:text-xl font-bold text-slate-900 mt-2">
-                    4,280 Total Post Impressions
+                  <h3 className="font-bold text-base sm:text-lg text-slate-900 group-hover:text-emerald-800 transition-colors flex items-center gap-2">
+                    Scholar Posts, Clinical Insights &amp; Reach Analytics
                   </h3>
-                  <p className="text-xs text-slate-600 mt-0.5">
-                    Your clinical case posts reached +24% more preceptors &amp; recruiters this month.
-                  </p>
+                  {!openSections.posts && (
+                    <p className="text-xs text-slate-500 mt-0.5 font-normal">
+                      4,280 Impressions · 399 Engagements · {staticUserPosts.length} Case Logs · Click to expand
+                    </p>
+                  )}
                 </div>
+              </div>
 
-                <span className="bg-emerald-50 text-emerald-900 border border-emerald-200 text-xs font-bold px-3 py-1.5 rounded-xl shadow-xs">
-                  Top 5% Ayush Scholar Content
+              <div className="flex items-center gap-2">
+                <span className="px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-emerald-50 text-emerald-800 border border-emerald-200 hidden sm:inline-block">
+                  Analytics &amp; Posts
                 </span>
-              </div>
-
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4">
-                <div className="bg-slate-50 border border-slate-200/80 p-3 rounded-2xl">
-                  <span className="text-[11px] text-slate-500 font-semibold block">Total Views</span>
-                  <span className="text-lg sm:text-xl font-bold text-slate-900">4,280</span>
-                  <span className="text-[10px] text-emerald-700 font-semibold block mt-0.5">+18% this week</span>
-                </div>
-
-                <div className="bg-slate-50 border border-slate-200/80 p-3 rounded-2xl">
-                  <span className="text-[11px] text-slate-500 font-semibold block">Post Engagements</span>
-                  <span className="text-lg sm:text-xl font-bold text-slate-900">399</span>
-                  <span className="text-[10px] text-emerald-700 font-semibold block mt-0.5">9.3% engagement</span>
-                </div>
-
-                <div className="bg-slate-50 border border-slate-200/80 p-3 rounded-2xl">
-                  <span className="text-[11px] text-slate-500 font-semibold block">Faculty Comments</span>
-                  <span className="text-lg sm:text-xl font-bold text-slate-900">9</span>
-                  <span className="text-[10px] text-emerald-700 font-semibold block mt-0.5">3 preceptor threads</span>
-                </div>
-
-                <div className="bg-slate-50 border border-slate-200/80 p-3 rounded-2xl">
-                  <span className="text-[11px] text-slate-500 font-semibold block">Recruiter Views</span>
-                  <span className="text-lg sm:text-xl font-bold text-slate-900">128</span>
-                  <span className="text-[10px] text-emerald-700 font-semibold block mt-0.5">Via posted cases</span>
-                </div>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleSection('posts');
+                  }}
+                  className="p-2 rounded-xl bg-slate-100 group-hover:bg-emerald-100/80 text-slate-700 group-hover:text-emerald-900 transition-all border border-slate-200/80 shadow-2xs cursor-pointer flex items-center gap-1.5"
+                  title={openSections.posts ? "Minimize section" : "Expand section"}
+                >
+                  <span className="text-[11px] font-bold px-1 hidden md:inline text-slate-500 group-hover:text-emerald-800">
+                    {openSections.posts ? 'Minimize' : 'Expand'}
+                  </span>
+                  <ChevronLeft 
+                    className={`w-4 h-4 transition-transform duration-300 transform text-emerald-700 ${
+                      openSections.posts ? 'rotate-0' : '-rotate-90'
+                    }`} 
+                  />
+                </button>
               </div>
             </div>
 
-            {/* Per-Post Breakdown */}
-            <div className="space-y-4">
-              <h4 className="font-bold text-sm text-slate-900 flex items-center gap-2">
-                <BarChart3 className="w-4 h-4 text-emerald-700" />
-                Your Posts &amp; Individual Analytics
-              </h4>
+            {/* Collapsible Content */}
+            {openSections.posts && (
+              <div className="mt-6 pt-5 border-t border-slate-100 animate-in fade-in duration-300 space-y-6">
+                {/* Analytics Card */}
+                <div className="bg-slate-50/80 rounded-3xl p-5 sm:p-6 border border-slate-200/90 shadow-2xs">
+                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-slate-200/60">
+                    <div>
+                      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-50 border border-emerald-200/80 rounded-full text-[10px] font-bold text-emerald-800 uppercase tracking-wider w-fit">
+                        <TrendingUp className="w-3.5 h-3.5 text-emerald-700" />
+                        Post Analytics &amp; Reach Overview
+                      </span>
+                      <h3 className="text-lg sm:text-xl font-bold text-slate-900 mt-2">
+                        4,280 Total Post Impressions
+                      </h3>
+                      <p className="text-xs text-slate-600 mt-0.5">
+                        Your clinical case posts reached +24% more preceptors &amp; recruiters this month.
+                      </p>
+                    </div>
 
-              {staticUserPosts.map((post) => (
-                <div key={post.id} className="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-xs hover:shadow-md transition-shadow">
-                  <div className="flex justify-between items-start mb-2">
-                    <span className="bg-emerald-50 text-emerald-800 text-[10px] font-bold px-2.5 py-0.5 rounded-md border border-emerald-200/60">
-                      {post.category}
+                    <span className="bg-emerald-50 text-emerald-900 border border-emerald-200 text-xs font-bold px-3 py-1.5 rounded-xl shadow-xs">
+                      Top 5% Ayush Scholar Content
                     </span>
-                    <span className="text-[11px] text-slate-400 font-medium">{post.time}</span>
                   </div>
-                  
-                  <h4 className="font-bold text-slate-900 text-base mb-1">{post.title}</h4>
-                  <p className="text-xs text-slate-600 mb-3.5 leading-relaxed">{post.snippet}</p>
 
-                  <div className="bg-slate-50 p-3 rounded-xl border border-slate-200/60 mb-3 grid grid-cols-2 sm:grid-cols-4 gap-2 text-center text-xs">
-                    <div>
-                      <span className="text-[10px] text-slate-400 font-bold block">Post Views</span>
-                      <span className="font-bold text-slate-900 flex items-center justify-center gap-1">
-                        <Eye className="w-3.5 h-3.5 text-slate-500" />
-                        {post.views}
-                      </span>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4">
+                    <div className="bg-white border border-slate-200/80 p-3 rounded-2xl shadow-2xs">
+                      <span className="text-[11px] text-slate-500 font-semibold block">Total Views</span>
+                      <span className="text-lg sm:text-xl font-bold text-slate-900">4,280</span>
+                      <span className="text-[10px] text-emerald-700 font-semibold block mt-0.5">+18% this week</span>
                     </div>
 
-                    <div>
-                      <span className="text-[10px] text-slate-400 font-bold block">Recruiter Views</span>
-                      <span className="font-bold text-emerald-800 flex items-center justify-center gap-1">
-                        <Building className="w-3.5 h-3.5 text-emerald-600" />
-                        {post.recruiterViews}
-                      </span>
+                    <div className="bg-white border border-slate-200/80 p-3 rounded-2xl shadow-2xs">
+                      <span className="text-[11px] text-slate-500 font-semibold block">Post Engagements</span>
+                      <span className="text-lg sm:text-xl font-bold text-slate-900">399</span>
+                      <span className="text-[10px] text-emerald-700 font-semibold block mt-0.5">9.3% engagement</span>
                     </div>
 
-                    <div>
-                      <span className="text-[10px] text-slate-400 font-bold block">Applies Triggered</span>
-                      <span className="font-bold text-slate-900">12 Verified</span>
+                    <div className="bg-white border border-slate-200/80 p-3 rounded-2xl shadow-2xs">
+                      <span className="text-[11px] text-slate-500 font-semibold block">Faculty Comments</span>
+                      <span className="text-lg sm:text-xl font-bold text-slate-900">9</span>
+                      <span className="text-[10px] text-emerald-700 font-semibold block mt-0.5">3 preceptor threads</span>
                     </div>
 
-                    <div>
-                      <span className="text-[10px] text-slate-400 font-bold block">Audience Focus</span>
-                      <span className="font-bold text-emerald-900 truncate block">{post.topAudience}</span>
+                    <div className="bg-white border border-slate-200/80 p-3 rounded-2xl shadow-2xs">
+                      <span className="text-[11px] text-slate-500 font-semibold block">Recruiter Views</span>
+                      <span className="text-lg sm:text-xl font-bold text-slate-900">128</span>
+                      <span className="text-[10px] text-emerald-700 font-semibold block mt-0.5">Via posted cases</span>
                     </div>
                   </div>
                 </div>
-              ))}
-            </div>
+
+                {/* Per-Post Breakdown */}
+                <div className="space-y-4">
+                  <h4 className="font-bold text-sm text-slate-900 flex items-center gap-2">
+                    <BarChart3 className="w-4 h-4 text-emerald-700" />
+                    Your Posts &amp; Individual Analytics
+                  </h4>
+
+                  {staticUserPosts.map((post) => (
+                    <div key={post.id} className="bg-slate-50/70 rounded-2xl border border-slate-200/80 p-5 shadow-2xs hover:shadow-md transition-shadow">
+                      <div className="flex justify-between items-start mb-2">
+                        <span className="bg-emerald-50 text-emerald-800 text-[10px] font-bold px-2.5 py-0.5 rounded-md border border-emerald-200/60">
+                          {post.category}
+                        </span>
+                        <span className="text-[11px] text-slate-400 font-medium">{post.time}</span>
+                      </div>
+                      
+                      <h4 className="font-bold text-slate-900 text-base mb-1">{post.title}</h4>
+                      <p className="text-xs text-slate-600 mb-3.5 leading-relaxed">{post.snippet}</p>
+
+                      <div className="bg-white p-3 rounded-xl border border-slate-200/60 mb-3 grid grid-cols-2 sm:grid-cols-4 gap-2 text-center text-xs shadow-2xs">
+                        <div>
+                          <span className="text-[10px] text-slate-400 font-bold block">Post Views</span>
+                          <span className="font-bold text-slate-900 flex items-center justify-center gap-1">
+                            <Eye className="w-3.5 h-3.5 text-slate-500" />
+                            {post.views}
+                          </span>
+                        </div>
+
+                        <div>
+                          <span className="text-[10px] text-slate-400 font-bold block">Recruiter Views</span>
+                          <span className="font-bold text-emerald-800 flex items-center justify-center gap-1">
+                            <Building className="w-3.5 h-3.5 text-emerald-600" />
+                            {post.recruiterViews}
+                          </span>
+                        </div>
+
+                        <div>
+                          <span className="text-[10px] text-slate-400 font-bold block">Applies Triggered</span>
+                          <span className="font-bold text-slate-900">12 Verified</span>
+                        </div>
+
+                        <div>
+                          <span className="text-[10px] text-slate-400 font-bold block">Audience Focus</span>
+                          <span className="font-bold text-emerald-900 truncate block">{post.topAudience}</span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </section>
 
         </div>
