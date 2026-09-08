@@ -1,79 +1,79 @@
 import React, { useState } from 'react';
 import { 
   UserCheck, 
-  BookOpen, 
-  Award, 
-  CheckCircle2, 
-  Building2, 
-  MapPin, 
-  Mail, 
-  Phone, 
-  ShieldCheck, 
-  FileText, 
-  Edit3, 
-  Sparkles, 
   GraduationCap, 
-  Layers, 
-  Download, 
-  Check, 
-  X, 
-  Clock, 
+  Award, 
+  BookOpen, 
+  Building, 
+  MapPin, 
+  ShieldCheck, 
+  CheckCircle2, 
+  Star, 
+  Sparkles, 
   Users, 
-  ExternalLink,
-  ChevronRight,
-  BarChart3,
-  ArrowLeft
+  Edit3, 
+  X, 
+  Check, 
+  Calendar,
+  BadgeCheck,
+  ChevronDown
 } from 'lucide-react';
 
-export const FacultyProfileView = ({ user, onNavigate, onBack }) => {
-  const [activeTab, setActiveTab] = useState('overview'); // 'overview' | 'courses' | 'scholars' | 'grants'
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [toastMessage, setToastMessage] = useState(null);
+import meenakshiAvatar from '../../assets/images/meenakshi_avatar.jpg';
+import courseGmpPoster from '../../assets/images/course_gmp_poster.jpg';
+import courseGcpPoster from '../../assets/images/course_gcp_poster.jpg';
+import ayushHeroBanner from '../../assets/images/ayush_hero_banner.jpg';
 
-  const facultyData = {
-    name: user?.name || "Prof. Meenakshi Joshi",
-    role: user?.role || "Professor & HOD (Dravyaguna)",
-    id: user?.id || "FAC-AIIA-7712",
-    email: user?.email || "prof.mjoshi@aiia.gov.in",
-    phone: "+91 98765 43210",
-    institution: user?.institution || "All India Institute of Ayurveda (AIIA), New Delhi",
-    department: "Dravyaguna (Ayurvedic Pharmacology & Materia Medica)",
-    qualifications: "Ph.D. (Ayurveda), MD (Dravyaguna), BAMS (Gold Medalist)",
-    experience: "18+ Years Academic & Clinical Research Experience",
-    ncismReg: "NCISM/FAC/DL/2012/8842",
-    officeLocation: "Room 304, Academic Block, AIIA Sarita Vihar, New Delhi",
-    officeHours: "Mon - Fri (2:00 PM - 4:30 PM)",
-    bio: "Professor & Head of Department at AIIA. Specializing in Dravyaguna phytochemistry, Schedule T GMP cleanroom standards, ICH E6(R3) GCP clinical trials, and herbal product standardization. Academic Preceptor for 140+ Ayush scholars.",
-    avatar: user?.avatar || "MJ",
-    verificationHash: "0x8F9A12B4C5D6E7F890123456789ABCDEF"
-  };
+export const FacultyProfileView = ({ user, onNavigate }) => {
+  const [activeTab, setActiveTab] = useState('all'); // 'all' | 'courses' | 'degrees' | 'badges'
+  const [isEditingBio, setIsEditingBio] = useState(false);
+  const [saveSuccess, setSaveSuccess] = useState(false);
 
-  const [profileForm, setProfileForm] = useState({ ...facultyData });
+  // Show only 1 item initially in each section with "Show More" buttons
+  const [showAllCourses, setShowAllCourses] = useState(false);
+  const [showAllDegrees, setShowAllDegrees] = useState(false);
+  const [showAllBadges, setShowAllBadges] = useState(false);
 
-  const handleSaveProfile = (e) => {
+  const [profileData, setProfileData] = useState({
+    name: user?.name || 'Prof. Meenakshi Joshi',
+    role: user?.role || 'Professor & HOD (Dravyaguna)',
+    institution: user?.institution || 'All India Institute of Ayurveda (AIIA), New Delhi',
+    department: 'Dravyaguna (Ayurvedic Pharmacology & Materia Medica)',
+    facultyId: user?.id || 'FAC-AIIA-7712',
+    ncismReg: 'NCISM/FAC/DL/2018/4412',
+    email: user?.email || 'prof.mjoshi@aiia.gov.in',
+    phone: '+91 98101 23456',
+    location: 'Sarita Vihar, Mathura Road, New Delhi 110076',
+    experience: '16+ Years Postgraduate Mentorship & Research',
+    bio: 'Senior Professor and Head of Dravyaguna at AIIA New Delhi. Specializing in chromatographic botanical marker profiling, Schedule T GMP cleanroom standards, and ICH-GCP evidence-based clinical trials. Mentored over 140 postgraduates and supervised multiple CCRAS SPARK research grants.',
+    avatarImage: user?.avatarImage || meenakshiAvatar,
+    coverImage: ayushHeroBanner
+  });
+
+  const [editForm, setEditForm] = useState({ ...profileData });
+
+  const handleSaveBio = (e) => {
     e.preventDefault();
-    setIsEditModalOpen(false);
-    showToast('Faculty Profile updated successfully!');
+    setProfileData({ ...editForm });
+    setIsEditingBio(false);
+    setSaveSuccess(true);
+    setTimeout(() => setSaveSuccess(false), 3000);
   };
 
-  const showToast = (msg) => {
-    setToastMessage(msg);
-    setTimeout(() => setToastMessage(null), 3000);
-  };
-
-  // Authored Micro-Courses
+  // 1. HIGHLIGHTED: Authored & Supervised Courses
   const authoredCourses = [
     {
       id: 'mc-1',
-      title: 'Schedule T Cleanroom Airflow & Manufacturing Basics',
+      title: 'Schedule T Basics & Manufacturing Compliance',
       category: 'Manufacturing & GMP',
       duration: '90 mins',
       enrolled: 142,
-      rating: '4.9/5',
-      passRate: '96%',
-      targetCohort: 'BAMS Final Year',
-      regulatoryCitation: 'CDSCO Drugs Rules 1945',
-      status: 'Published & Active'
+      rating: '4.9',
+      regulatoryStandard: 'CDSCO Drugs Rules 1945',
+      posterImage: courseGmpPoster,
+      description: 'Indian pharmaceutical manufacturing requirements, premises hygiene, cleanroom airflows, and documentation protocols under Drugs Rules 1945.',
+      competencies: ['Schedule T Rules', 'Cleanroom Hygiene', 'GMP Protocol', 'QA Documentation'],
+      completionRate: '94% Checklist Passed'
     },
     {
       id: 'mc-2',
@@ -81,561 +81,625 @@ export const FacultyProfileView = ({ user, onNavigate, onBack }) => {
       category: 'Clinical Research',
       duration: '120 mins',
       enrolled: 198,
-      rating: '4.9/5',
-      passRate: '94%',
-      targetCohort: 'MD Dravyaguna Scholars',
-      regulatoryCitation: 'ICH E6(R3) Step 4 (Jan 2025)',
-      status: 'Published & Active'
+      rating: '4.9',
+      regulatoryStandard: 'ICH E6(R3) Step 4 (Adopted Jan 2025)',
+      posterImage: courseGcpPoster,
+      description: 'International standards for clinical trials covering participant ethics, informed consent, trial data reliability, and risk-based quality thinking.',
+      competencies: ['ICH E6(R3)', 'Informed Consent', 'Trial Ethics', 'Data Integrity'],
+      completionRate: '96% Protocol Verified'
     },
     {
       id: 'mc-3',
-      title: 'Pharmacovigilance Basics & ADR Reporting Protocol',
+      title: 'Pharmacovigilance Basics & ADR Safety Monitoring',
       category: 'Pharmacovigilance',
-      duration: '60 mins',
+      duration: '90 mins',
       enrolled: 156,
-      rating: '4.8/5',
-      passRate: '98%',
-      targetCohort: 'All Ayush Scholars',
-      regulatoryCitation: 'WHO-UMC Safety Guidelines',
-      status: 'Published & Active'
+      rating: '4.9',
+      regulatoryStandard: 'WHO-Pv ADR Safety Guidelines',
+      posterImage: courseGmpPoster,
+      description: 'Real-world Adverse Drug Reaction (ADR) detection, causality assessment, and regulatory safety signal submission workflows.',
+      competencies: ['ADR Detection', 'WHO-UMC Causality', 'Safety Reporting', 'Signal Analysis'],
+      completionRate: '91% Audit Score'
     },
     {
       id: 'mc-4',
       title: 'HPTLC Mobile Phase Selection & Marker Fingerprinting',
-      category: 'Quality Control / QA',
-      duration: '45 mins',
-      enrolled: 88,
-      rating: '4.9/5',
-      passRate: '92%',
-      targetCohort: 'BAMS 3rd Year',
-      regulatoryCitation: 'Ayurvedic Pharmacopoeia of India (API)',
-      status: 'Published & Active'
+      category: 'Quality Assurance / QA',
+      duration: '60 mins',
+      enrolled: 85,
+      rating: '4.8',
+      regulatoryStandard: 'Ayurvedic Pharmacopoeia of India (API)',
+      posterImage: courseGcpPoster,
+      description: 'Practical phytochemistry laboratory protocols for chromatographic botanical marker extraction, Rf value validation, and SOP preparation.',
+      competencies: ['HPTLC Assay', 'Marker Fingerprinting', 'Lab SOPs', 'Assay Validation'],
+      completionRate: '89% Hands-on Certified'
     }
   ];
 
-  // Mentored Scholars Submissions
-  const mentoredScholars = [
+  // 2. HIGHLIGHTED: Academic Degrees & Qualifications
+  const degrees = [
     {
-      id: 'sch-1',
-      name: 'Aarav Sharma',
-      degree: 'BAMS (Final Year 2026)',
-      topic: 'Triphala Churna HPTLC Marker Fingerprinting Protocol',
-      submittedAt: 'Today, 10:14 AM',
-      accuracy: '94% Diagnostic Match',
-      status: 'Verified & Digitally Signed'
+      degree: 'Ph.D. in Dravyaguna & Botanical Quality Standardization',
+      institution: 'All India Institute of Ayurveda (AIIA), New Delhi',
+      year: '2015',
+      grade: 'Doctorate Awarded with Distinction',
+      focus: 'Chromatographic Marker Profiling, Heavy Metal Remediation, and HPLC Assay Standardization for Classical Formulations.',
+      type: 'Doctoral Degree'
     },
     {
-      id: 'sch-2',
-      name: 'Sunita Patel',
-      degree: 'BAMS (3rd Year)',
-      topic: 'Schedule T Sterile Area Standard Operating Procedure',
-      submittedAt: 'Yesterday, 4:30 PM',
-      accuracy: '89% Diagnostic Match',
-      status: 'Verified & Digitally Signed'
+      degree: 'Doctor of Medicine (M.D. Ayurveda) – Dravyaguna Vigyana',
+      institution: 'National Institute of Ayurveda (NIA), Jaipur',
+      year: '2008',
+      grade: 'University Gold Medalist',
+      focus: 'Materia Medica, Clinical Pharmacology, Nadi Pariksha Correlation, and Medicinal Flora Pharmacognosy.',
+      type: 'Postgraduate Degree'
     },
     {
-      id: 'sch-3',
-      name: 'Karan Malhotra',
-      degree: 'MD Ayurveda (Dravyaguna)',
-      topic: 'NABL Analytical Method Validation for Heavy Metals',
-      submittedAt: '2 days ago',
-      accuracy: '96% Diagnostic Match',
-      status: 'Verified & Digitally Signed'
+      degree: 'Bachelor of Ayurvedic Medicine and Surgery (BAMS)',
+      institution: 'Faculty of Ayurveda, Institute of Medical Sciences (IMS-BHU), Varanasi',
+      year: '2005',
+      grade: 'First Class with Honors (Top 1% Merit)',
+      focus: 'Comprehensive Samhita Studies, Clinical Diagnostics, Panchakarma Therapeutics, and Shalya Tantra Basics.',
+      type: 'Undergraduate Degree'
+    },
+    {
+      degree: 'Post-Doctoral Clinical Research Fellowship',
+      institution: 'CSIR - Central Drug Research Institute (CDRI), Lucknow',
+      year: '2017',
+      grade: 'National Research Fellow',
+      focus: 'High-Throughput Phytopharmaceutical Quality Systems and Standard Operating Procedures (SOPs).',
+      type: 'Specialized Fellowship'
     }
   ];
 
-  // Research Grants & Publications
-  const grantsAndPubs = [
+  // 3. HIGHLIGHTED: Verified Badges & Accreditations
+  const badges = [
     {
-      type: 'Research Grant',
-      title: 'CCRAS SPARK-4.0 National Research Studentship Mentorship',
-      funding: '₹50,000 Student Grant',
-      agency: 'Ministry of Ayush / CCRAS',
-      role: 'Principal Academic Supervisor',
-      status: 'Active (2025-2026)'
+      title: 'NCISM Senior Academic Preceptor',
+      issuer: 'National Commission for Indian System of Medicine (NCISM)',
+      badgeCode: 'NCISM-PREC-DL-2024-884',
+      year: 'Active Preceptor',
+      description: 'Statutory national accreditation confirming preceptor eligibility to guide MD/MS scholars and supervise accredited Ayush curriculum standards.',
+      standard: 'NCISM Faculty Regulations Act',
+      accent: 'border-emerald-300 bg-emerald-50/70 text-emerald-950',
+      badgeBg: 'bg-emerald-800 text-white'
     },
     {
-      type: 'Industry Consultancy',
-      title: 'Dabur R&D Botanical Fingerprinting & Cleanroom SOP Validation',
-      funding: '₹2,50,000 R&D Sponsorship',
-      agency: 'Dabur India R&D Division',
-      role: 'Lead Preceptor & Quality Auditor',
-      status: 'Active'
+      title: 'ICH GCP E6(R3) Certified Principal Investigator',
+      issuer: 'CDSCO & Global Clinical Standards Forum',
+      badgeCode: 'GCP-ICH-2025-E6R3-01',
+      year: 'Jan 2025 Standard',
+      description: 'Certified in the international ICH E6(R3) Step 4 standard covering clinical trial participant protection, risk-based quality thinking, and trial data integrity.',
+      standard: 'ICH E6(R3) Step 4 (2025)',
+      accent: 'border-blue-300 bg-blue-50/70 text-blue-950',
+      badgeBg: 'bg-blue-800 text-white'
     },
     {
-      type: 'Publication',
-      title: 'High-Throughput HPTLC Quantification of Bioactive Markers in Polyherbal Formulations',
-      journal: 'Journal of Ayurveda & Integrative Medicine (JAIM)',
-      year: '2025',
-      citation: 'J. Ayu. Int. Med. 2025; 16(2): 104-112'
+      title: 'Schedule T GMP Senior Cleanroom Auditor',
+      issuer: 'Drugs Control Licensing Authority & Ayush Council',
+      badgeCode: 'GMP-SCH-T-AUD-9912',
+      year: 'Certified Auditor',
+      description: 'Accredited auditor for pharmaceutical manufacturing facilities, HVAC airflow validation, cross-contamination prevention, and Schedule T statutory logs.',
+      standard: 'Drugs Rules 1945 Schedule T',
+      accent: 'border-teal-300 bg-teal-50/70 text-teal-950',
+      badgeBg: 'bg-teal-800 text-white'
     },
     {
-      type: 'Publication',
-      title: 'Schedule T Cleanroom Hygiene Compliance Across Indian Ayush Manufacturing Units',
-      journal: 'NCISM Academic & Regulatory Review',
-      year: '2024',
-      citation: 'NCISM Reg. Rev. 2024; 8(1): 45-58'
+      title: 'CCRAS National Research Guide & SPARK-4.0 Mentor',
+      issuer: 'Central Council for Research in Ayurvedic Sciences (CCRAS)',
+      badgeCode: 'CCRAS-SPARK-GUIDE-412',
+      year: 'Active Guide',
+      description: 'Authorized national mentor for SPARK studentship research grants, supervising evidence-based classical formula validation and clinical trials.',
+      standard: 'CCRAS National Studentship',
+      accent: 'border-amber-300 bg-amber-50/70 text-amber-950',
+      badgeBg: 'bg-amber-800 text-white'
+    },
+    {
+      title: 'WHO-Pv Adverse Drug Reaction (ADR) Safety Officer',
+      issuer: 'National Pharmacovigilance Coordination Centre (NPvCC)',
+      badgeCode: 'NPVCC-SAFE-3302',
+      year: 'Accredited Lead',
+      description: 'Certified coordinator for adverse event signal surveillance, WHO-UMC causality evaluation, and rapid safety alerts under the national Pv program.',
+      standard: 'WHO-UMC Safety Guidelines',
+      accent: 'border-purple-300 bg-purple-50/70 text-purple-950',
+      badgeBg: 'bg-purple-800 text-white'
     }
   ];
 
   return (
-    <div className="space-y-6 animate-fadeIn pb-12 font-sans max-w-7xl mx-auto">
+    <div className="min-h-screen bg-[#f7faf8] text-slate-900 pb-16 font-sans">
+      
       {/* Toast Notification */}
-      {toastMessage && (
-        <div className="fixed top-20 right-6 z-50 bg-emerald-800 text-white px-5 py-3 rounded-2xl shadow-xl border border-emerald-700 flex items-center gap-3 animate-bounce">
-          <CheckCircle2 className="w-5 h-5 text-emerald-300" />
-          <span className="text-xs font-bold">{toastMessage}</span>
+      {saveSuccess && (
+        <div className="fixed top-20 right-5 z-50 bg-emerald-800 text-white px-4 py-3 rounded-2xl shadow-xl flex items-center gap-2 text-xs font-bold animate-in slide-in-from-top">
+          <Check className="w-4 h-4 text-emerald-300" />
+          <span>Faculty profile updated successfully!</span>
         </div>
       )}
 
-      {/* Top Header / Back Navigation Bar */}
-      {onBack && (
-        <div className="flex items-center justify-between gap-3 bg-white p-3.5 px-5 rounded-2xl border border-slate-200/80 shadow-2xs">
-          <button
-            onClick={onBack}
-            className="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-emerald-800 font-bold text-xs flex items-center gap-1.5 transition-colors cursor-pointer active:scale-95"
-            title="Go Back"
-          >
-            <ArrowLeft className="w-3.5 h-3.5 text-emerald-700" />
-            <span>Back</span>
-          </button>
-
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
-              Faculty Scholar Profile
+      {/* Cover Banner */}
+      <div 
+        className="h-44 sm:h-56 bg-gradient-to-r from-emerald-900 via-teal-800 to-emerald-700 relative overflow-hidden rounded-3xl mb-4 bg-cover bg-center shadow-xs"
+        style={{ backgroundImage: `url(${profileData.coverImage})` }}
+      >
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-emerald-950/40 to-transparent" />
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-full flex justify-between items-end pb-4 relative z-10">
+          <div className="text-white">
+            <span className="px-3 py-1 bg-emerald-500/30 backdrop-blur-md border border-emerald-300/40 rounded-full text-[11px] font-extrabold uppercase tracking-wider text-emerald-100 inline-flex items-center gap-1.5 mb-1">
+              <UserCheck className="w-3.5 h-3.5 text-emerald-300" />
+              Academic Preceptor Profile
             </span>
-            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-50 text-emerald-800 border border-emerald-200">
-              <UserCheck className="w-3 h-3 text-emerald-600" />
-              Senior Academic Preceptor
-            </span>
-          </div>
-        </div>
-      )}
-
-      {/* Profile Header Banner */}
-      <div className="bg-white rounded-3xl overflow-hidden border border-slate-200/90 shadow-soft">
-        {/* Academic Gradient Cover */}
-        <div className="min-h-[160px] sm:h-52 w-full bg-gradient-to-r from-emerald-950 via-teal-900 to-emerald-900 relative p-4 sm:p-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-          <div className="absolute inset-0 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:16px_16px] opacity-10" />
-          
-          <span className="relative z-10 px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full text-[11px] sm:text-xs font-extrabold bg-emerald-400/20 text-emerald-200 border border-emerald-400/30 backdrop-blur-md flex items-center gap-1.5 shadow-xs">
-            <UserCheck className="w-3.5 h-3.5 text-emerald-300 shrink-0" />
-            <span>Senior Academic Preceptor · NCISM Verified</span>
-          </span>
-
-          <button
-            onClick={() => setIsEditModalOpen(true)}
-            className="relative z-10 px-3.5 py-1.5 sm:px-4 sm:py-2 bg-white/10 hover:bg-white/20 text-white text-[11px] sm:text-xs font-bold rounded-xl border border-white/20 backdrop-blur-md transition-all cursor-pointer flex items-center gap-1.5 shrink-0"
-          >
-            <Edit3 className="w-3.5 h-3.5" />
-            <span>Edit Faculty Profile</span>
-          </button>
-        </div>
-
-        {/* Profile Details Bar */}
-        <div className="px-4 sm:px-6 pb-6 pt-0 relative flex flex-col md:flex-row items-start md:items-end justify-between gap-5 -mt-12 sm:-mt-16">
-          <div className="flex flex-col sm:flex-row items-start sm:items-end gap-4 sm:gap-5 w-full md:w-auto">
-            {/* Avatar Circle */}
-            <div className="w-20 h-20 sm:w-28 sm:h-28 rounded-3xl bg-gradient-to-br from-emerald-700 via-teal-800 to-emerald-950 text-white font-extrabold text-2xl sm:text-4xl flex items-center justify-center border-4 border-white shadow-md relative z-20 shrink-0">
-              {facultyData.avatar}
-            </div>
-
-            <div className="space-y-1 z-10 w-full">
-              <div className="flex flex-wrap items-center gap-2">
-                <h1 className="text-xl sm:text-3xl font-extrabold text-slate-900 leading-tight">{profileForm.name}</h1>
-                <span className="px-2.5 py-0.5 rounded-full text-[11px] sm:text-xs font-bold bg-emerald-100 text-emerald-900 border border-emerald-200 flex items-center gap-1">
-                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-700" />
-                  HOD & Research Lead
-                </span>
-              </div>
-
-              <p className="text-xs font-bold text-emerald-800 flex items-center gap-1.5 mt-0.5">
-                <GraduationCap className="w-4 h-4 text-emerald-700 shrink-0" />
-                <span>{profileForm.role}</span>
-              </p>
-
-              <div className="text-xs text-slate-500 flex flex-wrap items-center gap-x-2 gap-y-1 pt-0.5">
-                <span className="flex items-center gap-1">
-                  <Building2 className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                  <span>{profileForm.institution}</span>
-                </span>
-                <span className="hidden sm:inline text-slate-300">·</span>
-                <span className="font-mono text-slate-700 font-bold bg-slate-100 px-2 py-0.5 rounded text-[11px]">
-                  ID: {profileForm.id}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* Quick Metrics Cards */}
-          <div className="grid grid-cols-3 gap-2 sm:gap-3 w-full md:w-auto pt-2 md:pt-0">
-            <div className="bg-emerald-50 border border-emerald-200 p-2.5 sm:px-4 sm:py-2.5 rounded-2xl text-center">
-              <span className="text-[9px] sm:text-[10px] font-extrabold text-emerald-800 uppercase tracking-tight block">Authored</span>
-              <span className="text-base sm:text-xl font-extrabold text-emerald-950 block mt-0.5">4 Courses</span>
-            </div>
-            <div className="bg-blue-50 border border-blue-200 p-2.5 sm:px-4 sm:py-2.5 rounded-2xl text-center">
-              <span className="text-[9px] sm:text-[10px] font-extrabold text-blue-800 uppercase tracking-tight block">Mentored</span>
-              <span className="text-base sm:text-xl font-extrabold text-blue-950 block mt-0.5">142 Scholars</span>
-            </div>
-            <div className="bg-purple-50 border border-purple-200 p-2.5 sm:px-4 sm:py-2.5 rounded-2xl text-center">
-              <span className="text-[9px] sm:text-[10px] font-extrabold text-purple-800 uppercase tracking-tight block">Grants</span>
-              <span className="text-base sm:text-xl font-extrabold text-purple-950 block mt-0.5">3 Grants</span>
-            </div>
           </div>
         </div>
       </div>
 
-      {/* Navigation Tabs (Scrollable on mobile) */}
-      <div className="flex items-center gap-2 border-b border-slate-200/90 pb-3 overflow-x-auto scrollbar-none whitespace-nowrap">
-        {[
-          { id: 'overview', label: '01 · Academic Bio & Credentials', icon: UserCheck },
-          { id: 'courses', label: '02 · Authored Courses (4)', icon: BookOpen },
-          { id: 'scholars', label: '03 · Mentored Cohorts (142)', icon: Users },
-          { id: 'grants', label: '04 · Grants & Publications (4)', icon: Award },
-        ].map((tab) => {
-          const Icon = tab.icon;
-          const isActive = activeTab === tab.id;
-          return (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-2xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 border shrink-0 ${
-                isActive
-                  ? 'bg-emerald-800 text-white border-emerald-900 shadow-xs ring-2 ring-emerald-600/30'
-                  : 'bg-white text-slate-700 hover:bg-slate-50 border-slate-200'
-              }`}
-            >
-              <Icon className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${isActive ? 'text-emerald-300' : 'text-slate-400'}`} />
-              <span>{tab.label}</span>
-            </button>
-          );
-        })}
-      </div>
-
-      {/* TAB 1: ACADEMIC BIO & CREDENTIALS */}
-      {activeTab === 'overview' && (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          
-          {/* Main Bio & Qualifications (2 cols) */}
-          <div className="lg:col-span-2 space-y-6">
+      {/* Main Container */}
+      <div className="max-w-6xl mx-auto -mt-16 sm:-mt-20 relative z-10 px-4 sm:px-6 space-y-6">
+        
+        {/* Profile Card Header */}
+        <div className="bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-7 shadow-xs">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-5">
             
-            {/* About / Preceptor Statement */}
-            <div className="bg-white rounded-3xl p-6 border border-slate-200/90 shadow-soft space-y-4">
-              <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-                <h3 className="text-base font-extrabold text-slate-900 flex items-center gap-2">
-                  <FileText className="w-4 h-4 text-emerald-700" />
-                  Preceptor Statement & Academic Bio
-                </h3>
-                <span className="text-[11px] font-bold text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
-                  NCISM Registered Preceptor
-                </span>
+            {/* Avatar & Core Faculty Info */}
+            <div className="flex flex-col sm:flex-row items-start sm:items-end gap-4 sm:gap-6 w-full">
+              
+              <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-3xl bg-gradient-to-br from-emerald-800 to-emerald-950 text-white font-extrabold text-2xl sm:text-3xl flex items-center justify-center border-4 border-white shadow-md overflow-hidden relative shrink-0">
+                {profileData.avatarImage ? (
+                  <img src={profileData.avatarImage} alt={profileData.name} className="w-full h-full object-cover" />
+                ) : (
+                  <span>MJ</span>
+                )}
               </div>
 
-              <p className="text-xs text-slate-700 leading-relaxed font-medium">
-                {profileForm.bio}
-              </p>
-
-              <div className="pt-2 grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80">
-                  <span className="text-[10px] font-extrabold uppercase text-slate-400 block">Department</span>
-                  <span className="font-extrabold text-slate-900 block mt-0.5">{profileForm.department}</span>
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+                    {profileData.name}
+                  </h1>
+                  <span className="bg-emerald-100 text-emerald-900 border border-emerald-300 text-[11px] font-extrabold px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                    <ShieldCheck className="w-3.5 h-3.5 text-emerald-700" />
+                    NCISM Verified Preceptor
+                  </span>
+                  <span className="bg-teal-100 text-teal-900 border border-teal-300 text-[11px] font-extrabold px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                    <Award className="w-3.5 h-3.5 text-teal-700" />
+                    CCRAS Guide
+                  </span>
                 </div>
-                <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80">
-                  <span className="text-[10px] font-extrabold uppercase text-slate-400 block">Academic Qualifications</span>
-                  <span className="font-extrabold text-slate-900 block mt-0.5">{profileForm.qualifications}</span>
+
+                <p className="text-xs sm:text-sm font-bold text-emerald-800 mt-1">
+                  {profileData.role}
+                </p>
+
+                <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 text-xs text-slate-500 font-semibold mt-2">
+                  <span className="flex items-center gap-1 text-slate-700 font-bold">
+                    <Building className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
+                    <span>{profileData.institution}</span>
+                  </span>
+                  <span className="hidden sm:inline text-slate-300">•</span>
+                  <span className="flex items-center gap-1">
+                    <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                    <span>{profileData.location}</span>
+                  </span>
                 </div>
               </div>
+
             </div>
 
-            {/* Core Teaching & Research Expertise */}
-            <div className="bg-white rounded-3xl p-6 border border-slate-200/90 shadow-soft space-y-4">
-              <h3 className="text-base font-extrabold text-slate-900 flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-emerald-700" />
-                Preceptor Expertise & Specializations
-              </h3>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                {[
-                  { title: 'Schedule T Cleanroom GMP', desc: 'Indian pharmaceutical manufacturing standards under Drugs Rules 1945.' },
-                  { title: 'ICH E6(R3) GCP Clinical Trials', desc: 'Step 4 Jan 2025 standard for trial ethics, consent & data integrity.' },
-                  { title: 'HPTLC Botanical Assay', desc: 'High-throughput chromatographic marker standardization and assay.' },
-                  { title: 'Pharmacovigilance & ADR', desc: 'WHO-UMC adverse event detection, safety monitoring & CDSCO reporting.' }
-                ].map((exp, idx) => (
-                  <div key={idx} className="p-4 bg-emerald-50/50 rounded-2xl border border-emerald-200/70 space-y-1">
-                    <span className="font-extrabold text-emerald-950 block text-xs flex items-center gap-1.5">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700" />
-                      {exp.title}
-                    </span>
-                    <p className="text-[11px] text-slate-600 leading-snug">{exp.desc}</p>
-                  </div>
-                ))}
-              </div>
+            {/* Quick Actions */}
+            <div className="flex items-center gap-2.5 w-full md:w-auto shrink-0">
+              <button
+                onClick={() => setIsEditingBio(true)}
+                className="w-full sm:w-auto px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer border border-slate-200"
+              >
+                <Edit3 className="w-3.5 h-3.5 text-slate-600" />
+                <span>Edit Profile</span>
+              </button>
             </div>
 
           </div>
 
-          {/* Sidebar: Verified Institutional Contact (1 col) */}
-          <div className="space-y-6">
-            
-            {/* Verified Identity Card */}
-            <div className="bg-white rounded-3xl p-6 border border-slate-200/90 shadow-soft space-y-4">
-              <h3 className="text-base font-extrabold text-slate-900 flex items-center gap-2">
-                <ShieldCheck className="w-4 h-4 text-emerald-700" />
-                Verified Identity & Contact
-              </h3>
-
-              <div className="space-y-3 text-xs">
-                <div className="pb-2 border-b border-slate-100">
-                  <span className="text-[10px] font-bold text-slate-400 block uppercase">Faculty ID / Roll</span>
-                  <span className="font-mono font-extrabold text-slate-800">{profileForm.id}</span>
-                </div>
-
-                <div className="pb-2 border-b border-slate-100">
-                  <span className="text-[10px] font-bold text-slate-400 block uppercase">Official Email</span>
-                  <span className="font-semibold text-emerald-800 flex items-center gap-1">
-                    <Mail className="w-3.5 h-3.5 text-emerald-700" />
-                    {profileForm.email}
-                  </span>
-                </div>
-
-                <div className="pb-2 border-b border-slate-100">
-                  <span className="text-[10px] font-bold text-slate-400 block uppercase">Contact Number</span>
-                  <span className="font-semibold text-slate-800 flex items-center gap-1">
-                    <Phone className="w-3.5 h-3.5 text-slate-500" />
-                    {profileForm.phone}
-                  </span>
-                </div>
-
-                <div className="pb-2 border-b border-slate-100">
-                  <span className="text-[10px] font-bold text-slate-400 block uppercase">NCISM Reg. Code</span>
-                  <span className="font-mono font-semibold text-slate-800">{profileForm.ncismReg}</span>
-                </div>
-
-                <div className="pb-2 border-b border-slate-100">
-                  <span className="text-[10px] font-bold text-slate-400 block uppercase">Office Campus Location</span>
-                  <span className="font-medium text-slate-700 flex items-center gap-1 mt-0.5">
-                    <MapPin className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
-                    {profileForm.officeLocation}
-                  </span>
-                </div>
-
-                <div>
-                  <span className="text-[10px] font-bold text-slate-400 block uppercase">Student Office Hours</span>
-                  <span className="font-semibold text-slate-800 flex items-center gap-1 mt-0.5">
-                    <Clock className="w-3.5 h-3.5 text-amber-600" />
-                    {profileForm.officeHours}
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* Cryptographic Preceptor Key Card */}
-            <div className="bg-emerald-950 text-white rounded-3xl p-5 shadow-lg space-y-3 border border-emerald-800">
-              <div className="flex items-center justify-between">
-                <span className="text-[10px] font-extrabold uppercase text-emerald-300 tracking-wider">Preceptor Ledger Key</span>
-                <span className="px-2 py-0.5 rounded text-[9px] font-bold bg-emerald-800 text-emerald-200">VERIFIED</span>
-              </div>
-              <p className="font-mono text-[10px] text-emerald-200 break-all bg-emerald-900/60 p-2.5 rounded-xl border border-emerald-800/80">
-                {profileForm.verificationHash}
-              </p>
-              <p className="text-[11px] text-emerald-300/80 leading-tight">
-                Used to cryptographically sign & audit student micro-sprint completion dossiers.
-              </p>
-            </div>
-
-          </div>
-
-        </div>
-      )}
-
-      {/* TAB 2: AUTHORED COURSES */}
-      {activeTab === 'courses' && (
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="text-base font-extrabold text-slate-900">
-                Published Courses & Pedagogical Modules
-              </h3>
-              <p className="text-xs text-slate-500 mt-0.5">
-                Micro-sprints authored by {profileForm.name} adhering to the 6-Step Pedagogical Blueprint.
-              </p>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {authoredCourses.map((course) => (
-              <div key={course.id} className="bg-white rounded-3xl p-5 border border-slate-200/90 shadow-soft space-y-3 flex flex-col justify-between">
-                <div className="space-y-2">
-                  <div className="flex justify-between items-start gap-2">
-                    <span className="px-2.5 py-1 rounded-lg text-[10px] font-extrabold uppercase bg-emerald-100 text-emerald-900 border border-emerald-200">
-                      {course.category}
-                    </span>
-                    <span className="text-[11px] font-bold text-slate-500 flex items-center gap-1">
-                      <Clock className="w-3.5 h-3.5" />
-                      {course.duration}
-                    </span>
-                  </div>
-
-                  <h4 className="font-extrabold text-sm text-slate-900 leading-snug">{course.title}</h4>
-
-                  <div className="p-2.5 bg-slate-50 rounded-xl text-xs text-slate-600 flex items-center justify-between">
-                    <span>Citation: <strong className="text-slate-800">{course.regulatoryCitation}</strong></span>
-                    <span className="font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded text-[10px]">{course.status}</span>
-                  </div>
-                </div>
-
-                <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-bold">
-                  <span className="text-slate-700">{course.enrolled} Scholars Enrolled</span>
-                  <span className="text-emerald-800">Pass Rate: {course.passRate}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* TAB 3: MENTORED SCHOLARS */}
-      {activeTab === 'scholars' && (
-        <div className="space-y-4">
-          <div className="bg-white rounded-3xl p-6 border border-slate-200/90 shadow-soft space-y-4">
-            <h3 className="text-base font-extrabold text-slate-900">
-              Recent Scholar Proof-of-Work Audits
-            </h3>
-            <p className="text-xs text-slate-500">
-              Practical workplace activity checklists evaluated and digitally signed by {profileForm.name}.
+          {/* Bio Statement */}
+          <div className="mt-5 pt-5 border-t border-slate-100">
+            <h2 className="text-[11px] font-extrabold uppercase text-slate-400 tracking-wider mb-1.5">
+              Academic & Preceptor Profile Statement
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-700 leading-relaxed font-medium">
+              "{profileData.bio}"
             </p>
+          </div>
 
-            <div className="space-y-3">
-              {mentoredScholars.map((sch) => (
-                <div key={sch.id} className="p-4 bg-slate-50 rounded-2xl border border-slate-200/80 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-                  <div>
-                    <h4 className="text-xs font-extrabold text-slate-900">{sch.topic}</h4>
-                    <p className="text-[11px] text-slate-600 mt-0.5">
-                      Student: <strong className="text-slate-800">{sch.name}</strong> ({sch.degree}) · {sch.submittedAt}
-                    </p>
-                  </div>
-                  <span className="px-3 py-1 bg-emerald-100 text-emerald-900 font-bold text-xs rounded-xl flex items-center gap-1.5 shrink-0">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700" />
-                    {sch.status}
-                  </span>
-                </div>
-              ))}
+          {/* High-Level Focus Statistics - STRICTLY NEEDED STATS */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-5 pt-5 border-t border-slate-100">
+            <div 
+              onClick={() => setActiveTab('courses')}
+              className="bg-emerald-50/70 p-3.5 rounded-2xl text-center border border-emerald-200/80 cursor-pointer hover:bg-emerald-100/70 transition-colors"
+            >
+              <span className="block text-2xl font-extrabold text-emerald-900">{authoredCourses.length}</span>
+              <span className="text-[11px] font-bold text-emerald-800 uppercase tracking-wider">Authored Courses</span>
+            </div>
+            
+            <div 
+              onClick={() => setActiveTab('degrees')}
+              className="bg-blue-50/70 p-3.5 rounded-2xl text-center border border-blue-200/80 cursor-pointer hover:bg-blue-100/70 transition-colors"
+            >
+              <span className="block text-2xl font-extrabold text-blue-900">{degrees.length}</span>
+              <span className="text-[11px] font-bold text-blue-800 uppercase tracking-wider">Earned Degrees</span>
+            </div>
+
+            <div 
+              onClick={() => setActiveTab('badges')}
+              className="bg-teal-50/70 p-3.5 rounded-2xl text-center border border-teal-200/80 cursor-pointer hover:bg-teal-100/70 transition-colors"
+            >
+              <span className="block text-2xl font-extrabold text-teal-900">{badges.length}</span>
+              <span className="text-[11px] font-bold text-teal-800 uppercase tracking-wider">Verified Badges</span>
+            </div>
+
+            <div className="bg-slate-50 p-3.5 rounded-2xl text-center border border-slate-200/80">
+              <span className="block text-2xl font-extrabold text-slate-900">142</span>
+              <span className="text-[11px] font-bold text-slate-600 uppercase tracking-wider">Mentored Scholars</span>
             </div>
           </div>
+
         </div>
-      )}
 
-      {/* TAB 4: GRANTS & PUBLICATIONS */}
-      {activeTab === 'grants' && (
-        <div className="space-y-4">
-          <h3 className="text-base font-extrabold text-slate-900">
-            Research Grants, FDPs & Publications
-          </h3>
+        {/* Highlight Filter Tabs */}
+        <div className="flex flex-wrap items-center gap-2 border-b border-slate-200 pb-2">
+          {[
+            { id: 'all', label: 'All Profile Highlights', icon: Sparkles },
+            { id: 'courses', label: `Authored Courses (${authoredCourses.length})`, icon: BookOpen },
+            { id: 'degrees', label: `Degrees & Qualifications (${degrees.length})`, icon: GraduationCap },
+            { id: 'badges', label: `Verified Badges (${badges.length})`, icon: Award },
+          ].map((tab) => {
+            const Icon = tab.icon;
+            const isActive = activeTab === tab.id;
+            return (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 ${
+                  isActive
+                    ? 'bg-emerald-800 text-white shadow-xs'
+                    : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-200'
+                }`}
+              >
+                <Icon className="w-3.5 h-3.5" />
+                <span>{tab.label}</span>
+              </button>
+            );
+          })}
+        </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {grantsAndPubs.map((item, idx) => (
-              <div key={idx} className="bg-white rounded-3xl p-5 border border-slate-200/90 shadow-soft space-y-2">
-                <span className="px-2.5 py-0.5 rounded text-[10px] font-extrabold uppercase bg-emerald-100 text-emerald-900 border border-emerald-200 inline-block">
-                  {item.type}
-                </span>
-                <h4 className="font-extrabold text-xs text-slate-900 leading-snug">{item.title}</h4>
-                {item.funding && (
-                  <p className="text-xs font-bold text-emerald-800">{item.funding} · {item.agency}</p>
-                )}
-                {item.journal && (
-                  <p className="text-xs text-slate-500">{item.journal} ({item.year})</p>
+        {/* Main Highlights Area (Courses, Degrees, and Badges) */}
+        <div className="w-full space-y-6">
+            
+            {/* HIGHLIGHT 1: COURSES */}
+            {(activeTab === 'all' || activeTab === 'courses') && (
+              <div className="bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-6 shadow-xs space-y-4">
+                <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                  <div className="flex items-center gap-2">
+                    <div className="p-2 rounded-xl bg-emerald-100 text-emerald-800">
+                      <BookOpen className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <h2 className="text-base font-extrabold text-slate-900">
+                        Authored Industry Micro-Courses
+                      </h2>
+                      <p className="text-xs text-slate-500">
+                        Practical regulatory and manufacturing courses authored for Ayush scholars
+                      </p>
+                    </div>
+                  </div>
+                  <span className="text-xs font-extrabold text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
+                    {authoredCourses.length} Published
+                  </span>
+                </div>
+
+                <div className={`grid grid-cols-1 ${showAllCourses ? 'sm:grid-cols-2' : ''} gap-4 pt-1`}>
+                  {(showAllCourses ? authoredCourses : authoredCourses.slice(0, 1)).map((course) => (
+                    <div 
+                      key={course.id} 
+                      className="rounded-2xl border border-slate-200 bg-slate-50/50 hover:bg-slate-50 transition-all p-4 flex flex-col justify-between space-y-3 group shadow-2xs"
+                    >
+                      <div className="space-y-2">
+                        {/* Tags */}
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-emerald-100 text-emerald-900 border border-emerald-200">
+                            {course.category}
+                          </span>
+                          <span className="text-[10px] font-bold text-amber-700 flex items-center gap-0.5">
+                            <Star className="w-3 h-3 fill-amber-400 text-amber-500" />
+                            {course.rating}
+                          </span>
+                        </div>
+
+                        <h3 className="text-sm font-bold text-slate-900 leading-snug group-hover:text-emerald-800 transition-colors">
+                          {course.title}
+                        </h3>
+
+                        {/* Official Regulatory Citation Chip */}
+                        <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white border border-slate-200 text-[10px] font-semibold text-slate-600">
+                          <ShieldCheck className="w-3 h-3 text-emerald-600" />
+                          <span>Standard: {course.regulatoryStandard}</span>
+                        </div>
+
+                        <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed">
+                          {course.description}
+                        </p>
+
+                        {/* Competencies */}
+                        <div className="flex flex-wrap items-center gap-1 pt-1">
+                          {course.competencies.slice(0, 3).map((comp, idx) => (
+                            <span key={idx} className="text-[9px] font-bold bg-white text-slate-700 px-1.5 py-0.5 rounded border border-slate-200">
+                              {comp}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Course Footer */}
+                      <div className="pt-3 border-t border-slate-200/80 flex items-center justify-between text-xs font-semibold text-slate-500">
+                        <span className="flex items-center gap-1 font-bold text-slate-700">
+                          <Users className="w-3.5 h-3.5 text-slate-400" />
+                          <span>{course.enrolled} Scholars</span>
+                        </span>
+                        <span className="text-[11px] font-extrabold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded">
+                          {course.completionRate}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {authoredCourses.length > 1 && (
+                  <div className="pt-3 border-t border-slate-100 flex justify-center">
+                    <button
+                      onClick={() => setShowAllCourses(!showAllCourses)}
+                      className="inline-flex items-center gap-2 px-5 py-2 rounded-xl text-xs font-bold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 transition-all cursor-pointer shadow-2xs active:scale-95"
+                    >
+                      <span>{showAllCourses ? 'Show Less' : `Show More (${authoredCourses.length - 1} More Courses)`}</span>
+                      <ChevronDown className={`w-3.5 h-3.5 text-emerald-700 transition-transform duration-200 ${showAllCourses ? 'rotate-180' : ''}`} />
+                    </button>
+                  </div>
                 )}
               </div>
-            ))}
-          </div>
-        </div>
-      )}
+            )}
 
-      {/* EDIT FACULTY PROFILE MODAL */}
-      {isEditModalOpen && (
+            {/* HIGHLIGHT 2: DEGREES & QUALIFICATIONS */}
+            {(activeTab === 'all' || activeTab === 'degrees') && (
+              <div className="bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-6 shadow-xs space-y-4">
+                <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                  <div className="flex items-center gap-2">
+                    <div className="p-2 rounded-xl bg-blue-100 text-blue-800">
+                      <GraduationCap className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <h2 className="text-base font-extrabold text-slate-900">
+                        Degrees & Academic Qualifications
+                      </h2>
+                      <p className="text-xs text-slate-500">
+                        Academic degrees, university gold medals, and specialized fellowships
+                      </p>
+                    </div>
+                  </div>
+                  <span className="text-xs font-extrabold text-blue-800 bg-blue-50 px-2.5 py-1 rounded-full border border-blue-200">
+                    {degrees.length} Verified
+                  </span>
+                </div>
+
+                <div className="space-y-3 pt-1">
+                  {(showAllDegrees ? degrees : degrees.slice(0, 1)).map((deg, idx) => (
+                    <div 
+                      key={idx} 
+                      className="p-4 rounded-2xl border border-slate-200 bg-slate-50/50 hover:bg-slate-50 transition-all space-y-2"
+                    >
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                        <h3 className="text-sm font-extrabold text-slate-900 flex items-center gap-2">
+                          <span>{deg.degree}</span>
+                        </h3>
+                        <span className="text-xs font-extrabold text-blue-900 bg-blue-100/70 border border-blue-200 px-2.5 py-0.5 rounded-full shrink-0">
+                          {deg.grade}
+                        </span>
+                      </div>
+
+                      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-600 font-semibold">
+                        <span className="flex items-center gap-1 text-emerald-800 font-bold">
+                          <Building className="w-3.5 h-3.5 text-emerald-700" />
+                          <span>{deg.institution}</span>
+                        </span>
+                        <span>•</span>
+                        <span className="flex items-center gap-1 text-slate-500">
+                          <Calendar className="w-3.5 h-3.5 text-slate-400" />
+                          <span>Conferred: {deg.year}</span>
+                        </span>
+                        <span>•</span>
+                        <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
+                          {deg.type}
+                        </span>
+                      </div>
+
+                      <p className="text-xs text-slate-600 leading-relaxed pt-0.5">
+                        <strong className="text-slate-700 font-bold">Specialized Focus:</strong> {deg.focus}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+
+                {degrees.length > 1 && (
+                  <div className="pt-3 border-t border-slate-100 flex justify-center">
+                    <button
+                      onClick={() => setShowAllDegrees(!showAllDegrees)}
+                      className="inline-flex items-center gap-2 px-5 py-2 rounded-xl text-xs font-bold text-blue-800 bg-blue-50 hover:bg-blue-100 border border-blue-200 transition-all cursor-pointer shadow-2xs active:scale-95"
+                    >
+                      <span>{showAllDegrees ? 'Show Less' : `Show More (${degrees.length - 1} More Degrees)`}</span>
+                      <ChevronDown className={`w-3.5 h-3.5 text-blue-700 transition-transform duration-200 ${showAllDegrees ? 'rotate-180' : ''}`} />
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* HIGHLIGHT 3: VERIFIED BADGES & ACCREDITATIONS */}
+            {(activeTab === 'all' || activeTab === 'badges') && (
+              <div className="bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-6 shadow-xs space-y-4">
+                <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                  <div className="flex items-center gap-2">
+                    <div className="p-2 rounded-xl bg-teal-100 text-teal-800">
+                      <Award className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <h2 className="text-base font-extrabold text-slate-900">
+                        Verified Badges & Professional Accreditations
+                      </h2>
+                      <p className="text-xs text-slate-500">
+                        Official NCISM, CDSCO, WHO, and CCRAS cryptographic preceptor badges
+                      </p>
+                    </div>
+                  </div>
+                  <span className="text-xs font-extrabold text-teal-800 bg-teal-50 px-2.5 py-1 rounded-full border border-teal-200">
+                    {badges.length} Credentials
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 gap-3.5 pt-1">
+                  {(showAllBadges ? badges : badges.slice(0, 1)).map((badge, idx) => (
+                    <div 
+                      key={idx} 
+                      className={`p-4 rounded-2xl border ${badge.accent} flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 transition-all`}
+                    >
+                      <div className="flex items-start gap-3.5">
+                        <div className={`w-10 h-10 rounded-xl ${badge.badgeBg} flex items-center justify-center font-bold shrink-0 shadow-xs mt-0.5`}>
+                          <BadgeCheck className="w-5 h-5 text-white" />
+                        </div>
+                        
+                        <div className="space-y-1">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <h3 className="text-sm font-extrabold text-slate-900">
+                              {badge.title}
+                            </h3>
+                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-white border border-slate-200 text-slate-700">
+                              {badge.year}
+                            </span>
+                          </div>
+
+                          <p className="text-xs text-slate-600 leading-relaxed max-w-xl">
+                            {badge.description}
+                          </p>
+
+                          <div className="flex flex-wrap items-center gap-2 text-[11px] font-semibold text-slate-500 pt-0.5">
+                            <span>Issuer: <strong className="text-slate-800">{badge.issuer}</strong></span>
+                            <span>•</span>
+                            <span className="font-mono text-[10px] bg-white px-2 py-0.5 rounded border border-slate-200 text-slate-700">
+                              ID: {badge.badgeCode}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="shrink-0 sm:self-center">
+                        <span className="px-3 py-1 bg-white rounded-xl border border-slate-200 text-[11px] font-extrabold text-emerald-800 flex items-center gap-1 shadow-2xs">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                          <span>Verified</span>
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {badges.length > 1 && (
+                  <div className="pt-3 border-t border-slate-100 flex justify-center">
+                    <button
+                      onClick={() => setShowAllBadges(!showAllBadges)}
+                      className="inline-flex items-center gap-2 px-5 py-2 rounded-xl text-xs font-bold text-teal-800 bg-teal-50 hover:bg-teal-100 border border-teal-200 transition-all cursor-pointer shadow-2xs active:scale-95"
+                    >
+                      <span>{showAllBadges ? 'Show Less' : `Show More (${badges.length - 1} More Badges)`}</span>
+                      <ChevronDown className={`w-3.5 h-3.5 text-teal-700 transition-transform duration-200 ${showAllBadges ? 'rotate-180' : ''}`} />
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+
+        </div>
+
+      </div>
+
+      {/* Edit Bio & Profile Modal */}
+      {isEditingBio && (
         <div className="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto animate-fadeIn">
-          <div className="bg-white rounded-3xl max-w-xl w-full p-6 sm:p-8 shadow-2xl border border-slate-200 space-y-5 relative my-8">
+          <div className="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 space-y-5 my-8">
             <div className="flex justify-between items-center border-b border-slate-100 pb-3">
               <div>
-                <h2 className="text-lg font-extrabold text-slate-900">Edit Faculty Academic Profile</h2>
-                <p className="text-xs text-slate-500">Update preceptor bio, office hours, and contact info.</p>
+                <h3 className="font-extrabold text-lg text-slate-900">Edit Faculty Profile</h3>
+                <p className="text-xs text-slate-500">Update your official preceptor bio statement and contact details.</p>
               </div>
-              <button onClick={() => setIsEditModalOpen(false)} className="p-2 text-slate-400 hover:text-slate-600 rounded-xl cursor-pointer">
+              <button
+                onClick={() => setIsEditingBio(false)}
+                className="p-1.5 text-slate-400 hover:text-slate-600 rounded-xl hover:bg-slate-100"
+              >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <form onSubmit={handleSaveProfile} className="space-y-4 text-xs">
+            <form onSubmit={handleSaveBio} className="space-y-4">
               <div>
-                <label className="block font-bold text-slate-800 mb-1">Full Name</label>
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                  Full Name & Title
+                </label>
                 <input
                   type="text"
-                  value={profileForm.name}
-                  onChange={(e) => setProfileForm({ ...profileForm, name: e.target.value })}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 font-semibold text-slate-900"
+                  value={editForm.name}
+                  onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-900 focus:ring-2 focus:ring-emerald-700"
                 />
               </div>
 
               <div>
-                <label className="block font-bold text-slate-800 mb-1">Academic Role & Designation</label>
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                  Designation / Role
+                </label>
                 <input
                   type="text"
-                  value={profileForm.role}
-                  onChange={(e) => setProfileForm({ ...profileForm, role: e.target.value })}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 font-semibold text-slate-900"
+                  value={editForm.role}
+                  onChange={(e) => setEditForm({ ...editForm, role: e.target.value })}
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-900 focus:ring-2 focus:ring-emerald-700"
                 />
               </div>
 
               <div>
-                <label className="block font-bold text-slate-800 mb-1">Preceptor Statement / Bio</label>
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                  Academic & Preceptor Statement
+                </label>
                 <textarea
-                  rows={3}
-                  value={profileForm.bio}
-                  onChange={(e) => setProfileForm({ ...profileForm, bio: e.target.value })}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 font-semibold text-slate-900"
+                  rows={4}
+                  value={editForm.bio}
+                  onChange={(e) => setEditForm({ ...editForm, bio: e.target.value })}
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-medium text-slate-900 focus:ring-2 focus:ring-emerald-700 leading-relaxed"
                 />
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="block font-bold text-slate-800 mb-1">Official Email</label>
-                  <input
-                    type="email"
-                    value={profileForm.email}
-                    onChange={(e) => setProfileForm({ ...profileForm, email: e.target.value })}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 font-semibold text-slate-900"
-                  />
-                </div>
-                <div>
-                  <label className="block font-bold text-slate-800 mb-1">Office Hours</label>
-                  <input
-                    type="text"
-                    value={profileForm.officeHours}
-                    onChange={(e) => setProfileForm({ ...profileForm, officeHours: e.target.value })}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 font-semibold text-slate-900"
-                  />
-                </div>
-              </div>
-
-              <div className="pt-3 border-t border-slate-200 flex justify-end gap-3">
+              <div className="pt-3 border-t border-slate-100 flex justify-end gap-2.5">
                 <button
                   type="button"
-                  onClick={() => setIsEditModalOpen(false)}
-                  className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl"
+                  onClick={() => setIsEditingBio(false)}
+                  className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 bg-emerald-800 hover:bg-emerald-900 text-white font-bold rounded-xl shadow-xs"
+                  className="px-5 py-2 bg-emerald-800 hover:bg-emerald-900 text-white text-xs font-bold rounded-xl shadow-xs cursor-pointer flex items-center gap-1.5"
                 >
-                  Save Changes
+                  <Check className="w-3.5 h-3.5" />
+                  <span>Save Changes</span>
                 </button>
               </div>
             </form>
           </div>
         </div>
       )}
+
     </div>
   );
 };
+
+export default FacultyProfileView;

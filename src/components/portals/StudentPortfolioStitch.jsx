@@ -31,8 +31,6 @@ import {
   GraduationCap
 } from 'lucide-react';
 
-import aaravAvatar from '../../assets/images/aarav_avatar.jpg';
-
 export const StudentPortfolioStitch = ({ user }) => {
   const [activeTab, setActiveTab] = useState('overview'); // 'overview' | 'skills' | 'certifications' | 'sprints' | 'timeline' | 'ledger'
   const [filterCategory, setFilterCategory] = useState('all');
@@ -55,12 +53,12 @@ export const StudentPortfolioStitch = ({ user }) => {
 
   // Comprehensive Student Profile Data
   const profileData = {
-    name: user?.name || 'Aarav Sharma',
+    name: user?.name || 'Priya Sharma',
     title: user?.degree || 'BAMS Final Year Practitioner & Researcher',
-    institution: user?.institution || 'National Institute of Ayurveda (NIA), Jaipur',
-    regNo: user?.id || 'NIA/AY/2026/0491',
-    avatarUrl: user?.avatarImage || aaravAvatar,
-    avatarFallback: aaravAvatar,
+    institution: 'Ayush National Institute of Ayurveda, Jaipur',
+    regNo: 'AYUSH-RJ-2024-88412',
+    avatarUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCQks4DVd0uos47KvnV6m1gIt_hAR4p1Z4QKSWScUJ8PbuRrKhJAJHCZIOVmGNk-yjc5O2xMliCnChxUoZ2QhsBHNjm2JFB1wu0P64DYxE_zEuFHJsAMyzIHU3tsaaVXZ0O7s_xdOsAE38CtzL7oA8X8CAoxYeU6kNVEnN8zBmLyPiFAJm4LGCvLFEUwJAKc5MpKqe9slqohipRTHrx4tC_WNQjfogEE5kQ9qC6i2493gpow2PPuis',
+    avatarFallback: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=400',
     verified: true,
     matchScore: 88,
     targetRole: 'Junior Ayurvedic Consultant / Clinical Researcher',
@@ -1087,7 +1085,7 @@ export const StudentPortfolioStitch = ({ user }) => {
             </div>
 
             <div className="space-y-3">
-              <h4 className="text-xs font-extrabold text-slate-800 uppercase tracking-wider">Recommended Courses to reach 95%+</h4>
+              <h4 className="text-xs font-extrabold text-slate-800 uppercase tracking-wider">Recommended Micro-Courses to reach 95%+</h4>
               
               <div className="p-3.5 rounded-xl border border-slate-200 bg-slate-50 flex items-center justify-between">
                 <div>

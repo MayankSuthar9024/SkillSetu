@@ -407,10 +407,10 @@ export function CoursesPage({ currentUser, activePortalId }) {
 
       {/* FACULTY ONLY: Simple "+ Post Course" Modal Dialog */}
       {isFacultyPortal && isPostingOpen && (
-        <div className="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto animate-fadeIn">
-          <div className="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl border border-slate-200 space-y-6 relative my-8">
+        <div className="fixed inset-0 z-[100] bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 overflow-y-auto animate-fadeIn pb-24 sm:pb-4">
+          <div className="bg-white rounded-3xl max-w-2xl w-full max-h-[88vh] flex flex-col shadow-2xl border border-slate-200 relative my-auto overflow-hidden">
             
-            <div className="flex justify-between items-center border-b border-slate-100 pb-4">
+            <div className="p-5 sm:p-6 pb-4 border-b border-slate-100 flex justify-between items-center shrink-0 bg-white">
               <div>
                 <span className="text-xs font-extrabold uppercase tracking-wider text-emerald-800 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
                   Faculty Publishing Desk
@@ -431,141 +431,145 @@ export function CoursesPage({ currentUser, activePortalId }) {
               </button>
             </div>
 
-            {/* Success Toast */}
-            {publishSuccess && (
-              <div className="p-4 bg-emerald-600 text-white rounded-2xl shadow-lg flex items-center justify-between animate-bounce">
-                <div className="flex items-center gap-3">
-                  <CheckCircle2 className="w-6 h-6 text-emerald-200" />
+            {/* Scrollable Modal Body */}
+            <div className="p-5 sm:p-6 space-y-5 overflow-y-auto flex-1">
+              {/* Success Toast */}
+              {publishSuccess && (
+                <div className="p-4 bg-emerald-600 text-white rounded-2xl shadow-lg flex items-center justify-between animate-bounce">
+                  <div className="flex items-center gap-3">
+                    <CheckCircle2 className="w-6 h-6 text-emerald-200" />
+                    <div>
+                      <h4 className="font-extrabold text-sm">Course Posted Successfully!</h4>
+                      <p className="text-xs text-emerald-100">Course poster is now live on the Courses tab for all students.</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* 1-Click Regulatory Presets */}
+              <div className="bg-emerald-50/70 p-4 rounded-2xl border border-emerald-200/80 space-y-2.5">
+                <span className="text-[11px] font-extrabold text-emerald-950 uppercase tracking-wider block">
+                  Quick 1-Click Topic Templates:
+                </span>
+                <div className="flex flex-wrap items-center gap-2">
+                  {coursePresets.map((preset, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => handleApplyPreset(preset)}
+                      className="px-3 py-1.5 bg-white hover:bg-emerald-800 hover:text-white text-slate-800 font-bold text-xs rounded-xl border border-slate-200 transition-all cursor-pointer"
+                    >
+                      + {preset.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Form Fields */}
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-1">
+                    Course Title *
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Schedule T Basics & Manufacturing Compliance"
+                    value={courseForm.title}
+                    onChange={(e) => setCourseForm({ ...courseForm, title: e.target.value })}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-900 focus:ring-2 focus:ring-emerald-700 focus:bg-white"
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   <div>
-                    <h4 className="font-extrabold text-sm">Course Posted Successfully!</h4>
-                    <p className="text-xs text-emerald-100">Course poster is now live on the Courses tab for all students.</p>
+                    <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-1">
+                      Domain / Category
+                    </label>
+                    <select
+                      value={courseForm.category}
+                      onChange={(e) => setCourseForm({ ...courseForm, category: e.target.value })}
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-900 focus:ring-2 focus:ring-emerald-700"
+                    >
+                      <option value="Manufacturing & GMP">Manufacturing & GMP</option>
+                      <option value="Clinical Research">Clinical Research (GCP)</option>
+                      <option value="Regulatory Compliance">Regulatory Compliance</option>
+                      <option value="Pharmacovigilance">Pharmacovigilance</option>
+                      <option value="Quality Assurance / QA">Quality Assurance / QA</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-1">
+                      Course Price (₹)
+                    </label>
+                    <select
+                      value={courseForm.price}
+                      onChange={(e) => setCourseForm({ ...courseForm, price: e.target.value })}
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-900 focus:ring-2 focus:ring-emerald-700"
+                    >
+                      <option value="Free Access">Free Access (Ministry Subsidized)</option>
+                      <option value="Free Access">Free for Scholars</option>
+                      <option value="₹499">₹499 (Standard)</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-1">
+                      Duration
+                    </label>
+                    <select
+                      value={courseForm.duration}
+                      onChange={(e) => setCourseForm({ ...courseForm, duration: e.target.value })}
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-900 focus:ring-2 focus:ring-emerald-700"
+                    >
+                      <option value="60 mins">60 mins</option>
+                      <option value="90 mins">90 mins</option>
+                      <option value="120 mins">120 mins</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-1">
+                    Course Description & Targeted Skill Gap
+                  </label>
+                  <textarea
+                    rows={3}
+                    placeholder="Describe the practical concepts and skill gap this course addresses..."
+                    value={courseForm.skillGap}
+                    onChange={(e) => setCourseForm({ ...courseForm, skillGap: e.target.value })}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-900 focus:ring-2 focus:ring-emerald-700 focus:bg-white"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-1">
+                    Core Competencies (Comma Separated)
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Schedule T Rules, Cleanroom SOPs, GMP Audit"
+                    value={courseForm.competencies}
+                    onChange={(e) => setCourseForm({ ...courseForm, competencies: e.target.value })}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-900 focus:ring-2 focus:ring-emerald-700 focus:bg-white"
+                  />
+                </div>
+
+                <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200">
+                  <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-1">
+                    Attach SOP / Reference Material (.pdf)
+                  </label>
+                  <div className="border border-dashed border-slate-300 rounded-xl p-3 text-center bg-white cursor-pointer">
+                    <UploadCloud className="w-6 h-6 text-emerald-700 mx-auto mb-1" />
+                    <span className="text-xs font-bold text-slate-800 block">
+                      {courseForm.attachedFileName || 'Upload SOP Document or Guideline PDF'}
+                    </span>
                   </div>
                 </div>
               </div>
-            )}
-
-            {/* 1-Click Regulatory Presets */}
-            <div className="bg-emerald-50/70 p-4 rounded-2xl border border-emerald-200/80 space-y-2.5">
-              <span className="text-[11px] font-extrabold text-emerald-950 uppercase tracking-wider block">
-                Quick 1-Click Topic Templates:
-              </span>
-              <div className="flex flex-wrap items-center gap-2">
-                {coursePresets.map((preset, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => handleApplyPreset(preset)}
-                    className="px-3 py-1.5 bg-white hover:bg-emerald-800 hover:text-white text-slate-800 font-bold text-xs rounded-xl border border-slate-200 transition-all cursor-pointer"
-                  >
-                    + {preset.label}
-                  </button>
-                ))}
-              </div>
             </div>
 
-            {/* Form Fields */}
-            <div className="space-y-4">
-              <div>
-                <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-1">
-                  Course Title *
-                </label>
-                <input
-                  type="text"
-                  placeholder="e.g. Schedule T Basics & Manufacturing Compliance"
-                  value={courseForm.title}
-                  onChange={(e) => setCourseForm({ ...courseForm, title: e.target.value })}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-900 focus:ring-2 focus:ring-emerald-700 focus:bg-white"
-                />
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <div>
-                  <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-1">
-                    Domain / Category
-                  </label>
-                  <select
-                    value={courseForm.category}
-                    onChange={(e) => setCourseForm({ ...courseForm, category: e.target.value })}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-900 focus:ring-2 focus:ring-emerald-700"
-                  >
-                    <option value="Manufacturing & GMP">Manufacturing & GMP</option>
-                    <option value="Clinical Research">Clinical Research (GCP)</option>
-                    <option value="Regulatory Compliance">Regulatory Compliance</option>
-                    <option value="Pharmacovigilance">Pharmacovigilance</option>
-                    <option value="Quality Assurance / QA">Quality Assurance / QA</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-1">
-                    Course Price (₹)
-                  </label>
-                  <select
-                    value={courseForm.price}
-                    onChange={(e) => setCourseForm({ ...courseForm, price: e.target.value })}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-900 focus:ring-2 focus:ring-emerald-700"
-                  >
-                    <option value="Free Access">Free Access (Ministry Subsidized)</option>
-                    <option value="Free Access">Free for Scholars</option>
-                    <option value="₹499">₹499 (Standard)</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-1">
-                    Duration
-                  </label>
-                  <select
-                    value={courseForm.duration}
-                    onChange={(e) => setCourseForm({ ...courseForm, duration: e.target.value })}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-900 focus:ring-2 focus:ring-emerald-700"
-                  >
-                    <option value="60 mins">60 mins</option>
-                    <option value="90 mins">90 mins</option>
-                    <option value="120 mins">120 mins</option>
-                  </select>
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-1">
-                  Course Description & Targeted Skill Gap
-                </label>
-                <textarea
-                  rows={3}
-                  placeholder="Describe the practical concepts and skill gap this course addresses..."
-                  value={courseForm.skillGap}
-                  onChange={(e) => setCourseForm({ ...courseForm, skillGap: e.target.value })}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-900 focus:ring-2 focus:ring-emerald-700 focus:bg-white"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-1">
-                  Core Competencies (Comma Separated)
-                </label>
-                <input
-                  type="text"
-                  placeholder="e.g. Schedule T Rules, Cleanroom SOPs, GMP Audit"
-                  value={courseForm.competencies}
-                  onChange={(e) => setCourseForm({ ...courseForm, competencies: e.target.value })}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-semibold text-slate-900 focus:ring-2 focus:ring-emerald-700 focus:bg-white"
-                />
-              </div>
-
-              <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200">
-                <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-1">
-                  Attach SOP / Reference Material (.pdf)
-                </label>
-                <div className="border border-dashed border-slate-300 rounded-xl p-3 text-center bg-white cursor-pointer">
-                  <UploadCloud className="w-6 h-6 text-emerald-700 mx-auto mb-1" />
-                  <span className="text-xs font-bold text-slate-800 block">
-                    {courseForm.attachedFileName || 'Upload SOP Document or Guideline PDF'}
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            <div className="pt-4 border-t border-slate-200 flex justify-end gap-3">
+            {/* Sticky Modal Footer */}
+            <div className="p-4 sm:p-6 pt-3 border-t border-slate-100 flex justify-end gap-3 shrink-0 bg-slate-50/50">
               <button
                 onClick={() => setIsPostingOpen(false)}
                 className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl cursor-pointer"
@@ -574,7 +578,7 @@ export function CoursesPage({ currentUser, activePortalId }) {
               </button>
               <button
                 onClick={handlePublishCourse}
-                className="px-6 py-2 bg-emerald-800 hover:bg-emerald-900 text-white text-xs font-bold rounded-xl shadow-md cursor-pointer flex items-center gap-1.5"
+                className="px-6 py-2 bg-emerald-800 hover:bg-emerald-900 text-white text-xs font-bold rounded-xl shadow-md cursor-pointer flex items-center gap-1.5 active:scale-95 transition-all"
               >
                 <Sparkles className="w-4 h-4 text-emerald-300" />
                 <span>Publish & Post Course</span>
@@ -587,7 +591,7 @@ export function CoursesPage({ currentUser, activePortalId }) {
 
       {/* STUDENT: Full-Page Course View */}
       {selectedCourseForBuy && (
-        <div className="fixed inset-0 z-50 bg-[#f8fafc] text-slate-900 overflow-y-auto min-h-screen animate-fadeIn">
+        <div className="fixed inset-0 z-[100] bg-[#f8fafc] text-slate-900 overflow-y-auto min-h-screen animate-fadeIn">
           {/* Top Full-Page Header */}
           <header className="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-200/80 px-4 sm:px-8 py-3.5 flex items-center justify-between shadow-2xs">
             <button

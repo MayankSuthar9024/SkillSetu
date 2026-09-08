@@ -44,12 +44,8 @@ export const FacultyPortalView = ({ user }) => {
       {/* Faculty Profile Banner */}
       <div className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-soft flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
         <div className="flex items-center gap-4">
-          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-800 to-emerald-950 text-white font-extrabold text-2xl flex items-center justify-center shadow-md border-2 border-emerald-400/40 shrink-0 overflow-hidden">
-            {user.avatarImage ? (
-              <img src={user.avatarImage} alt={user.name} className="w-full h-full object-cover" />
-            ) : (
-              user.avatar || 'MJ'
-            )}
+          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-800 to-emerald-950 text-white font-extrabold text-2xl flex items-center justify-center shadow-md border-2 border-emerald-400/40">
+            {user.avatar || 'MJ'}
           </div>
           <div>
             <div className="flex flex-wrap items-center gap-2">
@@ -69,7 +65,7 @@ export const FacultyPortalView = ({ user }) => {
         <div className="flex flex-wrap items-center gap-3">
           <div className="bg-emerald-50 border border-emerald-200 px-4 py-2 rounded-2xl text-center">
             <span className="text-[10px] uppercase font-bold text-emerald-700 block">Authored Modules</span>
-            <span className="text-xl font-extrabold text-emerald-900">4 Courses</span>
+            <span className="text-xl font-extrabold text-emerald-900">4 Micro-Courses</span>
           </div>
           <div className="bg-blue-50 border border-blue-200 px-4 py-2 rounded-2xl text-center">
             <span className="text-[10px] uppercase font-bold text-blue-700 block">Mentored Scholars</span>
@@ -113,7 +109,7 @@ export const FacultyPortalView = ({ user }) => {
           }`}
         >
           <BookOpen className="w-4 h-4" />
-          <span>03 · Course Studio & Industry FDPs</span>
+          <span>03 · Micro-Course Studio & Industry FDPs</span>
         </button>
       </div>
 
@@ -216,7 +212,7 @@ export const FacultyPortalView = ({ user }) => {
       {activeTab === 'author' && (
         <div className="space-y-6">
           <div className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-soft space-y-4">
-            <h3 className="text-base font-extrabold text-slate-900">Course Authoring Studio</h3>
+            <h3 className="text-base font-extrabold text-slate-900">Micro-Course Authoring Studio</h3>
             <p className="text-xs text-slate-500">
               Create interactive 15-minute micro-sprints aligned with 12 HSSC NQR Qualification Packs and NCISM curricula.
             </p>
