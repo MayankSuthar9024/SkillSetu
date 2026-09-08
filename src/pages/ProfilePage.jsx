@@ -37,6 +37,7 @@ import { FacultyProfileView } from '../components/portals/FacultyProfileView';
 import { CollegeProfileView } from '../components/portals/CollegeProfileView';
 import { MinistryProfileView } from '../components/portals/MinistryProfileView';
 import { AyushSixAxisRadarChart } from '../components/AyushSixAxisRadarChart';
+import { ComingSoonPage } from '../components/ComingSoonPage';
 import { getPostsByAuthor, getAuthorProfile } from '../data/feedPostsData';
 import { PORTALS_DATA } from '../data/portalData';
 
@@ -1239,9 +1240,9 @@ export function ProfilePage({ onNavigate, currentUser, activePortalId, viewingUs
     })()
   );
 
-  // 1. COMPANY BRAND PROFILE
+  // 1. COMPANY BRAND PROFILE (COMING SOON)
   if (roleType === 'company') {
-    return <CompanyProfileView user={targetEntity} onNavigate={onNavigate} onBack={onBack} isPublicView={Boolean(viewingUser)} />;
+    return <ComingSoonPage title="Pharma & Industry Portal" onBack={onBack} />;
   }
 
   // 2. FACULTY SCHOLAR PROFILE
@@ -1249,9 +1250,9 @@ export function ProfilePage({ onNavigate, currentUser, activePortalId, viewingUs
     return <FacultyProfileView user={targetEntity} onNavigate={onNavigate} onBack={onBack} isPublicView={Boolean(viewingUser)} />;
   }
 
-  // 3. COLLEGE & INSTITUTIONAL PROFILE
+  // 3. COLLEGE & INSTITUTIONAL PROFILE (COMING SOON)
   if (roleType === 'college') {
-    return <CollegeProfileView user={targetEntity} onNavigate={onNavigate} onBack={onBack} isPublicView={Boolean(viewingUser)} />;
+    return <ComingSoonPage title="College & Institute Hub" onBack={onBack} />;
   }
 
   // 4. MINISTRY & GOVERNMENT REGULATORY PROFILE

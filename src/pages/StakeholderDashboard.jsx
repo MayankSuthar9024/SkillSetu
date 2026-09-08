@@ -37,6 +37,7 @@ import { CompanyPage } from './CompanyPage';
 import { MinistryPage } from './MinistryPage';
 import { CoursesPage } from './CoursesPage';
 import { JobsPage } from './JobsPage';
+import { ComingSoonPage } from '../components/ComingSoonPage';
 
 export const StakeholderDashboard = ({
   activePortalId,
@@ -47,6 +48,18 @@ export const StakeholderDashboard = ({
   contrastMode,
   onToggleContrast
 }) => {
+  if (activePortalId === 'company' || activePortalId === 'college') {
+    const portalConfig = PORTALS_DATA.find(p => p.id === activePortalId);
+    return (
+      <ComingSoonPage
+        title={portalConfig?.title || (activePortalId === 'company' ? 'Pharma & Industry Portal' : 'College & Institute Hub')}
+        onBack={() => {
+          onSwitchPortal('student', PORTALS_DATA[0].profileUser);
+        }}
+      />
+    );
+  }
+
   const [activeTab, setActiveTab] = useState(() => {
     const hash = window.location.hash.replace('#', '');
     if (['feed', 'messages', 'jobs', 'skills', 'courses', 'network', 'console', 'profile'].includes(hash)) {

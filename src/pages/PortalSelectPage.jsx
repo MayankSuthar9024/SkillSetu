@@ -16,6 +16,7 @@ import {
   User
 } from 'lucide-react';
 import { PORTALS_DATA, PLATFORM_METADATA } from '../data/portalData';
+import { ComingSoonPage } from '../components/ComingSoonPage';
 
 export const PortalSelectPage = ({
   onBackToHome,
@@ -64,8 +65,17 @@ export const PortalSelectPage = ({
     }
   };
 
-  // 1. SPECIFIC ROLE LOGIN & SIGN-UP PAGE
+  // 1. SPECIFIC ROLE LOGIN & SIGN-UP PAGE / COMING SOON PAGE
   if (selectedPortalForAuth) {
+    if (selectedPortalForAuth.id === 'company' || selectedPortalForAuth.id === 'college') {
+      return (
+        <ComingSoonPage
+          title={selectedPortalForAuth.title}
+          onBack={() => setSelectedPortalForAuth(null)}
+        />
+      );
+    }
+
     return (
       <SpecificRoleLoginPage
         portal={selectedPortalForAuth}
