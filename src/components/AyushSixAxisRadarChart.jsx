@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Award, ShieldCheck, Sparkles, TrendingUp, Info } from 'lucide-react';
 
-export const AyushSixAxisRadarChart = ({ skillMatrix }) => {
+export const AyushSixAxisRadarChart = ({ skillMatrix, plain = false }) => {
   const [activeHoverAxis, setActiveHoverAxis] = useState(null);
 
   const defaultAxes = [
@@ -59,23 +59,8 @@ export const AyushSixAxisRadarChart = ({ skillMatrix }) => {
   const benchmarkRatios = [0.68, 0.65, 0.70, 0.64, 0.67, 0.66];
   const benchmarkPolygonPoints = createPolygonPoints(benchmarkRatios);
 
-  return (
-    <div className="bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-7 shadow-xs space-y-6">
-      
-      {/* Header */}
-      <div className="flex items-center justify-between gap-2 pb-4 border-b border-slate-100">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center">
-            <Award className="w-4 h-4" />
-          </div>
-          <h3 className="font-extrabold text-base sm:text-lg text-slate-900 tracking-tight">
-            6-Axis Ayush Competency Radar
-          </h3>
-        </div>
-      </div>
-
-      {/* Main Radar Display Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+  const radarContent = (
+    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
         
         {/* SVG Radar Chart Column */}
         <div className="lg:col-span-7 flex flex-col items-center justify-center relative">
@@ -117,16 +102,6 @@ export const AyushSixAxisRadarChart = ({ skillMatrix }) => {
                       strokeWidth={lIdx === levels.length - 1 ? '1.5' : '1'}
                       strokeDasharray={lIdx < levels.length - 1 ? '3 3' : 'none'}
                     />
-                    {/* Ring score label */}
-                    <text
-                      x={cx + 4}
-                      y={cy - radius * level - 2}
-                      fontSize="9"
-                      fill="#94a3b8"
-                      fontWeight="bold"
-                    >
-                      {Math.round(level * 100)}%
-                    </text>
                   </g>
                 );
               })}
@@ -203,18 +178,29 @@ export const AyushSixAxisRadarChart = ({ skillMatrix }) => {
                       className="transition-all duration-200"
                     />
 
-                    {/* Value text tag near vertex */}
-                    <text
-                      x={x}
-                      y={y - 10}
-                      textAnchor="middle"
-                      fontSize="10"
-                      fontWeight="bold"
-                      fill="#065f46"
-                      className="bg-white"
-                    >
-                      {axis.score}%
-                    </text>
+                    {/* Floating score badge shown only on hover to prevent overlapping */}
+                    {isHovered && (
+                      <g>
+                        <rect
+                          x={x - 18}
+                          y={y - 24}
+                          width="36"
+                          height="18"
+                          rx="6"
+                          fill="#065f46"
+                        />
+                        <text
+                          x={x}
+                          y={y - 12}
+                          textAnchor="middle"
+                          fontSize="10"
+                          fontWeight="bold"
+                          fill="#ffffff"
+                        >
+                          {axis.score}%
+                        </text>
+                      </g>
+                    )}
                   </g>
                 );
               })}
@@ -328,7 +314,25 @@ export const AyushSixAxisRadarChart = ({ skillMatrix }) => {
         </div>
 
       </div>
+  );
 
+  if (plain) {
+    return radarContent;
+  }
+
+  return (
+    <div className="bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-7 shadow-xs space-y-6">
+      <div className="flex items-center justify-between gap-2 pb-4 border-b border-slate-100">
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center">
+            <Award className="w-4 h-4" />
+          </div>
+          <h3 className="font-extrabold text-base sm:text-lg text-slate-900 tracking-tight">
+            6-Axis Ayush Competency Radar
+          </h3>
+        </div>
+      </div>
+      {radarContent}
     </div>
   );
 };
