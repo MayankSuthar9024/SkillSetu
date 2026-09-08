@@ -110,6 +110,14 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
       if (activePage !== 'home') {
         setActivePage('home');
       }
+      window.location.hash = '';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    if (['profile', 'feed', 'courses', 'skill', 'industry', 'messages'].includes(id)) {
+      setActivePage(id);
+      window.location.hash = id;
       window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }

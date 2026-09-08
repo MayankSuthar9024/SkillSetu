@@ -16,7 +16,8 @@ import {
   Eye,
   UserCheck,
   ShoppingBag,
-  Star
+  Star,
+  ArrowLeft
 } from 'lucide-react';
 
 import courseGmpPoster from '../assets/images/course_gmp_poster.jpg';
@@ -584,74 +585,179 @@ export function CoursesPage({ currentUser, activePortalId }) {
         </div>
       )}
 
-      {/* STUDENT: Buy & Watch Course Modal */}
+      {/* STUDENT: Full-Page Course View */}
       {selectedCourseForBuy && (
-        <div className="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto animate-fadeIn">
-          <div className="bg-white rounded-3xl max-w-xl w-full p-6 sm:p-8 shadow-2xl border border-slate-200 space-y-6 relative my-8">
-            
-            <div className="flex justify-between items-start border-b border-slate-100 pb-4">
-              <div>
-                <span className="text-xs font-extrabold uppercase tracking-wider text-emerald-800 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
-                  Student Checkout & Player
-                </span>
-                <h2 className="text-xl font-extrabold text-slate-900 mt-2">
-                  {selectedCourseForBuy.title}
-                </h2>
-                <p className="text-xs text-slate-500 mt-0.5">
-                  Posted by {selectedCourseForBuy.author} ({selectedCourseForBuy.authorRole})
-                </p>
-              </div>
+        <div className="fixed inset-0 z-50 bg-[#f8fafc] text-slate-900 overflow-y-auto min-h-screen animate-fadeIn">
+          {/* Top Full-Page Header */}
+          <header className="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-200/80 px-4 sm:px-8 py-3.5 flex items-center justify-between shadow-2xs">
+            <button
+              onClick={() => setSelectedCourseForBuy(null)}
+              className="inline-flex items-center gap-2 text-xs font-bold text-slate-700 hover:text-emerald-800 transition-colors cursor-pointer py-1.5 px-3 rounded-xl hover:bg-slate-100"
+            >
+              <ArrowLeft className="w-4 h-4 text-emerald-700" />
+              <span>Back to Courses</span>
+            </button>
 
+            <div className="flex items-center gap-3">
+              <span className="text-[11px] font-semibold text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200/80">
+                {selectedCourseForBuy.category}
+              </span>
               <button
                 onClick={() => setSelectedCourseForBuy(null)}
-                className="p-2 text-slate-400 hover:text-slate-600 rounded-xl hover:bg-slate-100 cursor-pointer"
+                className="w-8 h-8 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 flex items-center justify-center transition-colors cursor-pointer"
+                title="Close"
               >
-                <X className="w-5 h-5" />
+                <X className="w-4 h-4" />
               </button>
             </div>
+          </header>
 
-            {/* Poster Thumbnail */}
-            <div className="h-44 w-full rounded-2xl overflow-hidden relative bg-slate-900">
-              <img src={selectedCourseForBuy.posterImage} alt={selectedCourseForBuy.title} className="w-full h-full object-cover" />
-              <div className="absolute inset-0 bg-slate-950/40 flex items-center justify-center">
-                <PlayCircle className="w-14 h-14 text-white drop-shadow-lg animate-pulse cursor-pointer" />
-              </div>
-            </div>
-
-            {isPurchased ? (
-              <div className="p-5 bg-emerald-50 rounded-2xl border border-emerald-200 space-y-3 text-center">
-                <CheckCircle2 className="w-10 h-10 text-emerald-700 mx-auto" />
-                <h3 className="font-extrabold text-base text-emerald-950">Course Purchased & Unlocked!</h3>
-                <p className="text-xs text-emerald-900">You now have lifetime access to watch this module and download preceptor SOPs.</p>
-                <button
-                  onClick={() => alert(`Starting video lecture for: ${selectedCourseForBuy.title}`)}
-                  className="w-full py-3 bg-emerald-800 hover:bg-emerald-900 text-white font-extrabold text-xs rounded-xl shadow-md cursor-pointer flex items-center justify-center gap-2"
-                >
-                  <PlayCircle className="w-4 h-4 text-white" />
-                  <span>Start Watching Video Lecture</span>
-                </button>
-              </div>
-            ) : (
-              <div className="space-y-4">
-                <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-2 text-xs">
-                  <div className="flex justify-between items-center font-bold text-slate-900 text-sm">
-                    <span>Course Tuition Fee:</span>
-                    <span className="text-emerald-800 font-extrabold">{selectedCourseForBuy.price}</span>
+          {/* Full Page Content Container */}
+          <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              
+              {/* Left Column (2 Cols on Desktop) */}
+              <div className="lg:col-span-2 space-y-6">
+                
+                {/* 16:9 Hero Player */}
+                <div className="relative aspect-video w-full rounded-3xl overflow-hidden bg-slate-950 shadow-lg group">
+                  <img 
+                    src={selectedCourseForBuy.posterImage} 
+                    alt={selectedCourseForBuy.title}
+                    className="w-full h-full object-cover opacity-85"
+                  />
+                  <div className="absolute inset-0 bg-slate-950/30 flex items-center justify-center">
+                    <div 
+                      onClick={() => setIsPurchased(true)}
+                      className="w-20 h-20 rounded-full bg-white/95 hover:bg-white text-emerald-800 flex items-center justify-center shadow-2xl transition-all hover:scale-105 cursor-pointer"
+                    >
+                      <PlayCircle className="w-10 h-10 text-emerald-800" />
+                    </div>
                   </div>
-                  <p className="text-slate-600 leading-relaxed">{selectedCourseForBuy.skillGap}</p>
+                  <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-xs text-white bg-black/60 backdrop-blur-md px-4 py-2 rounded-xl">
+                    <span className="font-semibold">Interactive Video Lecture & Lab Simulation</span>
+                    <span className="font-mono text-xs text-slate-300">{selectedCourseForBuy.duration}</span>
+                  </div>
                 </div>
 
-                <button
-                  onClick={() => setIsPurchased(true)}
-                  className="w-full py-3.5 bg-emerald-800 hover:bg-emerald-900 text-white font-extrabold text-xs sm:text-sm rounded-xl shadow-lg cursor-pointer flex items-center justify-center gap-2 transition-all active:scale-95"
-                >
-                  <CreditCard className="w-4 h-4 text-emerald-300" />
-                  <span>Proceed to Buy & Watch ({selectedCourseForBuy.price})</span>
-                </button>
-              </div>
-            )}
+                {/* Course Header Info */}
+                <div className="space-y-3 pt-2">
+                  <div className="flex flex-wrap items-center gap-2 text-xs text-slate-500">
+                    <span className="font-bold text-slate-900">{selectedCourseForBuy.author}</span>
+                    <span>·</span>
+                    <span>{selectedCourseForBuy.authorRole}</span>
+                    <span>·</span>
+                    <span className="text-amber-500 font-bold flex items-center gap-1">
+                      <Star className="w-3.5 h-3.5 fill-amber-400 stroke-none" />
+                      {selectedCourseForBuy.rating} ({selectedCourseForBuy.enrolled} enrolled)
+                    </span>
+                  </div>
 
-          </div>
+                  <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight leading-tight">
+                    {selectedCourseForBuy.title}
+                  </h1>
+
+                  <p className="text-sm text-slate-600 leading-relaxed font-normal">
+                    {selectedCourseForBuy.skillGap}
+                  </p>
+                </div>
+
+                {/* Modules & Curriculum */}
+                <div className="space-y-4 pt-4 border-t border-slate-200">
+                  <h3 className="text-base font-bold text-slate-900 tracking-tight">Course Curriculum & Modules</h3>
+                  <div className="space-y-2.5">
+                    {[
+                      { num: '01', title: 'Regulatory Framework & Industry Standard Operating Procedures', time: '25 mins' },
+                      { num: '02', title: 'Practical Lab Execution, Testing & Phytochemical Standardization', time: '35 mins' },
+                      { num: '03', title: 'Quality Assurance, Audit Readiness & Final Verification Case', time: '30 mins' },
+                    ].map((mod, idx) => (
+                      <div key={idx} className="p-4 rounded-2xl bg-white border border-slate-200/80 flex items-center justify-between gap-4 hover:border-slate-300 transition-colors">
+                        <div className="flex items-center gap-3">
+                          <span className="w-8 h-8 rounded-xl bg-slate-100 text-slate-600 font-bold text-xs flex items-center justify-center font-mono">
+                            {mod.num}
+                          </span>
+                          <span className="text-xs sm:text-sm font-semibold text-slate-800">{mod.title}</span>
+                        </div>
+                        <span className="text-xs text-slate-400 font-medium shrink-0">{mod.time}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Target Competencies */}
+                <div className="space-y-3 pt-4 border-t border-slate-200">
+                  <h3 className="text-base font-bold text-slate-900 tracking-tight">Core Competencies</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    {selectedCourseForBuy.competencies.map((comp, idx) => (
+                      <div key={idx} className="p-3.5 rounded-2xl bg-white border border-slate-200/80 flex items-center gap-2.5 text-xs font-medium text-slate-800">
+                        <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                        <span>{comp}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+              </div>
+
+              {/* Right Column / Sticky Sidebar */}
+              <div className="space-y-6">
+                <div className="sticky top-20 bg-white rounded-3xl border border-slate-200/90 p-6 shadow-sm space-y-5">
+                  <div className="space-y-1">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
+                      National Skill Portal
+                    </span>
+                    <div className="text-2xl font-extrabold text-slate-900 pt-1">
+                      {selectedCourseForBuy.price || 'Free Access'}
+                    </div>
+                    <p className="text-xs text-slate-500">
+                      Subsidized for Ayush scholars & practitioners
+                    </p>
+                  </div>
+
+                  {isPurchased ? (
+                    <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 space-y-3 text-center">
+                      <CheckCircle2 className="w-8 h-8 text-emerald-700 mx-auto" />
+                      <div>
+                        <span className="font-bold text-sm text-emerald-950 block">Access Unlocked</span>
+                        <span className="text-xs text-emerald-800">Module is ready for full lecture playback and credential verification.</span>
+                      </div>
+                      <button
+                        onClick={() => alert(`Starting video lecture for: ${selectedCourseForBuy.title}`)}
+                        className="w-full py-3 bg-emerald-800 hover:bg-emerald-900 text-white font-bold text-xs rounded-xl shadow-xs cursor-pointer flex items-center justify-center gap-2"
+                      >
+                        <PlayCircle className="w-4 h-4 text-white" />
+                        <span>Start Video Lecture</span>
+                      </button>
+                    </div>
+                  ) : (
+                    <button
+                      onClick={() => setIsPurchased(true)}
+                      className="w-full py-3.5 bg-emerald-800 hover:bg-emerald-900 active:scale-95 text-white rounded-2xl text-xs sm:text-sm font-bold transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer"
+                    >
+                      <CreditCard className="w-4 h-4" />
+                      <span>Enroll & Start ({selectedCourseForBuy.price})</span>
+                    </button>
+                  )}
+
+                  <div className="pt-2 border-t border-slate-100 space-y-3 text-xs text-slate-600">
+                    <div className="flex items-center justify-between">
+                      <span className="text-slate-500">Duration:</span>
+                      <span className="font-semibold text-slate-900">{selectedCourseForBuy.duration}</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-slate-500">Accreditation:</span>
+                      <span className="font-semibold text-slate-900">NCISM / Ayush CoE</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-slate-500">Certificate:</span>
+                      <span className="font-semibold text-slate-900">Digital Verifiable Badge</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </main>
         </div>
       )}
 

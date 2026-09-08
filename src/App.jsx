@@ -23,7 +23,9 @@ export function App() {
   const [activePage, setActivePage] = useState('home'); // 'home' | 'features' | 'about' | 'opportunities' | 'skill' | 'industry' | 'courses' | 'feed' | 'profile' | 'messages' | 'login' | 'portals' | 'dashboard'
   const [isReadinessModalOpen, setIsReadinessModalOpen] = useState(false);
   const [activePortalId, setActivePortalId] = useState('student');
-  const [currentUser, setCurrentUser] = useState(null);
+  const [currentUser, setCurrentUser] = useState(() => {
+    return PORTALS_DATA[0].profileUser;
+  });
   const [contrastMode, setContrastMode] = useState('standard');
 
   const handleToggleContrast = () => {
@@ -116,6 +118,12 @@ export function App() {
 
   const handleNavigate = (page) => {
     if (currentUser) {
+      if (['feed', 'messages', 'jobs', 'skills', 'courses', 'network', 'console', 'profile'].includes(page)) {
+        setActivePage('dashboard');
+        window.location.hash = page;
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      }
       setActivePage('dashboard');
       window.location.hash = `dashboard-${activePortalId}`;
       window.scrollTo({ top: 0, behavior: 'smooth' });

@@ -3,36 +3,25 @@ import {
   User, 
   CheckCircle2, 
   Award, 
-  BookOpen, 
   Building, 
   MapPin, 
   Edit3, 
   ShieldCheck, 
   Sparkles, 
   ChevronRight,
-  ChevronDown,
-  ChevronUp,
-  Activity,
-  Heart,
-  MessageSquare,
-  Camera,
-  Image as ImageIcon,
-  Upload,
-  X,
-  TrendingUp,
-  BarChart3,
-  Eye,
-  FileText,
-  Download,
-  Lock,
-  GraduationCap,
-  Calendar,
-  Share2,
-  Check,
-  Star,
-  Clock,
-  ArrowUpRight,
-  Layers
+  MessageSquare, 
+  Camera, 
+  Image as ImageIcon, 
+  Upload, 
+  X, 
+  TrendingUp, 
+  BarChart3, 
+  Eye, 
+  FileText, 
+  Download, 
+  GraduationCap, 
+  Check, 
+  ArrowLeft 
 } from 'lucide-react';
 
 import aaravAvatar from '../assets/images/aarav_avatar.jpg';
@@ -45,143 +34,70 @@ import { AyushSixAxisRadarChart } from '../components/AyushSixAxisRadarChart';
 import { getPostsByAuthor, getAuthorProfile } from '../data/feedPostsData';
 import { PORTALS_DATA } from '../data/portalData';
 
-export function ProfilePage({ onNavigate, currentUser, activePortalId, viewingUser, onBack }) {
-  // Resolve effective target profile (whether viewing someone else's profile or own profile)
-  const targetEntity = viewingUser 
-    ? (getAuthorProfile(viewingUser) || viewingUser)
-    : (currentUser || PORTALS_DATA[0].profileUser);
-
-  // Determine role type: 'company' | 'faculty' | 'college' | 'admin' | 'student'
-  const roleType = (
-    targetEntity?.roleType || 
-    (!viewingUser ? activePortalId : null) || 
-    (() => {
-      const r = (targetEntity?.role || '').toLowerCase();
-      const inst = (targetEntity?.institution || '').toLowerCase();
-      const name = (targetEntity?.name || '').toLowerCase();
-
-      // Check student explicitly first so student studying at an institute doesn't get misclassified!
-      if (
-        r.includes('student') || r.includes('scholar') || r.includes('bams') || 
-        r.includes('fellow') || r.includes('intern') || name.includes('aarav') || 
-        name.includes('ananya')
-      ) {
-        return 'student';
-      }
-
-      if (
-        r.includes('recruiter') || r.includes('enterprise') || r.includes('pharma') || 
-        r.includes('industry') ||
-        name.includes('dabur') || name.includes('patanjali') || name.includes('himalaya') || 
-        name.includes('charak') || name.includes('baidyanath') || name.includes('soukya') || 
-        name.includes('kottakkal') || name.includes('avs') || name.includes('avp') ||
-        (r.includes('lead') && inst.includes('dabur'))
-      ) {
-        return 'company';
-      }
-
-      if (r.includes('professor') || r.includes('faculty') || r.includes('hod') || r.includes('preceptor') || r.includes('researcher') || name.includes('dr. ananya') || name.includes('meenakshi')) {
-        return 'faculty';
-      }
-
-      if (r.includes('ministry') || r.includes('director general') || r.includes('national admin') || r.includes('council') || name.includes('sanjay') || name.includes('ccras') || name.includes('ccrh') || name.includes('ccrum') || name.includes('ministry')) {
-        return 'admin';
-      }
-
-      if (r.includes('dean') || r.includes('placement head') || r.includes('principal') || name.includes('rajeshwar') || name.includes('institute') || name.includes('college') || name.includes('university') || name.includes('aiia') || name.includes('nis')) {
-        return 'college';
-      }
-
-      return 'student';
-    })()
-  );
-
-  // 1. COMPANY BRAND PROFILE
-  if (roleType === 'company') {
-    return <CompanyProfileView user={targetEntity} onNavigate={onNavigate} onBack={onBack} isPublicView={Boolean(viewingUser)} />;
-  }
-
-  // 2. FACULTY SCHOLAR PROFILE
-  if (roleType === 'faculty') {
-    return <FacultyProfileView user={targetEntity} onNavigate={onNavigate} onBack={onBack} isPublicView={Boolean(viewingUser)} />;
-  }
-
-  // 3. COLLEGE & INSTITUTIONAL PROFILE
-  if (roleType === 'college') {
-    return <CollegeProfileView user={targetEntity} onNavigate={onNavigate} onBack={onBack} isPublicView={Boolean(viewingUser)} />;
-  }
-
-  // 4. MINISTRY & GOVERNMENT REGULATORY PROFILE
-  if (roleType === 'admin') {
-    return <MinistryProfileView user={targetEntity} onNavigate={onNavigate} onBack={onBack} isPublicView={Boolean(viewingUser)} />;
-  }
-
-  // 5. STUDENT PRACTITIONER PORTFOLIO
+/**
+ * Student Scholar & Practitioner Portfolio View
+ */
+export function StudentProfileView({ user, onNavigate, onBack, isPublicView }) {
   const [isEditingBio, setIsEditingBio] = useState(false);
   const [saveSuccessToast, setSaveSuccessToast] = useState(false);
   const [downloadSuccessToast, setDownloadSuccessToast] = useState(false);
 
-  // Mobile-only section expand states (shows 1 item by default on mobile, all on desktop)
-  const [showAllCoursesMobile, setShowAllCoursesMobile] = useState(false);
-  const [showAllDegreesMobile, setShowAllDegreesMobile] = useState(false);
-  const [showAllBadgesMobile, setShowAllBadgesMobile] = useState(false);
-  
   // Media Upload Modal state ('pfp' | 'banner' | null)
   const [activeMediaModal, setActiveMediaModal] = useState(null);
   const fileInputRef = useRef(null);
 
   const [profileData, setProfileData] = useState({
-    name: targetEntity?.name || 'Aarav Sharma',
-    role: targetEntity?.role || 'BAMS Scholar & Ayush Research Fellow',
-    id: targetEntity?.id || 'NIA/AY/2026/0491',
-    email: targetEntity?.email || 'aarav.sharma@nia.ac.in',
-    institution: targetEntity?.institution || 'National Institute of Ayurveda (NIA), Jaipur',
-    degree: targetEntity?.degree || 'BAMS (Final Year 2026)',
-    location: targetEntity?.location || 'Jaipur, Rajasthan, India',
-    readinessScore: targetEntity?.readiness ? parseInt(targetEntity.readiness) : 88,
-    bio: targetEntity?.bio || 'Pioneering evidence-based Ayurvedic medicine, digital Nadi Pariksha diagnostics, and botanical extraction HPLC standardization. Fast-tracking Ayush academic research to clinical industry applications.',
+    name: user?.name || 'Aarav Sharma',
+    role: user?.role || 'BAMS Scholar & Ayush Research Fellow',
+    id: user?.id || 'NIA/AY/2026/0491',
+    email: user?.email || 'aarav.sharma@nia.ac.in',
+    institution: user?.institution || 'National Institute of Ayurveda (NIA), Jaipur',
+    degree: user?.degree || 'BAMS (Final Year 2026)',
+    location: user?.location || 'Jaipur, Rajasthan, India',
+    readinessScore: user?.readiness ? parseInt(user.readiness) : 88,
+    bio: user?.bio || 'Pioneering evidence-based Ayurvedic medicine, digital Nadi Pariksha diagnostics, and botanical extraction HPLC standardization. Fast-tracking Ayush academic research to clinical industry applications.',
     phone: '+91 98765 43210',
-    abhaId: targetEntity?.abhaId || '91-4402-8819-2041',
-    ncismReg: targetEntity?.ncismReg || 'NCISM/AYU/RJ/2022/9912',
-    cgpa: targetEntity?.cgpa || '8.94 / 10.0 (Honors)',
+    abhaId: user?.abhaId || '91-4402-8819-2041',
+    ncismReg: user?.ncismReg || 'NCISM/AYU/RJ/2022/9912',
+    cgpa: user?.cgpa || '8.94 / 10.0 (Honors)',
     batch: '2021 - 2026',
-    preceptor: targetEntity?.preceptor || 'Prof. Meenakshi Joshi (HOD Dravyaguna)',
-    avatar: targetEntity?.avatar || 'AS',
-    avatarImage: targetEntity?.avatarImage || aaravAvatar,
-    coverImage: targetEntity?.coverImage || 'https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=1400&q=80',
+    preceptor: user?.preceptor || 'Prof. Meenakshi Joshi (HOD Dravyaguna)',
+    avatar: user?.avatar || 'AS',
+    avatarImage: user?.avatarImage || aaravAvatar,
+    coverImage: user?.coverImage || 'https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=1400&q=80',
     verificationHash: 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855'
   });
 
-  // Sync profile when targetEntity changes
+  const [editForm, setEditForm] = useState({ ...profileData });
+
+  // Sync profile when user prop changes
   useEffect(() => {
-    if (targetEntity) {
+    if (user) {
       setProfileData(prev => ({
         ...prev,
-        name: targetEntity.name || prev.name,
-        role: targetEntity.role || prev.role,
-        id: targetEntity.id || prev.id,
-        email: targetEntity.email || prev.email,
-        institution: targetEntity.institution || prev.institution,
-        degree: targetEntity.degree || prev.degree,
-        avatar: targetEntity.avatar || prev.avatar,
-        avatarImage: targetEntity.avatarImage || prev.avatarImage,
-        readinessScore: targetEntity.readiness ? parseInt(targetEntity.readiness) : prev.readinessScore
+        name: user.name || prev.name,
+        role: user.role || prev.role,
+        id: user.id || prev.id,
+        email: user.email || prev.email,
+        institution: user.institution || prev.institution,
+        degree: user.degree || prev.degree,
+        avatar: user.avatar || prev.avatar,
+        avatarImage: user.avatarImage || prev.avatarImage,
+        readinessScore: user.readiness ? parseInt(user.readiness) : prev.readinessScore
       }));
       setEditForm(prev => ({
         ...prev,
-        name: targetEntity.name || prev.name,
-        role: targetEntity.role || prev.role,
-        id: targetEntity.id || prev.id,
-        email: targetEntity.email || prev.email,
-        institution: targetEntity.institution || prev.institution,
-        degree: targetEntity.degree || prev.degree,
-        avatar: targetEntity.avatar || prev.avatar,
-        avatarImage: targetEntity.avatarImage || prev.avatarImage
+        name: user.name || prev.name,
+        role: user.role || prev.role,
+        id: user.id || prev.id,
+        email: user.email || prev.email,
+        institution: user.institution || prev.institution,
+        degree: user.degree || prev.degree,
+        avatar: user.avatar || prev.avatar,
+        avatarImage: user.avatarImage || prev.avatarImage
       }));
     }
-  }, [targetEntity]);
-
-  const [editForm, setEditForm] = useState({ ...profileData });
+  }, [user]);
 
   const handleSaveBio = (e) => {
     e.preventDefault();
@@ -234,9 +150,6 @@ export function ProfilePage({ onNavigate, currentUser, activePortalId, viewingUs
     { title: 'Ayurvedic Tele-Medicine Certified', issuer: 'National Health Authority', date: 'Oct 2025', code: 'NHA-TELE-4091', status: 'Active' },
     { title: 'HSSC Skill Qualification Pack 4', issuer: 'Healthcare Sector Skill Council', date: 'Sep 2025', code: 'HSSC-NQR-8802', status: 'Active' }
   ];
-
-  // Retrieve any posts authored by this student from dataset
-  const authoredStudentPosts = getPostsByAuthor(profileData.id || profileData.name);
 
   const staticUserPosts = [
     {
@@ -303,7 +216,7 @@ export function ProfilePage({ onNavigate, currentUser, activePortalId, viewingUs
         </div>
       )}
 
-      {/* Botanical Cover Banner (Buttons removed per user request) */}
+      {/* Botanical Cover Banner */}
       <div 
         className="h-44 sm:h-60 bg-gradient-to-r from-emerald-800 via-teal-700 to-emerald-600 relative overflow-hidden rounded-3xl mb-4 bg-cover bg-center transition-all duration-300 shadow-sm"
         style={{
@@ -312,7 +225,7 @@ export function ProfilePage({ onNavigate, currentUser, activePortalId, viewingUs
       >
         <div className="max-w-6xl mx-auto px-4 h-full flex justify-between items-start pt-4 relative z-10">
           {/* Change Cover Photo Button */}
-          {!viewingUser && (
+          {!isPublicView && (
             <button
               onClick={() => openMediaModal('banner')}
               className="bg-white/80 hover:bg-white text-emerald-950 font-bold text-xs px-3.5 py-2 rounded-xl backdrop-blur-md transition-all flex items-center gap-1.5 border border-emerald-200/60 cursor-pointer shadow-xs"
@@ -338,8 +251,8 @@ export function ProfilePage({ onNavigate, currentUser, activePortalId, viewingUs
               {/* Profile Avatar (PFP) */}
               <div 
                 className="relative shrink-0 group cursor-pointer"
-                onClick={() => !viewingUser && openMediaModal('pfp')}
-                title={viewingUser ? profileData.name : "Change Profile Photo"}
+                onClick={() => !isPublicView && openMediaModal('pfp')}
+                title={isPublicView ? profileData.name : "Change Profile Photo"}
               >
                 <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-3xl bg-gradient-to-br from-emerald-700 to-teal-900 text-white font-extrabold text-2xl sm:text-4xl flex items-center justify-center border-4 border-white shadow-md overflow-hidden relative">
                   {profileData.avatarImage ? (
@@ -352,7 +265,7 @@ export function ProfilePage({ onNavigate, currentUser, activePortalId, viewingUs
                     <span>{profileData.avatar}</span>
                   )}
 
-                  {!viewingUser && (
+                  {!isPublicView && (
                     <div className="absolute inset-0 bg-emerald-950/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-white text-[11px] font-bold gap-1">
                       <Camera className="w-6 h-6 text-emerald-300" />
                       <span>Change Photo</span>
@@ -455,7 +368,7 @@ export function ProfilePage({ onNavigate, currentUser, activePortalId, viewingUs
                 </div>
               </div>
 
-              {!viewingUser ? (
+              {!isPublicView ? (
                 <button
                   onClick={() => setIsEditingBio(true)}
                   className="w-full sm:w-auto bg-emerald-800 hover:bg-emerald-700 active:scale-95 text-white font-bold text-xs px-5 py-3 rounded-2xl transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm hover:shadow-md border border-emerald-700/50"
@@ -483,7 +396,7 @@ export function ProfilePage({ onNavigate, currentUser, activePortalId, viewingUs
                 <User className="w-4 h-4 text-emerald-700" />
                 <span>About</span>
               </h3>
-              {!viewingUser && (
+              {!isPublicView && (
                 <button
                   type="button"
                   onClick={() => setIsEditingBio(true)}
@@ -712,7 +625,7 @@ export function ProfilePage({ onNavigate, currentUser, activePortalId, viewingUs
           </div>
         )}
 
-        {/* Vertically Scrollable Content Sections (All visible, smooth vertical scrolling) */}
+        {/* Vertically Scrollable Content Sections */}
         <div className="mt-8 space-y-12">
           
           {/* SECTION 1: 6-AXIS AYUSH RADAR, ACADEMIC QUALIFICATIONS & VERIFIED IDENTITY */}
@@ -732,232 +645,41 @@ export function ProfilePage({ onNavigate, currentUser, activePortalId, viewingUs
                 {/* Real 6-Axis Radar Chart Component */}
                 <AyushSixAxisRadarChart skillMatrix={skillMatrix} />
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 pt-1">
-                    {facultyHighlightedCourses.map((course, idx) => (
-                      <div 
-                        key={course.id} 
-                        className={`p-4 bg-slate-50 hover:bg-slate-100/80 rounded-2xl border border-slate-200/80 space-y-2.5 transition-all flex-col justify-between ${
-                          idx > 0 && !showAllCoursesMobile ? 'hidden sm:flex' : 'flex'
-                        }`}
-                      >
-                        <div className="space-y-1.5">
-                          <div className="flex justify-between items-start gap-1 flex-wrap">
-                            <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-emerald-100 text-emerald-900 border border-emerald-200">
-                              {course.category}
-                            </span>
-                            <div className="flex items-center gap-1.5">
-                              <span className="text-[10px] font-extrabold bg-teal-100 text-teal-900 px-2 py-0.5 rounded border border-teal-200">
-                                {course.price}
-                              </span>
-                              <span className="text-[10px] font-bold text-slate-500">{course.duration}</span>
-                            </div>
-                          </div>
-                          <h4 className="font-extrabold text-xs text-slate-900 leading-snug line-clamp-2">
-                            {course.title}
-                          </h4>
-                          <p className="text-[11px] text-slate-600 line-clamp-2 leading-relaxed">
-                            {course.skillGap}
-                          </p>
-                        </div>
+                {/* Academic Profile & Institutional Records */}
+                <div className="bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-6 shadow-xs">
+                  <h3 className="font-bold text-base text-slate-900 flex items-center gap-2 mb-4">
+                    <GraduationCap className="w-5 h-5 text-emerald-700" />
+                    Academic Profile &amp; Institutional Records
+                  </h3>
 
-                        <div className="pt-2 border-t border-slate-200/70 space-y-1.5 text-[11px]">
-                          <div className="flex items-center justify-between text-slate-500">
-                            <span>Pre → Post Avg</span>
-                            <span className="font-bold text-emerald-800">{course.preScore} → {course.postScore} ({course.delta})</span>
-                          </div>
-                          <div className="flex items-center justify-between text-slate-500">
-                            <span>Enrolled Scholars</span>
-                            <span className="font-bold text-slate-800">{course.enrolled}</span>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Mobile-only View More / Show Less button */}
-                  {facultyHighlightedCourses.length > 1 && (
-                    <div className="sm:hidden pt-1">
-                      <button
-                        type="button"
-                        onClick={() => setShowAllCoursesMobile(!showAllCoursesMobile)}
-                        className="w-full py-2.5 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 active:scale-98 text-emerald-900 font-bold text-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer border border-slate-200/80 shadow-2xs"
-                      >
-                        <span>
-                          {showAllCoursesMobile
-                            ? 'Show Less Courses'
-                            : `View More Courses (+${facultyHighlightedCourses.length - 1})`}
-                        </span>
-                        {showAllCoursesMobile ? (
-                          <ChevronUp className="w-4 h-4 text-emerald-700" />
-                        ) : (
-                          <ChevronDown className="w-4 h-4 text-emerald-700" />
-                        )}
-                      </button>
-                    </div>
-                  )}
-
-                  <div className="pt-3 border-t border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 text-xs">
-                    <span className="text-slate-500">Syllabus validated against CDSCO, WHO-GMP, and AYUSH Pharmacopoeia standards</span>
-                    <button
-                      onClick={() => setActiveTab('courses')}
-                      className="text-emerald-800 hover:text-emerald-900 font-bold flex items-center gap-1 cursor-pointer"
-                    >
-                      <span>View All Authored Courses ({facultyHighlightedCourses.length})</span>
-                      <ChevronRight className="w-4 h-4" />
-                    </button>
-                  </div>
-                </div>
-
-                {/* 2. Doctoral & Academic Degrees */}
-                <div className="bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-6 shadow-xs space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="font-bold text-base text-slate-900 flex items-center gap-2">
-                        <GraduationCap className="w-5 h-5 text-emerald-700" />
-                        Doctoral & Academic Degrees
-                      </h3>
-                      <p className="text-xs text-slate-500 mt-0.5">
-                        Doctorate degrees, postgraduate research, and statutory preceptor licensure credentials.
-                      </p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                    <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/60">
+                      <span className="text-slate-400 font-semibold block text-[11px]">Degree Program</span>
+                      <span className="font-bold text-slate-900 text-sm mt-0.5 block">{profileData.degree}</span>
+                      <span className="text-slate-500 mt-1 block">Batch: {profileData.batch}</span>
                     </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 pt-1">
-                    {facultyDegrees.map((deg, idx) => (
-                      <div 
-                        key={deg.id} 
-                        className={`p-4 rounded-2xl bg-slate-50 hover:bg-slate-100/80 border border-slate-200/80 space-y-2 transition-all flex-col justify-between ${
-                          idx > 0 && !showAllDegreesMobile ? 'hidden sm:flex' : 'flex'
-                        }`}
-                      >
-                        <div className="flex items-center justify-between">
-                          <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-emerald-100 text-emerald-900 border border-emerald-200">
-                            {deg.field}
-                          </span>
-                          <span className="text-[10px] font-bold text-slate-500">{deg.year}</span>
-                        </div>
-                        <h4 className="font-extrabold text-xs text-slate-900">{deg.degree}</h4>
-                        <p className="text-[11px] font-medium text-slate-600">{deg.institution}</p>
-                        <p className="text-[10px] text-slate-500 italic">{deg.thesis}</p>
-                        <div className="pt-2 border-t border-slate-200/60 flex items-center justify-between text-[10px]">
-                          <span className="font-bold text-emerald-800">{deg.grade}</span>
-                          <span className="font-mono text-slate-400">{deg.regNumber}</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Mobile-only View More / Show Less button */}
-                  {facultyDegrees.length > 1 && (
-                    <div className="sm:hidden pt-1">
-                      <button
-                        type="button"
-                        onClick={() => setShowAllDegreesMobile(!showAllDegreesMobile)}
-                        className="w-full py-2.5 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 active:scale-98 text-emerald-900 font-bold text-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer border border-slate-200/80 shadow-2xs"
-                      >
-                        <span>
-                          {showAllDegreesMobile
-                            ? 'Show Less Degrees'
-                            : `View More Degrees (+${facultyDegrees.length - 1})`}
-                        </span>
-                        {showAllDegreesMobile ? (
-                          <ChevronUp className="w-4 h-4 text-emerald-700" />
-                        ) : (
-                          <ChevronDown className="w-4 h-4 text-emerald-700" />
-                        )}
-                      </button>
+                    <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/60">
+                      <span className="text-slate-400 font-semibold block text-[11px]">Academic Standing</span>
+                      <span className="font-bold text-slate-900 text-sm mt-0.5 block">{profileData.cgpa}</span>
+                      <span className="text-slate-500 mt-1 block">Institutional Guide: {profileData.preceptor}</span>
                     </div>
-                  )}
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-slate-100 text-xs">
                     <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/60">
                       <span className="text-slate-400 font-semibold block text-[11px]">NCISM Registration</span>
                       <span className="font-mono font-bold text-slate-900 text-xs mt-0.5 block">{profileData.ncismReg}</span>
+                      <span className="text-emerald-700 font-semibold mt-1 block flex items-center gap-1">
+                        <CheckCircle2 className="w-3.5 h-3.5" /> Validated Practitioner
+                      </span>
                     </div>
 
                     <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/60">
                       <span className="text-slate-400 font-semibold block text-[11px]">National ABHA Health ID</span>
                       <span className="font-mono font-bold text-slate-900 text-xs mt-0.5 block">{profileData.abhaId}</span>
+                      <span className="text-teal-700 font-semibold mt-1 block flex items-center gap-1">
+                        <ShieldCheck className="w-3.5 h-3.5" /> DigiLocker Verified
+                      </span>
                     </div>
-                  </div>
-                </div>
-
-                {/* 3. Preceptor Badges & Certifications Showcase */}
-                <div className="bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-6 shadow-xs space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="font-bold text-base text-slate-900 flex items-center gap-2">
-                        <ShieldCheck className="w-5 h-5 text-emerald-700" />
-                        Preceptor Badges & Certifications
-                      </h3>
-                      <p className="text-xs text-slate-500 mt-0.5">
-                        Statutory accreditations issued by NCISM, CDSCO, and Ministry of Ayush.
-                      </p>
-                    </div>
-                    <span className="text-[11px] font-bold text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200 shrink-0 hidden sm:inline-block">
-                      {facultyBadges.length} Verified Badges
-                    </span>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 pt-1">
-                    {facultyBadges.map((badge, idx) => (
-                      <div 
-                        key={badge.id} 
-                        className={`p-4 rounded-2xl bg-slate-50 hover:bg-slate-100/80 border border-slate-200/80 space-y-2.5 transition-all flex-col justify-between ${
-                          idx > 0 && !showAllBadgesMobile ? 'hidden sm:flex' : 'flex'
-                        }`}
-                      >
-                        <div>
-                          <div className="flex items-center justify-between gap-1 mb-2">
-                            <span className="w-8 h-8 rounded-xl bg-emerald-800 text-emerald-200 flex items-center justify-center font-bold shadow-2xs shrink-0">
-                              <Award className="w-4 h-4" />
-                            </span>
-                            <span className="text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-900 border border-emerald-200">
-                              {badge.status}
-                            </span>
-                          </div>
-                          <h4 className="font-extrabold text-xs text-slate-900 leading-snug">{badge.title}</h4>
-                          <p className="text-[11px] text-slate-500 font-medium mt-1">{badge.issuer}</p>
-                          <p className="text-[11px] text-slate-600 mt-1 leading-relaxed line-clamp-2">{badge.description}</p>
-                        </div>
-                        <div className="pt-2 border-t border-slate-200/60 flex items-center justify-between text-[10px] text-slate-400 font-mono">
-                          <span>Issued {badge.date}</span>
-                          <span className="text-emerald-700 font-bold">{badge.code}</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Mobile-only View More / Show Less button */}
-                  {facultyBadges.length > 1 && (
-                    <div className="sm:hidden pt-1">
-                      <button
-                        type="button"
-                        onClick={() => setShowAllBadgesMobile(!showAllBadgesMobile)}
-                        className="w-full py-2.5 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 active:scale-98 text-emerald-900 font-bold text-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer border border-slate-200/80 shadow-2xs"
-                      >
-                        <span>
-                          {showAllBadgesMobile
-                            ? 'Show Less Badges'
-                            : `View More Badges (+${facultyBadges.length - 1})`}
-                        </span>
-                        {showAllBadgesMobile ? (
-                          <ChevronUp className="w-4 h-4 text-emerald-700" />
-                        ) : (
-                          <ChevronDown className="w-4 h-4 text-emerald-700" />
-                        )}
-                      </button>
-                    </div>
-                  )}
-
-                  <div className="pt-3 border-t border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 text-xs">
-                    <span className="text-slate-500">Authorized under Drugs Rules 1945 & ICH E6(R3) Preceptor Framework</span>
-                    <button
-                      onClick={() => setActiveTab('badges')}
-                      className="text-emerald-800 hover:text-emerald-900 font-bold flex items-center gap-1 cursor-pointer"
-                    >
-                      <span>View Ledger Credentials</span>
-                      <ChevronRight className="w-4 h-4" />
-                    </button>
                   </div>
                 </div>
 
@@ -1140,6 +862,97 @@ export function ProfilePage({ onNavigate, currentUser, activePortalId, viewingUs
       </div>
 
     </div>
+  );
+}
+
+/**
+ * Universal Profile Page Router
+ * Seamlessly routes to the designated stakeholder profile:
+ * - Company Brand Profile (CompanyProfileView)
+ * - Faculty Scholar Profile (FacultyProfileView)
+ * - College Institutional Profile (CollegeProfileView)
+ * - Ministry Regulatory Profile (MinistryProfileView)
+ * - Student Practitioner Portfolio (StudentProfileView)
+ */
+export function ProfilePage({ onNavigate, currentUser, activePortalId, viewingUser, onBack }) {
+  // Resolve effective target profile (whether viewing someone else's profile or own profile)
+  const targetEntity = viewingUser 
+    ? (getAuthorProfile(viewingUser) || viewingUser)
+    : (currentUser || PORTALS_DATA[0].profileUser);
+
+  // Determine role type: 'company' | 'faculty' | 'college' | 'admin' | 'student'
+  const roleType = (
+    targetEntity?.roleType || 
+    (!viewingUser ? activePortalId : null) || 
+    (() => {
+      const r = (targetEntity?.role || '').toLowerCase();
+      const inst = (targetEntity?.institution || '').toLowerCase();
+      const name = (targetEntity?.name || '').toLowerCase();
+
+      // Check student explicitly first so student studying at an institute doesn't get misclassified!
+      if (
+        r.includes('student') || r.includes('scholar') || r.includes('bams') || 
+        r.includes('fellow') || r.includes('intern') || name.includes('aarav') || 
+        name.includes('ananya')
+      ) {
+        return 'student';
+      }
+
+      if (
+        r.includes('recruiter') || r.includes('enterprise') || r.includes('pharma') || 
+        r.includes('industry') ||
+        name.includes('dabur') || name.includes('patanjali') || name.includes('himalaya') || 
+        name.includes('charak') || name.includes('baidyanath') || name.includes('soukya') || 
+        name.includes('kottakkal') || name.includes('avs') || name.includes('avp') ||
+        (r.includes('lead') && inst.includes('dabur'))
+      ) {
+        return 'company';
+      }
+
+      if (r.includes('professor') || r.includes('faculty') || r.includes('hod') || r.includes('preceptor') || r.includes('researcher') || name.includes('dr. ananya') || name.includes('meenakshi')) {
+        return 'faculty';
+      }
+
+      if (r.includes('ministry') || r.includes('director general') || r.includes('national admin') || r.includes('council') || name.includes('sanjay') || name.includes('ccras') || name.includes('ccrh') || name.includes('ccrum') || name.includes('ministry')) {
+        return 'admin';
+      }
+
+      if (r.includes('dean') || r.includes('placement head') || r.includes('principal') || name.includes('rajeshwar') || name.includes('institute') || name.includes('college') || name.includes('university') || name.includes('aiia') || name.includes('nis')) {
+        return 'college';
+      }
+
+      return 'student';
+    })()
+  );
+
+  // 1. COMPANY BRAND PROFILE
+  if (roleType === 'company') {
+    return <CompanyProfileView user={targetEntity} onNavigate={onNavigate} onBack={onBack} isPublicView={Boolean(viewingUser)} />;
+  }
+
+  // 2. FACULTY SCHOLAR PROFILE
+  if (roleType === 'faculty') {
+    return <FacultyProfileView user={targetEntity} onNavigate={onNavigate} onBack={onBack} isPublicView={Boolean(viewingUser)} />;
+  }
+
+  // 3. COLLEGE & INSTITUTIONAL PROFILE
+  if (roleType === 'college') {
+    return <CollegeProfileView user={targetEntity} onNavigate={onNavigate} onBack={onBack} isPublicView={Boolean(viewingUser)} />;
+  }
+
+  // 4. MINISTRY & GOVERNMENT REGULATORY PROFILE
+  if (roleType === 'admin') {
+    return <MinistryProfileView user={targetEntity} onNavigate={onNavigate} onBack={onBack} isPublicView={Boolean(viewingUser)} />;
+  }
+
+  // 5. STUDENT PRACTITIONER PORTFOLIO
+  return (
+    <StudentProfileView
+      user={targetEntity}
+      onNavigate={onNavigate}
+      onBack={onBack}
+      isPublicView={Boolean(viewingUser)}
+    />
   );
 }
 
