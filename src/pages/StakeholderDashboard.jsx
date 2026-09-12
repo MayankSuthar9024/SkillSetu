@@ -265,7 +265,16 @@ export const StakeholderDashboard = ({
               </div>
             )}
 
-            {activePortalId === 'student' && <StudentPortalView user={user} />}
+            {activePortalId === 'student' && (
+              <StudentPortalView 
+                user={user} 
+                onNavigateToSkills={() => {
+                  setActiveTab('skills');
+                  window.location.hash = 'skills';
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+              />
+            )}
             {activePortalId === 'company' && <CompanyPage currentUser={user} onOpenAuthModal={() => {}} />}
             {activePortalId === 'faculty' && (
               <ComingSoonView onBack={() => setActiveTab('feed')} />

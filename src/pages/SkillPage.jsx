@@ -25,6 +25,14 @@ import {
   Tag
 } from 'lucide-react';
 import { ALL_COURSES } from '../data/coursesData';
+import { useProctoringStream } from '../hooks/useProctoringStream';
+import { 
+  ProctoringPiP, 
+  ProctoringPermissionModal, 
+  DisqualificationModal, 
+  CameraDisconnectedBanner 
+} from '../components/ProctoringMonitor';
+
 
 const QUESTIONS = [
   { id: 1, domain: 'Clinical & Diagnostics', question: 'Which of the following is the primary method used in Nadi Pariksha for clinical assessment?', options: ['Pulse diagnosis at the radial artery', 'Blood pressure monitoring', 'Tongue examination only', 'Auscultation of chest'], correct: 0 },
@@ -76,8 +84,78 @@ export function SkillPage({ onNavigate, onOpenReadinessModal, selectedCourse = n
     if (testState === 'running' && timeLeft === 0) finishTest();
   }, [testState, timeLeft]);
 
-  const startTest = () => { setTestState('running'); setCurrentQ(0); setAnswers({}); setSelectedOption(null); setTimeLeft(TOTAL_TIME); };
-  const finishTest = useCallback(() => { clearTimeout(timerRef.current); setTestState('finished'); }, []);
+  const [isPermissionModalOpen, setIsPermissionModalOpen] = useState(false);
+  const [disqualificationReason, setDisqualificationReason] = useState(null);
+  const [submissionPayload, setSubmissionPayload] = useState(null);
+
+  const stopStreamRef = useRef(null);
+
+  // Automatic disqualification handler
+  const handleDisqualify = useCallback((reason) => {
+    clearTimeout(timerRef.current);
+    setDisqualificationReason(reason);
+    setTestState('disqualified');
+    if (stopStreamRef.current) {
+      stopStreamRef.current();
+    }
+  }, []);
+
+  // Proctoring Stream & Integrity Hook with motion & secondary device detection
+  const {
+    stream,
+    cameraActive,
+    cameraError,
+    isRequesting,
+    tabSwitchCount,
+    cameraDisconnected,
+    rapidMovementDetected,
+    faceAbsent,
+    faceAbsentCountdown,
+    requestCamera,
+    stopStream,
+    getProctoringMetadata
+  } = useProctoringStream({
+    isActive: testState === 'running',
+    onDisqualify: handleDisqualify
+  });
+
+  stopStreamRef.current = stopStream;
+
+  // Prompt camera permission modal before starting test
+  const handleInitiateAssessment = () => {
+    setIsPermissionModalOpen(true);
+  };
+
+  const handleGrantCameraAndStart = async () => {
+    const result = await requestCamera();
+    if (result.success) {
+      setIsPermissionModalOpen(false);
+      setDisqualificationReason(null);
+      setTestState('running');
+      setCurrentQ(0);
+      setAnswers({});
+      setSelectedOption(null);
+      setTimeLeft(TOTAL_TIME);
+      setSubmissionPayload(null);
+    }
+  };
+
+  const finishTest = useCallback(() => {
+    clearTimeout(timerRef.current);
+    // Generate final proctoring metadata payload
+    const proctoringData = getProctoringMetadata();
+    const finalPayload = {
+      test_id: 'ayush-universal-diagnostic-v1',
+      answers,
+      submitted_at: new Date().toISOString(),
+      ...proctoringData
+    };
+    setSubmissionPayload(finalPayload);
+    // Ensure camera stream is completely stopped
+    stopStream();
+    setTestState('finished');
+  }, [answers, getProctoringMetadata, stopStream]);
+
   const selectOption = (idx) => setSelectedOption(idx);
 
   const nextQuestion = () => {
@@ -89,7 +167,10 @@ export function SkillPage({ onNavigate, onOpenReadinessModal, selectedCourse = n
     if (currentQ > 0) { setCurrentQ(currentQ - 1); setSelectedOption(answers[currentQ - 1] ?? null); }
   };
   const submitTest = () => {
-    if (selectedOption !== null) setAnswers(prev => ({ ...prev, [currentQ]: selectedOption }));
+    if (selectedOption !== null) {
+      const updatedAnswers = { ...answers, [currentQ]: selectedOption };
+      setAnswers(updatedAnswers);
+    }
     finishTest();
   };
 
@@ -142,12 +223,44 @@ export function SkillPage({ onNavigate, onOpenReadinessModal, selectedCourse = n
     return 'text-red-600';
   };
 
+  // ─── DISQUALIFIED STATE: Immediate dismissal on integrity breach ───
+  if (testState === 'disqualified') {
+    return (
+      <div className="min-h-screen bg-[#f7faf8] text-slate-900 flex items-center justify-center p-4">
+        <DisqualificationModal
+          isOpen={true}
+          reason={disqualificationReason || 'Integrity breach detected during test session.'}
+          onReturn={() => {
+            setTestState('idle');
+            setDisqualificationReason(null);
+          }}
+        />
+      </div>
+    );
+  }
+
   // ─── RUNNING STATE: Quiz ───
   if (testState === 'running') {
     const q = QUESTIONS[currentQ];
     const isLast = currentQ === QUESTIONS.length - 1;
     return (
-      <div className="min-h-screen bg-[#f7faf8] text-slate-900 pb-8">
+      <div className="min-h-screen bg-[#f7faf8] text-slate-900 pb-8 relative">
+        {/* Disconnected Camera Banner */}
+        {cameraDisconnected && (
+          <CameraDisconnectedBanner onReEnable={requestCamera} />
+        )}
+
+        {/* Floating Proctoring PiP */}
+        <ProctoringPiP
+          stream={stream}
+          cameraActive={cameraActive}
+          tabSwitchCount={tabSwitchCount}
+          rapidMovementDetected={rapidMovementDetected}
+          faceAbsent={faceAbsent}
+          faceAbsentCountdown={faceAbsentCountdown}
+          onReEnableCamera={requestCamera}
+        />
+
         <div className="bg-white border-b border-slate-200/80 sticky top-0 z-30">
           <div className="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -258,7 +371,56 @@ export function SkillPage({ onNavigate, onOpenReadinessModal, selectedCourse = n
             </div>
           )}
 
-          <button onClick={() => setTestState('idle')} className="w-full bg-emerald-800 hover:bg-emerald-900 text-white font-bold text-sm py-4 rounded-xl transition-all cursor-pointer flex items-center justify-center gap-2">
+          {/* Proctoring Verification Summary Card */}
+          {submissionPayload?.proctoring_metadata && (
+            <div className="bg-white rounded-2xl border border-emerald-200 p-6 space-y-3">
+              <div className="flex items-center justify-between">
+                <h3 className="font-bold text-sm text-slate-900 flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                  Academic Proctoring Verification Ledger
+                </h3>
+                <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
+                  Verified Session
+                </span>
+              </div>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+                <div className="p-3 bg-slate-50 rounded-xl border border-slate-200/80">
+                  <span className="block text-slate-400 font-medium">Camera Feed</span>
+                  <span className="font-bold text-emerald-700">
+                    {submissionPayload.proctoring_metadata.camera_verified ? 'Active & Verified' : 'Unverified'}
+                  </span>
+                </div>
+                <div className="p-3 bg-slate-50 rounded-xl border border-slate-200/80">
+                  <span className="block text-slate-400 font-medium">Tab Switches</span>
+                  <span className={`font-bold ${submissionPayload.proctoring_metadata.tab_switch_count > 0 ? 'text-amber-600' : 'text-slate-900'}`}>
+                    {submissionPayload.proctoring_metadata.tab_switch_count} Recorded
+                  </span>
+                </div>
+                <div className="p-3 bg-slate-50 rounded-xl border border-slate-200/80">
+                  <span className="block text-slate-400 font-medium">Session Started</span>
+                  <span className="font-bold text-slate-900 font-mono text-[11px]">
+                    {new Date(submissionPayload.proctoring_metadata.session_started_at).toLocaleTimeString()}
+                  </span>
+                </div>
+                <div className="p-3 bg-slate-50 rounded-xl border border-slate-200/80">
+                  <span className="block text-slate-400 font-medium">Session Concluded</span>
+                  <span className="font-bold text-slate-900 font-mono text-[11px]">
+                    {new Date(submissionPayload.proctoring_metadata.session_ended_at).toLocaleTimeString()}
+                  </span>
+                </div>
+              </div>
+              <details className="text-[11px] text-slate-500 pt-1">
+                <summary className="cursor-pointer font-semibold hover:text-slate-700 select-none">
+                  View Raw Proctoring Submission Payload JSON
+                </summary>
+                <pre className="mt-2 p-3 bg-slate-900 text-emerald-400 rounded-xl font-mono text-[10px] overflow-x-auto">
+                  {JSON.stringify(submissionPayload, null, 2)}
+                </pre>
+              </details>
+            </div>
+          )}
+
+          <button onClick={() => { setTestState('idle'); setSubmissionPayload(null); }} className="w-full bg-emerald-800 hover:bg-emerald-900 text-white font-bold text-sm py-4 rounded-xl transition-all cursor-pointer flex items-center justify-center gap-2">
             <ChevronLeft className="w-4 h-4" />Back to Skills Overview
           </button>
         </div>
@@ -297,13 +459,22 @@ export function SkillPage({ onNavigate, onOpenReadinessModal, selectedCourse = n
             </div>
           </div>
           <button
-            onClick={startTest}
+            onClick={handleInitiateAssessment}
             className="w-full sm:w-auto px-6 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs transition-colors flex items-center justify-center gap-2 shrink-0 cursor-pointer shadow-xs"
           >
             <Play className="w-3.5 h-3.5 fill-slate-950" />
             <span>Start Assessment</span>
           </button>
         </div>
+
+        {/* Pre-Assessment Camera Permission Modal */}
+        <ProctoringPermissionModal
+          isOpen={isPermissionModalOpen}
+          onGrantAccess={handleGrantCameraAndStart}
+          onCancel={() => setIsPermissionModalOpen(false)}
+          errorMessage={cameraError}
+          isRequesting={isRequesting}
+        />
 
         {/* Executive 3-Card Metrics Row (Zero Redundancy) */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">

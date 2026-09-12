@@ -55,13 +55,19 @@ export function App() {
           setCurrentUser(portalCfg?.profileUser || null);
         }
         setActivePage('dashboard');
-      } else if (['how-it-works', 'features', 'skills', 'comparison'].includes(hash)) {
+      } else if (['how-it-works', 'features', 'comparison'].includes(hash)) {
         setActivePage('home');
         setTimeout(() => {
           const el = document.getElementById(hash);
           if (el) el.scrollIntoView({ behavior: 'smooth' });
         }, 100);
-      } else if (['about', 'opportunities', 'skill', 'industry', 'courses', 'feed', 'profile', 'messages'].includes(hash)) {
+      } else if (hash === 'skill' || hash === 'skills') {
+        if (currentUser) {
+          setActivePage('dashboard');
+        } else {
+          setActivePage('skill');
+        }
+      } else if (['about', 'opportunities', 'industry', 'courses', 'feed', 'profile', 'messages'].includes(hash)) {
         setActivePage(hash);
       } else if (!hash || hash === 'home') {
         if (currentUser) {
@@ -119,9 +125,9 @@ export function App() {
 
   const handleNavigate = (page) => {
     if (currentUser) {
-      if (['feed', 'messages', 'jobs', 'skills', 'courses', 'network', 'console', 'profile'].includes(page)) {
+      if (['feed', 'messages', 'jobs', 'skills', 'skill', 'courses', 'network', 'console', 'profile'].includes(page)) {
         setActivePage('dashboard');
-        window.location.hash = page;
+        window.location.hash = page === 'skill' ? 'skills' : page;
         window.scrollTo({ top: 0, behavior: 'smooth' });
         return;
       }

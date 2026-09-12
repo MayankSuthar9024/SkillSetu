@@ -87,13 +87,15 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
 
     setActiveSection(id);
     if (activePage !== 'home') {
-      setActivePage('home');
-      setTimeout(() => {
-        const el = document.getElementById(id);
-        if (el) {
-          el.scrollIntoView({ behavior: 'smooth' });
-        }
-      }, 100);
+      if (['how-it-works', 'features', 'comparison'].includes(id)) {
+        setActivePage('home');
+        setTimeout(() => {
+          const el = document.getElementById(id);
+          if (el) el.scrollIntoView({ behavior: 'smooth' });
+        }, 100);
+      } else {
+        setActivePage(id);
+      }
     } else {
       const el = document.getElementById(id);
       if (el) {
