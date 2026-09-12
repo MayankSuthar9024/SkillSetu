@@ -50,6 +50,7 @@ p, a, button, input, select, textarea,
   word-wrap: normal;
   direction: ltr;
   -webkit-font-feature-settings: 'liga' 1;
+  font-feature-settings: 'liga' 1;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -170,6 +171,7 @@ a {
 .line-clamp-2 {
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
