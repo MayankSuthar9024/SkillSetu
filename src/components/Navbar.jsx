@@ -72,6 +72,14 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
     return () => window.removeEventListener('scroll', handleScroll);
   }, [activePage]);
 
+  // Click outside to close profile dropdown
+  useEffect(() => {
+    if (!profileDropdownOpen) return;
+    const handleClickOutside = () => setProfileDropdownOpen(false);
+    window.addEventListener('click', handleClickOutside);
+    return () => window.removeEventListener('click', handleClickOutside);
+  }, [profileDropdownOpen]);
+
   const handleNavClick = (id) => {
     setMobileMenuOpen(false);
     setProfileDropdownOpen(false);
@@ -163,10 +171,13 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
               /* Profile PFP Avatar Button (Only when user is signed in) */
               <div className="relative">
                 <button
-                  onClick={() => handleNavClick('profile')}
-                  onMouseEnter={() => setProfileDropdownOpen(true)}
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setProfileDropdownOpen(prev => !prev);
+                  }}
                   className="flex items-center gap-2.5 bg-white hover:bg-emerald-50/80 border border-slate-200/80 rounded-2xl p-1.5 pr-3.5 shadow-xs transition-all cursor-pointer group active:scale-95"
-                  title="Click to view your Profile Page"
+                  title="Click to toggle Profile menu"
                 >
                   <div className="relative w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-700 to-teal-900 text-white font-extrabold text-xs flex items-center justify-center shadow-xs border-2 border-emerald-100 group-hover:scale-105 transition-transform shrink-0 overflow-hidden">
                     {currentUser.avatarImage ? (
@@ -190,7 +201,7 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
 
                 {profileDropdownOpen && (
                   <div
-                    onMouseLeave={() => setProfileDropdownOpen(false)}
+                    onClick={(e) => e.stopPropagation()}
                     className="absolute right-0 mt-2 w-56 bg-white rounded-2xl shadow-xl border border-slate-200 py-2 z-50 animate-in fade-in zoom-in-95"
                   >
                     <div className="px-4 py-2 border-b border-slate-100">
@@ -199,6 +210,7 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
                     </div>
 
                     <button
+                      type="button"
                       onClick={() => handleNavClick('profile')}
                       className="w-full text-left px-4 py-2 text-xs font-bold text-slate-800 hover:bg-emerald-50 hover:text-emerald-900 flex items-center gap-2 cursor-pointer"
                     >
@@ -208,12 +220,13 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
 
                     <div className="pt-1 mt-1 border-t border-slate-100">
                       <button
+                        type="button"
                         onClick={() => {
                           setProfileDropdownOpen(false);
                           if (onLogout) onLogout();
                           else onOpenAuthModal('login');
                         }}
-                        className="w-full text-left px-4 py-2 text-xs font-semibold text-rose-700 hover:bg-rose-50 flex items-center gap-2 cursor-pointer transition-colors"
+                        className="w-full text-left px-4 py-2.5 text-xs font-semibold text-rose-700 hover:bg-rose-50 flex items-center gap-2 cursor-pointer transition-colors"
                       >
                         <LogOut className="w-3.5 h-3.5 text-rose-600" />
                         <span>Sign Out</span>
@@ -227,6 +240,7 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
             {/* Sign In / Role Selection CTA - Only shown when user is not signed in */}
             {!currentUser && (
               <button
+                type="button"
                 onClick={() => onOpenAuthModal('login')}
                 className="bg-emerald-800 hover:bg-emerald-900 text-white font-label-sm text-xs font-bold py-2.5 px-5 rounded-xl active:scale-95 hover:shadow-md transition-all flex items-center gap-2 cursor-pointer shrink-0"
               >
@@ -239,19 +253,62 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
           {/* Mobile Action Controls */}
           <div className="md:hidden flex items-center gap-2">
             {currentUser ? (
-              <button
-                onClick={() => handleNavClick('profile')}
-                className="w-9 h-9 rounded-xl bg-emerald-800 text-white font-extrabold text-xs flex items-center justify-center border-2 border-white shadow-xs shrink-0 overflow-hidden"
-                title="Profile"
-              >
-                {currentUser.avatarImage ? (
-                  <img src={currentUser.avatarImage} alt={userName} className="w-full h-full object-cover" />
-                ) : (
-                  <span>{userAvatar}</span>
+              <div className="relative">
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setProfileDropdownOpen(prev => !prev);
+                  }}
+                  className="w-9 h-9 rounded-xl bg-emerald-800 text-white font-extrabold text-xs flex items-center justify-center border-2 border-white shadow-xs shrink-0 overflow-hidden cursor-pointer"
+                  title="Profile Menu"
+                >
+                  {currentUser.avatarImage ? (
+                    <img src={currentUser.avatarImage} alt={userName} className="w-full h-full object-cover" />
+                  ) : (
+                    <span>{userAvatar}</span>
+                  )}
+                </button>
+
+                {profileDropdownOpen && (
+                  <div
+                    onClick={(e) => e.stopPropagation()}
+                    className="absolute right-0 mt-2 w-56 bg-white rounded-2xl shadow-xl border border-slate-200 py-2 z-50 animate-in fade-in zoom-in-95"
+                  >
+                    <div className="px-4 py-2 border-b border-slate-100">
+                      <span className="font-extrabold text-xs text-slate-900 block">{userName}</span>
+                      <span className="text-[10px] text-slate-500 font-medium block">{userRole}</span>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => handleNavClick('profile')}
+                      className="w-full text-left px-4 py-2 text-xs font-bold text-slate-800 hover:bg-emerald-50 hover:text-emerald-900 flex items-center gap-2 cursor-pointer"
+                    >
+                      <User className="w-4 h-4 text-emerald-700" />
+                      <span>View Profile Page</span>
+                    </button>
+
+                    <div className="pt-1 mt-1 border-t border-slate-100">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setProfileDropdownOpen(false);
+                          if (onLogout) onLogout();
+                          else onOpenAuthModal('login');
+                        }}
+                        className="w-full text-left px-4 py-2.5 text-xs font-semibold text-rose-700 hover:bg-rose-50 flex items-center gap-2 cursor-pointer transition-colors"
+                      >
+                        <LogOut className="w-3.5 h-3.5 text-rose-600" />
+                        <span>Sign Out</span>
+                      </button>
+                    </div>
+                  </div>
                 )}
-              </button>
+              </div>
             ) : (
               <button
+                type="button"
                 onClick={() => onOpenAuthModal('login')}
                 className="px-3.5 py-1.5 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-white text-xs font-bold shadow-xs flex items-center gap-1 cursor-pointer"
               >

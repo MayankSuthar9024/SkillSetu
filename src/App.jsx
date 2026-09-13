@@ -25,7 +25,12 @@ export function App() {
   const [isReadinessModalOpen, setIsReadinessModalOpen] = useState(false);
   const [activePortalId, setActivePortalId] = useState('student');
   const [currentUser, setCurrentUser] = useState(() => {
-    return PORTALS_DATA[0].profileUser;
+    try {
+      const saved = localStorage.getItem('skillsetu_user');
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
   });
   const [contrastMode, setContrastMode] = useState('standard');
 
@@ -92,6 +97,10 @@ export function App() {
   const handleLoginSuccess = (portalId, user) => {
     setActivePortalId(portalId);
     setCurrentUser(user);
+    try {
+      localStorage.setItem('skillsetu_user', JSON.stringify(user));
+      localStorage.setItem('skillsetu_portal', portalId);
+    } catch {}
     setActivePage('dashboard');
     window.location.hash = `dashboard-${portalId}`;
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -101,7 +110,12 @@ export function App() {
     if (newPortalId) {
       setActivePortalId(newPortalId);
       const portalCfg = PORTALS_DATA.find(p => p.id === newPortalId);
-      setCurrentUser(newUser || portalCfg?.profileUser || null);
+      const userObj = newUser || portalCfg?.profileUser || null;
+      setCurrentUser(userObj);
+      try {
+        localStorage.setItem('skillsetu_user', JSON.stringify(userObj));
+        localStorage.setItem('skillsetu_portal', newPortalId);
+      } catch {}
       window.location.hash = `dashboard-${newPortalId}`;
     } else {
       setActivePage('login');
@@ -111,9 +125,13 @@ export function App() {
   };
 
   const handleLogout = () => {
+    try {
+      localStorage.removeItem('skillsetu_user');
+      localStorage.removeItem('skillsetu_portal');
+    } catch {}
     setCurrentUser(null);
-    setActivePage('login');
-    window.location.hash = 'login';
+    setActivePage('home');
+    window.location.hash = '';
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
