@@ -32,7 +32,9 @@ export const PORTALS_DATA = [
       readiness: "88%",
       verifiedBadges: 6,
       avatar: "AS",
-      avatarImage: aaravAvatar
+      avatarImage: aaravAvatar,
+      apaarId: "9841-2041-8891",
+      abcCredits: "164 Credits"
     },
     defaultCredentials: {
       identifier: "aarav.sharma@nia.ac.in",

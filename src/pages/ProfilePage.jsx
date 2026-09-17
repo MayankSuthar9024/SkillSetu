@@ -147,6 +147,8 @@ export function StudentProfileView({ user, onNavigate, onBack, isPublicView }) {
     readinessScore: user?.readiness ? parseInt(user.readiness) : 88,
     bio: user?.bio || 'Pioneering evidence-based Ayurvedic medicine, digital Nadi Pariksha diagnostics, and botanical extraction HPLC standardization. Fast-tracking Ayush academic research to clinical industry applications.',
     phone: '+91 98765 43210',
+    apaarId: user?.apaarId || '9841-2041-8891',
+    abcCredits: user?.abcCredits || '164 Credits',
     abhaId: user?.abhaId || '91-4402-8819-2041',
     ncismReg: user?.ncismReg || 'NCISM/AYU/RJ/2022/9912',
     cgpa: user?.cgpa || '8.94 / 10.0 (Honors)',
@@ -173,7 +175,9 @@ export function StudentProfileView({ user, onNavigate, onBack, isPublicView }) {
         degree: user.degree || prev.degree,
         avatar: user.avatar || prev.avatar,
         avatarImage: user.avatarImage || prev.avatarImage,
-        readinessScore: user.readiness ? parseInt(user.readiness) : prev.readinessScore
+        readinessScore: user.readiness ? parseInt(user.readiness) : prev.readinessScore,
+        apaarId: user.apaarId || prev.apaarId,
+        abcCredits: user.abcCredits || prev.abcCredits
       }));
       setEditForm(prev => ({
         ...prev,
@@ -184,7 +188,9 @@ export function StudentProfileView({ user, onNavigate, onBack, isPublicView }) {
         institution: user.institution || prev.institution,
         degree: user.degree || prev.degree,
         avatar: user.avatar || prev.avatar,
-        avatarImage: user.avatarImage || prev.avatarImage
+        avatarImage: user.avatarImage || prev.avatarImage,
+        apaarId: user.apaarId || prev.apaarId,
+        abcCredits: user.abcCredits || prev.abcCredits
       }));
     }
   }, [user]);
@@ -294,7 +300,7 @@ export function StudentProfileView({ user, onNavigate, onBack, isPublicView }) {
 
       {/* Responsive Back Navigation */}
       {onBack && (
-        <div className="max-w-6xl mx-auto mb-3 sm:mb-4 px-1 sm:px-0">
+        <div className="max-w-7xl mx-auto mb-3 sm:mb-4 px-2 sm:px-4">
           <button
             onClick={onBack}
             className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white hover:bg-slate-50 active:scale-95 text-slate-700 hover:text-emerald-800 font-bold text-xs border border-slate-200/80 shadow-2xs transition-all cursor-pointer"
@@ -313,7 +319,7 @@ export function StudentProfileView({ user, onNavigate, onBack, isPublicView }) {
           backgroundImage: profileData.coverImage ? `url(${profileData.coverImage})` : undefined
         }}
       >
-        <div className="max-w-6xl mx-auto px-4 h-full flex justify-between items-start pt-4 relative z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-full flex justify-between items-start pt-4 relative z-10">
           {/* Change Cover Photo Button */}
           {!isPublicView && (
             <button
@@ -329,7 +335,7 @@ export function StudentProfileView({ user, onNavigate, onBack, isPublicView }) {
       </div>
 
       {/* Main Profile Container */}
-      <div className="max-w-6xl mx-auto -mt-16 sm:-mt-20 relative z-10 min-w-0 max-w-full overflow-hidden px-1 sm:px-0">
+      <div className="max-w-7xl mx-auto -mt-16 sm:-mt-20 relative z-10 min-w-0 max-w-full overflow-hidden px-2 sm:px-4">
         
         {/* Header Card */}
         <div className="bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-8 shadow-sm min-w-0 max-w-full overflow-hidden">
@@ -437,7 +443,10 @@ export function StudentProfileView({ user, onNavigate, onBack, isPublicView }) {
 
               {!isPublicView ? (
                 <button
-                  onClick={() => setIsEditingBio(true)}
+                  onClick={() => {
+                    setEditForm({ ...profileData });
+                    setIsEditingBio(true);
+                  }}
                   className="w-full sm:w-auto bg-emerald-800 hover:bg-emerald-700 active:scale-95 text-white font-bold text-xs px-5 py-3 rounded-2xl transition-all flex items-center justify-center gap-2 cursor-pointer shadow-xs hover:shadow-sm border border-emerald-700/50"
                 >
                   <Edit3 className="w-3.5 h-3.5" />
@@ -487,7 +496,10 @@ export function StudentProfileView({ user, onNavigate, onBack, isPublicView }) {
               {!isPublicView && (
                 <button
                   type="button"
-                  onClick={() => setIsEditingBio(true)}
+                  onClick={() => {
+                    setEditForm({ ...profileData });
+                    setIsEditingBio(true);
+                  }}
                   className="text-emerald-800 hover:text-emerald-950 font-bold text-xs flex items-center gap-1 cursor-pointer transition-colors"
                   title="Edit About Bio"
                 >
@@ -664,6 +676,34 @@ export function StudentProfileView({ user, onNavigate, onBack, isPublicView }) {
                   </div>
                 </div>
 
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-bold uppercase text-slate-500 mb-1">APAAR ID (12-digit format)</label>
+                    <input
+                      type="text"
+                      name="apaarId"
+                      id="apaarId"
+                      value={editForm.apaarId || ''}
+                      onChange={(e) => setEditForm({ ...editForm, apaarId: e.target.value })}
+                      placeholder="9841-2041-8891"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 font-medium font-mono"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold uppercase text-slate-500 mb-1">ABC ID</label>
+                    <input
+                      type="text"
+                      name="abcId"
+                      id="abcId"
+                      value={editForm.abcCredits || ''}
+                      onChange={(e) => setEditForm({ ...editForm, abcCredits: e.target.value })}
+                      placeholder="164 Credits"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 font-medium font-mono"
+                    />
+                  </div>
+                </div>
+
                 <div>
                   <label className="block text-xs font-bold uppercase text-slate-500 mb-1">Bio Summary</label>
                   <textarea
@@ -743,6 +783,14 @@ export function StudentProfileView({ user, onNavigate, onBack, isPublicView }) {
             </div>
 
             {/* Permanent Content (No Minimize Option) */}
+            <div className="mt-6 space-y-6">
+                
+                {/* Top Row: Real 6-Axis Ayush Radar Chart & Sidebar Verified Credentials */}
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                  
+                  {/* Left Column: Real 6-Axis Ayush Radar Chart */}
+                  <div className="lg:col-span-7 xl:col-span-8 space-y-6">
+                    <AyushSixAxisRadarChart skillMatrix={skillMatrix} plain={true} />
             <div className="mt-6 space-y-8">
                   {/* Left Column: Real 6-Axis Ayush Radar Chart & Academic Records */}
                   <div className="lg:col-span-12 space-y-6">
@@ -836,6 +884,23 @@ export function StudentProfileView({ user, onNavigate, onBack, isPublicView }) {
               </div>
           </section>
 
+                  {/* Right Column: Sidebar Credentials */}
+                  <div className="lg:col-span-5 xl:col-span-4 space-y-6">
+                    {/* Official Contacts (Matching Container Block System) */}
+                    <div className="bg-white rounded-3xl border border-slate-200/90 p-5 sm:p-6 shadow-xs">
+                      <div className="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
+                        <div className="flex items-center gap-2.5">
+                          <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-800 flex items-center justify-center font-bold border border-emerald-200/60 shadow-2xs">
+                            <ShieldCheck className="w-4 h-4 text-emerald-700" />
+                          </div>
+                          <h4 className="font-extrabold text-sm text-slate-900 tracking-tight">
+                            Verified Contact &amp; Identity
+                          </h4>
+                        </div>
+                        <span className="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200">
+                          Active
+                        </span>
+                      </div>
           {/* SECTION: PAST INTERVIEWS & VIVA EVALUATION RECORD */}
           <section id="section-interviews" className="scroll-mt-6 rounded-3xl bg-white border border-slate-200/80 p-5 sm:p-7 shadow-xs transition-all">
             <div 
@@ -926,6 +991,175 @@ export function StudentProfileView({ user, onNavigate, onBack, isPublicView }) {
                         ))}
                       </div>
                     </div>
+                  </div>
+
+                </div>
+
+                {/* Academic Profile & Institutional Records (Full-width Prestige Dossier Layout) */}
+                <div className="bg-white rounded-3xl border border-slate-200 shadow-xs overflow-hidden">
+                  {/* Institutional Dossier Header */}
+                  <div className="p-5 sm:p-6 bg-gradient-to-r from-slate-50/90 via-white to-emerald-50/30 border-b border-slate-200/90 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div className="flex items-center gap-3.5 min-w-0">
+                      <div className="w-11 h-11 rounded-2xl bg-emerald-700 text-white flex items-center justify-center font-bold shadow-sm shadow-emerald-700/20 shrink-0">
+                        <GraduationCap className="w-6 h-6" />
+                      </div>
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-2">
+                          <h4 className="font-extrabold text-base sm:text-lg text-slate-900 tracking-tight">
+                            Academic Dossier &amp; Statutory Records
+                          </h4>
+                        </div>
+                        <p className="text-xs text-slate-500 font-medium mt-0.5">
+                          National Institute of Ayurveda (NIA), Jaipur · Batch {profileData.batch}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2.5 flex-wrap">
+                      <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold bg-teal-50 text-teal-800 border border-teal-200/90 shadow-2xs">
+                        <ShieldCheck className="w-3.5 h-3.5 text-teal-600 shrink-0" />
+                        <span>APAAR: {profileData.apaarId} • ABC Bank: {profileData.abcCredits} (DigiLocker Verified)</span>
+                      </span>
+                      <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-extrabold uppercase tracking-wider bg-emerald-50 text-emerald-800 border border-emerald-200/90 whitespace-nowrap shadow-2xs">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse"></span>
+                        NCISM Accredited
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="p-6 sm:p-7 space-y-6">
+                    
+                    {/* Dossier Level 1: Primary Academic Qualification & Academic Standing Banner */}
+                    <div className="p-5 sm:p-6 rounded-2xl bg-slate-50/90 border border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-5">
+                      <div className="space-y-2 flex-1 min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-800 bg-emerald-100/70 px-2.5 py-0.5 rounded-md border border-emerald-200/60">
+                            Degree &amp; Clinical Program
+                          </span>
+                          <span className="text-xs font-semibold text-slate-500">
+                            Phase IV (Final Year Residency)
+                          </span>
+                        </div>
+                        <h5 className="text-xl font-black text-slate-900 tracking-tight">
+                          {profileData.degree}
+                        </h5>
+                        <p className="text-xs sm:text-sm text-slate-600 font-medium">
+                          Ayurvedic Clinical Medicine, Dravyaguna Phytochemistry &amp; Shalya Chikitsa
+                        </p>
+                        <p className="text-xs text-slate-500 pt-1 flex items-center gap-1.5 flex-wrap">
+                          <span>Academic Mentor:</span>
+                          <strong className="text-slate-800 font-semibold">{profileData.preceptor}</strong>
+                        </p>
+                      </div>
+
+                      {/* Academic Merit Badge */}
+                      <div className="flex md:flex-col items-center md:items-end justify-between md:justify-center p-4 bg-white rounded-2xl border border-slate-200 shadow-2xs shrink-0 md:min-w-[190px]">
+                        <div className="flex items-baseline gap-1.5">
+                          <span className="text-3xl font-black text-slate-900 tracking-tight">8.94</span>
+                          <span className="text-xs font-bold text-slate-400">/ 10.0 CGPA</span>
+                        </div>
+                        <span className="inline-flex items-center gap-1.5 text-xs font-extrabold text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200/80 mt-1.5">
+                          <Award className="w-3.5 h-3.5 text-emerald-600" /> Top 2% Honors
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Dossier Level 2: Dual Statutory Licensure & Digital Health Identifiers */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                      
+                      {/* Statutory Licensure Card */}
+                      <div className="p-5 rounded-2xl bg-white border border-slate-200 hover:border-emerald-300 transition-colors shadow-2xs space-y-3">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <div className="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center border border-emerald-200/60 shadow-2xs">
+                              <ShieldCheck className="w-4 h-4" />
+                            </div>
+                            <span className="text-xs font-extrabold uppercase tracking-wider text-slate-600">
+                              Statutory Practitioner Registry
+                            </span>
+                          </div>
+                          <span className="inline-flex items-center gap-1 text-[10px] font-extrabold text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded-md border border-emerald-200/80">
+                            <CheckCircle2 className="w-3 h-3 text-emerald-600" /> Active
+                          </span>
+                        </div>
+
+                        <div className="flex items-center justify-between bg-slate-50/90 px-4 py-3 rounded-xl border border-slate-200/80">
+                          <span className="font-mono font-bold text-sm sm:text-base text-slate-900 select-all tracking-wider">
+                            {profileData.ncismReg}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => handleCopy(profileData.ncismReg, 'ncism')}
+                            className="p-1.5 rounded-lg text-slate-400 hover:text-emerald-700 hover:bg-white transition-colors cursor-pointer"
+                            title="Copy NCISM Registration ID"
+                          >
+                            {copiedField === 'ncism' ? (
+                              <Check className="w-4 h-4 text-emerald-700" />
+                            ) : (
+                              <Copy className="w-4 h-4" />
+                            )}
+                          </button>
+                        </div>
+
+                        <p className="text-xs text-slate-500 font-medium">
+                          National Commission for Indian System of Medicine (NCISM)
+                        </p>
+                      </div>
+
+                      {/* Digital Health ID Card */}
+                      <div className="p-5 rounded-2xl bg-white border border-slate-200 hover:border-teal-300 transition-colors shadow-2xs space-y-3">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <div className="w-7 h-7 rounded-lg bg-teal-50 text-teal-700 flex items-center justify-center border border-teal-200/60 shadow-2xs">
+                              <FileText className="w-4 h-4" />
+                            </div>
+                            <span className="text-xs font-extrabold uppercase tracking-wider text-slate-600">
+                              National ABHA Health ID
+                            </span>
+                          </div>
+                          <span className="inline-flex items-center gap-1 text-[10px] font-extrabold text-teal-800 bg-teal-50 px-2.5 py-0.5 rounded-md border border-teal-200/80">
+                            <ShieldCheck className="w-3 h-3 text-teal-600" /> DigiLocker
+                          </span>
+                        </div>
+
+                        <div className="flex items-center justify-between bg-slate-50/90 px-4 py-3 rounded-xl border border-slate-200/80">
+                          <span className="font-mono font-bold text-sm sm:text-base text-slate-900 select-all tracking-wider">
+                            {profileData.abhaId}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => handleCopy(profileData.abhaId, 'abha')}
+                            className="p-1.5 rounded-lg text-slate-400 hover:text-teal-700 hover:bg-white transition-colors cursor-pointer"
+                            title="Copy ABHA ID"
+                          >
+                            {copiedField === 'abha' ? (
+                              <Check className="w-4 h-4 text-teal-700" />
+                            ) : (
+                              <Copy className="w-4 h-4" />
+                            )}
+                          </button>
+                        </div>
+
+                        <p className="text-xs text-slate-500 font-medium">
+                          Ayushman Bharat Digital Mission (ABDM) Healthcare Registry
+                        </p>
+                      </div>
+
+                    </div>
+
+                    {/* Dossier Trust Ledger Strip */}
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pt-3 text-xs text-slate-500 border-t border-slate-200/70">
+                      <span className="flex items-center gap-2 font-medium">
+                        <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                        Statutory records verified by Ayush Academic &amp; Clinical Council
+                      </span>
+                      <span className="font-mono text-xs text-slate-400 truncate">
+                        SHA-256: {profileData.verificationHash.slice(0, 24)}...
+                      </span>
+                    </div>
+
+                  </div>
+                </div>
                   </div>
                 ))}
               </div>
