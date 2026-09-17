@@ -1,0 +1,418 @@
+[
+  {
+    "name": "tamannasharma-png/SIH26044-finaliteration",
+    "url": "https://github.com/tamannasharma-png/SIH26044-finaliteration",
+    "desc": null,
+    "lang": "HTML",
+    "stars": 4,
+    "readmeLen": 5629,
+    "headings": [],
+    "readmeSnippet": "Skill Tatva — Academia–Industry Skill Collaboration Portal\n\n«SIH26044 | Smart Automation | Ministry of Ayush»\n\n🚀 Overview\n\nSkill Tatva is a web-based platform designed to bridge the gap between academia and industry by connecting students, educational institutions, and industry opportunities through skill-based profiles, internships, placements, and skill mapping.\n\nThe platform focuses on helping students understand the skills required by industry and discover relevant opportunities, while enabling organizations to identify candidates based on their skills and requirements.\n\n---\n\n🎯 Problem S"
+  },
+  {
+    "name": "hemanth-eluri/sih26044-skill-portal",
+    "url": "https://github.com/hemanth-eluri/sih26044-skill-portal",
+    "desc": null,
+    "lang": "JavaScript",
+    "stars": 1,
+    "readmeLen": 4004,
+    "headings": [
+      "# ⭐ ISOTOPES 🚀",
+      "### SIH26044 — Portal for Academia–Industry Collaboration  ",
+      "## 📌 Status  ",
+      "## 🚀 Quick Start  ",
+      "## 🎯 Problem Statement  ",
+      "## 🌟 Core Mission  ",
+      "## 🧬 Skill Twin  ",
+      "## 🎨 Platform Features  ",
+      "### 👨‍🎓 Students  ",
+      "### 🏢 Companies  "
+    ],
+    "readmeSnippet": "\n# ⭐ ISOTOPES 🚀\n### SIH26044 — Portal for Academia–Industry Collaboration  \n\n> An intelligent career growth ecosystem connecting students, industries, academicians, and institutions through skill mapping, gap analysis, opportunities, and career intelligence.\n\n---\n\n## 📌 Status  \n**FULLY IMPLEMENTED ✅**  \nBackend, frontend, and database integration complete. Ready for testing and deployment.\n\n---\n\n## 🚀 Quick Start  \n\n1. **Start MongoDB**  \n   ```bash\n   mongod\n   ```\n\n2. **Setup Backend**  \n   ```bash\n   cd backend\n   npm install\n   npm run seed   # Populates sample data\n   npm start      # S"
+  },
+  {
+    "name": "dipanjan2907/Skill_Bridge_SIH",
+    "url": "https://github.com/dipanjan2907/Skill_Bridge_SIH",
+    "desc": "SIH 26044",
+    "lang": "TypeScript",
+    "stars": 2,
+    "readmeLen": 36158,
+    "headings": [
+      "# SkillBridge",
+      "### Deployed Endpoints & Environments",
+      "## Table of Contents",
+      "## 1. Project Overview",
+      "## 2. Problem Statement",
+      "### SIH 2026 Problem Statement ID: 26044",
+      "### Ecosystem Challenges Addressed",
+      "## 3. Key Features by Role",
+      "### Student Module",
+      "### Industry Partner Module"
+    ],
+    "readmeSnippet": "# SkillBridge\n\n**Bridging Academia and Industry through Skills, Opportunities and Collaboration.**\n\n> **Portal for Academia – Industry Collaboration for Skill Mapping, Internships and Placement**\n\n[![SIH 2026](https://img.shields.io/badge/SIH-2026-blueviolet?style=for-the-badge&logo=gov.in)](https://sih.gov.in)\n[![Problem Statement ID](https://img.shields.io/badge/SIH%20Problem%20ID-26044-orange?style=for-the-badge)](https://sih.gov.in)\n[![Theme](https://img.shields.io/badge/Theme-Smart%20Automation-06B6D4?style=for-the-badge)]()\n[![Project Status](https://img.shields.io/badge/Status-Fully%20F"
+  },
+  {
+    "name": "harshueie/SIH26044-AyushConnect",
+    "url": "https://github.com/harshueie/SIH26044-AyushConnect",
+    "desc": "SIH26044",
+    "lang": "HTML",
+    "stars": 0,
+    "readmeLen": 1409,
+    "headings": [
+      "# AyushConnect rebuilt full-stack prototype",
+      "## Stack",
+      "## Run on Windows",
+      "## Demo institutional accounts",
+      "## Main workflow",
+      "## Security note"
+    ],
+    "readmeSnippet": "# AyushConnect rebuilt full-stack prototype\n\n## Stack\n- Flask\n- Flask-SQLAlchemy\n- SQLite\n- Jinja templates\n- Bootstrap 5\n\n## Run on Windows\n\n1. Open this folder in VS Code.\n2. Create a virtual environment:\n   python -m venv venv\n3. Activate it:\n   venv\\Scripts\\activate\n4. Install packages:\n   pip install -r requirements.txt\n5. Start:\n   python app.py\n6. Open:\n   http://127.0.0.1:5000\n\nThe SQLite database `ayushconnect.db` is created automatically on first run.\n\n## Demo institutional accounts\n\nFaculty:\nEmail: faculty@ayushconnect.local\nPassword: Faculty@123\n\nAdmin:\nEmail: admin@ayushconnect.lo"
+  },
+  {
+    "name": "tamannasharma-png/SIH26044",
+    "url": "https://github.com/tamannasharma-png/SIH26044",
+    "desc": null,
+    "lang": "HTML",
+    "stars": 2,
+    "readmeLen": 5628,
+    "headings": [],
+    "readmeSnippet": "Skill Tatva — Academia–Industry Skill Collaboration Portal\n\n«SIH26044 | Smart Automation | Ministry of Ayush»\n\n🚀 Overview\n\nSkill Tatva is a web-based platform designed to bridge the gap between academia and industry by connecting students, educational institutions, and industry opportunities through skill-based profiles, internships, placements, and skill mapping.\n\nThe platform focuses on helping students understand the skills required by industry and discover relevant opportunities, while enabling organizations to identify candidates based on their skills and requirements.\n\n---\n\n🎯 Problem S"
+  },
+  {
+    "name": "aaryanpadgilwar-01/SIH26044",
+    "url": "https://github.com/aaryanpadgilwar-01/SIH26044",
+    "desc": null,
+    "lang": "JavaScript",
+    "stars": 0,
+    "readmeLen": 5194,
+    "headings": [
+      "# SkillMatrix — Academia-Industry Skill Mapping",
+      "## 🚀 Key Features by Portal",
+      "### 1. Student Portal",
+      "### 2. Industry Portal",
+      "### 3. Institution Portal (Dean / Admin)",
+      "## 🛠️ Strict Tech Stack Compliance",
+      "## 🔑 Demo Accounts",
+      "## 🏃 Running the Application",
+      "### 1. Start the FastAPI Backend",
+      "### 2. Start the React Frontend"
+    ],
+    "readmeSnippet": "# SkillMatrix — Academia-Industry Skill Mapping\n**SIH 2026 | Problem Statement SIH26044 | Team WinYaLearn**\n\nSkillMatrix is an intelligent talent aggregation and academia-industry skill bridging platform. It connects Students, Industry Employers, and Academic Institutions through an AI-driven skill matching engine, automated skill verification assessments, and a unified job marketplace.\n\n---\n\n## 🚀 Key Features by Portal\n\n### 1. Student Portal\n- **Reference UI Match**: Recreated to match the CareerBridge / SkillMatrix reference layout.\n  - Top Navigation with search, notifications, and user av"
+  },
+  {
+    "name": "Shaana-code/SIH26044_DECiphers",
+    "url": "https://github.com/Shaana-code/SIH26044_DECiphers",
+    "desc": "Portal for Academia - Industry collaboration for Skill Mapping, Internships and Placement",
+    "lang": "Python",
+    "stars": 0,
+    "readmeLen": 4774,
+    "headings": [
+      "# 🎓 SIH26044 — DECiphers",
+      "### Portal for Academia–Industry Collaboration: Skill Mapping, Internships & Placement",
+      "### 🌐 Quick Links",
+      "## 📌 Project Overview",
+      "## ✨ Key Features",
+      "## 🏗 System Architecture",
+      "## 📂 Basic Project Directory Structure"
+    ],
+    "readmeSnippet": "# 🎓 SIH26044 — DECiphers\n### Portal for Academia–Industry Collaboration: Skill Mapping, Internships & Placement\n\n[![GitHub Repository](https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github)](https://github.com/Shaana-code/SIH26044_DECiphers)\n[![Streamlit App](https://img.shields.io/badge/Streamlit-Live_Portal-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://sih26044deciphers-s2rrcxaomrlzm8wzbuemap.streamlit.app/#fast-api-python-advanced)\n[![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)](https://fastapi"
+  },
+  {
+    "name": "reshmabanu2823/SIH26044",
+    "url": "https://github.com/reshmabanu2823/SIH26044",
+    "desc": null,
+    "lang": "JavaScript",
+    "stars": 0,
+    "readmeLen": 3112,
+    "headings": [
+      "# SIH 2026 — SIH26044",
+      "## Problem Statement",
+      "### Description",
+      "## Reference Repositories"
+    ],
+    "readmeSnippet": "# SIH 2026 — SIH26044\n\n## Problem Statement\n**Title:** Portal for Academia - Industry collaboration for Skill Mapping, Internships and Placement\n\n**Category:** Software\n**Theme:** Miscellaneous\n**Organization:** Ministry of Ayush\n\n### Description\n<b>Background:</b><br><br> A significant gap exists between the skills acquired in academic institutions and the competencies expected by industries. Students often struggle to identify the skills required for their desired career paths, while industries face challenges in finding candidates with the right skill sets. Similarly, academicians have limi"
+  },
+  {
+    "name": "sarthakagarwal0508/SIH26044",
+    "url": "https://github.com/sarthakagarwal0508/SIH26044",
+    "desc": "SIH 2026 PROJECT",
+    "lang": "JavaScript",
+    "stars": 0,
+    "readmeLen": 8136,
+    "headings": [
+      "# SIH26044 — Student–Company Opportunity Platform",
+      "## 📌 Problem",
+      "## 🎯 Objectives",
+      "## 🛠️ Technology Stack",
+      "### Frontend",
+      "### Backend",
+      "### Database",
+      "### Development Tools",
+      "## 🏗️ Project Architecture",
+      "## 👥 User Roles"
+    ],
+    "readmeSnippet": "# SIH26044 — Student–Company Opportunity Platform\n\nA full-stack platform developed for **Smart India Hackathon 2026 (SIH26044)** to connect students with companies and help students discover and apply for relevant opportunities such as internships and jobs.\n\n---\n\n## 📌 Problem\n\nStudents often struggle to find suitable opportunities because job and internship information is scattered across different platforms. Companies also face difficulties in reaching students with the right skills and profiles.\n\nThe goal of this project is to provide a **single platform** where:\n\n* Students can create and "
+  },
+  {
+    "name": "Mahammad-owl/sih26044-portal-final",
+    "url": "https://github.com/Mahammad-owl/sih26044-portal-final",
+    "desc": null,
+    "lang": "JavaScript",
+    "stars": 0,
+    "readmeLen": 6922,
+    "headings": [
+      "# SKILLSETU (SIH-2026 Problem Statement SIH26044)",
+      "## 🌟 Executive Summary",
+      "## 🚀 3-Minute Judge Demo Presentation Flow",
+      "## 🔑 Demo Accounts (Instant 1-Click Access or Manual Sign-In)",
+      "## 🛠️ Tech Stack & Architecture",
+      "## 💻 How to Run Locally",
+      "### 1. Prerequisites",
+      "### 2. Quick Launch (Two Terminals)",
+      "### 3. Reset / Seed Database (Optional)",
+      "### 4. Production Build"
+    ],
+    "readmeSnippet": "# SKILLSETU (SIH-2026 Problem Statement SIH26044)\n\n> **National Portal for Academia–Industry Collaboration for Skill Mapping, Internships and Placement**\n> \n> *A unified, lightweight, offline-ready, evidence-based platform connecting **Students ↔ Academia ↔ Industry** across all engineering disciplines.*\n\n---\n\n## 🌟 Executive Summary\n\n**SKILLSETU** resolves the fundamental disconnect between academic curricula and rapidly evolving industry competencies. Unlike superficial job boards or legacy placement portals, SKILLSETU provides:\n\n1. **Evidence-Based Skill Verification**: A 7-stage empirical "
+  },
+  {
+    "name": "UJ77-max/sih26044-career-bridge",
+    "url": "https://github.com/UJ77-max/sih26044-career-bridge",
+    "desc": null,
+    "lang": "HTML",
+    "stars": 0,
+    "readmeLen": 1253,
+    "headings": [
+      "# AlumNex — SIH 2026 Prototype",
+      "## Core demo journey",
+      "## Prototype focus",
+      "## Suggested stack",
+      "## Important product principle"
+    ],
+    "readmeSnippet": "# AlumNex — SIH 2026 Prototype\n\n**SIH26044 · Portal for Academia–Industry Collaboration for Skill Mapping, Internships and Placement**\n\nAlumNex is a prototype career-intelligence platform connecting students, alumni, academia and industry.\n\n## Core demo journey\n\n1. Student creates a career profile.\n2. Student completes a lightweight skill assessment.\n3. The system compares skills with a target industry role.\n4. It identifies skill gaps and recommends a roadmap.\n5. It matches the student with relevant alumni mentors.\n6. It recommends internships/jobs based on skill compatibility.\n7. The student"
+  },
+  {
+    "name": "adisharma9548/sih26044-ayush-portal",
+    "url": "https://github.com/adisharma9548/sih26044-ayush-portal",
+    "desc": null,
+    "lang": "TypeScript",
+    "stars": 0,
+    "readmeLen": 23926,
+    "headings": [
+      "# NodalConnector | SIH26044 Portal",
+      "## 🌟 Executive Summary & Innovation Highlights",
+      "### 1. Native In-App WebRTC Video Calling (Unlimited Duration)",
+      "### 2. AI Skill Gap Radar & Adaptive Assessment Engine",
+      "### 3. Dynamic Indian College & University Auto-Discovery (Zero Hardcoded Data)",
+      "### 4. Verified Digital Dossier & Institutional Endorsement",
+      "### 5. Multi-Role Corporate Recruiter Console",
+      "## 🏛️ System Architecture",
+      "## 🛡️ Security & Pentest Compliance",
+      "## 📡 REST API Reference"
+    ],
+    "readmeSnippet": "# NodalConnector | SIH26044 Portal\n\n**National Academia–Industry Collaboration, Skill Gap Mapping, Virtual Technical Interviews & Placement Ecosystem**\n\n> **Smart India Hackathon (Problem ID: SIH26044)**  \n> **Category**: Academia–Industry Bridge & Skill Alignment for Technical & Ayush Bio-Pharma Sectors  \n> **Architecture**: Production-Grade Decoupled Monorepo (`client/` Frontend + `server/` Backend)  \n> **Security Certification**: OWASP Top 10 + API Security Hardened with Zero Static Catalogs\n\n---\n\n## 🌟 Executive Summary & Innovation Highlights\n\n**NodalConnector** bridges the critical gap b"
+  },
+  {
+    "name": "adisharma9548/sih26044-platform",
+    "url": "https://github.com/adisharma9548/sih26044-platform",
+    "desc": "Portal for Academia–Industry Collaboration – Skill Mapping, Internships and Placement",
+    "lang": "TypeScript",
+    "stars": 0,
+    "readmeLen": 1698,
+    "headings": [
+      "# SkillBridge — SIH26044",
+      "## Current capabilities",
+      "## Local setup",
+      "## Verification",
+      "## Development status"
+    ],
+    "readmeSnippet": "# SkillBridge — SIH26044\n\nSkillBridge is an Academia–Industry collaboration platform for skill mapping, career readiness, assessments, portfolios, and institutional insight.\n\n## Current capabilities\n\n- Role-based registration and JWT authentication for students, industry, faculty, and institutions\n- Student profile, skills, projects, education, certifications, secure resume, and portfolio documents\n- Career intelligence with readiness, skill gaps, and a target-role roadmap derived from saved student data\n- Institution-created MCQ assessments with server-side scoring and single-attempt protecti"
+  },
+  {
+    "name": "abhishek-sharma07-code/sih26044-vyuha",
+    "url": "https://github.com/abhishek-sharma07-code/sih26044-vyuha",
+    "desc": null,
+    "lang": "Python",
+    "stars": 0,
+    "readmeLen": 8691,
+    "headings": [
+      "# AyushSetu: National Academia - Industry Integration & Placement Platform",
+      "## 📌 Executive Summary",
+      "## 🏆 Winning Differentiators & Standout Features",
+      "## 💾 How to Enter Data into the Database",
+      "### Method 1: In-App UI Modals (Visual & Instant)",
+      "### Method 2: Live In-App Database Studio",
+      "### Method 3: Command-Line Utility (`data_manager.py`)",
+      "# 1. View live record metrics",
+      "# 2. Add a new student",
+      "# 3. Post a new job/internship"
+    ],
+    "readmeSnippet": "# AyushSetu: National Academia - Industry Integration & Placement Platform\n\n**Ministry of Ayush, Government of India**  \n*National Central Platform for Competency Mapping, Evidence-Based Verification, Bilateral Industry Collaborations, and Direct Placements.*\n\n---\n\n## 📌 Executive Summary\n\nTraditional higher education and corporate recruitment in the Ayush, pharmaceutical, and biotechnology sectors have historically operated in disconnected silos. Academic institutions struggle to keep syllabi updated with rapidly evolving laboratory and regulatory standards; recruiters spend months screening "
+  },
+  {
+    "name": "tanuhyak-glitch/sih26044-portal",
+    "url": "https://github.com/tanuhyak-glitch/sih26044-portal",
+    "desc": null,
+    "lang": "JavaScript",
+    "stars": 0,
+    "readmeLen": 4578,
+    "headings": [
+      "# Setu — SIH26044 Prototype",
+      "## Quick start (two terminals)",
+      "### 1. Backend",
+      "### 2. Frontend",
+      "### Demo logins (password for all: `password123`)",
+      "## A five-minute demo script",
+      "## What makes the matching \"AI-style\" but explainable",
+      "## Architecture",
+      "## Known scope limits (be upfront with judges about these)"
+    ],
+    "readmeSnippet": "# Setu — SIH26044 Prototype\n\n**Problem Statement SIH26044:** Portal for Academia–Industry collaboration for\nSkill Mapping, Internships and Placement.\n\nSetu (Hindi for \"bridge\") connects four groups on one platform: **students**\nmap real, levelled skills; **industry** posts internships/jobs with required\nskill levels; **colleges** get a live placement and skill-gap view of their\nown students; and an **admin** gets a national rollup across every college\nand company on the platform. The centerpiece is a transparent, explainable\n**skill-matching engine** — every match score can be broken down into"
+  },
+  {
+    "name": "dabikaran968-gif/sih26044-portal123",
+    "url": "https://github.com/dabikaran968-gif/sih26044-portal123",
+    "desc": null,
+    "lang": "Python",
+    "stars": 0,
+    "readmeLen": 5278,
+    "headings": [
+      "# SIH26044 — Skill, Internship & Placement Portal",
+      "## 🌟 Core Features & PRD Alignment",
+      "### 1. AI Resume Parsing & NLP Skill Extraction (Section 5.1 & 5.2)",
+      "### 2. Skill Gap Vector Analysis & Radar Chart (Section 5.3 & 9)",
+      "### 3. Smart Recommendations & Personalized Upskilling (Section 5.4 & 5.5)",
+      "### 4. Recruiter / Employer Portal (Section 5.6)",
+      "### 5. TPO / Institution Analytics Dashboard (Section 5.7)",
+      "### 6. Bilingual User Experience (Section 6)",
+      "## 🚀 Getting Started",
+      "### Prerequisites"
+    ],
+    "readmeSnippet": "# SIH26044 — Skill, Internship & Placement Portal\n\n> **Smart India Hackathon (SIH) Problem Statement ID:** SIH26044  \n> **Category:** Software  \n> **Target Audience:** Students, Recruiters / Companies, Training & Placement Officers (TPOs), Institutional Admins  \n\nAn AI-driven intelligent platform that automates resume skill extraction, aligns competencies to the **National Skills Qualification Framework (NSQF)** taxonomy, computes quantifiable skill gap vectors against live industry job postings, recommends curated **SWAYAM / NPTEL** upskilling paths, and equips institutions with batch-level p"
+  },
+  {
+    "name": "vishwatejay/SIH26044-Skill-Intelligence-Platform",
+    "url": "https://github.com/vishwatejay/SIH26044-Skill-Intelligence-Platform",
+    "desc": "AI-powered skill intelligence and career matching platform for SIH26044.",
+    "lang": "Python",
+    "stars": 0,
+    "readmeLen": 4881,
+    "headings": [
+      "# SIH26044: Real AI-Powered Skill Intelligence & Matching Platform",
+      "## 🎯 12 Core AI Assissted Features",
+      "## 🧮 Mathematical Compatibility Formula",
+      "## 🚀 Quickstart & Running the Application",
+      "### 1. Run Unit Tests",
+      "### 2. Start the Server",
+      "## 👥 Interactive SIH Demonstration Flows",
+      "### Flow 1: Student Persona (Rahul Sharma)",
+      "### Flow 2: Recruiter Persona (TechCorp Global)",
+      "### Flow 3: Institution / TPO Persona (NIT Placements)"
+    ],
+    "readmeSnippet": "# SIH26044: Real AI-Powered Skill Intelligence & Matching Platform\n\n[![Python](https://img.shields.io/badge/Python-3.13-blue.svg)](https://python.org)\n[![FastAPI](https://img.shields.io/badge/FastAPI-0.141-green.svg)](https://fastapi.tiangolo.com)\n[![AI Architecture](https://img.shields.io/badge/AI-Explainable_Hybrid_Engine-indigo.svg)](#ai-architecture)\n[![SIH Prototype](https://img.shields.io/badge/SIH-26044-orange.svg)](#sih-demonstration-flows)\n\nA production-grade, explainable AI Skill Intelligence and Career Matching Platform built for the Smart India Hackathon (SIH26044).\n\n---\n\n## 🎯 12 "
+  },
+  {
+    "name": "SAYANCHARABORTY/skill-connect-sih26044",
+    "url": "https://github.com/SAYANCHARABORTY/skill-connect-sih26044",
+    "desc": null,
+    "lang": "JavaScript",
+    "stars": 0,
+    "readmeLen": 7501,
+    "headings": [
+      "# SIH26044: Portal for Academia–Industry Collaboration for Skill Mapping, Internships and Placement",
+      "## 🌟 Key Features",
+      "## 🚀 Getting Started Locally",
+      "### Step 1: Open the Project in VS Code",
+      "### Step 2: Install Dependencies",
+      "### Step 3: Create a Firebase Project",
+      "### Step 4: Enable Authentication Providers",
+      "### Step 5: Create Firestore Database",
+      "### Step 6: Configure Environment Variables",
+      "### Step 7: Run Locally"
+    ],
+    "readmeSnippet": "# SIH26044: Portal for Academia–Industry Collaboration for Skill Mapping, Internships and Placement\n\nA full-stack web application designed for Smart India Hackathon problem statement **SIH26044**.\n\nThis centralized platform connects **Students**, **Academic Institutions**, and **Industry/Recruiters** to solve:\n- Student skill profiling & competency mapping\n- Automated skill gap identification before job/internship applications\n- Candidate matching algorithm for recruiters\n- Employability tracking and curriculum demand analysis for colleges\n\n---\n\n## 🌟 Key Features\n\n1. **Dual Authentication Sys"
+  },
+  {
+    "name": "arjunsingh7711/SkillBridge-SIH26044",
+    "url": "https://github.com/arjunsingh7711/SkillBridge-SIH26044",
+    "desc": "SkillBridge - A smart Academia Industry Collaboration Platform connecting students, institutions, and companies through skills, opportunities, internships, and career-focused learning.",
+    "lang": "HTML",
+    "stars": 0,
+    "readmeLen": 7914,
+    "headings": [
+      "## Smart India Hackathon 2026 | SIH26044",
+      "## 🎯 Problem",
+      "## 💡 Our Solution",
+      "### Student Side",
+      "### Company Side",
+      "## ✨ Key Features",
+      "### 👨‍🎓 Student Module",
+      "### 🏢 Company Module",
+      "### 🔐 Security",
+      "## 🖥️ Platform Screenshots"
+    ],
+    "readmeSnippet": "🚀 SkillBridge - Academia-Industry Collaboration Platform\n\n## Smart India Hackathon 2026 | SIH26044\n\nSkillBridge is a web-based platform designed to bridge the gap between **students and industry** by bringing skills, career opportunities, applications, and company recruitment into one unified platform.\n\nThe platform allows students to build and showcase their skills, discover relevant opportunities, and track their applications, while companies can publish opportunities and manage applications from a dedicated dashboard.\n\n---\n\n## 🎯 Problem\n\nStudents often struggle to find opportunities that "
+  },
+  {
+    "name": "PritParekh-17/SkillBridge-SIH26044",
+    "url": "https://github.com/PritParekh-17/SkillBridge-SIH26044",
+    "desc": "SkillBridge – Academia-Industry Skill Mapping, Internship and Placement Platform | SIH26044",
+    "lang": "Python",
+    "stars": 0,
+    "readmeLen": 19425,
+    "headings": [
+      "# SkillBridge",
+      "## Table of contents",
+      "## 1. Project overview",
+      "## 2. SIH problem statement",
+      "## 3. Features",
+      "## 4. Architecture",
+      "## 5. Tech stack",
+      "## 6. Folder structure",
+      "## 7. Windows prerequisites",
+      "## 8. Python setup"
+    ],
+    "readmeSnippet": "# SkillBridge\n\n**Smart India Hackathon 2026 — Problem Statement SIH26044**\nPortal for Academia–Industry Collaboration for Skill Mapping, Internships and Placement\n\n> SkillBridge is a skill-centric Academia–Industry Collaboration Platform connecting\n> **Students, Institutions, Faculty/Academicians, and Industry** through one continuous\n> lifecycle: **Assessment → Skill Profile → Skill Gap → Learning → Opportunity Matching →\n> Application → Recruiter Shortlist → Institution Analytics.**\n> The same canonical skill model powers every one of those stages — there is no\n> parallel, disconnected conce"
+  },
+  {
+    "name": "tharunkumar1920/sih26044-nexora-skill",
+    "url": "https://github.com/tharunkumar1920/sih26044-nexora-skill",
+    "desc": "AI-Powered Skill Intelligence & Career Placement Platform - SIH 2026",
+    "lang": "TypeScript",
+    "stars": 0,
+    "readmeLen": 4841,
+    "headings": [
+      "# ⚡ Nexora-Skill — Next-Gen AI Skill Intelligence & Career Opportunity Platform",
+      "## 🚀 1-Click Launch (Run in One Folder)",
+      "### Option A: Windows Batch (Recommended)",
+      "### Option B: PowerShell",
+      "### Option C: Manual Launch (Two Terminals)",
+      "## 🌟 Core Features & Modules",
+      "### 1. 📄 AI Resume Parser & Document Upload (`/onboard`)",
+      "### 2. 🎯 Explainable Machine Learning Match Engine",
+      "### 3. 👥 4 Integrated Stakeholder Portals",
+      "## 🔑 Demo Login Credentials"
+    ],
+    "readmeSnippet": "# ⚡ Nexora-Skill — Next-Gen AI Skill Intelligence & Career Opportunity Platform\n\n> **Nexora-Skill** is an AI-powered academia–industry skill intelligence, automated resume profiling, skill gap diagnostics, and explainable career matching ecosystem.\n\n---\n\n## 🚀 1-Click Launch (Run in One Folder)\n\nYou can launch the entire platform (Backend API + Frontend UI) with a single double-click:\n\n### Option A: Windows Batch (Recommended)\nSimply double click or run in terminal:\n```cmd\nstart.bat\n```\n\n### Option B: PowerShell\n```powershell\n.\\run.ps1\n```\n\n### Option C: Manual Launch (Two Terminals)\n\n**Termin"
+  },
+  {
+    "name": "neelimachallagundla/campus-portal_SIH26044",
+    "url": "https://github.com/neelimachallagundla/campus-portal_SIH26044",
+    "desc": "Prototype for SIH internal hackathon",
+    "lang": "JavaScript",
+    "stars": 0,
+    "readmeLen": 12158,
+    "headings": [
+      "# LearnBridge – Academia–Industry Collaboration & Skill Development Platform",
+      "## 🚀 Project Overview",
+      "## ✨ Key Features",
+      "### 👨‍🎓 Student Module",
+      "### 👨‍🏫 Academician Module",
+      "### 🏢 Organization Module",
+      "### 🛠️ Admin Module",
+      "## 🏗️ System Architecture",
+      "## 🧰 Tech Stack",
+      "### Frontend"
+    ],
+    "readmeSnippet": "# LearnBridge – Academia–Industry Collaboration & Skill Development Platform\n\nLearnBridge is a full-stack web platform designed to bridge the gap between **students, educational institutions, academicians, and industry organizations**.\n\nThe platform helps students discover structured learning paths, develop industry-relevant skills, track their progress, explore career opportunities, and connect their academic journey with placement opportunities.\n\n---\n\n## 🚀 Project Overview\n\nStudents often face a gap between academic learning and the skills expected by the industry.\n\n**LearnBridge** addresse"
+  }
+]
