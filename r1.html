@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skill Setu - Actionable Feature Implementation Roadmap & Prompts</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+    :root {
+      --primary: #047857;
+      --primary-dark: #065f46;
+      --primary-light: #ecfdf5;
+      --slate-950: #020617;
+      --slate-900: #0f172a;
+      --slate-800: #1e293b;
+      --slate-700: #334155;
+      --slate-600: #475569;
+      --slate-500: #64748b;
+      --slate-200: #e2e8f0;
+      --slate-100: #f1f5f9;
+      --slate-50: #f8fafc;
+      --emerald-600: #059669;
+      --emerald-100: #d1fae5;
+      --amber-600: #d97706;
+      --amber-100: #fef3c7;
+      --rose-600: #e11d48;
+      --rose-100: #ffe4e6;
+      --blue-600: #2563eb;
+      --blue-100: #dbeafe;
+      --purple-600: #7c3aed;
+      --purple-100: #ede9fe;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #f8fafc;
+      color: var(--slate-800);
+      line-height: 1.5;
+      padding: 2.5rem;
+      font-size: 13px;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      background: #ffffff;
+      border: 1px solid var(--slate-200);
+      border-radius: 16px;
+      box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+      overflow: hidden;
+    }
+
+    /* Header */
+    .header {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #065f46 100%);
+      color: white;
+      padding: 2.5rem 3rem;
+      position: relative;
+    }
+
+    .badge {
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      display: inline-block;
+      margin-bottom: 0.75rem;
+    }
+
+    .header h1 {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.5rem;
+    }
+
+    .header p {
+      color: rgba(255, 255, 255, 0.85);
+      font-size: 13px;
+      max-width: 750px;
+    }
+
+    .meta-bar {
+      display: flex;
+      gap: 2rem;
+      margin-top: 1.5rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.9);
+      flex-wrap: wrap;
+    }
+
+    /* Action bar */
+    .action-bar {
+      background: #f1f5f9;
+      border-bottom: 1px solid var(--slate-200);
+      padding: 1rem 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .btn-print {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.6rem 1.4rem;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: background 0.2s;
+    }
+
+    .btn-print:hover {
+      background: var(--primary-dark);
+    }
+
+    /* Summary Bar */
+    .summary-section {
+      padding: 1.5rem 3rem;
+      background: #ffffff;
+      border-bottom: 1px solid var(--slate-200);
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .diff-legend {
+      display: flex;
+      gap: 1rem;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .diff-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .diff-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .content-area {
+      padding: 2.5rem 3rem;
+    }
+
+    /* Roadmap Card */
+    .feature-card {
+      border: 1px solid var(--slate-200);
+      border-radius: 12px;
+      margin-bottom: 2rem;
+      background: #ffffff;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+      page-break-inside: avoid;
+    }
+
+    .card-header {
+      padding: 1.25rem 1.5rem;
+      background: #f8fafc;
+      border-bottom: 1px solid var(--slate-200);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .card-title-group {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .step-number {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: var(--slate-900);
+      color: white;
+      font-weight: 800;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .card-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--slate-900);
+    }
+
+    .card-tags {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .tag {
+      padding: 0.2rem 0.6rem;
+      border-radius: 9999px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .tag-easy { background: var(--emerald-100); color: var(--emerald-600); border: 1px solid #a7f3d0; }
+    .tag-medium { background: var(--amber-100); color: var(--amber-600); border: 1px solid #fde68a; }
+    .tag-hard { background: var(--rose-100); color: var(--rose-600); border: 1px solid #fecdd3; }
+    
+    .tag-stakeholder {
+      background: var(--purple-100);
+      color: var(--purple-600);
+      border: 1px solid #ddd6fe;
+    }
+
+    .card-body {
+      padding: 1.5rem;
+    }
+
+    .grid-info {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+      margin-bottom: 1.25rem;
+      font-size: 12px;
+    }
+
+    .info-box {
+      background: var(--slate-50);
+      border: 1px solid var(--slate-200);
+      border-radius: 8px;
+      padding: 0.85rem 1rem;
+    }
+
+    .info-box strong {
+      display: block;
+      color: var(--slate-900);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.25rem;
+    }
+
+    .info-box p {
+      color: var(--slate-600);
+      line-height: 1.4;
+    }
+
+    /* Code & Prompt Box */
+    .prompt-container {
+      background: #0f172a;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid #334155;
+    }
+
+    .prompt-header {
+      background: #1e293b;
+      padding: 0.6rem 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #94a3b8;
+      font-size: 11px;
+      font-weight: 700;
+      border-bottom: 1px solid #334155;
+    }
+
+    .copy-tip {
+      color: #38bdf8;
+      font-size: 10px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .prompt-content {
+      padding: 1rem 1.25rem;
+      color: #f1f5f9;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      word-break: break-word;
+      user-select: all;
+    }
+
+    .prompt-content span.highlight {
+      color: #4ade80;
+      font-weight: 600;
+    }
+
+    /* Footer */
+    .footer {
+      background: #f8fafc;
+      border-top: 1px solid var(--slate-200);
+      padding: 1.5rem 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: var(--slate-500);
+    }
+
+    @media print {
+      body {
+        padding: 0;
+        background: white;
+      }
+      .container {
+        border: none;
+        box-shadow: none;
+        max-width: 100%;
+        border-radius: 0;
+      }
+      .action-bar {
+        display: none !important;
+      }
+      .prompt-container {
+        border: 1px solid #cbd5e1;
+        background: #f8fafc;
+        color: #0f172a;
+      }
+      .prompt-header {
+        background: #e2e8f0;
+        color: #334155;
+      }
+      .prompt-content {
+        color: #0f172a;
+      }
+      .header, .tag, .step-number {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      .feature-card {
+        page-break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <span class="badge">Execution Playbook</span>
+    <h1>Skill Setu — Incomplete & Missing Features Roadmap</h1>
+    <p>Every feature from your requirement list that is either 0% built or partially simulated (even 1% incomplete), organized in ascending order of implementation difficulty with ready-to-use AI Agent execution prompts.</p>
+    
+    <div class="meta-bar">
+      <div>Total Tasks: <strong>15 Gap Items</strong></div>
+      <div>Order: <strong>Easiest (UI/Field Extension) → Hardest (Complex Workflows & State Engines)</strong></div>
+      <div>Usage: <strong>Copy each agent prompt sequentially to build step-by-step</strong></div>
+    </div>
+  </div>
+
+  <!-- Print Bar -->
+  <div class="action-bar">
+    <div>
+      <strong style="color: var(--slate-900); font-size: 13px;">Implementation Guide & Prompts (R1)</strong>
+      <span style="color: var(--slate-500); font-size: 12px; margin-left: 0.5rem;">Ready to print or execute one by one.</span>
+    </div>
+    <button class="btn-print" onclick="window.print()">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+      Print / Save as PDF
+    </button>
+  </div>
+
+  <!-- Summary Section -->
+  <div class="summary-section">
+    <div>
+      <span style="font-size: 12px; color: var(--slate-500);">15 Action Items (Ordered by Implementation Complexity: Level 1 to Level 5)</span>
+    </div>
+    <div class="diff-legend">
+      <div class="diff-item"><div class="diff-dot" style="background: var(--emerald-600);"></div> Level 1: Very Easy (Simple UI / Static Extension)</div>
+      <div class="diff-item"><div class="diff-dot" style="background: var(--blue-600);"></div> Level 2: Easy (Modal / Filter / Interactive Hook)</div>
+      <div class="diff-item"><div class="diff-dot" style="background: var(--amber-600);"></div> Level 3: Medium (State Pipeline & Component Linking)</div>
+      <div class="diff-item"><div class="diff-dot" style="background: var(--rose-600);"></div> Level 4-5: Advanced (Workflow Engines & Export Parsers)</div>
+    </div>
+  </div>
+
+  <!-- Content Cards -->
+  <div class="content-area">
+
+    <!-- LEVEL 1: VERY EASY -->
+
+    <!-- Card 1 -->
+    <div class="feature-card">
+      <div class="card-header">
+        <div class="card-title-group">
+          <div class="step-number">01</div>
+          <div class="card-title">APAAR ID & Academic Bank of Credits (ABC ID) NEP-2020 Field Integration</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag tag-easy">Level 1 · Very Easy</span>
+          <span class="tag tag-stakeholder">Student Profile</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="grid-info">
+          <div class="info-box">
+            <strong>Current State vs Gap</strong>
+            <p>Profile displays Digilocker & NCISM numbers, but lacks explicit 12-digit APAAR ID and Academic Bank of Credits (ABC ID) required under NEP 2020 with verified validation check.</p>
+          </div>
+          <div class="info-box">
+            <strong>Target Files & Scope</strong>
+            <p><code>src/pages/ProfilePage.jsx</code>, <code>src/components/portals/StudentPortalView.jsx</code>. Add input fields in Edit Profile modal and render verified ABC credit badge.</p>
+          </div>
+        </div>
+        <div class="prompt-container">
+          <div class="prompt-header">
+            <span>AGENT PROMPT #1</span>
+            <span class="copy-tip">Copy & Paste to Agent</span>
+          </div>
+          <div class="prompt-content">Add National Education Policy (NEP 2020) APAAR ID and Academic Bank of Credits (ABC ID) support to the student profile:
+1. In `src/pages/ProfilePage.jsx`, add `apaarId: '9841-2041-8891'` and `abcCredits: '164 Credits'` to profileData state and edit form.
+2. In the Edit Profile modal, add input fields for APAAR ID (12-digit format) and ABC ID.
+3. In the Academic Qualifications card or Dossier header, display a neat verified pill: "APAAR: 9841-2041-8891 • ABC Bank: 164 Credits (DigiLocker Verified)".
+4. Do not alter any existing radar charts or build scripts. Ensure clean styling matching the design.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="feature-card">
+      <div class="card-header">
+        <div class="card-title-group">
+          <div class="step-number">02</div>
+          <div class="card-title">Direct SWAYAM & NPTEL Course Bridge Links for Skill Deficits</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag tag-easy">Level 1 · Very Easy</span>
+          <span class="tag tag-stakeholder">Student & Courses</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="grid-info">
+          <div class="info-box">
+            <strong>Current State vs Gap</strong>
+            <p>Courses page and deficiency chips only link to internal certs. Lacks explicit national open-courseware bridges (SWAYAM / NPTEL / AICTE Free Electives) with direct external course tags.</p>
+          </div>
+          <div class="info-box">
+            <strong>Target Files & Scope</strong>
+            <p><code>src/pages/CoursesPage.jsx</code>, <code>src/components/portals/StudentPortalView.jsx</code>. Add "NPTEL / SWAYAM Certified" tag filters and courseware cards.</p>
+          </div>
+        </div>
+        <div class="prompt-container">
+          <div class="prompt-header">
+            <span>AGENT PROMPT #2</span>
+            <span class="copy-tip">Copy & Paste to Agent</span>
+          </div>
+          <div class="prompt-content">Integrate official SWAYAM / NPTEL national learning bridges for student skill deficiencies:
+1. In `src/components/portals/StudentPortalView.jsx`, in the "Remediation & Skill Deficit" recommendations, add direct SWAYAM & NPTEL tags and course cards (e.g. "NPTEL: Analytical Chemistry in Herbal Formulations - IIT Madras", "SWAYAM: Clinical Trials Management - AIIMS").
+2. Add a direct badge "Free MOOC • Credit Transferable" and an external link icon to swayam.gov.in.
+3. In `src/pages/CoursesPage.jsx`, add a filter tab "All | Ministry Certified | NPTEL / SWAYAM". Ensure clicking it filters to national portal courses.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="feature-card">
+      <div class="card-header">
+        <div class="card-title-group">
+          <div class="step-number">03</div>
+          <div class="card-title">Corporate Job Posting: Academic University Tier & Regional Targeting</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag tag-easy">Level 1 · Very Easy</span>
+          <span class="tag tag-stakeholder">Company Portal</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="grid-info">
+          <div class="info-box">
+            <strong>Current State vs Gap</strong>
+            <p>Recruiter job posting form collects title, salary, and requirements, but has no options to target specific University Tiers (Tier-1, Tier-2, State Ayush Universities, National Institutes) or regions.</p>
+          </div>
+          <div class="info-box">
+            <strong>Target Files & Scope</strong>
+            <p><code>src/components/portals/CompanyPortalView.jsx</code>. Add University Tier radio/checkbox controls to the "Post Opening" modal form.</p>
+          </div>
+        </div>
+        <div class="prompt-container">
+          <div class="prompt-header">
+            <span>AGENT PROMPT #3</span>
+            <span class="copy-tip">Copy & Paste to Agent</span>
+          </div>
+          <div class="prompt-content">Enhance the job posting form in `src/components/portals/CompanyPortalView.jsx` to support Academic Tier & Regional Targeting:
+1. Inside the "Create New Opportunity" modal, add a form section: "Candidate Sourcing Scope":
+   - Target Institution Tiers: Multi-select pills for [National Institutes of Excellence (NIA/AIIA), State Government Ayush Colleges, Private Deemed Universities].
+   - Target Region: Dropdown [Pan India, North Zone, Western Zone, South Zone].
+   - Minimum Readiness Benchmark: Slider or dropdown [Any, 70%+, 80%+, 90%+].
+2. Display these target criteria as badges on posted job cards in the recruiter listings table.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LEVEL 2: EASY -->
+
+    <!-- Card 4 -->
+    <div class="feature-card">
+      <div class="card-header">
+        <div class="card-title-group">
+          <div class="step-number">04</div>
+          <div class="card-title">Contextual Missing Skill Prerequisite Warning Modal on Job Apply</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag tag-easy">Level 2 · Easy</span>
+          <span class="tag tag-stakeholder">Student Jobs Page</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="grid-info">
+          <div class="info-box">
+            <strong>Current State vs Gap</strong>
+            <p>Currently clicking "Apply" immediately packages credentials. If a student is missing mandatory technical skills (e.g. Schedule T or HPLC), no alert prompts them to upskill first.</p>
+          </div>
+          <div class="info-box">
+            <strong>Target Files & Scope</strong>
+            <p><code>src/pages/JobsPage.jsx</code>. Intercept Apply click when candidate compatibility is under 80% with an interactive upskilling warning modal.</p>
+          </div>
+        </div>
+        <div class="prompt-container">
+          <div class="prompt-header">
+            <span>AGENT PROMPT #4</span>
+            <span class="copy-tip">Copy & Paste to Agent</span>
+          </div>
+          <div class="prompt-content">Add a contextual prerequisite alert workflow to `src/pages/JobsPage.jsx`:
+1. When a student clicks "Apply" on a job with match score < 85%:
+2. Instead of directly applying, open a modal: "Prerequisite Advisory: Recommended Upskilling Before Application".
+3. Display:
+   - "Missing Mandatory Skills": list the unmastered skills required for the job.
+   - "Suggested Fast-Track Module": with a 1-click button "Enroll in 20-min Bridge Quiz / Course".
+   - Two action buttons: "Proceed Anyway (Lower Match Rank)" and "Upskill First (Recommended)".
+4. If the user clicks "Proceed Anyway", complete the application as usual.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 5 -->
+    <div class="feature-card">
+      <div class="card-header">
+        <div class="card-title-group">
+          <div class="step-number">05</div>
+          <div class="card-title">LinkedIn-Style Multi-Document Upload & Document Locker</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag tag-easy">Level 2 · Easy</span>
+          <span class="tag tag-stakeholder">Student Profile</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="grid-info">
+          <div class="info-box">
+            <strong>Current State vs Gap</strong>
+            <p>Students can only upload profile/banner photos. There is no document repository for PDF resumes, internship completion letters, research manuscripts, and government certificates.</p>
+          </div>
+          <div class="info-box">
+            <strong>Target Files & Scope</strong>
+            <p><code>src/pages/ProfilePage.jsx</code>. Add a "Document Locker & Transcripts Vault" section with upload, file type icon, size, and view/download buttons.</p>
+          </div>
+        </div>
+        <div class="prompt-container">
+          <div class="prompt-header">
+            <span>AGENT PROMPT #5</span>
+            <span class="copy-tip">Copy & Paste to Agent</span>
+          </div>
+          <div class="prompt-content">Implement a LinkedIn-style Document Vault in `src/pages/ProfilePage.jsx`:
+1. Add a collapsible section: "Verified Document Locker & Credentials Vault" right below Academic Qualifications.
+2. Provide an "Upload New Document" drag-and-drop zone that accepts PDF, DOCX, and JPG.
+3. Include pre-loaded mock files:
+   - "BAMS_Final_Year_Marksheet_DigiLocker.pdf" (2.4 MB • Verified DigiLocker Hash)
+   - "Dabur_Clinical_Internship_Completion_Letter.pdf" (1.1 MB • Issued Dec 2025)
+   - "Standardized_Ayush_Curriculum_Vitae_2026.pdf" (840 KB • Generated by Skill Setu)
+4. Allow users to add a new document to local state with title, document category, and upload date. Include "View", "Download", and "Delete" action buttons.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 6 -->
+    <div class="feature-card">
+      <div class="card-header">
+        <div class="card-title-group">
+          <div class="step-number">06</div>
+          <div class="card-title">Dedicated TPO Command Center View in College Portal</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag tag-easy">Level 2 · Easy</span>
+          <span class="tag tag-stakeholder">College Portal</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="grid-info">
+          <div class="info-box">
+            <strong>Current State vs Gap</strong>
+            <p>The College Portal combines dean administration with placements. Requirement specifies a dedicated TPO (Training & Placement Officer) command center tracking campus drives and active pipelines.</p>
+          </div>
+          <div class="info-box">
+            <strong>Target Files & Scope</strong>
+            <p><code>src/components/portals/CollegePortalView.jsx</code>. Add a dedicated "TPO Drive Center" sub-view with active campus recruitment schedules and offer tally.</p>
+          </div>
+        </div>
+        <div class="prompt-container">
+          <div class="prompt-header">
+            <span>AGENT PROMPT #6</span>
+            <span class="copy-tip">Copy & Paste to Agent</span>
+          </div>
+          <div class="prompt-content">In `src/components/portals/CollegePortalView.jsx`, create a dedicated "TPO Placement Command Center" tab:
+1. Header: "Training & Placement Cell (TPO) • On-Campus Recruitment Drive Control".
+2. TPO Metrics: Active Campus Drives (6 Scheduled), Total Offers Extended (142), Highest CTC (₹18.5 LPA - Dabur Clinical R&D), Average Package (₹7.2 LPA), Placement Rate (84.2%).
+3. "Upcoming Recruitment Schedule" interactive table: Company Name, Role, Drive Date, Eligible Branches, Pre-Screen Cutoff Score, Status (Scheduled, Screening, Completed), and action button "Manage Drive".
+4. "Publish New On-Campus Placement Drive" modal button for TPO administrators.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LEVEL 3: MEDIUM -->
+
+    <!-- Card 7 -->
+    <div class="feature-card">
+      <div class="card-header">
+        <div class="card-title-group">
+          <div class="step-number">07</div>
+          <div class="card-title">Recruiter Applicant Pipeline: Interactive Stage Advancement with Notifications</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag tag-medium">Level 3 · Medium</span>
+          <span class="tag tag-stakeholder">Company Portal & State</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="grid-info">
+          <div class="info-box">
+            <strong>Current State vs Gap</strong>
+            <p>Recruiter sees applicant scores and static status tags. Needs an interactive pipeline interface to drag/advance candidates (Shortlist → Schedule Interview → Send Offer) with student notifications.</p>
+          </div>
+          <div class="info-box">
+            <strong>Target Files & Scope</strong>
+            <p><code>src/components/portals/CompanyPortalView.jsx</code>, <code>src/pages/MessagePage.jsx</code> or toast notification system.</p>
+          </div>
+        </div>
+        <div class="prompt-container">
+          <div class="prompt-header">
+            <span>AGENT PROMPT #7</span>
+            <span class="copy-tip">Copy & Paste to Agent</span>
+          </div>
+          <div class="prompt-content">Implement an interactive Applicant Stage Advancement pipeline in `src/components/portals/CompanyPortalView.jsx`:
+1. In the "Received Applications" tab, allow recruiters to dynamically advance candidates between 4 stages: [Applied → Shortlisted → Interview Scheduled → Offer Extended].
+2. When clicking "Schedule Interview":
+   - Open a modal with Date, Time, Google Meet / Physical Room link, and Round Type (Technical Viva, HR, Clinical Assay).
+   - Upon submitting, update candidate status, increment scheduled count, and display a confirmation toast: "Interview Invitation dispatched to candidate email & notification center".
+3. When clicking "Extend Offer": prompt with Offer Letter CTC, Role title, and update status to "Offered".</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 8 -->
+    <div class="feature-card">
+      <div class="card-header">
+        <div class="card-title-group">
+          <div class="step-number">08</div>
+          <div class="card-title">Digital Asset Verification Cell (College Admin Marksheet & Degree Verification Queue)</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag tag-medium">Level 3 · Medium</span>
+          <span class="tag tag-stakeholder">College Portal</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="grid-info">
+          <div class="info-box">
+            <strong>Current State vs Gap</strong>
+            <p>Currently degrees have pre-filled "Verified" badges without an administrative verification workflow where college registrars can review submitted student transcripts and mark them Approved or Rejected.</p>
+          </div>
+          <div class="info-box">
+            <strong>Target Files & Scope</strong>
+            <p><code>src/components/portals/CollegePortalView.jsx</code>. Add a "Digital Verification Cell" tab with an active review table of pending student credentials.</p>
+          </div>
+        </div>
+        <div class="prompt-container">
+          <div class="prompt-header">
+            <span>AGENT PROMPT #8</span>
+            <span class="copy-tip">Copy & Paste to Agent</span>
+          </div>
+          <div class="prompt-content">Add an interactive "Digital Asset Verification Cell" in `src/components/portals/CollegePortalView.jsx`:
+1. Add a tab "Credentials Verification Queue (Registrar Cell)" with count of pending approvals (e.g. 5 Pending).
+2. Render a table of student submissions:
+   - Candidate Name & Roll Number
+   - Document Claimed (e.g. "BAMS Sem 8 Marksheet (8.94 CGPA)", "DigiLocker 12th PCB Certificate", "Schedule T Internship")
+   - Submitted On & File Link
+   - Actions: "Verify & Stamp SHA-256" (green button) and "Reject / Request Resubmission" (red button).
+3. Clicking "Verify & Stamp" updates status to "NCISM/University Verified", generates a verified badge, and removes from pending queue with a success toast.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 9 -->
+    <div class="feature-card">
+      <div class="card-header">
+        <div class="card-title-group">
+          <div class="step-number">09</div>
+          <div class="card-title">Curriculum Realignment Engine (Industry Demand vs Course Syllabus Modernizer)</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag tag-medium">Level 3 · Medium</span>
+          <span class="tag tag-stakeholder">College & Academic Dean</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="grid-info">
+          <div class="info-box">
+            <strong>Current State vs Gap</strong>
+            <p>Industry demand metrics are shown, but the dean lacks a side-by-side Curriculum Realignment Engine that flags outdated syllabus topics vs emerging market demands.</p>
+          </div>
+          <div class="info-box">
+            <strong>Target Files & Scope</strong>
+            <p><code>src/components/portals/CollegePortalView.jsx</code>. Build an interactive curriculum analysis tool with syllabus modernization suggestions.</p>
+          </div>
+        </div>
+        <div class="prompt-container">
+          <div class="prompt-header">
+            <span>AGENT PROMPT #9</span>
+            <span class="copy-tip">Copy & Paste to Agent</span>
+          </div>
+          <div class="prompt-content">Build the "Curriculum Realignment Engine" in `src/components/portals/CollegePortalView.jsx`:
+1. Add a dedicated module: "AI Curriculum Realignment & Market Demand Auditor".
+2. Create a side-by-side comparison matrix:
+   - Left: "Current University Syllabus (NCISM 2020 Guidelines)"
+   - Right: "Live Industry Hiring Demand (Extracted from 450+ Corporate Postings)"
+3. Highlight actionable gaps:
+   - Topic: "Herbal Formulation Quality" → Currently 90% traditional organoleptic tests. Recommended upgrade: "Include 30 hrs HPLC & Heavy Metal Mass Spectrometry laboratory modules".
+   - Topic: "Ayurvedic Clinical Records" → Recommended upgrade: "ABDM / ABHA Digital Health Records Integration".
+4. Add a button: "Export Syllabus Modernization Proposal for Academic Board (BoS) PDF".</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LEVEL 4: ADVANCED -->
+
+    <!-- Card 10 -->
+    <div class="feature-card">
+      <div class="card-header">
+        <div class="card-title-group">
+          <div class="step-number">10</div>
+          <div class="card-title">Automated Digital No Objection Certificate (NOC) Internship Workflow</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag tag-hard">Level 4 · Advanced</span>
+          <span class="tag tag-stakeholder">Student & College TPO</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="grid-info">
+          <div class="info-box">
+            <strong>Current State vs Gap</strong>
+            <p>No NOC module exists. Students need to request an internship NOC digitally, and the College Admin/TPO needs to approve and generate a signed digital certificate.</p>
+          </div>
+          <div class="info-box">
+            <strong>Target Files & Scope</strong>
+            <p><code>src/components/portals/StudentPortalView.jsx</code> and <code>src/components/portals/CollegePortalView.jsx</code>. Digital request, TPO approval, and printable certificate generator.</p>
+          </div>
+        </div>
+        <div class="prompt-container">
+          <div class="prompt-header">
+            <span>AGENT PROMPT #10</span>
+            <span class="copy-tip">Copy & Paste to Agent</span>
+          </div>
+          <div class="prompt-content">Implement the end-to-end Automated Digital No Objection Certificate (NOC) workflow:
+1. In `src/components/portals/StudentPortalView.jsx`, add a tab "Internship NOC Requests":
+   - "Apply for Internship NOC" modal: Company Name, Role, Duration (Months), Start Date, Offer Letter attachment.
+   - Status tracker: Submitted → TPO Clearance → Dean Approval → Issued.
+2. In `src/components/portals/CollegePortalView.jsx`, add an "Institutional NOC Clearances" inbox:
+   - TPO can review student CGPA, attendance, and click "Approve & Digitally Sign NOC".
+3. When approved, generate a clean printable/downloadable Digital NOC Certificate with College Letterhead, student name, roll number, QR code verification stamp, and Dean's digital signature seal.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 11 -->
+    <div class="feature-card">
+      <div class="card-header">
+        <div class="card-title-group">
+          <div class="step-number">11</div>
+          <div class="card-title">National Institutional Compliance Export Engine (NIRF, NBA & NAAC Parameters)</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag tag-hard">Level 4 · Advanced</span>
+          <span class="tag tag-stakeholder">College & Ministry</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="grid-info">
+          <div class="info-box">
+            <strong>Current State vs Gap</strong>
+            <p>Institution data is currently only visual on-screen. There is no one-click compiler to export audit-ready CSV/Spreadsheets structured precisely to NIRF (Metric 3.2.1), NAAC, and NBA criteria.</p>
+          </div>
+          <div class="info-box">
+            <strong>Target Files & Scope</strong>
+            <p><code>src/components/portals/CollegePortalView.jsx</code>. Implement client-side CSV/XLS data compiler and modal report generator.</p>
+          </div>
+        </div>
+        <div class="prompt-container">
+          <div class="prompt-header">
+            <span>AGENT PROMPT #11</span>
+            <span class="copy-tip">Copy & Paste to Agent</span>
+          </div>
+          <div class="prompt-content">Build the National Compliance Export Engine in `src/components/portals/CollegePortalView.jsx`:
+1. Add a module: "Institutional Accreditation & Regulatory Reporting (NIRF / NAAC / NBA)".
+2. Provide three dedicated compliance tabs:
+   - NIRF Parameter: Placement, Higher Studies & Entrepreneurship (GO / GPH data).
+   - NAAC Criterion 5.2: Student Progression to Employment & Placements.
+   - NBA Criteria 4: Student Performance in Campus Drives and Skill Assessments.
+3. For each tab, display the calculated metric values (e.g. Median Salary, Total Placed %, Corporate MoU Count).
+4. Add a one-click button "Export NIRF Formatted Data (.CSV)" which dynamically builds and downloads an audit-ready CSV file formatted with standard regulatory column headers.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 12 -->
+    <div class="feature-card">
+      <div class="card-header">
+        <div class="card-title-group">
+          <div class="step-number">12</div>
+          <div class="card-title">Multi-Branch Assessment Testing Engine Expansion (Core Engineering & Management)</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag tag-hard">Level 4 · Advanced</span>
+          <span class="tag tag-stakeholder">Assessment Engine</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="grid-info">
+          <div class="info-box">
+            <strong>Current State vs Gap</strong>
+            <p>Assessment quiz currently specializes in Ayush Phytochemistry, GCP, and GMP. Requirement calls for selectable branch diagnostic tests (Computer Science, Mechanical, Electronics, Pharma Management).</p>
+          </div>
+          <div class="info-box">
+            <strong>Target Files & Scope</strong>
+            <p><code>src/pages/AssessmentPage.jsx</code>, <code>src/data/portalData.js</code>. Add branch quiz selector and question bank for Core CS, Mechanical, and Ayush-Biotech.</p>
+          </div>
+        </div>
+        <div class="prompt-container">
+          <div class="prompt-header">
+            <span>AGENT PROMPT #12</span>
+            <span class="copy-tip">Copy & Paste to Agent</span>
+          </div>
+          <div class="prompt-content">Expand the diagnostic quiz engine in `src/pages/AssessmentPage.jsx` with a branch-wise question bank:
+1. Before starting test, add a Branch Selection Screen:
+   - [Ayush Biomedical & Clinical Sciences]
+   - [Computer Science & Healthcare Informatics]
+   - [Bio-Mechanical & MedTech Engineering]
+   - [Pharmaceutical Operations & Management]
+2. Implement 10 specific questions for each branch with instant scoring, time limit, and face-detection proctoring.
+3. Upon completion, dynamically adapt the 6-Axis Radar chart in student profile to reflect the selected domain's competencies (e.g. for CS: Data Structures, Cloud, Python, Healthcare APIs).</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 13 -->
+    <div class="feature-card">
+      <div class="card-header">
+        <div class="card-title-group">
+          <div class="step-number">13</div>
+          <div class="card-title">Recruiter Consultancy & Live R&D Challenge Proposal Bidding Workflow</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag tag-hard">Level 4 · Advanced</span>
+          <span class="tag tag-stakeholder">Company & Faculty</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="grid-info">
+          <div class="info-box">
+            <strong>Current State vs Gap</strong>
+            <p>Industry problem statements exist as display cards. Faculties and colleges cannot submit structured research proposals or view grant funding bidding status.</p>
+          </div>
+          <div class="info-box">
+            <strong>Target Files & Scope</strong>
+            <p><code>src/components/portals/CompanyPortalView.jsx</code> and <code>src/components/portals/FacultyPortalView.jsx</code>. Two-way bid submission and evaluation pipeline.</p>
+          </div>
+        </div>
+        <div class="prompt-container">
+          <div class="prompt-header">
+            <span>AGENT PROMPT #13</span>
+            <span class="copy-tip">Copy & Paste to Agent</span>
+          </div>
+          <div class="prompt-content">Create a functional two-way R&D Consultancy Tendering pipeline:
+1. In `src/components/portals/FacultyPortalView.jsx`, in the "Industrial Consultancies" tab, allow faculties to click "Submit Project Proposal" on any live industry challenge (e.g. Dabur Herbal Extraction).
+2. The proposal form accepts: Principal Investigator, Proposed Timeline, Estimated Budget (₹), Abstract, and Methodology Document.
+3. In `src/components/portals/CompanyPortalView.jsx`, in the "R&D Grants" tab, display a "Received University Proposals" sub-tab showing submitted faculty proposals with "Accept Proposal & Issue MoU" or "Request Technical Clarification".</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 14 -->
+    <div class="feature-card">
+      <div class="card-header">
+        <div class="card-title-group">
+          <div class="step-number">14</div>
+          <div class="card-title">Real-Time WebSocket/Polling Notification Dispatcher for All Stakeholders</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag tag-hard">Level 5 · System-Wide</span>
+          <span class="tag tag-stakeholder">Cross-Platform</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="grid-info">
+          <div class="info-box">
+            <strong>Current State vs Gap</strong>
+            <p>Interactions (applying for a job, recruiter shortlisting, NOC approvals) occur in siloed local components without sending global popups or notifications to the other logged-in user.</p>
+          </div>
+          <div class="info-box">
+            <strong>Target Files & Scope</strong>
+            <p><code>src/context/NotificationContext.jsx</code>, <code>src/components/Navbar.jsx</code>. Global state management for real-time notification alerts across roles.</p>
+          </div>
+        </div>
+        <div class="prompt-container">
+          <div class="prompt-header">
+            <span>AGENT PROMPT #14</span>
+            <span class="copy-tip">Copy & Paste to Agent</span>
+          </div>
+          <div class="prompt-content">Implement a cross-stakeholder Notification Event Dispatcher:
+1. Create a `NotificationContext.jsx` that exposes `notifications`, `unreadCount`, and `dispatchNotification(targetRole, title, message, link)`.
+2. Wrap `App.jsx` with this provider and wire the bell icon in `src/components/Navbar.jsx` with a dropdown list of recent events and badge count.
+3. Connect actions:
+   - When student applies for a job → trigger notification to Company: "New applicant for QC Specialist".
+   - When company schedules interview → trigger notification to Student: "Interview Scheduled with Dabur".
+   - When student requests NOC → trigger notification to College TPO.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 15 -->
+    <div class="feature-card">
+      <div class="card-header">
+        <div class="card-title-group">
+          <div class="step-number">15</div>
+          <div class="card-title">Unified Offline-Capable Digilocker & Sha-256 Verifier Audit Tool</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag tag-hard">Level 5 · System-Wide</span>
+          <span class="tag tag-stakeholder">Security & Trust</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="grid-info">
+          <div class="info-box">
+            <strong>Current State vs Gap</strong>
+            <p>Sha-256 strings are displayed as static text hashes. Needs an interactive "Verify Digital Credential" modal where an auditor or employer can paste a hash/QR string and see valid cryptographic proof.</p>
+          </div>
+          <div class="info-box">
+            <strong>Target Files & Scope</strong>
+            <p><code>src/components/CredentialVerifierModal.jsx</code>. Verification tool accessible from the public navigation or student portfolio.</p>
+          </div>
+        </div>
+        <div class="prompt-container">
+          <div class="prompt-header">
+            <span>AGENT PROMPT #15</span>
+            <span class="copy-tip">Copy & Paste to Agent</span>
+          </div>
+          <div class="prompt-content">Build a public "Cryptographic Credential Verifier" tool in `src/components/CredentialVerifierModal.jsx`:
+1. Add a button in the Navbar and Student Portfolio: "Verify Credential Integrity".
+2. Open a modal with:
+   - Input field: "Enter SHA-256 Hash or Certificate ID (e.g. e3b0c44298fc...)".
+   - Drag-and-drop verification zone: "Drop certificate PDF to compute checksum".
+3. Upon checking, simulate client-side verification and render:
+   - Status: "TAMPER-EVIDENT RECORD VALIDATED" (green shield).
+   - Stamped by: National Institute of Ayurveda & Ministry of Ayush Academic Node.
+   - Issue Timestamp, Recipient Name (Aarav Sharma), and Course/Degree verified.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <div>Skill Setu Project — Technical Roadmap & Execution Instructions</div>
+    <div>Document: <strong>r1.html</strong> • Press <strong>Ctrl + P</strong> to Print</div>
+  </div>
+
+</div>
+
+</body>
+</html>
