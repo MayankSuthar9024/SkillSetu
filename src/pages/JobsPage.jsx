@@ -26,22 +26,38 @@ export function JobsPage({ currentUser, onNavigate }) {
   const [locationFilter, setLocationFilter] = useState('all');
   const [appliedModalJob, setAppliedModalJob] = useState(null);
   const [gapAnalysisJob, setGapAnalysisJob] = useState(null);
+  const [prerequisiteModalJob, setPrerequisiteModalJob] = useState(null);
+  const [enrolledBridgeSuccess, setEnrolledBridgeSuccess] = useState(false);
 
-  // Available job opportunities from feed
-  const jobs = INITIAL_FEED_POSTS.filter(p => p.isInternship).map(p => ({
-    id: `job-${p.id}`,
-    title: p.title,
-    company: p.author?.brandName || p.author?.name || 'Ayush Enterprise',
-    location: p.location,
-    stipend: p.stipend,
-    duration: p.duration,
-    skills: (p.skillsRequired || []).slice(0, 3),
-    match: 90 + (p.id % 8),
-    logoBg: p.author?.avatarBg || 'bg-emerald-900',
-    logoText: p.author?.avatar || 'AY',
-    logoImage: p.author?.avatarImage,
-    recruiter: p.author?.recruiter
-  }));
+  // Available job opportunities from feed with calibrated match scores
+  const jobs = INITIAL_FEED_POSTS.filter(p => p.isInternship).map(p => {
+    // Calibrate match scores so both >= 85% and < 85% roles exist for realistic testing
+    const defaultScores = {
+      'job-1': 92, // >= 85%
+      'job-2': 78, // < 85% (Triggers Prerequisite Advisory)
+      'job-3': 74, // < 85% (Triggers Prerequisite Advisory)
+      'job-4': 95, // >= 85%
+      'job-5': 81, // < 85% (Triggers Prerequisite Advisory)
+      'job-6': 88  // >= 85%
+    };
+    const idKey = `job-${p.id}`;
+    const calculatedMatch = defaultScores[idKey] ?? (p.id % 2 === 0 ? 76 + (p.id % 7) : 89 + (p.id % 8));
+
+    return {
+      id: idKey,
+      title: p.title,
+      company: p.author?.brandName || p.author?.name || 'Ayush Enterprise',
+      location: p.location,
+      stipend: p.stipend,
+      duration: p.duration,
+      skills: (p.skillsRequired || []).slice(0, 4),
+      match: calculatedMatch,
+      logoBg: p.author?.avatarBg || 'bg-emerald-900',
+      logoText: p.author?.avatar || 'AY',
+      logoImage: p.author?.avatarImage,
+      recruiter: p.author?.recruiter
+    };
+  });
 
   // Student's applied jobs with timeline progress
   const [appliedList, setAppliedList] = useState([
@@ -95,23 +111,26 @@ export function JobsPage({ currentUser, onNavigate }) {
         skill.toLowerCase().includes(s.toLowerCase().split(' ')[0]) || 
         s.toLowerCase().includes(skill.toLowerCase().split(' ')[0])
       );
-      if (isMatched || (matched.length === 0 && job.skills.length > 1)) {
+      if (isMatched) {
         matched.push(skill);
       } else {
         gaps.push(skill);
       }
     });
 
-    // Ensure at least 1 gap exists so bridge courses can always be demonstrated
+    // Ensure realistic gaps exist for roles below 85%
     if (gaps.length === 0 && job.skills && job.skills.length > 1) {
       gaps.push(matched.pop());
     }
+    if (job.match < 85 && gaps.length === 0) {
+      gaps.push('ICH-GCP Guidelines (Clinical Trial Monitoring)');
+      gaps.push('Schedule T Cleanroom Airflow Validation');
+    }
 
-    const matchScore = Math.round((matched.length / Math.max(1, (matched.length + gaps.length))) * 100);
     return { 
       matched, 
       gaps, 
-      matchScore: Math.min(matchScore, 82)
+      matchScore: job.match || 78
     };
   };
 
@@ -119,7 +138,7 @@ export function JobsPage({ currentUser, onNavigate }) {
   const getSuggestedCoursesForJob = (job, gaps) => {
     if (!job) return [];
     const matched = ALL_COURSES.filter(course => 
-      gaps.some(gap => {
+      (gaps || []).some(gap => {
         const keyword = gap.toLowerCase().split(' ')[0];
         return course.title.toLowerCase().includes(keyword) ||
           course.competencies.some(c => c.toLowerCase().includes(keyword)) ||
@@ -131,17 +150,24 @@ export function JobsPage({ currentUser, onNavigate }) {
     return [...matched, ...fallbacks].slice(0, 2);
   };
 
-  // Trigger skill match modal first when user clicks apply
+  // Contextual Prerequisite Alert Workflow:
+  // When student clicks "Apply" on a job with match score < 85%, open Prerequisite Advisory modal
   const handleInitiateApply = (job) => {
     if (appliedList.some(a => a.jobId === job.id)) {
       setActiveTab('applied');
       return;
     }
-    setGapAnalysisJob(job);
+    if (job.match < 85) {
+      setPrerequisiteModalJob(job);
+      setEnrolledBridgeSuccess(false);
+    } else {
+      handleConfirmApply(job);
+    }
   };
 
   // Final confirmation to submit application
   const handleConfirmApply = (job) => {
+    setPrerequisiteModalJob(null);
     setGapAnalysisJob(null);
     const newApplication = {
       id: `app-${Date.now()}`,
@@ -151,11 +177,11 @@ export function JobsPage({ currentUser, onNavigate }) {
       location: job.location,
       stipend: job.stipend,
       appliedDate: 'Today',
-      status: 'Application Submitted',
+      status: job.match < 85 ? 'Application Submitted (Lower Match Rank)' : 'Application Submitted',
       statusType: 'active',
       activeStep: 0,
       steps: ['Applied', 'Reviewed', 'Matched', 'Interview'],
-      interviewNote: null
+      interviewNote: job.match < 85 ? `Applied with ${job.match}% match rank (Below 85% recommended benchmark)` : null
     };
 
     setAppliedList(prev => [newApplication, ...prev]);
@@ -164,6 +190,7 @@ export function JobsPage({ currentUser, onNavigate }) {
 
   // Open course in Skill section
   const handleOpenCourseInSkills = (course) => {
+    setPrerequisiteModalJob(null);
     setGapAnalysisJob(null);
     if (onNavigate) {
       onNavigate('skills', { course });
@@ -321,8 +348,13 @@ export function JobsPage({ currentUser, onNavigate }) {
                           </div>
                         </div>
 
-                        <span className="text-[11px] font-semibold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-md shrink-0 border border-emerald-100">
-                          {job.match}% match
+                        <span className={`text-[11px] font-bold px-2 py-0.5 rounded-md shrink-0 border flex items-center gap-1 ${
+                          job.match >= 85 
+                            ? 'text-emerald-800 bg-emerald-50 border-emerald-200' 
+                            : 'text-amber-900 bg-amber-50 border-amber-300'
+                        }`}>
+                          {job.match < 85 && <AlertTriangle className="w-3 h-3 text-amber-600 shrink-0" />}
+                          <span>{job.match}% match</span>
                         </span>
                       </div>
 
@@ -516,6 +548,182 @@ export function JobsPage({ currentUser, onNavigate }) {
           </div>
         </div>
       )}
+
+      {/* PREREQUISITE ADVISORY MODAL (Triggered for job.match < 85%) */}
+      {prerequisiteModalJob && (() => {
+        const { matched, gaps, matchScore } = getSkillBreakdown(prerequisiteModalJob);
+        const suggestedCourses = getSuggestedCoursesForJob(prerequisiteModalJob, gaps);
+        const topCourse = suggestedCourses[0] || {
+          id: 'fast-track-bridge',
+          title: 'Schedule T GMP & Clinical Diagnostics Fast-Track Module',
+          duration: '15-20 Mins',
+          author: 'National Ayush Preceptor Cell',
+          posterImage: null
+        };
+
+        return (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/70 backdrop-blur-xs animate-fadeIn overflow-y-auto">
+            <div className="bg-white rounded-3xl max-w-lg w-full shadow-2xl border border-amber-300/80 overflow-hidden my-auto flex flex-col max-h-[92vh] animate-in fade-in zoom-in-95">
+              
+              {/* Modal Header */}
+              <div className="px-6 py-5 border-b border-slate-100 flex items-start justify-between shrink-0 bg-gradient-to-r from-amber-50/70 via-amber-50/30 to-white">
+                <div className="flex items-start gap-3 min-w-0">
+                  <div className="p-2.5 rounded-2xl bg-amber-100 text-amber-800 border border-amber-200 shrink-0 mt-0.5">
+                    <AlertTriangle className="w-5 h-5 text-amber-700 stroke-[2.2]" />
+                  </div>
+                  <div className="min-w-0">
+                    <h3 className="text-base sm:text-lg font-black text-slate-900 tracking-tight leading-snug">
+                      Prerequisite Advisory: Recommended Upskilling Before Application
+                    </h3>
+                    <p className="text-xs text-slate-500 truncate mt-1">
+                      {prerequisiteModalJob.title} · <span className="font-semibold text-slate-700">{prerequisiteModalJob.company}</span>
+                    </p>
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => setPrerequisiteModalJob(null)}
+                  className="w-8 h-8 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 flex items-center justify-center transition-colors cursor-pointer shrink-0 ml-2"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              {/* Modal Body */}
+              <div className="p-6 space-y-5 overflow-y-auto flex-1">
+                
+                {/* Match Benchmark Alert Callout */}
+                <div className="p-4 rounded-2xl bg-amber-50/90 border border-amber-200/90 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2">
+                      <span className="text-2xl font-black text-amber-950">{prerequisiteModalJob.match}% Match</span>
+                      <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 bg-amber-200/80 text-amber-950 rounded-md">
+                        Below 85% Benchmark
+                      </span>
+                    </div>
+                    <p className="text-[11px] text-amber-900 font-medium leading-relaxed">
+                      Recruiters prioritize candidates with <strong>85%+ verified readiness</strong>. Applying now places your dossier in a lower match ranking tier.
+                    </p>
+                  </div>
+                  <div className="w-full sm:w-28 bg-amber-200/60 rounded-full h-2.5 overflow-hidden shrink-0">
+                    <div 
+                      className="bg-amber-600 h-full rounded-full transition-all duration-500"
+                      style={{ width: `${prerequisiteModalJob.match}%` }}
+                    />
+                  </div>
+                </div>
+
+                {/* 1. Missing Mandatory Skills List */}
+                <div className="space-y-2.5">
+                  <div className="flex items-center justify-between">
+                    <h4 className="text-xs font-black uppercase tracking-wider text-slate-900 flex items-center gap-1.5">
+                      <AlertTriangle className="w-3.5 h-3.5 text-amber-600" />
+                      <span>Missing Mandatory Skills:</span>
+                    </h4>
+                    <span className="text-[10px] font-bold text-amber-800 bg-amber-100/60 px-2 py-0.5 rounded border border-amber-200">
+                      {gaps.length} Unmastered {gaps.length === 1 ? 'Skill' : 'Skills'}
+                    </span>
+                  </div>
+
+                  <div className="space-y-2">
+                    {gaps.map((skill, idx) => (
+                      <div 
+                        key={idx}
+                        className="p-3 rounded-xl bg-amber-50/50 border border-amber-200/80 flex items-center justify-between text-xs text-amber-950"
+                      >
+                        <div className="flex items-center gap-2.5 min-w-0">
+                          <span className="w-5 h-5 rounded-full bg-amber-200/80 text-amber-900 flex items-center justify-center text-[10px] font-black shrink-0">
+                            ✕
+                          </span>
+                          <span className="font-bold text-slate-900 truncate">{skill}</span>
+                        </div>
+                        <span className="text-[10px] font-bold text-amber-900 shrink-0 bg-white px-2 py-0.5 rounded-md border border-amber-200 shadow-2xs">
+                          Mandatory Requirement
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* 2. Suggested Fast Track Module with 1-Click Button */}
+                <div className="p-4 rounded-2xl bg-teal-50/70 border border-teal-200/90 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <h4 className="text-xs font-black uppercase tracking-wider text-teal-950 flex items-center gap-1.5">
+                      <Sparkles className="w-3.5 h-3.5 text-teal-700" />
+                      <span>Suggested Fast Track Module</span>
+                    </h4>
+                    <span className="text-[10px] font-extrabold text-teal-800 bg-teal-100 px-2 py-0.5 rounded-md border border-teal-200">
+                      +12% Readiness Boost
+                    </span>
+                  </div>
+
+                  <div className="space-y-1">
+                    <h5 className="text-xs font-bold text-slate-900 leading-snug">
+                      {topCourse.title}
+                    </h5>
+                    <p className="text-[11px] text-slate-500">
+                      Targeted 15-minute diagnostic simulation to satisfy prerequisite skills before submission.
+                    </p>
+                  </div>
+
+                  {/* 1-Click Button */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setEnrolledBridgeSuccess(true);
+                      setTimeout(() => {
+                        handleOpenCourseInSkills(topCourse);
+                      }, 800);
+                    }}
+                    className="w-full py-2.5 px-4 rounded-xl bg-teal-800 hover:bg-teal-900 text-white font-extrabold text-xs transition-all cursor-pointer flex items-center justify-center gap-2 shadow-xs active:scale-98"
+                  >
+                    <PlayCircle className="w-4 h-4 text-teal-300" />
+                    <span>Enroll in 15-min Bridge Quiz / Course</span>
+                  </button>
+
+                  {enrolledBridgeSuccess && (
+                    <div className="p-2.5 bg-emerald-100 text-emerald-900 text-xs rounded-xl font-bold flex items-center justify-center gap-2 animate-in fade-in">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-700 shrink-0" />
+                      <span>Enrolled! Launching Bridge Sprint in Skills...</span>
+                    </div>
+                  )}
+                </div>
+
+              </div>
+
+              {/* Modal Footer: TWO Action Buttons */}
+              <div className="px-6 py-4 border-t border-slate-100 flex flex-col-reverse sm:flex-row items-center justify-between gap-3 shrink-0 bg-slate-50/60">
+                {/* Button 1: Proceed Anyway (Lower Match Rank) */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    const jobToApply = prerequisiteModalJob;
+                    setPrerequisiteModalJob(null);
+                    handleConfirmApply(jobToApply);
+                  }}
+                  className="w-full sm:w-auto px-4 py-2.5 rounded-xl border border-slate-300 hover:bg-slate-100 text-slate-700 text-xs font-bold transition-all cursor-pointer text-center"
+                >
+                  Proceed Anyway (Lower Match Rank)
+                </button>
+
+                {/* Button 2: Upskill First (Recommended) */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    handleOpenCourseInSkills(topCourse);
+                    setPrerequisiteModalJob(null);
+                  }}
+                  className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-white text-xs font-extrabold flex items-center justify-center gap-1.5 transition-all cursor-pointer shadow-md active:scale-98"
+                >
+                  <Sparkles className="w-3.5 h-3.5 text-emerald-300" />
+                  <span>Upskill First (Recommended)</span>
+                </button>
+              </div>
+
+            </div>
+          </div>
+        );
+      })()}
 
       {/* SKILL MATCH & GAP ANALYSIS MODAL */}
       {gapAnalysisJob && (() => {
