@@ -154,6 +154,18 @@ export const StudentPortalView = ({ user, onNavigateToSkills }) => {
       tag: 'NPTEL Certified',
       url: 'https://swayam.gov.in/explorer?searchText=pharmaceutical+engineering',
       enrolledCount: '1,150 Scholars'
+    },
+    {
+      id: 'swayam-4',
+      title: 'SWAYAM: Biostatistics & Epidemiological Research for Ayush - PGIMER',
+      provider: 'PGIMER Chandigarh',
+      targetDeficit: 'Evidence-Based Biostatistics & GCP',
+      duration: '8 Weeks',
+      credits: '2 Credits (Transferable via ABC Bank)',
+      badge: 'Free MOOC • Credit Transferable',
+      tag: 'SWAYAM Certified',
+      url: 'https://swayam.gov.in/explorer?searchText=biostatistics',
+      enrolledCount: '940 Scholars'
     }
   ];
 
@@ -500,7 +512,7 @@ export const StudentPortalView = ({ user, onNavigateToSkills }) => {
                       className="px-3.5 py-2 bg-emerald-800 hover:bg-emerald-900 text-white rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 shrink-0 shadow-2xs self-start sm:self-auto cursor-pointer"
                       title="Open on official SWAYAM portal (swayam.gov.in)"
                     >
-                      <span>Enroll on SWAYAM</span>
+                      <span>Enroll on swayam.gov.in</span>
                       <ExternalLink className="w-3.5 h-3.5 text-emerald-300" />
                     </a>
                   </div>
@@ -771,7 +783,7 @@ export const StudentPortalView = ({ user, onNavigateToSkills }) => {
                     className="w-full py-2.5 px-4 bg-emerald-800 hover:bg-emerald-900 text-white text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer shadow-xs"
                     title="Open course on official SWAYAM portal (swayam.gov.in)"
                   >
-                    <span>Enroll on SWAYAM</span>
+                    <span>Enroll on swayam.gov.in</span>
                     <ExternalLink className="w-3.5 h-3.5 text-emerald-300" />
                   </a>
                 </div>

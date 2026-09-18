@@ -535,7 +535,7 @@ export function CoursesPage({ currentUser, activePortalId }) {
                       rel="noopener noreferrer"
                       className="px-4 py-2 bg-emerald-800 hover:bg-emerald-900 text-white rounded-xl font-bold text-xs shadow-md transition-all cursor-pointer flex items-center gap-1.5 shrink-0"
                     >
-                      <span>Enroll on SWAYAM</span>
+                      <span>Enroll on swayam.gov.in</span>
                       <ExternalLink className="w-3.5 h-3.5 text-emerald-300" />
                     </a>
                   ) : isFacultyPortal ? (
