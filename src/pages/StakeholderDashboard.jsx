@@ -275,7 +275,7 @@ export const StakeholderDashboard = ({
                 }}
               />
             )}
-            {activePortalId === 'company' && <CompanyPage currentUser={user} onOpenAuthModal={() => {}} />}
+            {activePortalId === 'company' && <CompanyPortalView user={user} />}
             {activePortalId === 'faculty' && (
               <ComingSoonView onBack={() => setActiveTab('feed')} />
             )}
