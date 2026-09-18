@@ -25,9 +25,11 @@ import {
   Check,
   Star,
   ExternalLink,
-  MessageSquare
+  MessageSquare,
+  Landmark
 } from 'lucide-react';
 import { HERO_STATS, PLATFORM_METADATA } from '../../data/portalData';
+import { TPOPlacementCommandCenter } from './TPOPlacementCommandCenter';
 
 export const StudentPortalView = ({ user, onNavigateToSkills }) => {
   const defaultUser = {
@@ -413,6 +415,21 @@ export const StudentPortalView = ({ user, onNavigateToSkills }) => {
         >
           <Award className="w-4 h-4" />
           <span>Verified Digital Portfolio</span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab('tpo')}
+          className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 shrink-0 ${
+            activeTab === 'tpo'
+              ? 'bg-emerald-800 text-white shadow-xs'
+              : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
+          }`}
+        >
+          <Landmark className="w-4 h-4 text-emerald-600" />
+          <span>TPO Placement Command Center</span>
+          <span className="px-1.5 py-0.2 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-950 border border-emerald-200">
+            6 Drives
+          </span>
         </button>
       </div>
 
@@ -1081,6 +1098,11 @@ export const StudentPortalView = ({ user, onNavigateToSkills }) => {
             </div>
           </div>
         </div>
+      )}
+
+      {/* TAB 5: TPO Placement Command Center */}
+      {activeTab === 'tpo' && (
+        <TPOPlacementCommandCenter user={safeUser} isTPOAdmin={false} />
       )}
     </div>
   );
