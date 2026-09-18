@@ -149,6 +149,7 @@ export function StudentProfileView({ user, onNavigate, onBack, isPublicView }) {
     phone: '+91 98765 43210',
     apaarId: user?.apaarId || '9841-2041-8891',
     abcCredits: user?.abcCredits || '164 Credits',
+    abcId: user?.abcId || user?.abcCredits || '164 Credits',
     abhaId: user?.abhaId || '91-4402-8819-2041',
     ncismReg: user?.ncismReg || 'NCISM/AYU/RJ/2022/9912',
     cgpa: user?.cgpa || '8.94 / 10.0 (Honors)',
@@ -177,7 +178,8 @@ export function StudentProfileView({ user, onNavigate, onBack, isPublicView }) {
         avatarImage: user.avatarImage || prev.avatarImage,
         readinessScore: user.readiness ? parseInt(user.readiness) : prev.readinessScore,
         apaarId: user.apaarId || prev.apaarId,
-        abcCredits: user.abcCredits || prev.abcCredits
+        abcCredits: user.abcCredits || user.abcId || prev.abcCredits,
+        abcId: user.abcId || user.abcCredits || prev.abcId
       }));
       setEditForm(prev => ({
         ...prev,
@@ -190,7 +192,8 @@ export function StudentProfileView({ user, onNavigate, onBack, isPublicView }) {
         avatar: user.avatar || prev.avatar,
         avatarImage: user.avatarImage || prev.avatarImage,
         apaarId: user.apaarId || prev.apaarId,
-        abcCredits: user.abcCredits || prev.abcCredits
+        abcCredits: user.abcCredits || user.abcId || prev.abcCredits,
+        abcId: user.abcId || user.abcCredits || prev.abcId
       }));
     }
   }, [user]);
@@ -696,8 +699,8 @@ export function StudentProfileView({ user, onNavigate, onBack, isPublicView }) {
                       type="text"
                       name="abcId"
                       id="abcId"
-                      value={editForm.abcCredits || ''}
-                      onChange={(e) => setEditForm({ ...editForm, abcCredits: e.target.value })}
+                      value={editForm.abcCredits || editForm.abcId || ''}
+                      onChange={(e) => setEditForm({ ...editForm, abcCredits: e.target.value, abcId: e.target.value })}
                       placeholder="164 Credits"
                       className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 font-medium font-mono"
                     />
@@ -788,27 +791,23 @@ export function StudentProfileView({ user, onNavigate, onBack, isPublicView }) {
                 {/* Top Row: Real 6-Axis Ayush Radar Chart & Sidebar Verified Credentials */}
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
                   
-                  {/* Left Column: Real 6-Axis Ayush Radar Chart */}
-                  <div className="lg:col-span-7 xl:col-span-8 space-y-6">
-                    <AyushSixAxisRadarChart skillMatrix={skillMatrix} plain={true} />
-            <div className="mt-6 space-y-8">
                   {/* Left Column: Real 6-Axis Ayush Radar Chart & Academic Records */}
-                  <div className="lg:col-span-12 space-y-6">
-                    
+                  <div className="lg:col-span-7 xl:col-span-8 space-y-6">
                     {/* Real 6-Axis Radar Chart Component (Seamless plain mode) */}
                     <AyushSixAxisRadarChart skillMatrix={skillMatrix} plain={true} />
 
                     {/* Academic Qualifications Table (Clean & Concise) */}
                     <div className="bg-white rounded-2xl border border-slate-200/90 shadow-2xs overflow-hidden">
-                      <div className="px-5 py-3.5 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+                      <div className="px-5 py-3.5 border-b border-slate-100 flex flex-wrap items-center justify-between gap-2 bg-slate-50/50">
                         <div className="flex items-center gap-2">
                           <GraduationCap className="w-4 h-4 text-emerald-700" />
                           <h4 className="font-bold text-sm text-slate-800 tracking-tight">
                             Academic Qualifications
                           </h4>
                         </div>
-                        <span className="text-[10px] font-semibold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200/80">
-                          Verified
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-teal-50 text-teal-800 border border-teal-200/90 shadow-2xs">
+                          <ShieldCheck className="w-3.5 h-3.5 text-teal-600 shrink-0" />
+                          <span>APAAR: {profileData.apaarId} • ABC Bank: {profileData.abcCredits} (DigiLocker Verified)</span>
                         </span>
                       </div>
 
@@ -881,8 +880,6 @@ export function StudentProfileView({ user, onNavigate, onBack, isPublicView }) {
                     </div>
 
                   </div>
-              </div>
-          </section>
 
                   {/* Right Column: Sidebar Credentials */}
                   <div className="lg:col-span-5 xl:col-span-4 space-y-6">
@@ -901,6 +898,320 @@ export function StudentProfileView({ user, onNavigate, onBack, isPublicView }) {
                           Active
                         </span>
                       </div>
+
+                      <div className="space-y-3">
+                        {/* University Enrollment Block */}
+                        <div className="p-3.5 rounded-2xl bg-slate-50/70 border border-slate-200/80 hover:bg-slate-50 transition-colors">
+                          <div className="flex items-center justify-between text-xs mb-1">
+                            <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400">
+                              University Enrollment Roll
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => handleCopy(profileData.id, 'id')}
+                              className="text-slate-400 hover:text-emerald-700 p-1 rounded-md hover:bg-white cursor-pointer transition-colors"
+                              title="Copy Enrollment Roll"
+                            >
+                              {copiedField === 'id' ? <Check className="w-3.5 h-3.5 text-emerald-700" /> : <Copy className="w-3.5 h-3.5" />}
+                            </button>
+                          </div>
+                          <span className="font-mono font-bold text-sm text-slate-900 block select-all">
+                            {profileData.id}
+                          </span>
+                        </div>
+
+                        {/* Official Institutional Email Block */}
+                        <div className="p-3.5 rounded-2xl bg-slate-50/70 border border-slate-200/80 hover:bg-slate-50 transition-colors">
+                          <div className="flex items-center justify-between text-xs mb-1">
+                            <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400">
+                              Official Institutional Email
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => handleCopy(profileData.email, 'email')}
+                              className="text-slate-400 hover:text-emerald-700 p-1 rounded-md hover:bg-white cursor-pointer transition-colors"
+                              title="Copy Email"
+                            >
+                              {copiedField === 'email' ? <Check className="w-3.5 h-3.5 text-emerald-700" /> : <Copy className="w-3.5 h-3.5" />}
+                            </button>
+                          </div>
+                          <a 
+                            href={`mailto:${profileData.email}`} 
+                            className="font-semibold text-xs text-emerald-900 hover:text-emerald-700 hover:underline truncate block"
+                          >
+                            {profileData.email}
+                          </a>
+                        </div>
+
+                        {/* Contact Phone Block */}
+                        <div className="p-3.5 rounded-2xl bg-slate-50/70 border border-slate-200/80 hover:bg-slate-50 transition-colors">
+                          <div className="flex items-center justify-between text-xs mb-1">
+                            <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400">
+                              Contact Number
+                            </span>
+                            <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.2 rounded border border-emerald-200/60">
+                              Verified
+                            </span>
+                          </div>
+                          <span className="font-bold text-xs sm:text-sm text-slate-900 block">
+                            {profileData.phone}
+                          </span>
+                        </div>
+
+                        {/* Campus Location Block */}
+                        <div className="p-3.5 rounded-2xl bg-slate-50/70 border border-slate-200/80 hover:bg-slate-50 transition-colors">
+                          <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 block mb-1">
+                            Clinical Campus Location
+                          </span>
+                          <span className="font-bold text-xs sm:text-sm text-slate-900 block">
+                            {profileData.location}
+                          </span>
+                        </div>
+
+                        {/* Bottom Micro Security Seal */}
+                        <div className="pt-2.5 flex items-center justify-center gap-1.5 text-[10px] font-semibold text-slate-400 border-t border-slate-100">
+                          <Lock className="w-3 h-3 text-emerald-700" />
+                          <span>Tamper-evident Ayush Scholar Identity</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+
+                {/* Academic Profile & Institutional Records (Full-width Prestige Dossier Layout) */}
+                <div className="bg-white rounded-3xl border border-slate-200 shadow-xs overflow-hidden">
+                  {/* Institutional Dossier Header */}
+                  <div className="p-5 sm:p-6 bg-gradient-to-r from-slate-50/90 via-white to-emerald-50/30 border-b border-slate-200/90 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div className="flex items-center gap-3.5 min-w-0">
+                      <div className="w-11 h-11 rounded-2xl bg-emerald-700 text-white flex items-center justify-center font-bold shadow-sm shadow-emerald-700/20 shrink-0">
+                        <GraduationCap className="w-6 h-6" />
+                      </div>
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-2">
+                          <h4 className="font-extrabold text-base sm:text-lg text-slate-900 tracking-tight">
+                            Academic Dossier &amp; Statutory Records
+                          </h4>
+                        </div>
+                        <p className="text-xs text-slate-500 font-medium mt-0.5">
+                          National Institute of Ayurveda (NIA), Jaipur · Batch {profileData.batch}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2.5 flex-wrap">
+                      <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold bg-teal-50 text-teal-800 border border-teal-200/90 shadow-2xs">
+                        <ShieldCheck className="w-3.5 h-3.5 text-teal-600 shrink-0" />
+                        <span>APAAR: {profileData.apaarId} • ABC Bank: {profileData.abcCredits} (DigiLocker Verified)</span>
+                      </span>
+                      <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-extrabold uppercase tracking-wider bg-emerald-50 text-emerald-800 border border-emerald-200/90 whitespace-nowrap shadow-2xs">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse"></span>
+                        NCISM Accredited
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="p-6 sm:p-7 space-y-6">
+                    
+                    {/* Dossier Level 1: Primary Academic Qualification & Academic Standing Banner */}
+                    <div className="p-5 sm:p-6 rounded-2xl bg-slate-50/90 border border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-5">
+                      <div className="space-y-2 flex-1 min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-800 bg-emerald-100/70 px-2.5 py-0.5 rounded-md border border-emerald-200/60">
+                            Degree &amp; Clinical Program
+                          </span>
+                          <span className="text-xs font-semibold text-slate-500">
+                            Phase IV (Final Year Residency)
+                          </span>
+                        </div>
+                        <h5 className="text-xl font-black text-slate-900 tracking-tight">
+                          {profileData.degree}
+                        </h5>
+                        <p className="text-xs sm:text-sm text-slate-600 font-medium">
+                          Ayurvedic Clinical Medicine, Dravyaguna Phytochemistry &amp; Shalya Chikitsa
+                        </p>
+                        <p className="text-xs text-slate-500 pt-1 flex items-center gap-1.5 flex-wrap">
+                          <span>Academic Mentor:</span>
+                          <strong className="text-slate-800 font-semibold">{profileData.preceptor}</strong>
+                        </p>
+                      </div>
+
+                      {/* Academic Merit Badge */}
+                      <div className="flex md:flex-col items-center md:items-end justify-between md:justify-center p-4 bg-white rounded-2xl border border-slate-200 shadow-2xs shrink-0 md:min-w-[190px]">
+                        <div className="flex items-baseline gap-1.5">
+                          <span className="text-3xl font-black text-slate-900 tracking-tight">8.94</span>
+                          <span className="text-xs font-bold text-slate-400">/ 10.0 CGPA</span>
+                        </div>
+                        <span className="inline-flex items-center gap-1.5 text-xs font-extrabold text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200/80 mt-1.5">
+                          <Award className="w-3.5 h-3.5 text-emerald-600" /> Top 2% Honors
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Dossier Level 2: Statutory Licensure, Digital Health & NEP 2020 Academic Identifiers */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                      
+                      {/* Statutory Licensure Card */}
+                      <div className="p-5 rounded-2xl bg-white border border-slate-200 hover:border-emerald-300 transition-colors shadow-2xs space-y-3">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <div className="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center border border-emerald-200/60 shadow-2xs">
+                              <ShieldCheck className="w-4 h-4" />
+                            </div>
+                            <span className="text-xs font-extrabold uppercase tracking-wider text-slate-600">
+                              Statutory Practitioner Registry
+                            </span>
+                          </div>
+                          <span className="inline-flex items-center gap-1 text-[10px] font-extrabold text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded-md border border-emerald-200/80">
+                            <CheckCircle2 className="w-3 h-3 text-emerald-600" /> Active
+                          </span>
+                        </div>
+
+                        <div className="flex items-center justify-between bg-slate-50/90 px-4 py-3 rounded-xl border border-slate-200/80">
+                          <span className="font-mono font-bold text-sm sm:text-base text-slate-900 select-all tracking-wider">
+                            {profileData.ncismReg}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => handleCopy(profileData.ncismReg, 'ncism')}
+                            className="p-1.5 rounded-lg text-slate-400 hover:text-emerald-700 hover:bg-white transition-colors cursor-pointer"
+                            title="Copy NCISM Registration ID"
+                          >
+                            {copiedField === 'ncism' ? (
+                              <Check className="w-4 h-4 text-emerald-700" />
+                            ) : (
+                              <Copy className="w-4 h-4" />
+                            )}
+                          </button>
+                        </div>
+
+                        <p className="text-xs text-slate-500 font-medium">
+                          National Commission for Indian System of Medicine (NCISM)
+                        </p>
+                      </div>
+
+                      {/* Digital Health ID Card */}
+                      <div className="p-5 rounded-2xl bg-white border border-slate-200 hover:border-teal-300 transition-colors shadow-2xs space-y-3">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <div className="w-7 h-7 rounded-lg bg-teal-50 text-teal-700 flex items-center justify-center border border-teal-200/60 shadow-2xs">
+                              <FileText className="w-4 h-4" />
+                            </div>
+                            <span className="text-xs font-extrabold uppercase tracking-wider text-slate-600">
+                              National ABHA Health ID
+                            </span>
+                          </div>
+                          <span className="inline-flex items-center gap-1 text-[10px] font-extrabold text-teal-800 bg-teal-50 px-2.5 py-0.5 rounded-md border border-teal-200/80">
+                            <ShieldCheck className="w-3.5 h-3.5 text-teal-600" /> DigiLocker
+                          </span>
+                        </div>
+
+                        <div className="flex items-center justify-between bg-slate-50/90 px-4 py-3 rounded-xl border border-slate-200/80">
+                          <span className="font-mono font-bold text-sm sm:text-base text-slate-900 select-all tracking-wider">
+                            {profileData.abhaId}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => handleCopy(profileData.abhaId, 'abha')}
+                            className="p-1.5 rounded-lg text-slate-400 hover:text-teal-700 hover:bg-white transition-colors cursor-pointer"
+                            title="Copy ABHA ID"
+                          >
+                            {copiedField === 'abha' ? (
+                              <Check className="w-4 h-4 text-teal-700" />
+                            ) : (
+                              <Copy className="w-4 h-4" />
+                            )}
+                          </button>
+                        </div>
+
+                        <p className="text-xs text-slate-500 font-medium">
+                          Ayushman Bharat Digital Mission (ABDM) Healthcare Registry
+                        </p>
+                      </div>
+
+                      {/* NEP 2020 APAAR ID & Academic Bank of Credits Card */}
+                      <div className="p-5 rounded-2xl bg-white border border-slate-200 hover:border-teal-300 transition-colors shadow-2xs space-y-3">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <div className="w-7 h-7 rounded-lg bg-teal-50 text-teal-700 flex items-center justify-center border border-teal-200/60 shadow-2xs">
+                              <GraduationCap className="w-4 h-4" />
+                            </div>
+                            <span className="text-xs font-extrabold uppercase tracking-wider text-slate-600">
+                              NEP 2020 APAAR &amp; ABC
+                            </span>
+                          </div>
+                          <span className="inline-flex items-center gap-1 text-[10px] font-extrabold text-teal-800 bg-teal-50 px-2.5 py-0.5 rounded-md border border-teal-200/80">
+                            <ShieldCheck className="w-3.5 h-3.5 text-teal-600" /> DigiLocker
+                          </span>
+                        </div>
+
+                        <div className="space-y-2">
+                          <div className="flex items-center justify-between bg-slate-50/90 px-3.5 py-2 rounded-xl border border-slate-200/80">
+                            <div className="min-w-0">
+                              <span className="text-[10px] font-bold uppercase text-slate-400 block">APAAR ID</span>
+                              <span className="font-mono font-bold text-xs sm:text-sm text-slate-900 select-all tracking-wider block">
+                                {profileData.apaarId}
+                              </span>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => handleCopy(profileData.apaarId, 'apaar')}
+                              className="p-1.5 rounded-lg text-slate-400 hover:text-teal-700 hover:bg-white transition-colors cursor-pointer"
+                              title="Copy APAAR ID"
+                            >
+                              {copiedField === 'apaar' ? (
+                                <Check className="w-4 h-4 text-teal-700" />
+                              ) : (
+                                <Copy className="w-4 h-4" />
+                              )}
+                            </button>
+                          </div>
+
+                          <div className="flex items-center justify-between bg-slate-50/90 px-3.5 py-2 rounded-xl border border-slate-200/80">
+                            <div className="min-w-0">
+                              <span className="text-[10px] font-bold uppercase text-slate-400 block">ABC Credit Bank</span>
+                              <span className="font-mono font-bold text-xs sm:text-sm text-slate-900 select-all tracking-wider block">
+                                {profileData.abcCredits}
+                              </span>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => handleCopy(profileData.abcCredits, 'abc')}
+                              className="p-1.5 rounded-lg text-slate-400 hover:text-teal-700 hover:bg-white transition-colors cursor-pointer"
+                              title="Copy ABC Credits"
+                            >
+                              {copiedField === 'abc' ? (
+                                <Check className="w-4 h-4 text-teal-700" />
+                              ) : (
+                                <Copy className="w-4 h-4" />
+                              )}
+                            </button>
+                          </div>
+                        </div>
+
+                        <p className="text-xs text-slate-500 font-medium">
+                          Academic Bank of Credits (ABC) &amp; DigiLocker Verified
+                        </p>
+                      </div>
+
+                    </div>
+
+                    {/* Dossier Trust Ledger Strip */}
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pt-3 text-xs text-slate-500 border-t border-slate-200/70">
+                      <span className="flex items-center gap-2 font-medium">
+                        <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                        Statutory records verified by Ayush Academic &amp; Clinical Council
+                      </span>
+                      <span className="font-mono text-xs text-slate-400 truncate">
+                        SHA-256: {profileData.verificationHash.slice(0, 24)}...
+                      </span>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+          </section>
+
           {/* SECTION: PAST INTERVIEWS & VIVA EVALUATION RECORD */}
           <section id="section-interviews" className="scroll-mt-6 rounded-3xl bg-white border border-slate-200/80 p-5 sm:p-7 shadow-xs transition-all">
             <div 
@@ -991,175 +1302,6 @@ export function StudentProfileView({ user, onNavigate, onBack, isPublicView }) {
                         ))}
                       </div>
                     </div>
-                  </div>
-
-                </div>
-
-                {/* Academic Profile & Institutional Records (Full-width Prestige Dossier Layout) */}
-                <div className="bg-white rounded-3xl border border-slate-200 shadow-xs overflow-hidden">
-                  {/* Institutional Dossier Header */}
-                  <div className="p-5 sm:p-6 bg-gradient-to-r from-slate-50/90 via-white to-emerald-50/30 border-b border-slate-200/90 flex flex-col md:flex-row md:items-center justify-between gap-4">
-                    <div className="flex items-center gap-3.5 min-w-0">
-                      <div className="w-11 h-11 rounded-2xl bg-emerald-700 text-white flex items-center justify-center font-bold shadow-sm shadow-emerald-700/20 shrink-0">
-                        <GraduationCap className="w-6 h-6" />
-                      </div>
-                      <div className="min-w-0">
-                        <div className="flex items-center gap-2">
-                          <h4 className="font-extrabold text-base sm:text-lg text-slate-900 tracking-tight">
-                            Academic Dossier &amp; Statutory Records
-                          </h4>
-                        </div>
-                        <p className="text-xs text-slate-500 font-medium mt-0.5">
-                          National Institute of Ayurveda (NIA), Jaipur · Batch {profileData.batch}
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-2.5 flex-wrap">
-                      <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold bg-teal-50 text-teal-800 border border-teal-200/90 shadow-2xs">
-                        <ShieldCheck className="w-3.5 h-3.5 text-teal-600 shrink-0" />
-                        <span>APAAR: {profileData.apaarId} • ABC Bank: {profileData.abcCredits} (DigiLocker Verified)</span>
-                      </span>
-                      <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-extrabold uppercase tracking-wider bg-emerald-50 text-emerald-800 border border-emerald-200/90 whitespace-nowrap shadow-2xs">
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse"></span>
-                        NCISM Accredited
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="p-6 sm:p-7 space-y-6">
-                    
-                    {/* Dossier Level 1: Primary Academic Qualification & Academic Standing Banner */}
-                    <div className="p-5 sm:p-6 rounded-2xl bg-slate-50/90 border border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-5">
-                      <div className="space-y-2 flex-1 min-w-0">
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <span className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-800 bg-emerald-100/70 px-2.5 py-0.5 rounded-md border border-emerald-200/60">
-                            Degree &amp; Clinical Program
-                          </span>
-                          <span className="text-xs font-semibold text-slate-500">
-                            Phase IV (Final Year Residency)
-                          </span>
-                        </div>
-                        <h5 className="text-xl font-black text-slate-900 tracking-tight">
-                          {profileData.degree}
-                        </h5>
-                        <p className="text-xs sm:text-sm text-slate-600 font-medium">
-                          Ayurvedic Clinical Medicine, Dravyaguna Phytochemistry &amp; Shalya Chikitsa
-                        </p>
-                        <p className="text-xs text-slate-500 pt-1 flex items-center gap-1.5 flex-wrap">
-                          <span>Academic Mentor:</span>
-                          <strong className="text-slate-800 font-semibold">{profileData.preceptor}</strong>
-                        </p>
-                      </div>
-
-                      {/* Academic Merit Badge */}
-                      <div className="flex md:flex-col items-center md:items-end justify-between md:justify-center p-4 bg-white rounded-2xl border border-slate-200 shadow-2xs shrink-0 md:min-w-[190px]">
-                        <div className="flex items-baseline gap-1.5">
-                          <span className="text-3xl font-black text-slate-900 tracking-tight">8.94</span>
-                          <span className="text-xs font-bold text-slate-400">/ 10.0 CGPA</span>
-                        </div>
-                        <span className="inline-flex items-center gap-1.5 text-xs font-extrabold text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200/80 mt-1.5">
-                          <Award className="w-3.5 h-3.5 text-emerald-600" /> Top 2% Honors
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Dossier Level 2: Dual Statutory Licensure & Digital Health Identifiers */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                      
-                      {/* Statutory Licensure Card */}
-                      <div className="p-5 rounded-2xl bg-white border border-slate-200 hover:border-emerald-300 transition-colors shadow-2xs space-y-3">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <div className="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center border border-emerald-200/60 shadow-2xs">
-                              <ShieldCheck className="w-4 h-4" />
-                            </div>
-                            <span className="text-xs font-extrabold uppercase tracking-wider text-slate-600">
-                              Statutory Practitioner Registry
-                            </span>
-                          </div>
-                          <span className="inline-flex items-center gap-1 text-[10px] font-extrabold text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded-md border border-emerald-200/80">
-                            <CheckCircle2 className="w-3 h-3 text-emerald-600" /> Active
-                          </span>
-                        </div>
-
-                        <div className="flex items-center justify-between bg-slate-50/90 px-4 py-3 rounded-xl border border-slate-200/80">
-                          <span className="font-mono font-bold text-sm sm:text-base text-slate-900 select-all tracking-wider">
-                            {profileData.ncismReg}
-                          </span>
-                          <button
-                            type="button"
-                            onClick={() => handleCopy(profileData.ncismReg, 'ncism')}
-                            className="p-1.5 rounded-lg text-slate-400 hover:text-emerald-700 hover:bg-white transition-colors cursor-pointer"
-                            title="Copy NCISM Registration ID"
-                          >
-                            {copiedField === 'ncism' ? (
-                              <Check className="w-4 h-4 text-emerald-700" />
-                            ) : (
-                              <Copy className="w-4 h-4" />
-                            )}
-                          </button>
-                        </div>
-
-                        <p className="text-xs text-slate-500 font-medium">
-                          National Commission for Indian System of Medicine (NCISM)
-                        </p>
-                      </div>
-
-                      {/* Digital Health ID Card */}
-                      <div className="p-5 rounded-2xl bg-white border border-slate-200 hover:border-teal-300 transition-colors shadow-2xs space-y-3">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <div className="w-7 h-7 rounded-lg bg-teal-50 text-teal-700 flex items-center justify-center border border-teal-200/60 shadow-2xs">
-                              <FileText className="w-4 h-4" />
-                            </div>
-                            <span className="text-xs font-extrabold uppercase tracking-wider text-slate-600">
-                              National ABHA Health ID
-                            </span>
-                          </div>
-                          <span className="inline-flex items-center gap-1 text-[10px] font-extrabold text-teal-800 bg-teal-50 px-2.5 py-0.5 rounded-md border border-teal-200/80">
-                            <ShieldCheck className="w-3 h-3 text-teal-600" /> DigiLocker
-                          </span>
-                        </div>
-
-                        <div className="flex items-center justify-between bg-slate-50/90 px-4 py-3 rounded-xl border border-slate-200/80">
-                          <span className="font-mono font-bold text-sm sm:text-base text-slate-900 select-all tracking-wider">
-                            {profileData.abhaId}
-                          </span>
-                          <button
-                            type="button"
-                            onClick={() => handleCopy(profileData.abhaId, 'abha')}
-                            className="p-1.5 rounded-lg text-slate-400 hover:text-teal-700 hover:bg-white transition-colors cursor-pointer"
-                            title="Copy ABHA ID"
-                          >
-                            {copiedField === 'abha' ? (
-                              <Check className="w-4 h-4 text-teal-700" />
-                            ) : (
-                              <Copy className="w-4 h-4" />
-                            )}
-                          </button>
-                        </div>
-
-                        <p className="text-xs text-slate-500 font-medium">
-                          Ayushman Bharat Digital Mission (ABDM) Healthcare Registry
-                        </p>
-                      </div>
-
-                    </div>
-
-                    {/* Dossier Trust Ledger Strip */}
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pt-3 text-xs text-slate-500 border-t border-slate-200/70">
-                      <span className="flex items-center gap-2 font-medium">
-                        <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                        Statutory records verified by Ayush Academic &amp; Clinical Council
-                      </span>
-                      <span className="font-mono text-xs text-slate-400 truncate">
-                        SHA-256: {profileData.verificationHash.slice(0, 24)}...
-                      </span>
-                    </div>
-
-                  </div>
-                </div>
                   </div>
                 ))}
               </div>
