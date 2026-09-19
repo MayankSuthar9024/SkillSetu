@@ -170,6 +170,9 @@ export const StakeholderDashboard = ({
             </div>
           );
         }
+        if (activePortalId === 'company') {
+          return <CompanyPortalView user={user} />;
+        }
         return (
           <JobsPage
             currentUser={user}
@@ -275,7 +278,7 @@ export const StakeholderDashboard = ({
                 }}
               />
             )}
-            {activePortalId === 'company' && <CompanyPage currentUser={user} onOpenAuthModal={() => {}} />}
+            {activePortalId === 'company' && <CompanyPortalView user={user} />}
             {activePortalId === 'faculty' && (
               <ComingSoonView onBack={() => setActiveTab('feed')} />
             )}

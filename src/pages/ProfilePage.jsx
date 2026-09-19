@@ -788,14 +788,8 @@ export function StudentProfileView({ user, onNavigate, onBack, isPublicView }) {
                 {/* Top Row: Real 6-Axis Ayush Radar Chart & Sidebar Verified Credentials */}
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
                   
-                  {/* Left Column: Real 6-Axis Ayush Radar Chart */}
+                  {/* Left Column: Real 6-Axis Ayush Radar Chart & Academic Qualifications Table */}
                   <div className="lg:col-span-7 xl:col-span-8 space-y-6">
-                    <AyushSixAxisRadarChart skillMatrix={skillMatrix} plain={true} />
-            <div className="mt-6 space-y-8">
-                  {/* Left Column: Real 6-Axis Ayush Radar Chart & Academic Records */}
-                  <div className="lg:col-span-12 space-y-6">
-                    
-                    {/* Real 6-Axis Radar Chart Component (Seamless plain mode) */}
                     <AyushSixAxisRadarChart skillMatrix={skillMatrix} plain={true} />
 
                     {/* Academic Qualifications Table (Clean & Concise) */}
@@ -879,10 +873,7 @@ export function StudentProfileView({ user, onNavigate, onBack, isPublicView }) {
                         </table>
                       </div>
                     </div>
-
                   </div>
-              </div>
-          </section>
 
                   {/* Right Column: Sidebar Credentials */}
                   <div className="lg:col-span-5 xl:col-span-4 space-y-6">
@@ -901,94 +892,81 @@ export function StudentProfileView({ user, onNavigate, onBack, isPublicView }) {
                           Active
                         </span>
                       </div>
-          {/* SECTION: PAST INTERVIEWS & VIVA EVALUATION RECORD */}
-          <section id="section-interviews" className="scroll-mt-6 rounded-3xl bg-white border border-slate-200/80 p-5 sm:p-7 shadow-xs transition-all">
-            <div 
-              onClick={() => toggleSection('interviews')}
-              className="flex items-center justify-between cursor-pointer group select-none transition-colors"
-              title={openSections.interviews ? "Click to minimize section" : "Click to expand section"}
-            >
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-2xl bg-emerald-50 text-emerald-800 flex items-center justify-center font-bold border border-emerald-200/60 shadow-2xs group-hover:scale-105 transition-transform">
-                  <History className="w-4 h-4 text-emerald-700" />
-                </div>
-                <div>
-                  <h3 className="font-bold text-base sm:text-lg text-slate-900 group-hover:text-emerald-800 transition-colors flex items-center gap-2">
-                    Past Interviews, Viva Transcripts &amp; Candidate Speeches
-                  </h3>
-                  {!openSections.interviews && (
-                    <p className="text-xs text-slate-500 mt-0.5 font-normal">
-                      {studentPastInterviews.length} Recorded Placement Rounds · Dabur, AIIA, Patanjali · Click to expand
-                    </p>
-                  )}
-                </div>
-              </div>
 
-              <div className="flex items-center gap-2">
-                <span className="px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-emerald-50 text-emerald-800 border border-emerald-200 hidden sm:inline-block">
-                  {studentPastInterviews.length} Recorded Rounds
-                </span>
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    toggleSection('interviews');
-                  }}
-                  className="p-2 rounded-xl bg-slate-100 group-hover:bg-emerald-100/80 text-slate-700 group-hover:text-emerald-900 transition-all border border-slate-200/80 shadow-2xs cursor-pointer flex items-center gap-1.5"
-                  title={openSections.interviews ? "Minimize section" : "Expand section"}
-                >
-                  <span className="text-[11px] font-bold px-1 hidden md:inline text-slate-500 group-hover:text-emerald-800">
-                    {openSections.interviews ? 'Minimize' : 'Expand'}
-                  </span>
-                  <ChevronLeft 
-                    className={`w-4 h-4 transition-transform duration-300 transform text-emerald-700 ${
-                      openSections.interviews ? 'rotate-0' : '-rotate-90'
-                    }`} 
-                  />
-                </button>
-              </div>
-            </div>
-
-            {/* Collapsible Content */}
-            {openSections.interviews && (
-              <div className="mt-6 pt-5 border-t border-slate-100 animate-in fade-in duration-300 space-y-4">
-                {studentPastInterviews.map((item) => (
-                  <div key={item.id} className="bg-slate-50/70 p-5 rounded-3xl border border-slate-200/80 shadow-2xs space-y-3.5 hover:shadow-md transition-shadow">
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-200/60">
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <h4 className="font-extrabold text-sm sm:text-base text-slate-900">{item.role}</h4>
-                          <span className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold border ${item.statusColor}`}>
-                            {item.status}
+                      <div className="space-y-3">
+                        {/* University Enrollment Block */}
+                        <div className="p-3.5 rounded-2xl bg-slate-50/70 border border-slate-200/80 hover:bg-slate-50 transition-colors">
+                          <div className="flex items-center justify-between text-xs mb-1">
+                            <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400">
+                              University Enrollment Roll
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => handleCopy(profileData.id, 'id')}
+                              className="text-slate-400 hover:text-emerald-700 p-1 rounded-md hover:bg-white cursor-pointer transition-colors"
+                              title="Copy Enrollment Roll"
+                            >
+                              {copiedField === 'id' ? <Check className="w-3.5 h-3.5 text-emerald-700" /> : <Copy className="w-3.5 h-3.5" />}
+                            </button>
+                          </div>
+                          <span className="font-mono font-bold text-sm text-slate-900 block select-all">
+                            {profileData.id}
                           </span>
                         </div>
-                        <p className="text-xs text-slate-600 font-semibold">{item.company}</p>
-                        <p className="text-[11px] text-slate-400">Interviewer: <strong className="text-slate-700">{item.interviewer}</strong> ({item.mode})</p>
-                      </div>
 
-                      <div className="p-2 bg-white rounded-xl border border-slate-200 text-center sm:text-right shrink-0">
-                        <span className="text-[10px] uppercase font-bold text-slate-400 block">Score</span>
-                        <span className="text-sm font-black text-emerald-800 font-mono">{item.technicalScore}</span>
-                        <span className="text-[10px] text-slate-500 block">{item.date}</span>
-                      </div>
-                    </div>
+                        {/* Official Institutional Email Block */}
+                        <div className="p-3.5 rounded-2xl bg-slate-50/70 border border-slate-200/80 hover:bg-slate-50 transition-colors">
+                          <div className="flex items-center justify-between text-xs mb-1">
+                            <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400">
+                              Official Institutional Email
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => handleCopy(profileData.email, 'email')}
+                              className="text-slate-400 hover:text-emerald-700 p-1 rounded-md hover:bg-white cursor-pointer transition-colors"
+                              title="Copy Email"
+                            >
+                              {copiedField === 'email' ? <Check className="w-3.5 h-3.5 text-emerald-700" /> : <Copy className="w-3.5 h-3.5" />}
+                            </button>
+                          </div>
+                          <a 
+                            href={`mailto:${profileData.email}`} 
+                            className="font-semibold text-xs text-emerald-900 hover:text-emerald-700 hover:underline truncate block"
+                          >
+                            {profileData.email}
+                          </a>
+                        </div>
 
-                    {/* What candidate spoke */}
-                    <div className="p-3.5 rounded-2xl bg-emerald-50/70 border border-emerald-200/70 text-xs">
-                      <strong className="text-[11px] uppercase tracking-wide text-emerald-900 block font-extrabold mb-1">
-                        Candidate's Response &amp; Spoken Explanation:
-                      </strong>
-                      <p className="text-slate-800 italic font-medium">"{item.candidateSpoke}"</p>
-                    </div>
-
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-slate-500 pt-1">
-                      <p><strong className="text-slate-700">Recruiter Notes:</strong> {item.outcomeNotes}</p>
-                      <div className="flex flex-wrap gap-1">
-                        {item.feedbackTags.map((tag, idx) => (
-                          <span key={idx} className="px-2 py-0.5 rounded bg-white text-slate-700 text-[10px] font-bold border border-slate-200">
-                            ✓ {tag}
+                        {/* Contact Phone Block */}
+                        <div className="p-3.5 rounded-2xl bg-slate-50/70 border border-slate-200/80 hover:bg-slate-50 transition-colors">
+                          <div className="flex items-center justify-between text-xs mb-1">
+                            <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400">
+                              Contact Number
+                            </span>
+                            <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.2 rounded border border-emerald-200/60">
+                              Verified
+                            </span>
+                          </div>
+                          <span className="font-bold text-xs sm:text-sm text-slate-900 block">
+                            {profileData.phone}
                           </span>
-                        ))}
+                        </div>
+
+                        {/* Campus Location Block */}
+                        <div className="p-3.5 rounded-2xl bg-slate-50/70 border border-slate-200/80 hover:bg-slate-50 transition-colors">
+                          <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 block mb-1">
+                            Clinical Campus Location
+                          </span>
+                          <span className="font-bold text-xs sm:text-sm text-slate-900 block">
+                            {profileData.location}
+                          </span>
+                        </div>
+
+                        {/* Bottom Micro Security Seal */}
+                        <div className="pt-2.5 flex items-center justify-center gap-1.5 text-[10px] font-semibold text-slate-400 border-t border-slate-100">
+                          <Lock className="w-3 h-3 text-emerald-700" />
+                          <span>Tamper-evident Ayush Scholar Identity</span>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -1160,6 +1138,100 @@ export function StudentProfileView({ user, onNavigate, onBack, isPublicView }) {
 
                   </div>
                 </div>
+
+            </div>
+          </section>
+
+          {/* SECTION: PAST INTERVIEWS & VIVA EVALUATION RECORD */}
+          <section id="section-interviews" className="scroll-mt-6 rounded-3xl bg-white border border-slate-200/80 p-5 sm:p-7 shadow-xs transition-all">
+            <div 
+              onClick={() => toggleSection('interviews')}
+              className="flex items-center justify-between cursor-pointer group select-none transition-colors"
+              title={openSections.interviews ? "Click to minimize section" : "Click to expand section"}
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-2xl bg-emerald-50 text-emerald-800 flex items-center justify-center font-bold border border-emerald-200/60 shadow-2xs group-hover:scale-105 transition-transform">
+                  <History className="w-4 h-4 text-emerald-700" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-base sm:text-lg text-slate-900 group-hover:text-emerald-800 transition-colors flex items-center gap-2">
+                    Past Interviews, Viva Transcripts &amp; Candidate Speeches
+                  </h3>
+                  {!openSections.interviews && (
+                    <p className="text-xs text-slate-500 mt-0.5 font-normal">
+                      {studentPastInterviews.length} Recorded Placement Rounds · Dabur, AIIA, Patanjali · Click to expand
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <span className="px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-emerald-50 text-emerald-800 border border-emerald-200 hidden sm:inline-block">
+                  {studentPastInterviews.length} Recorded Rounds
+                </span>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleSection('interviews');
+                  }}
+                  className="p-2 rounded-xl bg-slate-100 group-hover:bg-emerald-100/80 text-slate-700 group-hover:text-emerald-900 transition-all border border-slate-200/80 shadow-2xs cursor-pointer flex items-center gap-1.5"
+                  title={openSections.interviews ? "Minimize section" : "Expand section"}
+                >
+                  <span className="text-[11px] font-bold px-1 hidden md:inline text-slate-500 group-hover:text-emerald-800">
+                    {openSections.interviews ? 'Minimize' : 'Expand'}
+                  </span>
+                  <ChevronLeft 
+                    className={`w-4 h-4 transition-transform duration-300 transform text-emerald-700 ${
+                      openSections.interviews ? 'rotate-0' : '-rotate-90'
+                    }`} 
+                  />
+                </button>
+              </div>
+            </div>
+
+            {/* Collapsible Content */}
+            {openSections.interviews && (
+              <div className="mt-6 pt-5 border-t border-slate-100 animate-in fade-in duration-300 space-y-4">
+                {studentPastInterviews.map((item) => (
+                  <div key={item.id} className="bg-slate-50/70 p-5 rounded-3xl border border-slate-200/80 shadow-2xs space-y-3.5 hover:shadow-md transition-shadow">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-200/60">
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <h4 className="font-extrabold text-sm sm:text-base text-slate-900">{item.role}</h4>
+                          <span className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold border ${item.statusColor}`}>
+                            {item.status}
+                          </span>
+                        </div>
+                        <p className="text-xs text-slate-600 font-semibold">{item.company}</p>
+                        <p className="text-[11px] text-slate-400">Interviewer: <strong className="text-slate-700">{item.interviewer}</strong> ({item.mode})</p>
+                      </div>
+
+                      <div className="p-2 bg-white rounded-xl border border-slate-200 text-center sm:text-right shrink-0">
+                        <span className="text-[10px] uppercase font-bold text-slate-400 block">Score</span>
+                        <span className="text-sm font-black text-emerald-800 font-mono">{item.technicalScore}</span>
+                        <span className="text-[10px] text-slate-500 block">{item.date}</span>
+                      </div>
+                    </div>
+
+                    {/* What candidate spoke */}
+                    <div className="p-3.5 rounded-2xl bg-emerald-50/70 border border-emerald-200/70 text-xs">
+                      <strong className="text-[11px] uppercase tracking-wide text-emerald-900 block font-extrabold mb-1">
+                        Candidate's Response &amp; Spoken Explanation:
+                      </strong>
+                      <p className="text-slate-800 italic font-medium">"{item.candidateSpoke}"</p>
+                    </div>
+
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-slate-500 pt-1">
+                      <p><strong className="text-slate-700">Recruiter Notes:</strong> {item.outcomeNotes}</p>
+                      <div className="flex flex-wrap gap-1">
+                        {item.feedbackTags.map((tag, idx) => (
+                          <span key={idx} className="px-2 py-0.5 rounded bg-white text-slate-700 text-[10px] font-bold border border-slate-200">
+                            ✓ {tag}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 ))}
               </div>
