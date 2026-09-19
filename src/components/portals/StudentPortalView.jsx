@@ -25,9 +25,11 @@ import {
   Check,
   Star,
   ExternalLink,
-  MessageSquare
+  MessageSquare,
+  Landmark
 } from 'lucide-react';
 import { HERO_STATS, PLATFORM_METADATA } from '../../data/portalData';
+import { TPOPlacementCommandCenter } from './TPOPlacementCommandCenter';
 
 export const StudentPortalView = ({ user, onNavigateToSkills }) => {
   const defaultUser = {
@@ -35,7 +37,10 @@ export const StudentPortalView = ({ user, onNavigateToSkills }) => {
     avatar: 'AS',
     degree: 'BAMS Final Year',
     institution: 'National Institute of Ayurveda (NIA), Jaipur',
-    id: 'AYUSH-BAMS-2022-849'
+    id: 'AYUSH-BAMS-2022-849',
+    apaarId: '9841-2041-8891',
+    abcCredits: '164 Credits',
+    abcId: '164 Credits'
   };
   const safeUser = (user && user.name) ? user : (HERO_STATS?.profileUser || defaultUser);
   const [activeTab, setActiveTab] = useState('assessment');
@@ -111,6 +116,58 @@ export const StudentPortalView = ({ user, onNavigateToSkills }) => {
       sponsor: 'CCRAS SPARK-4.0 Research Cell',
       status: 'Enrolled',
       badge: 'Clinical Associate'
+    }
+  ];
+
+  // National SWAYAM / NPTEL Learning Bridges for Remediation & Skill Deficits
+  const nationalMOOCBridges = [
+    {
+      id: 'swayam-1',
+      title: 'NPTEL: Analytical Chemistry in Herbal Formulations - IIT Madras',
+      provider: 'IIT Madras',
+      targetDeficit: 'Phytochemical Standardization (HPTLC)',
+      duration: '12 Weeks',
+      credits: '3 Credits (Transferable via ABC Bank)',
+      badge: 'Free MOOC • Credit Transferable',
+      tag: 'NPTEL Certified',
+      url: 'https://swayam.gov.in/explorer?searchText=analytical+chemistry',
+      enrolledCount: '1,420 Scholars'
+    },
+    {
+      id: 'swayam-2',
+      title: 'SWAYAM: Clinical Trials Management - AIIMS',
+      provider: 'AIIMS New Delhi',
+      targetDeficit: 'Clinical Dravyaguna & Diagnostics',
+      duration: '8 Weeks',
+      credits: '2 Credits (Transferable via ABC Bank)',
+      badge: 'Free MOOC • Credit Transferable',
+      tag: 'SWAYAM Certified',
+      url: 'https://swayam.gov.in/explorer?searchText=clinical+trials',
+      enrolledCount: '1,890 Scholars'
+    },
+    {
+      id: 'swayam-3',
+      title: 'NPTEL: Schedule T Pharmaceutical Engineering & Quality Control - IIT Kharagpur',
+      provider: 'IIT Kharagpur',
+      targetDeficit: 'Ayush Regulatory & IP Filing',
+      duration: '12 Weeks',
+      credits: '3 Credits (Transferable via ABC Bank)',
+      badge: 'Free MOOC • Credit Transferable',
+      tag: 'NPTEL Certified',
+      url: 'https://swayam.gov.in/explorer?searchText=pharmaceutical+engineering',
+      enrolledCount: '1,150 Scholars'
+    },
+    {
+      id: 'swayam-4',
+      title: 'SWAYAM: Biostatistics & Epidemiological Research for Ayush - PGIMER',
+      provider: 'PGIMER Chandigarh',
+      targetDeficit: 'Evidence-Based Biostatistics & GCP',
+      duration: '8 Weeks',
+      credits: '2 Credits (Transferable via ABC Bank)',
+      badge: 'Free MOOC • Credit Transferable',
+      tag: 'SWAYAM Certified',
+      url: 'https://swayam.gov.in/explorer?searchText=biostatistics',
+      enrolledCount: '940 Scholars'
     }
   ];
 
@@ -258,6 +315,10 @@ export const StudentPortalView = ({ user, onNavigateToSkills }) => {
                 <ShieldCheck className="w-3.5 h-3.5 shrink-0" />
                 100% SHA-256 Verifiable Ayush Portfolio
               </span>
+              <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-teal-50 text-teal-800 border border-teal-200/90 flex items-center gap-1 shrink-0 shadow-2xs">
+                <ShieldCheck className="w-3.5 h-3.5 text-teal-600 shrink-0" />
+                <span>APAAR: {safeUser.apaarId || '9841-2041-8891'} • ABC Bank: {safeUser.abcCredits || '164 Credits'} (DigiLocker Verified)</span>
+              </span>
             </div>
             <p className="text-xs text-slate-500 mt-1 break-words">
               {safeUser.degree} · {safeUser.institution} · Roll: <span className="font-mono font-semibold text-slate-700">{safeUser.id}</span>
@@ -355,6 +416,21 @@ export const StudentPortalView = ({ user, onNavigateToSkills }) => {
           <Award className="w-4 h-4" />
           <span>Verified Digital Portfolio</span>
         </button>
+
+        <button
+          onClick={() => setActiveTab('tpo')}
+          className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 shrink-0 ${
+            activeTab === 'tpo'
+              ? 'bg-emerald-800 text-white shadow-xs'
+              : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
+          }`}
+        >
+          <Landmark className="w-4 h-4 text-emerald-600" />
+          <span>TPO Placement Command Center</span>
+          <span className="px-1.5 py-0.2 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-950 border border-emerald-200">
+            6 Drives
+          </span>
+        </button>
       </div>
 
 
@@ -395,7 +471,69 @@ export const StudentPortalView = ({ user, onNavigateToSkills }) => {
               <Sparkles className="w-5 h-5 text-emerald-700 shrink-0 mt-0.5" />
               <div>
                 <strong className="block font-bold">Competency Enhancement Roadmap:</strong>
-                Complete the <em>Ayush Regulatory & IP Filing</em> 30-minute sprint to elevate your Industry Readiness from 88% to 94%!
+                Complete the <em>Ayush Regulatory &amp; IP Filing</em> 30-minute sprint to elevate your Industry Readiness from 88% to 94%!
+              </div>
+            </div>
+
+            {/* Remediation & Skill Deficit Recommendations (SWAYAM & NPTEL National Portal) */}
+            <div className="pt-4 border-t border-slate-100 space-y-3">
+              <div className="flex items-center justify-between flex-wrap gap-2">
+                <div className="flex items-center gap-2">
+                  <span className="p-1.5 rounded-lg bg-teal-50 text-teal-800 border border-teal-200">
+                    <BookOpen className="w-4 h-4" />
+                  </span>
+                  <div>
+                    <h4 className="text-xs font-black text-slate-900 tracking-tight">
+                      Remediation &amp; Skill Deficit Recommendations
+                    </h4>
+                    <p className="text-[11px] text-slate-500">
+                      National MOOC Electives (IITs / AIIMS) for detected competency gaps
+                    </p>
+                  </div>
+                </div>
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-teal-100 text-teal-900 border border-teal-200">
+                  UGC / AICTE Approved
+                </span>
+              </div>
+
+              <div className="space-y-2.5">
+                {nationalMOOCBridges.map((bridge) => (
+                  <div 
+                    key={bridge.id} 
+                    className="p-3.5 bg-slate-50/80 hover:bg-teal-50/40 rounded-2xl border border-slate-200 hover:border-teal-300 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs"
+                  >
+                    <div className="space-y-1 min-w-0">
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <span className="text-[9px] font-black uppercase tracking-wider text-teal-950 bg-teal-100 px-2 py-0.5 rounded border border-teal-200">
+                          {bridge.tag}
+                        </span>
+                        <span className="text-[9px] font-extrabold text-emerald-900 bg-emerald-100 px-2 py-0.5 rounded border border-emerald-200">
+                          {bridge.badge}
+                        </span>
+                        <span className="text-[10px] font-bold text-slate-400">
+                          {bridge.duration} · {bridge.credits}
+                        </span>
+                      </div>
+                      <h5 className="text-xs font-bold text-slate-900 leading-snug">
+                        {bridge.title}
+                      </h5>
+                      <p className="text-[11px] text-slate-500">
+                        Target Deficit: <strong className="text-slate-800 font-semibold">{bridge.targetDeficit}</strong>
+                      </p>
+                    </div>
+
+                    <a
+                      href={bridge.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-3.5 py-2 bg-emerald-800 hover:bg-emerald-900 text-white rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 shrink-0 shadow-2xs self-start sm:self-auto cursor-pointer"
+                      title="Open on official SWAYAM portal (swayam.gov.in)"
+                    >
+                      <span>Enroll on swayam.gov.in</span>
+                      <ExternalLink className="w-3.5 h-3.5 text-emerald-300" />
+                    </a>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
@@ -548,37 +686,127 @@ export const StudentPortalView = ({ user, onNavigateToSkills }) => {
         </div>
       )}
 
-      {/* TAB 3: Micro-Bridge Courses */}
+      {/* TAB 3: Micro-Bridge Courses & National MOOC Electives */}
       {activeTab === 'bridge' && (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          {bridgeModules.map((mod) => (
-            <div key={mod.id} className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-soft flex flex-col justify-between space-y-4">
-              <div className="space-y-3">
-                <span className="px-2.5 py-1 rounded text-[10px] font-bold bg-amber-100 text-amber-900">
-                  {mod.duration} Micro-Module
-                </span>
-                <h4 className="text-sm font-bold text-slate-900 leading-snug">{mod.title}</h4>
-                <p className="text-xs text-slate-500">Sponsored by: {mod.sponsor}</p>
-                <div className="text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-lg">
-                  Reward: {mod.badge}
-                </div>
+        <div className="space-y-8">
+          {/* Section 1: Fast-Track 15-Min Micro-Sprints */}
+          <div className="space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div>
+                <h3 className="text-base font-extrabold text-slate-900 flex items-center gap-2">
+                  <span className="p-1 rounded-md bg-amber-100 text-amber-900 text-xs font-black">FAST-TRACK</span>
+                  <span>15-Minute Preceptor Micro-Sprints</span>
+                </h3>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Rapid experiential lab simulations to boost competency benchmarks before placement interviews.
+                </p>
               </div>
-
-              <button
-                onClick={() => setEnrolledCourse(mod.id)}
-                className="w-full py-2 px-3 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-white text-xs font-bold transition-colors cursor-pointer"
-              >
-                {enrolledCourse === mod.id ? (
-                  <span className="flex items-center justify-center gap-1.5">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                    <span>Module Active in Lab</span>
-                  </span>
-                ) : (
-                  'Start Micro-Sprint'
-                )}
-              </button>
+              <span className="text-xs text-slate-400 font-semibold shrink-0">3 Ready in Lab</span>
             </div>
-          ))}
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+              {bridgeModules.map((mod) => (
+                <div key={mod.id} className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-soft flex flex-col justify-between space-y-4">
+                  <div className="space-y-3">
+                    <span className="px-2.5 py-1 rounded text-[10px] font-bold bg-amber-100 text-amber-900">
+                      {mod.duration} Micro-Module
+                    </span>
+                    <h4 className="text-sm font-bold text-slate-900 leading-snug">{mod.title}</h4>
+                    <p className="text-xs text-slate-500">Sponsored by: {mod.sponsor}</p>
+                    <div className="text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-lg">
+                      Reward: {mod.badge}
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={() => setEnrolledCourse(mod.id)}
+                    className="w-full py-2 px-3 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-white text-xs font-bold transition-colors cursor-pointer"
+                  >
+                    {enrolledCourse === mod.id ? (
+                      <span className="flex items-center justify-center gap-1.5">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                        <span>Module Active in Lab</span>
+                      </span>
+                    ) : (
+                      'Start Micro-Sprint'
+                    )}
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Section 2: National Open-Courseware Bridges (SWAYAM & NPTEL MOOCs) */}
+          <div className="space-y-4 pt-4 border-t border-slate-200/80">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div>
+                <h3 className="text-base font-extrabold text-slate-900 flex items-center gap-2">
+                  <span className="p-1 rounded-md bg-teal-100 text-teal-900 text-xs font-black">NEP 2020 MOOC</span>
+                  <span>National Open-Courseware Bridges (SWAYAM &amp; NPTEL)</span>
+                </h3>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Official UGC &amp; Ministry accredited courses from top IITs &amp; AIIMS to remediate detected skill deficiencies with ABC credit transfer.
+                </p>
+              </div>
+              <span className="px-2.5 py-1 rounded-full text-xs font-extrabold bg-teal-50 text-teal-800 border border-teal-200 shrink-0">
+                Direct External Links to swayam.gov.in
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+              {nationalMOOCBridges.map((bridge) => (
+                <div 
+                  key={bridge.id} 
+                  className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-soft hover:shadow-xl hover:border-teal-400 transition-all flex flex-col justify-between space-y-4"
+                >
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between flex-wrap gap-1">
+                      <span className="px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider bg-teal-100 text-teal-950 border border-teal-200">
+                        {bridge.tag}
+                      </span>
+                      <span className="text-[11px] font-bold text-slate-400">
+                        {bridge.duration}
+                      </span>
+                    </div>
+
+                    <h4 className="text-sm font-bold text-slate-900 leading-snug">
+                      {bridge.title}
+                    </h4>
+
+                    <div className="space-y-1 text-xs">
+                      <p className="text-slate-600 font-semibold">
+                        Host: <span className="text-teal-800">{bridge.provider}</span>
+                      </p>
+                      <p className="text-slate-500">
+                        Target Deficit: <span className="text-slate-800 font-bold">{bridge.targetDeficit}</span>
+                      </p>
+                    </div>
+
+                    <div className="space-y-1.5 pt-1">
+                      <div className="inline-flex items-center gap-1 text-[10px] font-extrabold text-emerald-900 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-lg">
+                        <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                        <span>{bridge.badge}</span>
+                      </div>
+                      <p className="text-[10px] text-slate-400 font-medium">
+                        {bridge.credits} · {bridge.enrolledCount}
+                      </p>
+                    </div>
+                  </div>
+
+                  <a
+                    href={bridge.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full py-2.5 px-4 bg-emerald-800 hover:bg-emerald-900 text-white text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer shadow-xs"
+                    title="Open course on official SWAYAM portal (swayam.gov.in)"
+                  >
+                    <span>Enroll on swayam.gov.in</span>
+                    <ExternalLink className="w-3.5 h-3.5 text-emerald-300" />
+                  </a>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       )}
 
@@ -701,6 +929,12 @@ export const StudentPortalView = ({ user, onNavigateToSkills }) => {
               <p className="text-xs text-slate-500 mt-1">
                 Verified Secondary (10th), Senior Secondary (12th PCB) &amp; Professional BAMS marks breakdown.
               </p>
+              <div className="mt-2.5">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-teal-50 text-teal-800 border border-teal-200/90 shadow-2xs">
+                  <ShieldCheck className="w-3.5 h-3.5 text-teal-600 shrink-0" />
+                  <span>APAAR: {safeUser.apaarId || '9841-2041-8891'} • ABC Bank: {safeUser.abcCredits || '164 Credits'} (DigiLocker Verified)</span>
+                </span>
+              </div>
             </div>
 
             {/* Sub-selector buttons */}
@@ -864,6 +1098,11 @@ export const StudentPortalView = ({ user, onNavigateToSkills }) => {
             </div>
           </div>
         </div>
+      )}
+
+      {/* TAB 5: TPO Placement Command Center */}
+      {activeTab === 'tpo' && (
+        <TPOPlacementCommandCenter user={safeUser} isTPOAdmin={false} />
       )}
     </div>
   );

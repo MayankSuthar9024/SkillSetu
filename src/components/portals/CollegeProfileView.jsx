@@ -1,10 +1,10 @@
 import React from 'react';
-import { ComingSoonPage } from '../ComingSoonPage';
+import { CollegePortalView } from './CollegePortalView';
 
 export const CollegeProfileView = ({ user, onNavigate, onBack }) => {
   return (
-    <ComingSoonPage
-      title="College & Institute Hub"
+    <CollegePortalView
+      user={user}
       onBack={onBack || (() => {
         if (onNavigate) onNavigate('feed');
         else window.history.back();
