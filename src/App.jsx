@@ -60,6 +60,11 @@ export function App() {
           setCurrentUser(portalCfg?.profileUser || null);
         }
         setActivePage('dashboard');
+      } else if (['college', 'college-portal', 'registrar', 'verification', 'digital-asset-verification'].includes(hash)) {
+        setActivePortalId('college');
+        const portalCfg = PORTALS_DATA.find(p => p.id === 'college');
+        setCurrentUser(portalCfg?.profileUser || null);
+        setActivePage('dashboard');
       } else if (['how-it-works', 'features', 'comparison'].includes(hash)) {
         setActivePage('home');
         setTimeout(() => {
@@ -142,6 +147,16 @@ export function App() {
   };
 
   const handleNavigate = (page) => {
+    if (page === 'college' || page === 'college-portal' || page === 'registrar') {
+      setActivePortalId('college');
+      const portalCfg = PORTALS_DATA.find(p => p.id === 'college');
+      setCurrentUser(portalCfg?.profileUser || null);
+      setActivePage('dashboard');
+      window.location.hash = 'dashboard-college';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
     if (currentUser) {
       if (['feed', 'messages', 'jobs', 'skills', 'skill', 'courses', 'network', 'console', 'profile'].includes(page)) {
         setActivePage('dashboard');

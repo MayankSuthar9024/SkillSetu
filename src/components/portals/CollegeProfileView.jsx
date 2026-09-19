@@ -3,13 +3,15 @@ import { CollegePortalView } from './CollegePortalView';
 
 export const CollegeProfileView = ({ user, onNavigate, onBack }) => {
   return (
-    <CollegePortalView
-      user={user}
-      onBack={onBack || (() => {
-        if (onNavigate) onNavigate('feed');
-        else window.history.back();
-      })}
-    />
+    <div className="space-y-6">
+      <CollegePortalView
+        user={user}
+        onBack={onBack || (() => {
+          if (onNavigate) onNavigate('feed');
+          else window.history.back();
+        })}
+      />
+    </div>
   );
 };
 

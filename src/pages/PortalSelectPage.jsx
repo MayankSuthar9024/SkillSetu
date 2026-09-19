@@ -65,17 +65,8 @@ export const PortalSelectPage = ({
     }
   };
 
-  // 1. SPECIFIC ROLE LOGIN & SIGN-UP PAGE / COMING SOON PAGE
+  // 1. SPECIFIC ROLE LOGIN & SIGN-UP PAGE
   if (selectedPortalForAuth) {
-    if (selectedPortalForAuth.id === 'company' || selectedPortalForAuth.id === 'college') {
-      return (
-        <ComingSoonPage
-          title={selectedPortalForAuth.title}
-          onBack={() => setSelectedPortalForAuth(null)}
-        />
-      );
-    }
-
     return (
       <SpecificRoleLoginPage
         portal={selectedPortalForAuth}
