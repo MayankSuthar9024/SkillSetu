@@ -26,9 +26,17 @@ import {
   Briefcase,
   ArrowUpDown,
   ArrowUp,
-  ArrowDown
+  ArrowDown,
+  FileCheck,
+  Printer
 } from 'lucide-react';
 import { PLATFORM_METADATA } from '../../data/portalData';
+import { 
+  DigitalNocModal, 
+  getStoredNocRequests, 
+  saveStoredNocRequests, 
+  generateSha256Hash 
+} from './StudentPortalView';
 
 // Initial Mock Data: 5 Student Submissions awaiting Registrar audit
 const INITIAL_PENDING_SUBMISSIONS = [
@@ -144,32 +152,73 @@ const INITIAL_VERIFIED_RECORDS = [
   }
 ];
 
-// Helper to generate a realistic 64-character SHA-256 cryptographic digest
-const generateSha256Hash = (rollNumber, docName) => {
-  const seed = `${rollNumber}-${docName}-${Date.now()}`;
-  let hashVal = 0;
-  for (let i = 0; i < seed.length; i++) {
-    hashVal = ((hashVal << 5) - hashVal) + seed.charCodeAt(i);
-    hashVal |= 0;
-  }
-  const p1 = Math.abs(hashVal).toString(16).padStart(8, '0');
-  const p2 = Math.random().toString(16).substring(2, 10);
-  const p3 = Math.random().toString(16).substring(2, 10);
-  const p4 = Math.random().toString(16).substring(2, 10);
-  const p5 = Math.random().toString(16).substring(2, 10);
-  const p6 = Math.random().toString(16).substring(2, 10);
-  const p7 = Math.random().toString(16).substring(2, 10);
-  const p8 = Math.random().toString(16).substring(2, 10);
-  return `0x${p1}${p2}${p3}${p4}${p5}${p6}${p7}${p8}`.toLowerCase();
-};
-
 export const CollegePortalView = ({ user, onBack }) => {
   // Main Navigation Tabs
-  const [activeTab, setActiveTab] = useState('queue'); // 'queue' | 'verified' | 'compliance'
+  const [activeTab, setActiveTab] = useState('queue'); // 'queue' | 'verified' | 'noc'
 
   // Submission Queues State
   const [pendingSubmissions, setPendingSubmissions] = useState(INITIAL_PENDING_SUBMISSIONS);
   const [verifiedRecords, setVerifiedRecords] = useState(INITIAL_VERIFIED_RECORDS);
+
+  // Institutional NOC Clearances State
+  const [nocRequests, setNocRequests] = useState(() => getStoredNocRequests());
+  const [selectedNocForCert, setSelectedNocForCert] = useState(null);
+  const [previewOfferDoc, setPreviewOfferDoc] = useState(null);
+  const [nocSearchQuery, setNocSearchQuery] = useState('');
+  const [nocStatusFilter, setNocStatusFilter] = useState('all'); // 'all' | 'pending' | 'issued'
+
+  // Synchronize NOC requests across Student and College portals
+  useEffect(() => {
+    const handleSync = () => {
+      setNocRequests(getStoredNocRequests());
+    };
+    window.addEventListener('skillsetu_noc_updated', handleSync);
+    window.addEventListener('storage', handleSync);
+    return () => {
+      window.removeEventListener('skillsetu_noc_updated', handleSync);
+      window.removeEventListener('storage', handleSync);
+    };
+  }, []);
+
+  const pendingNocCount = nocRequests.filter((r) => r.status !== 'issued').length;
+
+  // Handle TPO Review & Approve & Digitally Sign NOC
+  const handleApproveAndSignNoc = (req) => {
+    const timestamp = new Date().toLocaleString('en-IN', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+
+    const sha256Hash = generateSha256Hash(req.rollNumber, req.companyName);
+
+    const updatedRequests = nocRequests.map((item) => {
+      if (item.id === req.id) {
+        return {
+          ...item,
+          status: 'issued',
+          statusStep: 4,
+          tpoApprovedAt: timestamp,
+          tpoApprovedBy: `${user?.name || 'Dr. Vivek Swaroop'} (TPO Preceptor Cell)`,
+          deanApprovedAt: timestamp,
+          deanApprovedBy: 'Prof. (Dr.) Rajeshwar Pant (Dean Academic Affairs)',
+          sha256Hash: sha256Hash
+        };
+      }
+      return item;
+    });
+
+    setNocRequests(updatedRequests);
+    saveStoredNocRequests(updatedRequests);
+
+    setToast({
+      type: 'success',
+      title: 'NOC Approved & Digitally Signed',
+      message: `Digital NOC for ${req.studentName} (${req.companyName}) has been approved and cryptographically stamped with Dean's digital signature seal.`
+    });
+  };
 
   // Search and Filter State
   const [searchQuery, setSearchQuery] = useState('');
@@ -377,14 +426,14 @@ export const CollegePortalView = ({ user, onBack }) => {
       <div className="flex flex-wrap items-center gap-2 border-b border-slate-200 pb-2">
         <button
           onClick={() => setActiveTab('queue')}
-          className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 ${
+          className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 ${
             activeTab === 'queue'
               ? 'bg-emerald-800 text-white shadow-xs'
               : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
           }`}
         >
           <Clock className="w-4 h-4" />
-          <span>Credentials Verification Queue (Registrar Cell)</span>
+          <span>Credentials Queue</span>
           <span
             className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold ${
               activeTab === 'queue'
@@ -398,14 +447,14 @@ export const CollegePortalView = ({ user, onBack }) => {
 
         <button
           onClick={() => setActiveTab('verified')}
-          className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 ${
+          className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 ${
             activeTab === 'verified'
               ? 'bg-emerald-800 text-white shadow-xs'
               : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
           }`}
         >
           <ShieldCheck className="w-4 h-4" />
-          <span>NCISM / University Verified Audit Ledger</span>
+          <span>Verified Ledger</span>
           <span
             className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold ${
               activeTab === 'verified'
@@ -414,6 +463,27 @@ export const CollegePortalView = ({ user, onBack }) => {
             }`}
           >
             {verifiedRecords.length} Stamped
+          </span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab('noc')}
+          className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 ${
+            activeTab === 'noc'
+              ? 'bg-emerald-800 text-white shadow-xs'
+              : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
+          }`}
+        >
+          <FileCheck className="w-4 h-4" />
+          <span>NOC Clearances</span>
+          <span
+            className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold ${
+              activeTab === 'noc'
+                ? 'bg-emerald-700 text-emerald-100'
+                : 'bg-amber-100 text-amber-800'
+            }`}
+          >
+            {pendingNocCount} Pending
           </span>
         </button>
       </div>
@@ -799,6 +869,262 @@ export const CollegePortalView = ({ user, onBack }) => {
         </div>
       )}
 
+      {/* TAB 3 CONTENT: Institutional NOC Clearances Inbox (TPO & Dean Cell) */}
+      {activeTab === 'noc' && (
+        <div className="space-y-4">
+          {/* Header Toolbar */}
+          <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/80 shadow-soft space-y-3.5">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <div className="flex items-center gap-2">
+                  <h3 className="text-base font-bold text-slate-900">
+                    NOC Clearances
+                  </h3>
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-50 text-amber-800 border border-amber-200">
+                    {pendingNocCount} Pending
+                  </span>
+                </div>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Review student internship eligibility and issue institutional digital NOC clearance.
+                </p>
+              </div>
+
+              {/* Minimal Metric Summary */}
+              <div className="flex items-center gap-2 text-xs bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200/70 w-fit">
+                <span className="text-slate-500">Total: <strong className="text-slate-800 font-bold">{nocRequests.length}</strong></span>
+                <span className="text-slate-300">·</span>
+                <span className="text-amber-700">Pending: <strong className="text-amber-800 font-bold">{pendingNocCount}</strong></span>
+                <span className="text-slate-300">·</span>
+                <span className="text-emerald-700">Approved: <strong className="text-emerald-800 font-bold">{nocRequests.filter(r => r.status === 'issued').length}</strong></span>
+              </div>
+            </div>
+
+            {/* Filter and Search Bar */}
+            <div className="pt-3 border-t border-slate-100 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+              {/* Search Box */}
+              <div className="relative flex-1 max-w-md">
+                <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
+                <input
+                  type="text"
+                  placeholder="Search student, roll no, company, role..."
+                  value={nocSearchQuery}
+                  onChange={(e) => setNocSearchQuery(e.target.value)}
+                  className="w-full pl-9 pr-8 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-700 focus:bg-white transition-all"
+                />
+                {nocSearchQuery && (
+                  <button
+                    onClick={() => setNocSearchQuery('')}
+                    className="absolute right-2.5 top-2 text-slate-400 hover:text-slate-600 cursor-pointer"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                )}
+              </div>
+
+              {/* Status Filter Buttons */}
+              <div className="flex items-center gap-1.5 overflow-x-auto">
+                <button
+                  onClick={() => setNocStatusFilter('all')}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                    nocStatusFilter === 'all'
+                      ? 'bg-emerald-800 text-white shadow-2xs'
+                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                  }`}
+                >
+                  All ({nocRequests.length})
+                </button>
+                <button
+                  onClick={() => setNocStatusFilter('pending')}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                    nocStatusFilter === 'pending'
+                      ? 'bg-amber-700 text-white shadow-2xs'
+                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                  }`}
+                >
+                  Pending ({pendingNocCount})
+                </button>
+                <button
+                  onClick={() => setNocStatusFilter('issued')}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                    nocStatusFilter === 'issued'
+                      ? 'bg-emerald-700 text-white shadow-2xs'
+                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                  }`}
+                >
+                  Approved ({nocRequests.filter(r => r.status === 'issued').length})
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* NOC Clearance Applications List */}
+          <div className="space-y-4">
+            {nocRequests
+              .filter((item) => {
+                const matchesSearch =
+                  item.studentName.toLowerCase().includes(nocSearchQuery.toLowerCase()) ||
+                  item.rollNumber.toLowerCase().includes(nocSearchQuery.toLowerCase()) ||
+                  item.companyName.toLowerCase().includes(nocSearchQuery.toLowerCase()) ||
+                  item.role.toLowerCase().includes(nocSearchQuery.toLowerCase());
+
+                const matchesStatus =
+                  nocStatusFilter === 'all' ||
+                  (nocStatusFilter === 'pending' && item.status !== 'issued') ||
+                  (nocStatusFilter === 'issued' && item.status === 'issued');
+
+                return matchesSearch && matchesStatus;
+              })
+              .map((req) => (
+                <div
+                  key={req.id}
+                  className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-soft space-y-4 transition-all hover:border-slate-300"
+                >
+                  {/* Top Row: Student Identity & Request Meta */}
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-800 font-bold text-sm flex items-center justify-center shrink-0 border border-emerald-200">
+                        {req.studentName.split(' ').map(n => n[0]).join('')}
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <h4 className="text-base font-bold text-slate-900">{req.studentName}</h4>
+                          <span className="font-mono text-xs font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200/60">
+                            {req.rollNumber}
+                          </span>
+                        </div>
+                        <p className="text-xs text-slate-500 mt-0.5">
+                          {req.program} · Applied {req.appliedDate}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <span
+                        className={`px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5 ${
+                          req.status === 'issued'
+                            ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                            : 'bg-amber-50 text-amber-700 border border-amber-200'
+                        }`}
+                      >
+                        {req.status === 'issued' ? (
+                          <>
+                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                            <span>NOC Approved &amp; Stamped</span>
+                          </>
+                        ) : (
+                          <>
+                            <Clock className="w-3.5 h-3.5 text-amber-600" />
+                            <span>Pending Clearance</span>
+                          </>
+                        )}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Clean 2-Section Grid */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                    {/* Left: Internship Placement Specifications */}
+                    <div className="bg-slate-50/70 rounded-xl p-3.5 space-y-2 border border-slate-200/60">
+                      <div className="flex items-center gap-1.5 text-slate-500 font-bold text-[11px] uppercase tracking-wider">
+                        <Building2 className="w-3.5 h-3.5 text-slate-400" />
+                        <span>Internship Placement</span>
+                      </div>
+                      <div>
+                        <h5 className="text-sm font-bold text-slate-900">{req.companyName}</h5>
+                        <p className="text-slate-600 font-medium">{req.role}</p>
+                      </div>
+                      <div className="flex items-center gap-4 text-slate-500 pt-0.5">
+                        <span>Duration: <strong className="text-slate-800 font-semibold">{req.duration}</strong></span>
+                        <span>Starts: <strong className="text-slate-800 font-semibold">{req.startDate}</strong></span>
+                      </div>
+
+                      <div className="pt-2 border-t border-slate-200/60 flex items-center justify-between">
+                        <span className="text-slate-500 font-medium">Offer Letter:</span>
+                        <button
+                          onClick={() => setPreviewOfferDoc(req)}
+                          className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-slate-700 font-semibold text-xs hover:text-emerald-700 hover:border-emerald-300 hover:bg-slate-50 cursor-pointer transition-all shadow-2xs"
+                        >
+                          <FileText className="w-3.5 h-3.5 text-emerald-600" />
+                          <span className="truncate max-w-[140px]">{req.offerLetterName || 'Offer_Letter.pdf'}</span>
+                          <Eye className="w-3 h-3 text-slate-400" />
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Right: Academic Standing & Criteria Check */}
+                    <div className="bg-slate-50/70 rounded-xl p-3.5 space-y-2 border border-slate-200/60">
+                      <div className="flex items-center justify-between text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+                        <span className="flex items-center gap-1.5">
+                          <ShieldCheck className="w-3.5 h-3.5 text-slate-400" />
+                          <span>Academic Standing</span>
+                        </span>
+                        <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 normal-case tracking-normal">
+                          <Check className="w-3 h-3 text-emerald-600" /> Criteria Met
+                        </span>
+                      </div>
+
+                      {/* 3 Metric Cards */}
+                      <div className="grid grid-cols-3 gap-2 text-center pt-0.5">
+                        <div className="bg-white rounded-lg p-2 border border-slate-200/80">
+                          <span className="text-[10px] text-slate-400 font-medium block">CGPA</span>
+                          <span className="text-sm font-bold text-slate-900">{req.cgpa || '8.94'}</span>
+                          <span className="text-[10px] text-emerald-600 font-semibold block">&ge; 7.50 req</span>
+                        </div>
+                        <div className="bg-white rounded-lg p-2 border border-slate-200/80">
+                          <span className="text-[10px] text-slate-400 font-medium block">Attendance</span>
+                          <span className="text-sm font-bold text-slate-900">{req.attendance || '88.5%'}</span>
+                          <span className="text-[10px] text-emerald-600 font-semibold block">&ge; 75% req</span>
+                        </div>
+                        <div className="bg-white rounded-lg p-2 border border-slate-200/80">
+                          <span className="text-[10px] text-slate-400 font-medium block">Backlogs</span>
+                          <span className="text-sm font-bold text-slate-900">0</span>
+                          <span className="text-[10px] text-emerald-600 font-semibold block">Clean</span>
+                        </div>
+                      </div>
+
+                      <p className="text-[11px] text-slate-500 leading-snug">
+                        Candidate has fulfilled statutory clinical postings and theoretical requirements.
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Actions Row */}
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pt-2 border-t border-slate-100">
+                    <div className="text-xs text-slate-500 font-mono">
+                      Ref: {req.referenceNo || req.id}
+                      {req.status === 'issued' && (
+                        <span className="text-emerald-700 font-sans font-semibold ml-2">
+                          · Digitally signed
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      {req.status !== 'issued' ? (
+                        <button
+                          onClick={() => handleApproveAndSignNoc(req)}
+                          className="px-4 py-2 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-white text-xs font-bold shadow-xs hover:shadow-sm transition-all flex items-center gap-1.5 cursor-pointer"
+                        >
+                          <ShieldCheck className="w-4 h-4 text-emerald-300" />
+                          <span>Approve &amp; Sign NOC</span>
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => setSelectedNocForCert(req)}
+                          className="px-4 py-2 rounded-xl bg-slate-900 hover:bg-black text-white text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer shadow-xs"
+                        >
+                          <Printer className="w-3.5 h-3.5 text-emerald-400" />
+                          <span>View Certificate</span>
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
+          </div>
+        </div>
+      )}
+
       {/* DOCUMENT PREVIEW MODAL */}
       {previewDoc && (
         <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
@@ -1016,6 +1342,95 @@ export const CollegePortalView = ({ user, onBack }) => {
           </div>
         </div>
       )}
+
+      {/* OFFER LETTER PREVIEW MODAL */}
+      {previewOfferDoc && (
+        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-200">
+          <div className="bg-white rounded-3xl border border-slate-200 shadow-2xl max-w-xl w-full p-6 sm:p-7 space-y-5 animate-in zoom-in-95 duration-200">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center">
+                  <FileText className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-base font-extrabold text-slate-900">Official Internship Offer Letter</h3>
+                  <p className="text-xs text-slate-500">Host Organization Appointment Verification</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setPreviewOfferDoc(null)}
+                className="p-1.5 text-slate-400 hover:text-slate-700 rounded-xl hover:bg-slate-100 cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Simulated Offer Document Body */}
+            <div className="bg-slate-50 rounded-2xl p-5 border border-slate-200 space-y-3.5 text-xs text-slate-800">
+              <div className="flex items-center justify-between border-b border-slate-200 pb-3">
+                <div>
+                  <h4 className="text-sm font-black text-slate-900">{previewOfferDoc.companyName}</h4>
+                  <p className="text-[11px] text-slate-500">Phytopharmacy Research &amp; Formulation Division</p>
+                </div>
+                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
+                  Verified Offer
+                </span>
+              </div>
+
+              <div className="space-y-2">
+                <p>
+                  To: <strong className="text-slate-900">{previewOfferDoc.studentName}</strong> ({previewOfferDoc.rollNumber})
+                </p>
+                <p className="text-slate-600 leading-relaxed">
+                  We are pleased to offer you the position of <strong className="text-slate-900">{previewOfferDoc.role}</strong> at <strong className="text-slate-900">{previewOfferDoc.companyName}</strong> for a duration of <strong className="text-slate-900">{previewOfferDoc.duration}</strong> commencing on <strong className="text-slate-900">{previewOfferDoc.startDate}</strong>.
+                </p>
+                <p className="text-slate-600 leading-relaxed">
+                  This training includes Schedule T GMP compliance, classical Ayush pharmacopoeial standardization, and laboratory analytical assay training.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-200 text-[11px]">
+                <div>
+                  <span className="text-slate-400 block font-bold uppercase text-[9px]">File Attached</span>
+                  <span className="font-semibold text-slate-800">{previewOfferDoc.offerLetterName || 'Offer_Letter.pdf'}</span>
+                </div>
+                <div>
+                  <span className="text-slate-400 block font-bold uppercase text-[9px]">File Size</span>
+                  <span className="font-semibold text-slate-800">{previewOfferDoc.offerLetterSize || '1.8 MB'}</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-end gap-3 pt-2">
+              <button
+                onClick={() => setPreviewOfferDoc(null)}
+                className="px-4 py-2 rounded-xl border border-slate-200 text-xs font-bold text-slate-600 hover:bg-slate-100 cursor-pointer"
+              >
+                Close Inspection
+              </button>
+              {previewOfferDoc.status !== 'issued' && (
+                <button
+                  onClick={() => {
+                    handleApproveAndSignNoc(previewOfferDoc);
+                    setPreviewOfferDoc(null);
+                  }}
+                  className="px-5 py-2 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-white text-xs font-bold shadow-xs flex items-center gap-1.5 cursor-pointer"
+                >
+                  <ShieldCheck className="w-4 h-4" />
+                  <span>Approve &amp; Digitally Sign NOC</span>
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* DIGITAL NOC CERTIFICATE MODAL */}
+      <DigitalNocModal
+        isOpen={!!selectedNocForCert}
+        onClose={() => setSelectedNocForCert(null)}
+        noc={selectedNocForCert}
+      />
     </div>
   );
 };
