@@ -260,6 +260,7 @@ export const StakeholderDashboard = ({
 
   const studentNavItems = [
     { id: 'feed', label: 'Home', icon: Home },
+    { id: 'console', label: 'Student Portal', icon: Layers },
     { id: 'skills', label: 'Skills', icon: BarChart3 },
     { id: 'messages', label: 'Messages', icon: MessageSquare },
     { id: 'jobs', label: 'Jobs', icon: Briefcase }
@@ -649,15 +650,15 @@ export const StakeholderDashboard = ({
                 <span className="text-[10px] mt-0.5 font-bold">Home</span>
               </button>
 
-              {/* 2. Skills */}
+              {/* 2. Portal */}
               <button
-                onClick={() => { setActiveTab('skills'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                onClick={() => { setActiveTab('console'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
                 className={`flex flex-col items-center justify-center py-1 w-full text-xs transition-all cursor-pointer ${
-                  activeTab === 'skills' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-medium'
+                  activeTab === 'console' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-medium'
                 }`}
               >
-                <BarChart3 className={`w-5 h-5 shrink-0 ${activeTab === 'skills' ? 'text-emerald-700' : 'text-slate-500'}`} />
-                <span className="text-[10px] mt-0.5 font-bold">Skills</span>
+                <Layers className={`w-5 h-5 shrink-0 ${activeTab === 'console' ? 'text-emerald-700' : 'text-slate-500'}`} />
+                <span className="text-[10px] mt-0.5 font-bold">Portal</span>
               </button>
 
               {/* 3. Center Elevated Floating Green (+) Button */}
@@ -673,15 +674,15 @@ export const StakeholderDashboard = ({
                 </div>
               </div>
 
-              {/* 4. Messages */}
+              {/* 4. Skills */}
               <button
-                onClick={() => { setActiveTab('messages'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                onClick={() => { setActiveTab('skills'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
                 className={`flex flex-col items-center justify-center py-1 w-full text-xs transition-all cursor-pointer ${
-                  activeTab === 'messages' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-medium'
+                  activeTab === 'skills' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-medium'
                 }`}
               >
-                <MessageSquare className={`w-5 h-5 shrink-0 ${activeTab === 'messages' ? 'text-emerald-700' : 'text-slate-500'}`} />
-                <span className="text-[10px] mt-0.5 font-bold">Messages</span>
+                <BarChart3 className={`w-5 h-5 shrink-0 ${activeTab === 'skills' ? 'text-emerald-700' : 'text-slate-500'}`} />
+                <span className="text-[10px] mt-0.5 font-bold">Skills</span>
               </button>
 
               {/* 5. Jobs */}

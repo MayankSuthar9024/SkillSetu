@@ -28,7 +28,9 @@ import {
   Landmark,
   Layers,
   MapPin,
-  Briefcase
+  Briefcase,
+  LayoutGrid,
+  List
 } from 'lucide-react';
 
 export const TPOPlacementCommandCenter = ({ user = {}, isTPOAdmin = true }) => {
@@ -141,6 +143,8 @@ export const TPOPlacementCommandCenter = ({ user = {}, isTPOAdmin = true }) => {
   // Search & Filter State
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
+  const [viewMode, setViewMode] = useState('cards'); // 'cards' | 'table'
+  const [registeredDrives, setRegisteredDrives] = useState({ 'drive-1': true });
 
   // Modals
   const [isPublishModalOpen, setIsPublishModalOpen] = useState(false);
@@ -267,171 +271,147 @@ export const TPOPlacementCommandCenter = ({ user = {}, isTPOAdmin = true }) => {
       )}
 
       {/* 1. HEADER */}
-      <div className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-soft">
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-5 pb-5 border-b border-slate-100">
-          <div className="space-y-1.5">
-            <div className="flex items-center gap-2 flex-wrap">
-              <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-800 flex items-center justify-center font-bold border border-emerald-200 shadow-2xs">
-                <Landmark className="w-5 h-5 text-emerald-800" />
+      <div className="bg-white rounded-3xl p-5 sm:p-6 border border-slate-200/80 shadow-soft">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2.5 flex-wrap">
+              <div className="w-10 h-10 rounded-2xl bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold border border-emerald-200 shadow-2xs">
+                <Briefcase className="w-5 h-5 text-emerald-800" />
               </div>
-              <h2 className="text-lg sm:text-xl font-black text-slate-900 tracking-tight">
-                Training &amp; Placement Cell (TPO) • On-Campus Recruitment Drive Control
-              </h2>
-              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-950 border border-emerald-200">
-                NCISM Tier-1 Directorate
-              </span>
+              <div>
+                <h2 className="text-lg sm:text-xl font-black text-slate-900 tracking-tight">
+                  Campus Placement Drives
+                </h2>
+                <p className="text-xs text-slate-500 font-medium">
+                  Explore upcoming recruitment drives, review competency radar cutoffs, and register directly.
+                </p>
+              </div>
             </div>
-            <p className="text-xs text-slate-500 font-medium">
-              National Institute of Ayurveda (Deemed to be University) • Institutional Placement Operations &amp; Industry Partnership Matrix
-            </p>
-          </div>
-
-          <div className="flex items-center gap-2.5 flex-wrap">
-            <button
-              type="button"
-              onClick={() => setIsPublishModalOpen(true)}
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-800 hover:bg-emerald-900 active:scale-95 text-white font-extrabold text-xs shadow-md transition-all cursor-pointer"
-            >
-              <PlusCircle className="w-4 h-4 text-emerald-300" />
-              <span>Publish New On-Campus Placement Drive</span>
-            </button>
-          </div>
-        </div>
-
-        {/* Institutional Accreditation Pill Bar */}
-        <div className="pt-4 flex flex-wrap items-center justify-between gap-3 text-[11px] text-slate-600">
-          <div className="flex items-center gap-3 flex-wrap">
-            <span className="flex items-center gap-1 font-semibold text-slate-700">
-              <ShieldCheck className="w-3.5 h-3.5 text-teal-600" />
-              AISHE Code: <strong className="font-mono text-slate-900">AISHE-C-24901</strong>
-            </span>
-            <span>•</span>
-            <span className="flex items-center gap-1 font-semibold text-slate-700">
-              <School className="w-3.5 h-3.5 text-purple-600" />
-              TPO Chair: <strong className="text-slate-900">{user?.name || 'Dr. Rajeshwar Pant'}</strong> (Dean Academic Affairs)
-            </span>
           </div>
 
           <div className="flex items-center gap-2">
-            <span className="px-2 py-0.5 rounded-md bg-teal-50 text-teal-800 border border-teal-200 text-[10px] font-bold">
-              DigiLocker Synced Offers
+            {isTPOAdmin ? (
+              <button
+                type="button"
+                onClick={() => setIsPublishModalOpen(true)}
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-800 hover:bg-emerald-900 active:scale-95 text-white font-extrabold text-xs shadow-md transition-all cursor-pointer"
+              >
+                <PlusCircle className="w-4 h-4 text-emerald-300" />
+                <span>Publish New Drive</span>
+              </button>
+            ) : (
+              <div className="flex items-center gap-2 bg-emerald-50 border border-emerald-200/80 px-3.5 py-2 rounded-2xl text-xs">
+                <CheckCircle2 className="w-4 h-4 text-emerald-700 shrink-0" />
+                <span className="text-emerald-900 font-bold">
+                  Registered: <span className="font-extrabold">{Object.keys(registeredDrives).length} Drive(s)</span>
+                </span>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Minimal info bar */}
+        <div className="pt-3.5 mt-3.5 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3 text-[11px] text-slate-600">
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="px-2.5 py-0.5 rounded-md bg-emerald-100/70 text-emerald-900 border border-emerald-200 font-bold text-[10px]">
+              AY 2025–26 Placement Season
             </span>
-            <span className="px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-800 border border-emerald-200 text-[10px] font-bold">
-              APAAR Verified Eligibility
+            <span className="text-slate-400">·</span>
+            <span className="flex items-center gap-1 font-semibold text-slate-700">
+              <ShieldCheck className="w-3.5 h-3.5 text-teal-600" />
+              APAAR Verified Eligibility &amp; DigiLocker Synced
             </span>
           </div>
+
+          <span className="text-slate-500 font-medium">
+            National Institute of Ayurveda · TPO Cell
+          </span>
         </div>
       </div>
 
-      {/* 2. TPO METRICS CARDS */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-        {/* Metric 1: Active Campus Drives */}
-        <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-2xs hover:shadow-md transition-all">
-          <div className="flex items-center justify-between mb-2.5">
+      {/* 2. PLACEMENT METRICS (4 Sleek Cards) */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4">
+        {/* Metric 1 */}
+        <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/80 shadow-2xs hover:shadow-md transition-all">
+          <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-bold text-slate-500">Active Campus Drives</span>
             <div className="w-8 h-8 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center border border-blue-100">
               <Calendar className="w-4 h-4" />
             </div>
           </div>
-          <div className="space-y-1">
-            <h3 className="text-2xl font-black text-slate-900 tracking-tight">
-              {activeDrivesCount} Scheduled
-            </h3>
-            <p className="text-[11px] text-blue-700 font-semibold flex items-center gap-1">
-              <Clock className="w-3 h-3" /> Next drive in 6 days
-            </p>
-          </div>
+          <h3 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+            {activeDrivesCount} Scheduled
+          </h3>
+          <p className="text-[11px] text-blue-700 font-semibold flex items-center gap-1 mt-1">
+            <Clock className="w-3 h-3" /> Next drive in 6 days
+          </p>
         </div>
 
-        {/* Metric 2: Total Offers Extended */}
-        <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-2xs hover:shadow-md transition-all">
-          <div className="flex items-center justify-between mb-2.5">
-            <span className="text-xs font-bold text-slate-500">Total Offers Extended</span>
-            <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center border border-emerald-100">
-              <Award className="w-4 h-4" />
-            </div>
-          </div>
-          <div className="space-y-1">
-            <h3 className="text-2xl font-black text-slate-900 tracking-tight">
-              142
-            </h3>
-            <p className="text-[11px] text-emerald-700 font-semibold flex items-center gap-1">
-              <CheckCircle2 className="w-3 h-3" /> AY 2025–26 Graduating Cohort
-            </p>
-          </div>
-        </div>
-
-        {/* Metric 3: Highest CTC */}
-        <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-2xs hover:shadow-md transition-all">
-          <div className="flex items-center justify-between mb-2.5">
-            <span className="text-xs font-bold text-slate-500">Highest CTC</span>
+        {/* Metric 2 */}
+        <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/80 shadow-2xs hover:shadow-md transition-all">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-xs font-bold text-slate-500">Highest Package</span>
             <div className="w-8 h-8 rounded-xl bg-purple-50 text-purple-700 flex items-center justify-center border border-purple-100">
               <Coins className="w-4 h-4" />
             </div>
           </div>
-          <div className="space-y-1">
-            <h3 className="text-2xl font-black text-slate-900 tracking-tight">
-              ₹18.5 LPA
-            </h3>
-            <p className="text-[11px] text-purple-700 font-bold truncate">
-              Dabur Clinical R&amp;D
-            </p>
-          </div>
+          <h3 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+            ₹18.5 LPA
+          </h3>
+          <p className="text-[11px] text-purple-700 font-bold truncate mt-1">
+            Dabur Clinical R&amp;D
+          </p>
         </div>
 
-        {/* Metric 4: Average Package */}
-        <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-2xs hover:shadow-md transition-all">
-          <div className="flex items-center justify-between mb-2.5">
-            <span className="text-xs font-bold text-slate-500">Average package</span>
+        {/* Metric 3 */}
+        <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/80 shadow-2xs hover:shadow-md transition-all">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-xs font-bold text-slate-500">Average Package</span>
             <div className="w-8 h-8 rounded-xl bg-teal-50 text-teal-700 flex items-center justify-center border border-teal-100">
               <TrendingUp className="w-4 h-4" />
             </div>
           </div>
-          <div className="space-y-1">
-            <h3 className="text-2xl font-black text-slate-900 tracking-tight">
-              ₹7.2 LPA
-            </h3>
-            <p className="text-[11px] text-teal-700 font-semibold">
-              +18.4% YoY Institutional Growth
-            </p>
-          </div>
+          <h3 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+            ₹7.2 LPA
+          </h3>
+          <p className="text-[11px] text-teal-700 font-semibold mt-1">
+            +18.4% YoY Growth
+          </p>
         </div>
 
-        {/* Metric 5: Placement Rate */}
-        <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-2xs hover:shadow-md transition-all">
-          <div className="flex items-center justify-between mb-2.5">
+        {/* Metric 4 */}
+        <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/80 shadow-2xs hover:shadow-md transition-all">
+          <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-bold text-slate-500">Placement Rate</span>
-            <div className="w-8 h-8 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center border border-amber-100">
+            <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center border border-emerald-100">
               <Sparkles className="w-4 h-4" />
             </div>
           </div>
-          <div className="space-y-1">
-            <h3 className="text-2xl font-black text-emerald-800 tracking-tight">
-              84.2%
-            </h3>
-            <p className="text-[11px] text-slate-500 font-semibold">
-              Target: 90% by Nov 2026
-            </p>
-          </div>
+          <h3 className="text-xl sm:text-2xl font-black text-emerald-800 tracking-tight">
+            84.2%
+          </h3>
+          <p className="text-[11px] text-slate-500 font-semibold mt-1">
+            142 Offers Extended
+          </p>
         </div>
       </div>
 
-      {/* 3. UPCOMING RECRUITMENT SCHEDULE TABLE */}
+      {/* 3. RECRUITMENT DRIVES SECTION */}
       <div className="bg-white rounded-3xl border border-slate-200/80 shadow-soft overflow-hidden">
-        {/* Table Controls & Filter Bar */}
-        <div className="p-5 border-b border-slate-100 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-50/40">
+        {/* Toolbar & Filter Bar */}
+        <div className="p-4 sm:p-5 border-b border-slate-100 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-50/40">
           <div>
             <div className="flex items-center gap-2">
               <Briefcase className="w-4 h-4 text-emerald-800" />
               <h3 className="font-extrabold text-base text-slate-900 tracking-tight">
-                Upcoming Recruitment Schedule
+                Upcoming Placement Drives
               </h3>
               <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-700 border border-slate-200">
-                {filteredDrives.length} Drives Listed
+                {filteredDrives.length} Drives
               </span>
             </div>
             <p className="text-xs text-slate-500 mt-0.5">
-              Interactive roster of campus recruiters, pre-screen score cutoffs, and scheduled interview rounds
+              Review company requirements, pre-screen cutoffs, and apply directly.
             </p>
           </div>
 
@@ -444,7 +424,7 @@ export const TPOPlacementCommandCenter = ({ user = {}, isTPOAdmin = true }) => {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="Search company, role, branch..."
-                className="pl-8 pr-3 py-1.5 text-xs bg-white rounded-xl border border-slate-200 text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-emerald-700 w-48 sm:w-56"
+                className="pl-8 pr-3 py-1.5 text-xs bg-white rounded-xl border border-slate-200 text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-emerald-700 w-44 sm:w-52"
               />
             </div>
 
@@ -465,162 +445,279 @@ export const TPOPlacementCommandCenter = ({ user = {}, isTPOAdmin = true }) => {
                 </button>
               ))}
             </div>
+
+            {/* View Mode Switcher */}
+            <div className="flex items-center bg-slate-100/90 p-1 rounded-xl border border-slate-200/80">
+              <button
+                type="button"
+                onClick={() => setViewMode('cards')}
+                className={`p-1.5 rounded-lg transition-all cursor-pointer ${
+                  viewMode === 'cards'
+                    ? 'bg-white text-emerald-800 shadow-2xs'
+                    : 'text-slate-400 hover:text-slate-700'
+                }`}
+                title="Cards View"
+              >
+                <LayoutGrid className="w-3.5 h-3.5" />
+              </button>
+              <button
+                type="button"
+                onClick={() => setViewMode('table')}
+                className={`p-1.5 rounded-lg transition-all cursor-pointer ${
+                  viewMode === 'table'
+                    ? 'bg-white text-emerald-800 shadow-2xs'
+                    : 'text-slate-400 hover:text-slate-700'
+                }`}
+                title="Table View"
+              >
+                <List className="w-3.5 h-3.5" />
+              </button>
+            </div>
           </div>
         </div>
 
-        {/* Table Content */}
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead>
-              <tr className="bg-slate-50/70 text-[10px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-100">
-                <th className="py-3 px-5">Company Name</th>
-                <th className="py-3 px-4">Role &amp; Package</th>
-                <th className="py-3 px-4">Drive Date &amp; Mode</th>
-                <th className="py-3 px-4">Eligible Branches</th>
-                <th className="py-3 px-4 text-center">Pre-Screen Cutoff</th>
-                <th className="py-3 px-4 text-center">Status</th>
-                <th className="py-3 px-5 text-right">Action</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100 text-slate-700">
-              {filteredDrives.length === 0 ? (
-                <tr>
-                  <td colSpan="7" className="py-12 text-center text-slate-400 font-medium">
-                    No placement drives match your filter criteria.
-                  </td>
-                </tr>
-              ) : (
-                filteredDrives.map((drive) => {
+        {/* Content: Cards View or Table View */}
+        {viewMode === 'cards' ? (
+          <div className="p-4 sm:p-5">
+            {filteredDrives.length === 0 ? (
+              <div className="py-12 text-center text-slate-400 font-medium">
+                No placement drives match your filter criteria.
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {filteredDrives.map((drive) => {
+                  const isRegistered = Boolean(registeredDrives[drive.id]);
                   const isScheduled = drive.status === 'Scheduled';
                   const isScreening = drive.status === 'Screening';
-                  const isCompleted = drive.status === 'Completed';
 
                   return (
-                    <tr 
+                    <div
                       key={drive.id}
-                      className="hover:bg-slate-50/60 transition-colors group"
+                      className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-2xs hover:shadow-md hover:border-emerald-200 transition-all flex flex-col justify-between space-y-4 group"
                     >
-                      {/* Company Name */}
-                      <td className="py-3.5 px-5">
-                        <div className="flex items-center gap-3">
-                          <div className="w-9 h-9 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center font-black text-xs border border-slate-200 shrink-0 shadow-2xs group-hover:bg-emerald-50 group-hover:text-emerald-800 group-hover:border-emerald-200 transition-colors">
-                            {drive.company.slice(0, 2).toUpperCase()}
-                          </div>
-                          <div>
-                            <div className="font-extrabold text-slate-900 text-xs sm:text-sm">
-                              {drive.company}
+                      {/* Top Row: Company Info & CTC */}
+                      <div className="space-y-3">
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="flex items-center gap-3 min-w-0">
+                            <div className="w-11 h-11 rounded-2xl bg-emerald-50 text-emerald-800 flex items-center justify-center font-black text-sm border border-emerald-200/80 shrink-0 shadow-2xs group-hover:bg-emerald-800 group-hover:text-white transition-all">
+                              {drive.company.slice(0, 2).toUpperCase()}
                             </div>
-                            <div className="text-[10px] text-slate-400 font-medium">
-                              {drive.sector}
+                            <div className="min-w-0">
+                              <h4 className="font-extrabold text-slate-900 text-sm truncate leading-snug">
+                                {drive.company}
+                              </h4>
+                              <p className="text-[11px] text-slate-400 truncate">
+                                {drive.sector}
+                              </p>
                             </div>
                           </div>
-                        </div>
-                      </td>
 
-                      {/* Role & Package */}
-                      <td className="py-3.5 px-4">
-                        <div className="space-y-0.5">
-                          <div className="font-bold text-slate-900 leading-snug">
-                            {drive.role}
-                          </div>
-                          <div className="flex items-center gap-1.5 flex-wrap">
-                            <span className="font-extrabold text-emerald-800 text-[11px] bg-emerald-50 px-1.5 py-0.2 rounded border border-emerald-200/60">
+                          <div className="flex flex-col items-end gap-1 shrink-0">
+                            <span className="font-black text-xs text-emerald-900 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200">
                               {drive.ctc}
                             </span>
-                            <span className="text-[10px] text-slate-400 font-medium">
-                              ({drive.vacancies} Vacancies)
-                            </span>
                           </div>
                         </div>
-                      </td>
 
-                      {/* Drive Date & Mode */}
-                      <td className="py-3.5 px-4 whitespace-nowrap">
-                        <div className="space-y-0.5">
-                          <div className="font-bold text-slate-900 flex items-center gap-1.5">
+                        {/* Role Title */}
+                        <div>
+                          <h5 className="font-bold text-slate-800 text-xs leading-snug">
+                            {drive.role}
+                          </h5>
+                          <span className="text-[10px] text-slate-400 font-medium">
+                            {drive.vacancies} Vacancies · {drive.contactPerson}
+                          </span>
+                        </div>
+
+                        {/* Key Info Chips */}
+                        <div className="space-y-1.5 pt-1 text-xs">
+                          <div className="flex items-center gap-1.5 text-slate-600 text-[11px]">
                             <Calendar className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                            <span>{drive.driveDate}</span>
+                            <span className="font-semibold text-slate-800">{drive.driveDate}</span>
+                            <span className="text-slate-300">·</span>
+                            <span className="text-slate-500 truncate">{drive.mode}</span>
                           </div>
-                          <div className="text-[10px] text-slate-500 flex items-center gap-1">
-                            <MapPin className="w-3 h-3 text-slate-400 shrink-0" />
-                            <span className="truncate max-w-[150px]">{drive.mode}</span>
-                          </div>
-                        </div>
-                      </td>
 
-                      {/* Eligible Branches */}
-                      <td className="py-3.5 px-4">
-                        <div className="flex flex-wrap gap-1 max-w-[220px]">
-                          {drive.eligibleBranches.map((branch, i) => (
-                            <span 
-                              key={i}
-                              className="px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-100 text-slate-700 border border-slate-200/90 whitespace-nowrap"
-                            >
-                              {branch}
+                          <div className="flex items-center gap-1.5 text-[11px]">
+                            <Award className="w-3.5 h-3.5 text-teal-600 shrink-0" />
+                            <span className="font-mono font-bold text-teal-800">{drive.cutoffScore}</span>
+                            <span className="text-emerald-700 font-bold text-[10px] bg-emerald-50 px-1.5 py-0.2 rounded border border-emerald-200">
+                              Eligible ✓
                             </span>
-                          ))}
-                        </div>
-                      </td>
+                          </div>
 
-                      {/* Pre-Screen Cutoff Score */}
-                      <td className="py-3.5 px-4 text-center">
-                        <div className="inline-flex flex-col items-center">
-                          <span className="px-2.5 py-1 rounded-full text-[11px] font-black font-mono bg-teal-50 text-teal-900 border border-teal-200">
-                            {drive.cutoffScore}
-                          </span>
-                          <span className="text-[9px] text-slate-400 font-semibold mt-0.5">
-                            Pre-Screen Cutoff Score
-                          </span>
+                          {/* Eligible Disciplines */}
+                          <div className="flex flex-wrap gap-1 pt-1">
+                            {drive.eligibleBranches.slice(0, 2).map((branch, i) => (
+                              <span
+                                key={i}
+                                className="px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-100 text-slate-600 border border-slate-200/80"
+                              >
+                                {branch}
+                              </span>
+                            ))}
+                            {drive.eligibleBranches.length > 2 && (
+                              <span className="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-slate-50 text-slate-500 border border-slate-200/80">
+                                +{drive.eligibleBranches.length - 2} more
+                              </span>
+                            )}
+                          </div>
                         </div>
-                      </td>
+                      </div>
 
-                      {/* Status */}
-                      <td className="py-3.5 px-4 text-center">
-                        <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-extrabold border ${
+                      {/* Bottom Action Row */}
+                      <div className="pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
+                        <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${
                           isScheduled
                             ? 'bg-blue-50 text-blue-800 border-blue-200'
                             : isScreening
                             ? 'bg-amber-50 text-amber-900 border-amber-200'
-                            : 'bg-emerald-50 text-emerald-900 border-emerald-200'
+                            : 'bg-slate-100 text-slate-700 border-slate-200'
                         }`}>
                           <span className={`w-1.5 h-1.5 rounded-full ${
-                            isScheduled 
-                              ? 'bg-blue-500' 
-                              : isScreening 
-                              ? 'bg-amber-500 animate-ping' 
-                              : 'bg-emerald-600'
+                            isScheduled ? 'bg-blue-500' : isScreening ? 'bg-amber-500' : 'bg-slate-400'
                           }`} />
                           {drive.status}
                         </span>
-                      </td>
 
-                      {/* Action Button */}
-                      <td className="py-3.5 px-5 text-right whitespace-nowrap">
                         <button
                           type="button"
                           onClick={() => setSelectedDriveForManage(drive)}
-                          className="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-emerald-800 hover:text-white text-slate-700 font-bold text-xs border border-slate-200 transition-all cursor-pointer inline-flex items-center gap-1 shadow-2xs group-hover:border-emerald-700"
+                          className={`px-3.5 py-1.5 rounded-xl font-bold text-xs transition-all cursor-pointer flex items-center gap-1 shadow-2xs ${
+                            isRegistered
+                              ? 'bg-emerald-50 text-emerald-800 border border-emerald-300'
+                              : 'bg-emerald-800 hover:bg-emerald-900 text-white'
+                          }`}
                         >
-                          <span>Manage Drive</span>
-                          <ChevronRight className="w-3.5 h-3.5" />
+                          {isRegistered ? (
+                            <>
+                              <Check className="w-3.5 h-3.5 text-emerald-700" />
+                              <span>Registered</span>
+                            </>
+                          ) : (
+                            <>
+                              <span>{isTPOAdmin ? 'Manage Drive' : 'View & Register'}</span>
+                              <ChevronRight className="w-3.5 h-3.5" />
+                            </>
+                          )}
                         </button>
-                      </td>
-                    </tr>
+                      </div>
+                    </div>
                   );
-                })
-              )}
-            </tbody>
-          </table>
-        </div>
+                })}
+              </div>
+            )}
+          </div>
+        ) : (
+          /* Streamlined Table View */
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs">
+              <thead>
+                <tr className="bg-slate-50/70 text-[10px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-100">
+                  <th className="py-3 px-5">Company Name</th>
+                  <th className="py-3 px-4">Role &amp; Package</th>
+                  <th className="py-3 px-4">Date &amp; Venue</th>
+                  <th className="py-3 px-4 text-center">Cutoff</th>
+                  <th className="py-3 px-4 text-center">Status</th>
+                  <th className="py-3 px-5 text-right">Action</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100 text-slate-700">
+                {filteredDrives.length === 0 ? (
+                  <tr>
+                    <td colSpan="6" className="py-12 text-center text-slate-400 font-medium">
+                      No placement drives match your filter criteria.
+                    </td>
+                  </tr>
+                ) : (
+                  filteredDrives.map((drive) => {
+                    const isRegistered = Boolean(registeredDrives[drive.id]);
+                    const isScheduled = drive.status === 'Scheduled';
+                    const isScreening = drive.status === 'Screening';
 
-        {/* Table Footer */}
+                    return (
+                      <tr key={drive.id} className="hover:bg-slate-50/60 transition-colors group">
+                        <td className="py-3.5 px-5">
+                          <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center font-black text-xs border border-slate-200 shrink-0 group-hover:bg-emerald-50 group-hover:text-emerald-800 transition-colors">
+                              {drive.company.slice(0, 2).toUpperCase()}
+                            </div>
+                            <div>
+                              <div className="font-extrabold text-slate-900 text-xs sm:text-sm">
+                                {drive.company}
+                              </div>
+                              <div className="text-[10px] text-slate-400">
+                                {drive.sector}
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+
+                        <td className="py-3.5 px-4">
+                          <div className="font-bold text-slate-900">{drive.role}</div>
+                          <span className="font-extrabold text-emerald-800 text-[11px] bg-emerald-50 px-1.5 py-0.2 rounded border border-emerald-200/60">
+                            {drive.ctc}
+                          </span>
+                        </td>
+
+                        <td className="py-3.5 px-4 whitespace-nowrap">
+                          <div className="font-bold text-slate-900 flex items-center gap-1.5">
+                            <Calendar className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                            <span>{drive.driveDate}</span>
+                          </div>
+                          <div className="text-[10px] text-slate-500 truncate max-w-[150px]">
+                            {drive.mode}
+                          </div>
+                        </td>
+
+                        <td className="py-3.5 px-4 text-center">
+                          <span className="px-2 py-0.5 rounded-full text-[10px] font-bold font-mono bg-teal-50 text-teal-900 border border-teal-200">
+                            {drive.cutoffScore}
+                          </span>
+                        </td>
+
+                        <td className="py-3.5 px-4 text-center">
+                          <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${
+                            isScheduled
+                              ? 'bg-blue-50 text-blue-800 border-blue-200'
+                              : isScreening
+                              ? 'bg-amber-50 text-amber-900 border-amber-200'
+                              : 'bg-slate-100 text-slate-700 border-slate-200'
+                          }`}>
+                            {drive.status}
+                          </span>
+                        </td>
+
+                        <td className="py-3.5 px-5 text-right whitespace-nowrap">
+                          <button
+                            type="button"
+                            onClick={() => setSelectedDriveForManage(drive)}
+                            className={`px-3 py-1.5 rounded-xl font-bold text-xs transition-all cursor-pointer inline-flex items-center gap-1 ${
+                              isRegistered
+                                ? 'bg-emerald-50 text-emerald-800 border border-emerald-300'
+                                : 'bg-slate-100 hover:bg-emerald-800 hover:text-white text-slate-700 border border-slate-200'
+                            }`}
+                          >
+                            {isRegistered ? 'Registered ✓' : (isTPOAdmin ? 'Manage Drive' : 'View & Register')}
+                          </button>
+                        </td>
+                      </tr>
+                    );
+                  })
+                )}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        {/* Table/Card Footer */}
         <div className="px-5 py-3 border-t border-slate-100 bg-slate-50/50 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-500">
           <div className="flex items-center gap-2">
             <CheckCircle2 className="w-4 h-4 text-emerald-700" />
-            <span>All drives strictly mapped to NCISM / Ayush Industry Readiness Competency Vectors</span>
+            <span>All drives verified by TPO Directorate &amp; aligned with Ayush Industry standards</span>
           </div>
           <span className="font-semibold text-slate-700">
-            Total Openings Across Campus: <strong className="text-emerald-900 font-bold">65 Vacancies</strong>
+            Total Openings: <strong className="text-emerald-900 font-bold">65 Vacancies</strong>
           </span>
         </div>
       </div>
@@ -851,7 +948,7 @@ export const TPOPlacementCommandCenter = ({ user = {}, isTPOAdmin = true }) => {
         </div>
       )}
 
-      {/* 5. MODAL: MANAGE DRIVE MODAL */}
+      {/* 5. MODAL: DRIVE DETAILS / REGISTRATION MODAL */}
       {selectedDriveForManage && (
         <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-4">
           <div className="bg-white rounded-3xl max-w-2xl w-full p-6 shadow-2xl border border-slate-200 space-y-5 animate-in fade-in zoom-in-95 max-h-[90vh] overflow-y-auto">
@@ -866,12 +963,12 @@ export const TPOPlacementCommandCenter = ({ user = {}, isTPOAdmin = true }) => {
                     <h4 className="font-extrabold text-base text-slate-900 tracking-tight">
                       {selectedDriveForManage.company}
                     </h4>
-                    <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-900 border border-emerald-200">
+                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-900 border border-emerald-200">
                       {selectedDriveForManage.status}
                     </span>
                   </div>
                   <p className="text-xs text-slate-500 font-medium">
-                    {selectedDriveForManage.role} • {selectedDriveForManage.ctc}
+                    {selectedDriveForManage.role} • <strong className="text-emerald-800">{selectedDriveForManage.ctc}</strong>
                   </p>
                 </div>
               </div>
@@ -884,7 +981,7 @@ export const TPOPlacementCommandCenter = ({ user = {}, isTPOAdmin = true }) => {
               </button>
             </div>
 
-            {/* Drive Key Metrics Banner */}
+            {/* Drive Key Metrics */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               <div className="p-3 bg-slate-50 rounded-2xl border border-slate-200/80">
                 <span className="text-[10px] font-bold text-slate-400 block">Date &amp; Venue</span>
@@ -893,89 +990,145 @@ export const TPOPlacementCommandCenter = ({ user = {}, isTPOAdmin = true }) => {
               </div>
 
               <div className="p-3 bg-slate-50 rounded-2xl border border-slate-200/80">
-                <span className="text-[10px] font-bold text-slate-400 block">Pre-Screen Cutoff</span>
+                <span className="text-[10px] font-bold text-slate-400 block">Cutoff Benchmark</span>
                 <span className="font-mono font-bold text-teal-800 text-xs mt-0.5 block">{selectedDriveForManage.cutoffScore}</span>
-                <span className="text-[10px] text-teal-600 font-semibold block">Radar Benchmark</span>
+                <span className="text-[10px] text-teal-600 font-semibold block">Pre-Screen Radar</span>
               </div>
 
               <div className="p-3 bg-slate-50 rounded-2xl border border-slate-200/80">
-                <span className="text-[10px] font-bold text-slate-400 block">Applications</span>
-                <span className="font-bold text-slate-900 text-xs mt-0.5 block">{selectedDriveForManage.registeredCount} Registered</span>
-                <span className="text-[10px] text-slate-500 block">{selectedDriveForManage.vacancies} Openings</span>
+                <span className="text-[10px] font-bold text-slate-400 block">Vacancies</span>
+                <span className="font-bold text-slate-900 text-xs mt-0.5 block">{selectedDriveForManage.vacancies} Openings</span>
+                <span className="text-[10px] text-slate-500 block">{selectedDriveForManage.registeredCount} Applied</span>
               </div>
 
               <div className="p-3 bg-slate-50 rounded-2xl border border-slate-200/80">
-                <span className="text-[10px] font-bold text-slate-400 block">Shortlisted</span>
-                <span className="font-bold text-emerald-800 text-xs mt-0.5 block">{selectedDriveForManage.shortlistedCount} Scholars</span>
-                <span className="text-[10px] text-emerald-600 font-semibold block">Qualified Cutoff</span>
+                <span className="text-[10px] font-bold text-slate-400 block">Coordinator</span>
+                <span className="font-bold text-slate-900 text-xs mt-0.5 truncate block">{selectedDriveForManage.contactPerson}</span>
+                <span className="text-[10px] text-slate-500 block">TPO Directorate</span>
               </div>
             </div>
 
-            {/* Candidate Shortlist Simulation */}
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <h5 className="font-bold text-xs text-slate-800 uppercase tracking-wide">
-                  Pre-Screened Shortlist Roster (Above {selectedDriveForManage.cutoffScore})
-                </h5>
-                <button
-                  type="button"
-                  onClick={() => {
-                    alert(`Exporting official TPO Shortlist CSV for ${selectedDriveForManage.company}...`);
-                  }}
-                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 transition-colors cursor-pointer"
-                >
-                  <Download className="w-3.5 h-3.5 text-slate-500" />
-                  <span>Export Shortlist (CSV)</span>
-                </button>
-              </div>
+            {/* Eligibility & Details */}
+            {isTPOAdmin ? (
+              /* Admin Shortlist View */
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <h5 className="font-bold text-xs text-slate-800 uppercase tracking-wide">
+                    Pre-Screened Shortlist Roster (Above {selectedDriveForManage.cutoffScore})
+                  </h5>
+                  <button
+                    type="button"
+                    onClick={() => alert(`Exporting official TPO Shortlist CSV for ${selectedDriveForManage.company}...`)}
+                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 transition-colors cursor-pointer"
+                  >
+                    <Download className="w-3.5 h-3.5 text-slate-500" />
+                    <span>Export Shortlist (CSV)</span>
+                  </button>
+                </div>
 
-              <div className="space-y-2 border border-slate-200 rounded-2xl p-3 bg-slate-50/50">
-                {[
-                  { name: 'Aarav Sharma', id: 'NIA/AY/2026/0491', degree: 'BAMS (Final Year)', radarMatch: '96%', apaar: '9841-2041-8891' },
-                  { name: 'Ananya Deshmukh', id: 'NIA/AY/2026/0312', degree: 'MD/MS Dravyaguna', radarMatch: '94%', apaar: '8812-4012-9921' },
-                  { name: 'Devendra Varma', id: 'NIA/AY/2026/0189', degree: 'B.Pharm Ayush', radarMatch: '91%', apaar: '7721-9012-4412' }
-                ].map((candidate, idx) => (
-                  <div key={idx} className="p-2.5 rounded-xl bg-white border border-slate-200/80 flex items-center justify-between gap-2 shadow-2xs">
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-800 font-bold text-xs flex items-center justify-center border border-emerald-200">
-                        {candidate.name.slice(0, 2).toUpperCase()}
-                      </div>
-                      <div>
-                        <div className="font-bold text-xs text-slate-900">{candidate.name}</div>
-                        <div className="text-[10px] text-slate-500 font-mono">
-                          {candidate.id} • {candidate.degree} • APAAR: {candidate.apaar}
+                <div className="space-y-2 border border-slate-200 rounded-2xl p-3 bg-slate-50/50">
+                  {[
+                    { name: 'Aarav Sharma', id: 'NIA/AY/2026/0491', degree: 'BAMS (Final Year)', radarMatch: '96%', apaar: '9841-2041-8891' },
+                    { name: 'Ananya Deshmukh', id: 'NIA/AY/2026/0312', degree: 'MD/MS Dravyaguna', radarMatch: '94%', apaar: '8812-4012-9921' },
+                    { name: 'Devendra Varma', id: 'NIA/AY/2026/0189', degree: 'B.Pharm Ayush', radarMatch: '91%', apaar: '7721-9012-4412' }
+                  ].map((candidate, idx) => (
+                    <div key={idx} className="p-2.5 rounded-xl bg-white border border-slate-200/80 flex items-center justify-between gap-2 shadow-2xs">
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-800 font-bold text-xs flex items-center justify-center border border-emerald-200">
+                          {candidate.name.slice(0, 2).toUpperCase()}
+                        </div>
+                        <div>
+                          <div className="font-bold text-xs text-slate-900">{candidate.name}</div>
+                          <div className="text-[10px] text-slate-500 font-mono">
+                            {candidate.id} • {candidate.degree} • APAAR: {candidate.apaar}
+                          </div>
                         </div>
                       </div>
+                      <div className="flex items-center gap-2">
+                        <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-900 border border-emerald-200 font-mono">
+                          {candidate.radarMatch} Match
+                        </span>
+                      </div>
                     </div>
-
-                    <div className="flex items-center gap-2">
-                      <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-900 border border-emerald-200 font-mono">
-                        {candidate.radarMatch} Match
-                      </span>
-                      <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded">
-                        Cleared Cutoff
-                      </span>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              /* Student Eligibility Verification & Confirmation */
+              <div className="space-y-3">
+                <div className="p-4 rounded-2xl bg-emerald-50/70 border border-emerald-200/80 space-y-2">
+                  <div className="flex items-center gap-2 text-xs font-bold text-emerald-950">
+                    <ShieldCheck className="w-4 h-4 text-emerald-700 shrink-0" />
+                    <span>Academic &amp; Skill Competency Eligibility: Qualified ✓</span>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-[11px] text-emerald-900 pt-1">
+                    <div className="bg-white/80 p-2 rounded-xl border border-emerald-200/60">
+                      <span className="text-slate-500 block text-[10px]">CGPA Standard</span>
+                      <strong className="font-mono">8.94 / 10.0</strong> (≥ 7.50 ✓)
+                    </div>
+                    <div className="bg-white/80 p-2 rounded-xl border border-emerald-200/60">
+                      <span className="text-slate-500 block text-[10px]">Attendance</span>
+                      <strong className="font-mono">88.5%</strong> (≥ 75% ✓)
+                    </div>
+                    <div className="bg-white/80 p-2 rounded-xl border border-emerald-200/60">
+                      <span className="text-slate-500 block text-[10px]">Competency Radar</span>
+                      <strong className="font-mono">88%</strong> (&gt; {selectedDriveForManage.cutoffScore} ✓)
                     </div>
                   </div>
-                ))}
-              </div>
-            </div>
+                </div>
 
-            {/* Action Bar */}
-            <div className="flex items-center justify-between pt-3 border-t border-slate-100 flex-wrap gap-2">
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => {
-                    alert(`Pre-screening notifications and test links dispatched to ${selectedDriveForManage.shortlistedCount} candidates!`);
-                    setSelectedDriveForManage(null);
-                  }}
-                  className="px-4 py-2 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-white font-bold text-xs flex items-center gap-1.5 shadow-2xs cursor-pointer"
-                >
-                  <Send className="w-3.5 h-3.5" />
-                  <span>Notify Shortlisted Scholars</span>
-                </button>
+                <div className="p-3 bg-slate-50 rounded-2xl border border-slate-200/80 text-xs space-y-1.5">
+                  <span className="font-bold text-slate-700 block">Eligible Disciplines:</span>
+                  <div className="flex flex-wrap gap-1.5">
+                    {selectedDriveForManage.eligibleBranches.map((branch, i) => (
+                      <span key={i} className="px-2 py-0.5 rounded-lg bg-white border border-slate-200 text-slate-700 font-medium text-[11px]">
+                        {branch}
+                      </span>
+                    ))}
+                  </div>
+                </div>
               </div>
+            )}
+
+            {/* Modal Action Bar */}
+            <div className="flex items-center justify-between pt-3 border-t border-slate-100 flex-wrap gap-2">
+              {isTPOAdmin ? (
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      alert(`Pre-screening notifications and test links dispatched to ${selectedDriveForManage.shortlistedCount} candidates!`);
+                      setSelectedDriveForManage(null);
+                    }}
+                    className="px-4 py-2 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-white font-bold text-xs flex items-center gap-1.5 shadow-2xs cursor-pointer"
+                  >
+                    <Send className="w-3.5 h-3.5" />
+                    <span>Notify Shortlisted Scholars</span>
+                  </button>
+                </div>
+              ) : (
+                <div>
+                  {registeredDrives[selectedDriveForManage.id] ? (
+                    <span className="text-xs font-bold text-emerald-800 flex items-center gap-1.5">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                      <span>Registration Confirmed · Slot 1 Allotted</span>
+                    </span>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setRegisteredDrives(prev => ({ ...prev, [selectedDriveForManage.id]: true }));
+                        setToastMessage(`Successfully registered for ${selectedDriveForManage.company} recruitment drive!`);
+                        setSelectedDriveForManage(null);
+                      }}
+                      className="px-5 py-2.5 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-white font-extrabold text-xs flex items-center gap-2 shadow-md cursor-pointer transition-all active:scale-95"
+                    >
+                      <Check className="w-4 h-4" />
+                      <span>Register for Campus Drive</span>
+                    </button>
+                  )}
+                </div>
+              )}
 
               <button
                 type="button"
