@@ -18,7 +18,6 @@ import {
   Menu, 
   X, 
   Flame,
-  Landmark,
   ShieldCheck
 } from 'lucide-react';
 
@@ -220,18 +219,6 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
                       <span>View Profile Page</span>
                     </button>
 
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setProfileDropdownOpen(false);
-                        setActivePage('college');
-                      }}
-                      className="w-full text-left px-4 py-2 text-xs font-bold text-emerald-900 hover:bg-emerald-50 flex items-center gap-2 cursor-pointer"
-                    >
-                      <Landmark className="w-4 h-4 text-emerald-700" />
-                      <span>College Verification Cell</span>
-                    </button>
-
                     <div className="pt-1 mt-1 border-t border-slate-100">
                       <button
                         type="button"
@@ -251,17 +238,7 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
               </div>
             ) : null}
 
-            {/* College Portal Quick Link + Sign In CTA */}
-            <button
-              type="button"
-              onClick={() => setActivePage('college')}
-              className="bg-emerald-50 hover:bg-emerald-100/90 text-emerald-900 border border-emerald-300 font-label-sm text-xs font-bold py-2.5 px-3.5 rounded-xl active:scale-95 transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs shrink-0"
-              title="Open College & Registrar Digital Asset Verification Cell"
-            >
-              <Landmark className="w-4 h-4 text-emerald-700" />
-              <span>College Portal</span>
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse"></span>
-            </button>
+
 
             {!currentUser && (
               <button
@@ -398,17 +375,7 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
                 </>
               ) : (
                 <>
-                  <button
-                    onClick={() => {
-                      setMobileMenuOpen(false);
-                      setActivePage('college');
-                      window.location.hash = 'college';
-                    }}
-                    className="w-full py-3 bg-emerald-50 hover:bg-emerald-100 text-emerald-900 font-bold rounded-xl text-sm flex items-center justify-center gap-2 border border-emerald-300 cursor-pointer shadow-xs"
-                  >
-                    <Landmark className="w-4 h-4 text-emerald-700" />
-                    <span>College Portal (Verification Cell)</span>
-                  </button>
+
                   <button
                     onClick={() => {
                       setMobileMenuOpen(false);
