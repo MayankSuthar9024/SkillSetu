@@ -17,7 +17,8 @@ import {
   UserCheck,
   ShoppingBag,
   Star,
-  ArrowLeft
+  ArrowLeft,
+  ExternalLink
 } from 'lucide-react';
 
 import courseGmpPoster from '../assets/images/course_gmp_poster.jpg';
@@ -29,6 +30,7 @@ export function CoursesPage({ currentUser, activePortalId }) {
   const isFacultyPortal = activePortalId === 'faculty';
   
   const [isPostingOpen, setIsPostingOpen] = useState(false);
+  const [portalFilter, setPortalFilter] = useState('All'); // 'All' | 'Ministry Certified' | 'NPTEL / SWAYAM'
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchTerm, setSearchTerm] = useState('');
   const [publishSuccess, setPublishSuccess] = useState(false);
@@ -43,6 +45,7 @@ export function CoursesPage({ currentUser, activePortalId }) {
       id: 'mc-1', 
       title: 'Schedule T Basics & Manufacturing Compliance', 
       category: 'Manufacturing & GMP',
+      providerType: 'Ministry Certified',
       duration: '90 mins', 
       enrolled: 142, 
       rating: '4.9', 
@@ -58,6 +61,7 @@ export function CoursesPage({ currentUser, activePortalId }) {
       id: 'mc-2', 
       title: 'Good Clinical Practice (GCP) – ICH E6(R3)', 
       category: 'Clinical Research',
+      providerType: 'Ministry Certified',
       duration: '120 mins', 
       enrolled: 198, 
       rating: '4.9', 
@@ -73,6 +77,7 @@ export function CoursesPage({ currentUser, activePortalId }) {
       id: 'mc-3', 
       title: 'Good Manufacturing Practice (GMP) Basics', 
       category: 'Quality Assurance / QA',
+      providerType: 'Ministry Certified',
       duration: '90 mins', 
       enrolled: 112, 
       rating: '4.8', 
@@ -88,6 +93,7 @@ export function CoursesPage({ currentUser, activePortalId }) {
       id: 'mc-4', 
       title: 'Regulatory Affairs Basics & CDSCO Framework', 
       category: 'Regulatory Compliance',
+      providerType: 'Ministry Certified',
       duration: '90 mins', 
       enrolled: 85, 
       rating: '4.7', 
@@ -103,6 +109,7 @@ export function CoursesPage({ currentUser, activePortalId }) {
       id: 'mc-5', 
       title: 'Pharmacovigilance Basics & ADR Safety Monitoring', 
       category: 'Pharmacovigilance',
+      providerType: 'Ministry Certified',
       duration: '90 mins', 
       enrolled: 156, 
       rating: '4.9', 
@@ -113,6 +120,79 @@ export function CoursesPage({ currentUser, activePortalId }) {
       targetCohort: 'All Ayush Scholars',
       skillGap: 'Detection, assessment, understanding and prevention of adverse drug effects. Real-world ADR reporting workflows and safety signal processing.',
       competencies: ['ADR Detection', 'WHO-UMC Causality', 'Safety Reporting', 'Signal Assessment']
+    },
+    // National MOOC Learning Bridges (SWAYAM & NPTEL)
+    {
+      id: 'mc-swayam-1',
+      title: 'NPTEL: Analytical Chemistry in Herbal Formulations - IIT Madras',
+      category: 'Quality Assurance / QA',
+      providerType: 'NPTEL / SWAYAM',
+      duration: '12 Weeks (Credit Transferable)',
+      enrolled: 1420,
+      rating: '4.9',
+      price: 'Free MOOC',
+      posterImage: courseGmpPoster,
+      author: 'Prof. S. Ranganathan',
+      authorRole: 'Department of Chemistry, IIT Madras',
+      targetCohort: 'BAMS & Ayush Researchers',
+      skillGap: 'Remediation for HPTLC fingerprinting, chromatography calibration, and herbal API standardization.',
+      competencies: ['HPLC / HPTLC', 'Mass Spectrometry', 'Herbal Marker Assay', 'NPTEL Certified'],
+      swayamUrl: 'https://swayam.gov.in/explorer?searchText=analytical+chemistry',
+      isSwayam: true
+    },
+    {
+      id: 'mc-swayam-2',
+      title: 'SWAYAM: Clinical Trials Management - AIIMS',
+      category: 'Clinical Research',
+      providerType: 'NPTEL / SWAYAM',
+      duration: '8 Weeks (Credit Transferable)',
+      enrolled: 1890,
+      rating: '4.9',
+      price: 'Free MOOC',
+      posterImage: courseGcpPoster,
+      author: 'Dr. Priya Narang',
+      authorRole: 'Clinical Research Centre, AIIMS New Delhi',
+      targetCohort: 'Ayush Scholars & MD Fellows',
+      skillGap: 'Remediation for clinical research protocol design, ethical clearances, and ICH-GCP trial monitoring.',
+      competencies: ['ICH-GCP E6(R3)', 'Trial Ethics', 'CDSCO Filing', 'SWAYAM Certified'],
+      swayamUrl: 'https://swayam.gov.in/explorer?searchText=clinical+trials',
+      isSwayam: true
+    },
+    {
+      id: 'mc-swayam-3',
+      title: 'NPTEL: Schedule T Pharmaceutical Engineering & Quality Control - IIT Kharagpur',
+      category: 'Manufacturing & GMP',
+      providerType: 'NPTEL / SWAYAM',
+      duration: '12 Weeks (Credit Transferable)',
+      enrolled: 1150,
+      rating: '4.8',
+      price: 'Free MOOC',
+      posterImage: ayushHeroBanner,
+      author: 'Prof. K. B. Roy',
+      authorRole: 'Biochemical Engineering, IIT Kharagpur',
+      targetCohort: 'BAMS Final Year & GMP Auditors',
+      skillGap: 'Remediation for HVAC cleanroom protocols, particle counts, and industrial Schedule T validation.',
+      competencies: ['Schedule T GMP', 'Cleanroom HVAC', 'Sterility Testing', 'NPTEL Certified'],
+      swayamUrl: 'https://swayam.gov.in/explorer?searchText=pharmaceutical+engineering',
+      isSwayam: true
+    },
+    {
+      id: 'mc-swayam-4',
+      title: 'SWAYAM: Biostatistics & Epidemiological Research for Ayush - PGIMER',
+      category: 'Clinical Research',
+      providerType: 'NPTEL / SWAYAM',
+      duration: '8 Weeks (Credit Transferable)',
+      enrolled: 940,
+      rating: '4.8',
+      price: 'Free MOOC',
+      posterImage: courseGcpPoster,
+      author: 'Prof. Anita Deshmukh',
+      authorRole: 'Biostatistics Division, PGIMER',
+      targetCohort: 'All Ayush Scholars',
+      skillGap: 'Remediation for epidemiological study design, statistical power, and SPSS / R analytics in clinical trials.',
+      competencies: ['Clinical Biostatistics', 'Epidemiology', 'Evidence Synthesis', 'SWAYAM Certified'],
+      swayamUrl: 'https://swayam.gov.in/explorer?searchText=biostatistics',
+      isSwayam: true
     }
   ]);
 
@@ -252,17 +332,20 @@ export function CoursesPage({ currentUser, activePortalId }) {
   const categories = ['All', 'Manufacturing & GMP', 'Clinical Research', 'Regulatory Compliance', 'Pharmacovigilance', 'Quality Assurance / QA'];
 
   const filteredCourses = coursesList.filter(course => {
+    const matchesPortal = portalFilter === 'All' || 
+                          (portalFilter === 'Ministry Certified' && course.providerType === 'Ministry Certified') ||
+                          (portalFilter === 'NPTEL / SWAYAM' && (course.providerType === 'NPTEL / SWAYAM' || course.isSwayam));
     const matchesCategory = selectedCategory === 'All' || course.category === selectedCategory;
     const matchesSearch = course.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
                           course.skillGap.toLowerCase().includes(searchTerm.toLowerCase()) ||
                           course.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
                           course.competencies.some(c => c.toLowerCase().includes(searchTerm.toLowerCase()));
-    return matchesCategory && matchesSearch;
+    return matchesPortal && matchesCategory && matchesSearch;
   });
 
   return (
     <div className="min-h-screen bg-[#f3f7f5] py-8 px-4 sm:px-6 lg:px-8 font-sans text-slate-900">
-      <div className="max-w-7xl mx-auto space-y-8">
+      <div className="max-w-7xl mx-auto space-y-6">
         
         {/* Clean Top Header Bar: Search on Left, + Post Course on Right */}
         <div className="bg-white rounded-3xl p-5 border border-slate-200/80 shadow-soft flex flex-col sm:flex-row justify-between items-center gap-4">
@@ -292,7 +375,55 @@ export function CoursesPage({ currentUser, activePortalId }) {
 
         </div>
 
-        {/* Course Posters Grid (Posted by Faculty) */}
+        {/* National Learning Portal Filter Tabs (Prompt #2: All | Ministry Certified | NPTEL / SWAYAM) */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-3.5 sm:p-4 rounded-3xl border border-slate-200/80 shadow-soft">
+          <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-0.5">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider mr-1 hidden sm:inline">
+              Source:
+            </span>
+            {['All', 'Ministry Certified', 'NPTEL / SWAYAM'].map((tab) => (
+              <button
+                key={tab}
+                type="button"
+                onClick={() => setPortalFilter(tab)}
+                className={`px-4 py-2 rounded-xl text-xs font-extrabold transition-all cursor-pointer flex items-center gap-1.5 shrink-0 ${
+                  portalFilter === tab
+                    ? 'bg-emerald-800 text-white shadow-xs'
+                    : 'bg-slate-50 hover:bg-slate-100 text-slate-600 border border-slate-200/80'
+                }`}
+              >
+                <span>{tab}</span>
+                {tab === 'NPTEL / SWAYAM' && (
+                  <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-amber-300 text-amber-950 font-black">
+                    Free MOOC
+                  </span>
+                )}
+              </button>
+            ))}
+          </div>
+
+          <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider mr-1 hidden lg:inline">
+              Category:
+            </span>
+            {categories.map((cat) => (
+              <button
+                key={cat}
+                type="button"
+                onClick={() => setSelectedCategory(cat)}
+                className={`px-2.5 py-1 rounded-lg text-[11px] font-semibold transition-all cursor-pointer shrink-0 ${
+                  selectedCategory === cat
+                    ? 'bg-emerald-100 text-emerald-900 border border-emerald-300 font-bold'
+                    : 'bg-white text-slate-500 hover:text-slate-800 border border-slate-200'
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Course Posters Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredCourses.map((course) => (
             <div 
@@ -309,11 +440,19 @@ export function CoursesPage({ currentUser, activePortalId }) {
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-black/30" />
                 
                 {/* Top Badges */}
-                <div className="absolute top-3 left-3 right-3 flex items-center justify-between z-10">
-                  <span className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-950 bg-emerald-400 px-2.5 py-1 rounded-lg shadow-xs">
-                    {course.category}
-                  </span>
-                  <span className="text-xs font-extrabold text-slate-950 bg-white/90 backdrop-blur-md px-3 py-1 rounded-xl shadow-xs">
+                <div className="absolute top-3 left-3 right-3 flex items-center justify-between z-10 gap-2">
+                  <div className="flex items-center gap-1.5 flex-wrap min-w-0">
+                    <span className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-950 bg-emerald-400 px-2.5 py-1 rounded-lg shadow-xs truncate">
+                      {course.category}
+                    </span>
+                    {course.isSwayam && (
+                      <span className="text-[10px] font-black uppercase tracking-wider text-teal-950 bg-teal-200 border border-teal-300 px-2 py-0.5 rounded-md shadow-xs flex items-center gap-1 shrink-0">
+                        <Sparkles className="w-3 h-3 text-teal-800" />
+                        NPTEL / SWAYAM
+                      </span>
+                    )}
+                  </div>
+                  <span className="text-xs font-extrabold text-slate-950 bg-white/90 backdrop-blur-md px-3 py-1 rounded-xl shadow-xs shrink-0">
                     {course.price}
                   </span>
                 </div>
@@ -325,7 +464,7 @@ export function CoursesPage({ currentUser, activePortalId }) {
                   </div>
                   <div className="min-w-0">
                     <span className="text-xs font-extrabold text-white block truncate leading-none">
-                      Posted by: {course.author}
+                      {course.isSwayam ? `Course Instructor: ${course.author}` : `Posted by: ${course.author}`}
                     </span>
                     <span className="text-[10px] text-emerald-200 block truncate mt-0.5 font-medium">
                       {course.authorRole}
@@ -337,9 +476,23 @@ export function CoursesPage({ currentUser, activePortalId }) {
               {/* Poster Card Details Content */}
               <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
                 <div className="space-y-2.5">
-                  <h3 className="font-extrabold text-base text-slate-900 leading-snug group-hover:text-emerald-800 transition-colors">
-                    {course.title}
-                  </h3>
+                  <div className="flex items-center justify-between gap-2 flex-wrap">
+                    <h3 className="font-extrabold text-base text-slate-900 leading-snug group-hover:text-emerald-800 transition-colors">
+                      {course.title}
+                    </h3>
+                  </div>
+
+                  {course.isSwayam && (
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <span className="inline-flex items-center gap-1 text-[10px] font-extrabold text-teal-900 bg-teal-50 border border-teal-200 px-2.5 py-0.5 rounded-md">
+                        <CheckCircle2 className="w-3 h-3 text-teal-700" />
+                        Free MOOC • Credit Transferable
+                      </span>
+                      <span className="inline-flex items-center gap-1 text-[10px] font-extrabold text-emerald-900 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-md">
+                        NPTEL / SWAYAM Certified
+                      </span>
+                    </div>
+                  )}
 
                   <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed">
                     {course.skillGap}
@@ -370,12 +523,22 @@ export function CoursesPage({ currentUser, activePortalId }) {
                 </div>
 
                 {/* Role-Specific Action Footer */}
-                <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
+                <div className="pt-4 border-t border-slate-100 flex items-center justify-between gap-3">
                   <span className="text-xs font-extrabold text-slate-900">
                     {course.price === 'Free Access' ? 'Free for Scholars' : course.price}
                   </span>
 
-                  {isFacultyPortal ? (
+                  {course.isSwayam ? (
+                    <a
+                      href={course.swayamUrl || 'https://swayam.gov.in'}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-4 py-2 bg-emerald-800 hover:bg-emerald-900 text-white rounded-xl font-bold text-xs shadow-md transition-all cursor-pointer flex items-center gap-1.5 shrink-0"
+                    >
+                      <span>Enroll on swayam.gov.in</span>
+                      <ExternalLink className="w-3.5 h-3.5 text-emerald-300" />
+                    </a>
+                  ) : isFacultyPortal ? (
                     /* FACULTY VIEW: Manage & SOP (Faculty do NOT enroll) */
                     <button
                       onClick={() => alert(`Opening preceptor SOP canvas for: ${course.title}`)}
