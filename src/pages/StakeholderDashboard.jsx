@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import { 
   LogOut, 
   LogIn,
-  RefreshCw, 
-  ChevronDown, 
   Search, 
   Flame, 
   User, 
@@ -17,7 +15,9 @@ import {
   Plus,
   MessageSquare,
   BookOpen,
-  X
+  X,
+  Landmark,
+  ShieldCheck
 } from 'lucide-react';
 import { PORTALS_DATA, PLATFORM_METADATA } from '../data/portalData';
 
@@ -58,9 +58,8 @@ export const StakeholderDashboard = ({
       if (hash === 'opportunities') return 'jobs';
       if (hash === 'industry') return 'network';
     }
-    return activePortalId === 'student' || activePortalId === 'faculty' ? 'feed' : 'console';
+    return activePortalId === 'student' || activePortalId === 'faculty' || activePortalId === 'college' ? 'feed' : 'console';
   }); // 'feed' | 'messages' | 'jobs' | 'skills' | 'network' | 'console' | 'profile' | 'courses'
-  const [roleDropdownOpen, setRoleDropdownOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [openCreatePostModal, setOpenCreatePostModal] = useState(false);
@@ -216,58 +215,6 @@ export const StakeholderDashboard = ({
       case 'console':
         return (
           <div className="space-y-6">
-            {activePortalId !== 'faculty' && activePortalId !== 'student' && (
-              <div className="bg-white p-5 sm:p-6 rounded-3xl border border-slate-200 shadow-soft flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                <div>
-                  <span className="text-xs font-bold uppercase tracking-wider text-emerald-800 bg-emerald-50 px-3 py-1 rounded-full">
-                    Operations & Management Console
-                  </span>
-                  <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 mt-2">
-                    {currentPortalConfig.title} Operational Dashboard
-                  </h2>
-                  <p className="text-xs text-slate-500 mt-1">
-                    Tailored tools and analytics for {user.name} ({currentPortalConfig.subtitle})
-                  </p>
-                </div>
-
-                <div className="relative w-full sm:w-auto">
-                  <button
-                    onClick={() => setRoleDropdownOpen(!roleDropdownOpen)}
-                    className="w-full sm:w-auto px-4 py-2.5 bg-emerald-800 hover:bg-emerald-900 text-white font-bold text-xs rounded-xl flex items-center justify-between sm:justify-start gap-2 cursor-pointer shadow-xs"
-                  >
-                    <RefreshCw className="w-3.5 h-3.5" />
-                    <span>Switch Role: {currentPortalConfig.title}</span>
-                    <ChevronDown className="w-4 h-4" />
-                  </button>
-
-                  {roleDropdownOpen && (
-                    <div className="absolute right-0 mt-2 w-64 bg-white rounded-2xl shadow-2xl border border-slate-200 py-2 z-50 animate-in fade-in">
-                      <div className="px-3 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                        Switch Role
-                      </div>
-                      {PORTALS_DATA.map((p) => (
-                        <button
-                          key={p.id}
-                          onClick={() => {
-                            setRoleDropdownOpen(false);
-                            onSwitchPortal(p.id, p.profileUser);
-                          }}
-                          className={`w-full text-left px-3 py-2 text-xs flex items-center justify-between transition-colors ${
-                            activePortalId === p.id 
-                              ? 'bg-emerald-50 text-emerald-900 font-bold' 
-                              : 'text-slate-700 hover:bg-slate-50'
-                          }`}
-                        >
-                          <span>{p.title} Console</span>
-                          <span className="text-[10px] text-slate-400">{p.subtitle}</span>
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
-
             {activePortalId === 'student' && (
               <StudentPortalView 
                 user={user} 
@@ -322,8 +269,7 @@ export const StakeholderDashboard = ({
 
   const collegeNavItems = [
     { id: 'feed', label: 'Feed', icon: Home },
-    { id: 'courses', label: 'Courses', icon: BookOpen },
-    { id: 'console', label: 'College Console', icon: Layers },
+    { id: 'console', label: 'Verification', icon: ShieldCheck },
     { id: 'network', label: 'Placement Desk', icon: Building2 }
   ];
 
@@ -469,6 +415,21 @@ export const StakeholderDashboard = ({
                   >
                     <User className="w-4 h-4 text-emerald-700" />
                     <span>View Profile Page</span>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setProfileDropdownOpen(false);
+                      const collegePortal = PORTALS_DATA.find(p => p.id === 'college');
+                      if (onSwitchPortal && collegePortal) {
+                        onSwitchPortal('college', collegePortal.profileUser);
+                      }
+                      setActiveTab('console');
+                    }}
+                    className="w-full text-left px-4 py-2 text-xs font-bold text-emerald-900 hover:bg-emerald-50 flex items-center gap-2 cursor-pointer"
+                  >
+                    <Landmark className="w-4 h-4 text-emerald-700" />
+                    <span>College Verification</span>
                   </button>
 
                   <div className="pt-1 mt-1 border-t border-slate-100">

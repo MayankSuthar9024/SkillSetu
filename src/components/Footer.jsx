@@ -98,6 +98,15 @@ export function Footer({ onNavigate, onSeeHowItWorks }) {
                 Opportunities
               </button>
             </li>
+            <li>
+              <button 
+                onClick={() => onNavigate('college')} 
+                className="text-emerald-800 hover:text-emerald-950 font-bold transition-colors hover:underline cursor-pointer flex items-center gap-1"
+              >
+                <span>College Portal (Verification Cell)</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
+              </button>
+            </li>
           </ul>
         </div>
 
