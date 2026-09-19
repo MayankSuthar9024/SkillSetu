@@ -9,7 +9,7 @@ import {
   ShieldCheck, 
   FileText, 
   PlusCircle, 
-  Sparkles,
+  Sparkles, 
   ExternalLink,
   ChevronRight,
   Briefcase,
@@ -156,7 +156,10 @@ export const CompanyPortalView = ({ user = {} }) => {
       sprintScore: '94/100',
       sprintTask: 'Triphala Churna HPTLC Marker Fingerprinting',
       hash: '0x9F4C82E1',
-      status: 'Ready for Review'
+      status: 'Applied', // 'Applied' | 'Shortlisted' | 'Interview Scheduled' | 'Offered'
+      appliedRole: 'Phytochemistry QC Trainee',
+      interviewDetails: null,
+      offerDetails: null
     },
     {
       id: 'c-2',
@@ -166,11 +169,14 @@ export const CompanyPortalView = ({ user = {} }) => {
       region: 'North Zone',
       degree: 'MD Ayurveda (Dravyaguna)',
       match: 93,
-      skills: ['Heavy Metal Assay', 'Phytopharmacy', 'Pharmacovigilance'],
+      skills: ['Heavy Metal Assay', 'Phytopharmacy', 'Pharmacovigilance', 'HPLC Column Assay'],
       sprintScore: '91/100',
       sprintTask: 'NABL Analytical Method Validation',
       hash: '0x7E3A9102',
-      status: 'Ready for Review'
+      status: 'Shortlisted',
+      appliedRole: 'Junior Clinical Trial Coordinator',
+      interviewDetails: null,
+      offerDetails: null
     },
     {
       id: 'c-3',
@@ -293,8 +299,9 @@ export const CompanyPortalView = ({ user = {} }) => {
 
   const handleShortlist = (id) => {
     setCandidates(prev => prev.map(c => 
-      c.id === id ? { ...c, status: 'Fast-Track Shortlisted' } : c
+      c.id === cand.id ? { ...c, status: 'Shortlisted' } : c
     ));
+    showToast(`Candidate ${cand.name} successfully advanced to Shortlisted! Notification dispatched to student.`);
   };
 
   const filteredCandidates = candidates.filter(c => 
@@ -313,6 +320,26 @@ export const CompanyPortalView = ({ user = {} }) => {
 
   return (
     <div className="space-y-6">
+      {/* Toast Notification Alert */}
+      {toastMessage && (
+        <div className="fixed bottom-6 right-6 z-50 bg-slate-900 text-white px-5 py-4 rounded-2xl shadow-2xl border border-emerald-500/40 flex items-center gap-3 animate-in slide-in-from-bottom-5 duration-300 max-w-lg">
+          <div className="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
+            <BellRing className="w-4 h-4 text-emerald-400 animate-bounce" />
+          </div>
+          <div className="text-xs">
+            <p className="font-bold text-emerald-300">Pipeline Update Dispatched</p>
+            <p className="text-slate-200 mt-0.5 leading-snug">{toastMessage}</p>
+          </div>
+          <button 
+            onClick={() => setToastMessage(null)}
+            className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 cursor-pointer ml-auto"
+            title="Dismiss notification"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+      )}
+
       {/* Enterprise Recruiter Banner */}
       <div className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-soft flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
         <div className="flex items-center gap-4">
@@ -328,7 +355,7 @@ export const CompanyPortalView = ({ user = {} }) => {
               <h2 className="text-xl font-extrabold text-slate-900">{user.name || 'Dabur India R&D Division'}</h2>
               <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-900 border border-amber-200 flex items-center gap-1">
                 <Building2 className="w-3.5 h-3.5" />
-                Verified Corporate Partner
+                Dabur India Ltd. (Clinical R&amp;D Division)
               </span>
             </div>
             <p className="text-xs text-slate-500 mt-1">

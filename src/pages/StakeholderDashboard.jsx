@@ -170,6 +170,9 @@ export const StakeholderDashboard = ({
             </div>
           );
         }
+        if (activePortalId === 'company') {
+          return <CompanyPortalView user={user} />;
+        }
         return (
           <JobsPage
             currentUser={user}
