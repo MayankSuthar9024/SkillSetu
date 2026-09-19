@@ -16,8 +16,8 @@ import {
   MessageSquare,
   BookOpen,
   X,
-  Landmark,
-  ShieldCheck
+  ShieldCheck,
+  Users
 } from 'lucide-react';
 import { PORTALS_DATA, PLATFORM_METADATA } from '../data/portalData';
 
@@ -25,6 +25,7 @@ import { StudentPortalView } from '../components/portals/StudentPortalView';
 import { CompanyPortalView } from '../components/portals/CompanyPortalView';
 import { FacultyPortalView } from '../components/portals/FacultyPortalView';
 import { CollegePortalView } from '../components/portals/CollegePortalView';
+import { CollegeStudentsView } from '../components/portals/CollegeStudentsView';
 import { MinistryAdminPortalView } from '../components/portals/MinistryAdminPortalView';
 
 import { FeedPage } from './FeedPage';
@@ -51,15 +52,17 @@ export const StakeholderDashboard = ({
   const [activeTab, setActiveTab] = useState(() => {
     if (typeof window !== 'undefined') {
       const hash = window.location.hash.replace('#', '');
-      if (['feed', 'courses', 'console', 'jobs', 'skills', 'network', 'profile', 'messages'].includes(hash)) {
+      if (['feed', 'courses', 'console', 'jobs', 'skills', 'network', 'profile', 'messages', 'students'].includes(hash)) {
         return hash;
       }
       if (hash === 'skill') return 'skills';
       if (hash === 'opportunities') return 'jobs';
       if (hash === 'industry') return 'network';
+      if (hash === 'placement' || hash === 'placements' || hash === 'student' || hash === 'students') return 'students';
     }
     return activePortalId === 'student' || activePortalId === 'faculty' || activePortalId === 'college' ? 'feed' : 'console';
-  }); // 'feed' | 'messages' | 'jobs' | 'skills' | 'network' | 'console' | 'profile' | 'courses'
+  }); // 'feed' | 'messages' | 'jobs' | 'skills' | 'network' | 'console' | 'profile' | 'courses' | 'students'
+  const [viewingUser, setViewingUser] = useState(null);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [openCreatePostModal, setOpenCreatePostModal] = useState(false);
@@ -68,7 +71,7 @@ export const StakeholderDashboard = ({
   React.useEffect(() => {
     const handleHash = () => {
       const hash = window.location.hash.replace('#', '');
-      if (['feed', 'courses', 'console', 'jobs', 'skills', 'network', 'profile', 'messages'].includes(hash)) {
+      if (['feed', 'courses', 'console', 'jobs', 'skills', 'network', 'profile', 'messages', 'students'].includes(hash)) {
         setActiveTab(hash);
       } else if (hash === 'skill') {
         setActiveTab('skills');
@@ -76,6 +79,8 @@ export const StakeholderDashboard = ({
         setActiveTab('jobs');
       } else if (hash === 'industry') {
         setActiveTab('network');
+      } else if (hash === 'placement' || hash === 'placements' || hash === 'student' || hash === 'students') {
+        setActiveTab('students');
       }
     };
     window.addEventListener('hashchange', handleHash);
@@ -114,8 +119,11 @@ export const StakeholderDashboard = ({
       case 'feed':
         return (
           <FeedPage
-            onNavigate={(page) => {
-              if (page === 'profile') setActiveTab('profile');
+            onNavigate={(page, targetUser) => {
+              if (page === 'profile') {
+                setViewingUser(targetUser || null);
+                setActiveTab('profile');
+              }
               else if (page === 'messages') setActiveTab('messages');
               else if (page === 'opportunities') setActiveTab('jobs');
               else if (page === 'skill') setActiveTab('skills');
@@ -129,7 +137,10 @@ export const StakeholderDashboard = ({
         return (
           <MessagePage
             onNavigate={(page) => {
-              if (page === 'profile') setActiveTab('profile');
+              if (page === 'profile') {
+                setViewingUser(null);
+                setActiveTab('profile');
+              }
               else if (page === 'feed') setActiveTab('feed');
             }}
             currentUser={user}
@@ -139,11 +150,18 @@ export const StakeholderDashboard = ({
         return (
           <ProfilePage
             onNavigate={(page) => {
-              if (page === 'feed') setActiveTab('feed');
+              if (page === 'feed') {
+                setViewingUser(null);
+                setActiveTab('feed');
+              }
               else if (page === 'messages') setActiveTab('messages');
               else if (page === 'opportunities') setActiveTab('jobs');
               else if (page === 'skill') setActiveTab('skills');
+              else if (page === 'console') setActiveTab('console');
+              else if (page === 'network') setActiveTab('network');
             }}
+            onBack={viewingUser ? () => setViewingUser(null) : undefined}
+            viewingUser={viewingUser}
             currentUser={user}
             activePortalId={activePortalId}
           />
@@ -212,6 +230,8 @@ export const StakeholderDashboard = ({
             activePortalId={activePortalId}
           />
         );
+      case 'students':
+        return <CollegeStudentsView user={user} />;
       case 'console':
         return (
           <div className="space-y-6">
@@ -270,7 +290,7 @@ export const StakeholderDashboard = ({
   const collegeNavItems = [
     { id: 'feed', label: 'Feed', icon: Home },
     { id: 'console', label: 'Verification', icon: ShieldCheck },
-    { id: 'network', label: 'Placement Desk', icon: Building2 }
+    { id: 'students', label: 'Student', icon: Users }
   ];
 
   let navItems = studentNavItems;
@@ -324,7 +344,10 @@ export const StakeholderDashboard = ({
               return (
                 <button
                   key={item.id}
-                  onClick={() => setActiveTab(item.id)}
+                  onClick={() => {
+                    setViewingUser(null);
+                    setActiveTab(item.id);
+                  }}
                   className={`flex flex-col items-center justify-center px-3 lg:px-4 py-1.5 rounded-xl text-xs transition-all cursor-pointer relative ${
                     isActive
                       ? 'text-emerald-800 font-extrabold bg-emerald-50/80 border border-emerald-200/80'
@@ -387,7 +410,10 @@ export const StakeholderDashboard = ({
             {/* User Profile PFP Avatar Button */}
             <div className="relative">
               <button
-                onClick={() => setActiveTab('profile')}
+                onClick={() => {
+                  setViewingUser(null);
+                  setActiveTab('profile');
+                }}
                 onMouseEnter={() => setProfileDropdownOpen(true)}
                 className="w-9 h-9 rounded-xl bg-emerald-800 text-white font-extrabold text-xs flex items-center justify-center shadow-xs hover:ring-2 hover:ring-emerald-600 transition-all cursor-pointer shrink-0 overflow-hidden border border-emerald-900/20"
                 title={`View Profile Page (${user.name})`}
@@ -410,26 +436,15 @@ export const StakeholderDashboard = ({
                   </div>
 
                   <button
-                    onClick={() => { setActiveTab('profile'); setProfileDropdownOpen(false); }}
+                    onClick={() => {
+                      setViewingUser(null);
+                      setActiveTab('profile');
+                      setProfileDropdownOpen(false);
+                    }}
                     className="w-full text-left px-4 py-2 text-xs font-bold text-slate-800 hover:bg-emerald-50 hover:text-emerald-900 flex items-center gap-2 cursor-pointer"
                   >
                     <User className="w-4 h-4 text-emerald-700" />
                     <span>View Profile Page</span>
-                  </button>
-
-                  <button
-                    onClick={() => {
-                      setProfileDropdownOpen(false);
-                      const collegePortal = PORTALS_DATA.find(p => p.id === 'college');
-                      if (onSwitchPortal && collegePortal) {
-                        onSwitchPortal('college', collegePortal.profileUser);
-                      }
-                      setActiveTab('console');
-                    }}
-                    className="w-full text-left px-4 py-2 text-xs font-bold text-emerald-900 hover:bg-emerald-50 flex items-center gap-2 cursor-pointer"
-                  >
-                    <Landmark className="w-4 h-4 text-emerald-700" />
-                    <span>College Verification</span>
                   </button>
 
                   <div className="pt-1 mt-1 border-t border-slate-100">
@@ -540,6 +555,83 @@ export const StakeholderDashboard = ({
               >
                 <BarChart3 className={`w-5 h-5 shrink-0 ${activeTab === 'skills' ? 'text-emerald-700' : 'text-slate-500'}`} />
                 <span className="text-[10px] mt-0.5 font-bold">Radar</span>
+              </button>
+
+            </div>
+          ) : activePortalId === 'college' ? (
+            <div className="grid grid-cols-5 items-center w-full max-w-md mx-auto px-1">
+              
+              {/* 1. Feed */}
+              <button
+                onClick={() => {
+                  setViewingUser(null);
+                  setActiveTab('feed');
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+                className={`flex flex-col items-center justify-center py-1 w-full text-xs transition-all cursor-pointer ${
+                  activeTab === 'feed' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-medium'
+                }`}
+              >
+                <Home className={`w-5 h-5 shrink-0 ${activeTab === 'feed' ? 'text-emerald-700' : 'text-slate-500'}`} />
+                <span className="text-[10px] mt-0.5 font-bold">Feed</span>
+              </button>
+
+              {/* 2. Verification */}
+              <button
+                onClick={() => {
+                  setViewingUser(null);
+                  setActiveTab('console');
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+                className={`flex flex-col items-center justify-center py-1 w-full text-xs transition-all cursor-pointer ${
+                  activeTab === 'console' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-medium'
+                }`}
+              >
+                <ShieldCheck className={`w-5 h-5 shrink-0 ${activeTab === 'console' ? 'text-emerald-700' : 'text-slate-500'}`} />
+                <span className="text-[10px] mt-0.5 font-bold">Verification</span>
+              </button>
+
+              {/* 3. Center Elevated Floating Green (+) Button */}
+              <div className="flex items-center justify-center relative -mt-7 w-full">
+                <div className="w-13 h-13 rounded-full bg-white flex items-center justify-center shadow-lg border border-slate-100 p-0.5">
+                  <button
+                    onClick={handleOpenCreatePost}
+                    className="w-11 h-11 rounded-full bg-emerald-800 hover:bg-emerald-900 active:scale-95 text-white flex items-center justify-center shadow-md hover:shadow-lg transition-all cursor-pointer group"
+                    title="Create Post"
+                  >
+                    <Plus className="w-5 h-5 stroke-[2.5] group-hover:rotate-90 transition-transform duration-300" />
+                  </button>
+                </div>
+              </div>
+
+              {/* 4. Student */}
+              <button
+                onClick={() => {
+                  setViewingUser(null);
+                  setActiveTab('students');
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+                className={`flex flex-col items-center justify-center py-1 w-full text-xs transition-all cursor-pointer ${
+                  activeTab === 'students' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-medium'
+                }`}
+              >
+                <Users className={`w-5 h-5 shrink-0 ${activeTab === 'students' ? 'text-emerald-700' : 'text-slate-500'}`} />
+                <span className="text-[10px] mt-0.5 font-bold">Student</span>
+              </button>
+
+              {/* 5. Profile */}
+              <button
+                onClick={() => {
+                  setViewingUser(null);
+                  setActiveTab('profile');
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+                className={`flex flex-col items-center justify-center py-1 w-full text-xs transition-all cursor-pointer ${
+                  activeTab === 'profile' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-medium'
+                }`}
+              >
+                <User className={`w-5 h-5 shrink-0 ${activeTab === 'profile' ? 'text-emerald-700' : 'text-slate-500'}`} />
+                <span className="text-[10px] mt-0.5 font-bold">Profile</span>
               </button>
 
             </div>

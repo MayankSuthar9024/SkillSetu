@@ -23,7 +23,10 @@ import {
   Layers,
   Award,
   Users,
-  Briefcase
+  Briefcase,
+  ArrowUpDown,
+  ArrowUp,
+  ArrowDown
 } from 'lucide-react';
 import { PLATFORM_METADATA } from '../../data/portalData';
 
@@ -141,114 +144,6 @@ const INITIAL_VERIFIED_RECORDS = [
   }
 ];
 
-// Mock Enrolled Student and Placement Directory Data
-const INITIAL_COLLEGE_STUDENTS = [
-  {
-    id: 'stu-001',
-    name: 'Aarav Sharma',
-    rollNumber: 'NIA-2022-AY-042',
-    program: 'BAMS (Final Year)',
-    cgpa: '8.94',
-    avatar: 'AS',
-    placementStatus: 'Placed',
-    company: 'Dabur India Ltd',
-    package: '₹8.50 LPA',
-    role: 'Ayush Analytical QC Associate',
-    skills: ['HPTLC', 'Schedule T GMP', 'Phytochemistry']
-  },
-  {
-    id: 'stu-002',
-    name: 'Pooja Iyer',
-    rollNumber: 'NIA-2021-AY-018',
-    program: 'MD Ayurveda (Dravyaguna)',
-    cgpa: '9.20',
-    avatar: 'PI',
-    placementStatus: 'Placed',
-    company: 'Himalaya Wellness',
-    package: '₹10.20 LPA',
-    role: 'Formulations Scientist',
-    skills: ['Pharmacovigilance', 'HPLC', 'Heavy Metal Assay']
-  },
-  {
-    id: 'stu-003',
-    name: 'Sunita Patel',
-    rollNumber: 'NIA-2021-AY-118',
-    program: 'BAMS (Final Year)',
-    cgpa: '8.75',
-    avatar: 'SP',
-    placementStatus: 'Placed',
-    company: 'Patanjali Research Foundation',
-    package: '₹7.80 LPA',
-    role: 'Clinical Research Associate',
-    skills: ['Clinical Trials', 'Schedule T', 'Phytopharmacy']
-  },
-  {
-    id: 'stu-004',
-    name: 'Rohan Deshmukh',
-    rollNumber: 'NIA-2023-AY-089',
-    program: 'BAMS (3rd Year)',
-    cgpa: '8.40',
-    avatar: 'RD',
-    placementStatus: 'Internship',
-    company: 'All India Institute of Ayurveda',
-    package: '₹35,000/mo',
-    role: 'Clinical Resident Intern',
-    skills: ['Kayachikitsa', 'Panchakarma', 'Patient History']
-  },
-  {
-    id: 'stu-005',
-    name: 'Neha Gupta',
-    rollNumber: 'NIA-2021-AY-064',
-    program: 'M.Pharm (Ayurveda)',
-    cgpa: '9.10',
-    avatar: 'NG',
-    placementStatus: 'Placed',
-    company: 'Charak Pharma',
-    package: '₹9.00 LPA',
-    role: 'Quality Assurance Chemist',
-    skills: ['Standardization', 'GLP', 'Documentation']
-  },
-  {
-    id: 'stu-006',
-    name: 'Kavita Reddy',
-    rollNumber: 'NIA-2022-AY-055',
-    program: 'BAMS (Final Year)',
-    cgpa: '8.60',
-    avatar: 'KR',
-    placementStatus: 'Internship',
-    company: 'CCRAS Regional Center',
-    package: '₹30,000/mo',
-    role: 'Ayush Research Intern',
-    skills: ['Clinical Protocols', 'Nadi Pariksha', 'Epidemiology']
-  },
-  {
-    id: 'stu-007',
-    name: 'Vikram Joshi',
-    rollNumber: 'NIA-2022-AY-072',
-    program: 'BAMS (Final Year)',
-    cgpa: '7.90',
-    avatar: 'VJ',
-    placementStatus: 'Seeking',
-    company: 'Emami Ayush Division',
-    package: 'Interviewing',
-    role: 'QC Trainee (In Pipeline)',
-    skills: ['Phytochemistry', 'Rasa Shastra', 'Schedule T']
-  },
-  {
-    id: 'stu-008',
-    name: 'Ananya Verma',
-    rollNumber: 'NIA-2021-AY-033',
-    program: 'M.Pharm (Ayurveda)',
-    cgpa: '8.90',
-    avatar: 'AV',
-    placementStatus: 'Placed',
-    company: 'Baidyanath Research',
-    package: '₹8.20 LPA',
-    role: 'Formulation Chemist',
-    skills: ['HPLC', 'Extraction', 'Microbiology']
-  }
-];
-
 // Helper to generate a realistic 64-character SHA-256 cryptographic digest
 const generateSha256Hash = (rollNumber, docName) => {
   const seed = `${rollNumber}-${docName}-${Date.now()}`;
@@ -279,8 +174,19 @@ export const CollegePortalView = ({ user, onBack }) => {
   // Search and Filter State
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
-  const [studentSearchQuery, setStudentSearchQuery] = useState('');
-  const [studentStatusFilter, setStudentStatusFilter] = useState('all');
+
+  // Sorting State for Queue
+  const [sortField, setSortField] = useState('date'); // 'date' | 'name' | 'rollNumber' | 'document'
+  const [sortDirection, setSortDirection] = useState('desc'); // 'asc' | 'desc'
+
+  const handleSort = (field) => {
+    if (sortField === field) {
+      setSortDirection((prev) => (prev === 'asc' ? 'desc' : 'asc'));
+    } else {
+      setSortField(field);
+      setSortDirection(field === 'date' ? 'desc' : 'asc');
+    }
+  };
 
   // Modal & Toast States
   const [toast, setToast] = useState(null);
@@ -379,18 +285,18 @@ export const CollegePortalView = ({ user, onBack }) => {
     return matchesSearch && matchesCategory;
   });
 
-  // Filter students by search and placement status
-  const filteredStudents = INITIAL_COLLEGE_STUDENTS.filter((stu) => {
-    const matchesSearch =
-      stu.name.toLowerCase().includes(studentSearchQuery.toLowerCase()) ||
-      stu.rollNumber.toLowerCase().includes(studentSearchQuery.toLowerCase()) ||
-      stu.program.toLowerCase().includes(studentSearchQuery.toLowerCase()) ||
-      stu.company.toLowerCase().includes(studentSearchQuery.toLowerCase());
-
-    const matchesFilter =
-      studentStatusFilter === 'all' || stu.placementStatus === studentStatusFilter;
-
-    return matchesSearch && matchesFilter;
+  const sortedPending = [...filteredPending].sort((a, b) => {
+    let result = 0;
+    if (sortField === 'name') {
+      result = a.candidateName.localeCompare(b.candidateName);
+    } else if (sortField === 'rollNumber') {
+      result = a.rollNumber.localeCompare(b.rollNumber);
+    } else if (sortField === 'document') {
+      result = a.documentClaimed.localeCompare(b.documentClaimed);
+    } else if (sortField === 'date') {
+      result = new Date(a.submittedOn).getTime() - new Date(b.submittedOn).getTime();
+    }
+    return sortDirection === 'asc' ? result : -result;
   });
 
   return (
@@ -471,64 +377,43 @@ export const CollegePortalView = ({ user, onBack }) => {
       <div className="flex flex-wrap items-center gap-2 border-b border-slate-200 pb-2">
         <button
           onClick={() => setActiveTab('queue')}
-          className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer flex items-center gap-2 ${
+          className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 ${
             activeTab === 'queue'
               ? 'bg-emerald-800 text-white shadow-xs'
               : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
           }`}
         >
           <Clock className="w-4 h-4" />
-          <span>Verification Queue</span>
+          <span>Credentials Verification Queue (Registrar Cell)</span>
           <span
-            className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
+            className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold ${
               activeTab === 'queue'
                 ? 'bg-emerald-700 text-emerald-100'
                 : 'bg-amber-100 text-amber-800'
             }`}
           >
-            {pendingSubmissions.length}
+            {pendingSubmissions.length} Pending
           </span>
         </button>
 
         <button
           onClick={() => setActiveTab('verified')}
-          className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer flex items-center gap-2 ${
+          className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 ${
             activeTab === 'verified'
               ? 'bg-emerald-800 text-white shadow-xs'
               : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
           }`}
         >
           <ShieldCheck className="w-4 h-4" />
-          <span>Verified Records</span>
+          <span>NCISM / University Verified Audit Ledger</span>
           <span
-            className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
+            className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold ${
               activeTab === 'verified'
                 ? 'bg-emerald-700 text-emerald-100'
                 : 'bg-emerald-100 text-emerald-800'
             }`}
           >
-            {verifiedRecords.length}
-          </span>
-        </button>
-
-        <button
-          onClick={() => setActiveTab('students')}
-          className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer flex items-center gap-2 ${
-            activeTab === 'students'
-              ? 'bg-emerald-800 text-white shadow-xs'
-              : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
-          }`}
-        >
-          <Users className="w-4 h-4" />
-          <span>Students & Placements</span>
-          <span
-            className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
-              activeTab === 'students'
-                ? 'bg-emerald-700 text-emerald-100'
-                : 'bg-slate-100 text-slate-700'
-            }`}
-          >
-            {INITIAL_COLLEGE_STUDENTS.length}
+            {verifiedRecords.length} Stamped
           </span>
         </button>
       </div>
@@ -537,42 +422,71 @@ export const CollegePortalView = ({ user, onBack }) => {
       {activeTab === 'queue' && (
         <div className="space-y-4">
           {/* Information & Toolbar Header */}
-          <div className="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-soft">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-soft space-y-3">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
               <div>
-                <h3 className="text-sm font-bold text-slate-900">
-                  Verification Queue ({pendingSubmissions.length} pending)
-                </h3>
+                <div className="flex items-center gap-2">
+                  <h3 className="text-sm font-bold text-slate-900">
+                    Digital Asset Verification Cell
+                  </h3>
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-50 text-amber-800 border border-amber-200">
+                    {sortedPending.length} Pending
+                  </span>
+                </div>
                 <p className="text-xs text-slate-500 mt-0.5">
-                  Verify submitted credentials and marks against DigiLocker.
+                  Click headers to sort or use controls below to audit DigiLocker credentials.
                 </p>
               </div>
 
-              {/* Search & Category Filter */}
+              {/* Search, Sort & Category Filter */}
               <div className="flex flex-wrap items-center gap-2">
-                <div className="relative min-w-[240px]">
-                  <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
+                {/* Search Box */}
+                <div className="relative min-w-[200px] flex-1 sm:flex-initial">
+                  <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
                   <input
                     type="text"
-                    placeholder="Search candidate, roll no, doc..."
+                    placeholder="Search candidate, roll, doc..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full bg-slate-50 focus:bg-white border border-slate-200 rounded-xl pl-9 pr-3 py-1.5 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-700 transition-all"
+                    className="w-full bg-slate-50 focus:bg-white border border-slate-200 rounded-xl pl-9 pr-7 py-1.5 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-700 transition-all"
                   />
                   {searchQuery && (
                     <button
                       onClick={() => setSearchQuery('')}
-                      className="absolute right-2.5 top-2.5 text-slate-400 hover:text-slate-600 cursor-pointer"
+                      className="absolute right-2.5 top-2 text-slate-400 hover:text-slate-600 cursor-pointer"
                     >
                       <X className="w-3.5 h-3.5" />
                     </button>
                   )}
                 </div>
 
+                {/* Quick Sort Dropdown */}
+                <div className="flex items-center gap-1.5 bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-1.5 text-xs">
+                  <ArrowUpDown className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                  <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Sort:</span>
+                  <select
+                    value={`${sortField}-${sortDirection}`}
+                    onChange={(e) => {
+                      const [field, dir] = e.target.value.split('-');
+                      setSortField(field);
+                      setSortDirection(dir);
+                    }}
+                    className="bg-transparent font-semibold text-slate-800 text-xs focus:outline-none cursor-pointer"
+                  >
+                    <option value="date-desc">Newest Submissions</option>
+                    <option value="date-asc">Oldest Submissions</option>
+                    <option value="name-asc">Candidate Name (A → Z)</option>
+                    <option value="name-desc">Candidate Name (Z → A)</option>
+                    <option value="rollNumber-asc">Roll Number (Asc)</option>
+                    <option value="document-asc">Document Name</option>
+                  </select>
+                </div>
+
+                {/* Category Filter */}
                 <select
                   value={categoryFilter}
                   onChange={(e) => setCategoryFilter(e.target.value)}
-                  className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-700 cursor-pointer"
+                  className="bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-1.5 text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-700 cursor-pointer"
                 >
                   <option value="all">All Document Types</option>
                   <option value="marksheet">Marksheets</option>
@@ -591,104 +505,156 @@ export const CollegePortalView = ({ user, onBack }) => {
                         message: 'Reset pending approvals queue back to initial state.'
                       });
                     }}
-                    className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold flex items-center gap-1 cursor-pointer transition-all"
+                    className="px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold flex items-center gap-1 cursor-pointer transition-all"
                     title="Reset mock pending queue"
                   >
                     <RotateCcw className="w-3.5 h-3.5" />
-                    <span>Reset Queue</span>
+                    <span>Reset</span>
                   </button>
                 )}
               </div>
             </div>
           </div>
 
-          {/* Submissions Table */}
-          {filteredPending.length > 0 ? (
-            <div className="bg-white rounded-3xl border border-slate-200/80 shadow-soft overflow-hidden">
-              <div className="overflow-x-auto">
-                <table className="w-full text-left border-collapse">
+          {/* Submissions Table - Simplified, No Horizontal Scroll */}
+          {sortedPending.length > 0 ? (
+            <div className="bg-white rounded-2xl border border-slate-200/80 shadow-soft overflow-hidden">
+              <div className="w-full">
+                <table className="w-full text-left border-collapse table-auto">
                   <thead>
-                    <tr className="bg-slate-50/80 border-b border-slate-200 text-[11px] font-bold uppercase tracking-wider text-slate-500">
-                      <th className="py-3 px-4 sm:px-6">Candidate</th>
-                      <th className="py-3 px-4">Document</th>
-                      <th className="py-3 px-4">Submitted</th>
-                      <th className="py-3 px-4">Status</th>
-                      <th className="py-3 px-4 sm:px-6 text-right">Actions</th>
+                    <tr className="bg-slate-50/90 border-b border-slate-200 text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                      {/* 1. Sortable: Candidate & Roll (28%) */}
+                      <th
+                        onClick={() => handleSort('name')}
+                        className="py-3 px-4 sm:px-5 cursor-pointer select-none hover:bg-slate-100 transition-colors group w-[28%]"
+                        title="Click to sort by Candidate Name"
+                      >
+                        <div className="flex items-center gap-1.5">
+                          <span>Candidate & Roll</span>
+                          {sortField === 'name' ? (
+                            sortDirection === 'asc' ? (
+                              <ArrowUp className="w-3.5 h-3.5 text-emerald-700 stroke-[2.5]" />
+                            ) : (
+                              <ArrowDown className="w-3.5 h-3.5 text-emerald-700 stroke-[2.5]" />
+                            )
+                          ) : (
+                            <ArrowUpDown className="w-3 h-3 text-slate-300 group-hover:text-slate-500 transition-colors" />
+                          )}
+                        </div>
+                      </th>
+
+                      {/* 2. Sortable: Claimed Document & Evidence (40%) */}
+                      <th
+                        onClick={() => handleSort('document')}
+                        className="py-3 px-4 cursor-pointer select-none hover:bg-slate-100 transition-colors group w-[40%]"
+                        title="Click to sort by Document Title"
+                      >
+                        <div className="flex items-center gap-1.5">
+                          <span>Document Claimed & Evidence</span>
+                          {sortField === 'document' ? (
+                            sortDirection === 'asc' ? (
+                              <ArrowUp className="w-3.5 h-3.5 text-emerald-700 stroke-[2.5]" />
+                            ) : (
+                              <ArrowDown className="w-3.5 h-3.5 text-emerald-700 stroke-[2.5]" />
+                            )
+                          ) : sortField === 'date' ? (
+                            sortDirection === 'asc' ? (
+                              <ArrowUp className="w-3.5 h-3.5 text-emerald-700 stroke-[2.5]" />
+                            ) : (
+                              <ArrowDown className="w-3.5 h-3.5 text-emerald-700 stroke-[2.5]" />
+                            )
+                          ) : (
+                            <ArrowUpDown className="w-3 h-3 text-slate-300 group-hover:text-slate-500 transition-colors" />
+                          )}
+                        </div>
+                      </th>
+
+                      {/* 3. Status (14%) */}
+                      <th className="py-3 px-4 w-[14%]">
+                        <span>Status</span>
+                      </th>
+
+                      {/* 4. Actions (18%) */}
+                      <th className="py-3 px-4 sm:px-5 text-right w-[18%]">
+                        <span>Actions</span>
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100 text-xs">
-                    {filteredPending.map((item) => (
+                    {sortedPending.map((item) => (
                       <tr
                         key={item.id}
-                        className="hover:bg-slate-50/70 transition-colors group"
+                        className="hover:bg-slate-50/80 transition-colors group"
                       >
-                        {/* Candidate */}
-                        <td className="py-3.5 px-4 sm:px-6">
-                          <div className="flex items-center gap-3">
-                            <div className="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-900 font-bold text-xs flex items-center justify-center shrink-0">
+                        {/* 1. Candidate Name & Roll Number */}
+                        <td className="py-2.5 px-4 sm:px-5">
+                          <div className="flex items-center gap-2.5">
+                            <div className="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-900 font-bold text-xs flex items-center justify-center shrink-0">
                               {item.avatar}
                             </div>
-                            <div>
-                              <div className="font-semibold text-slate-900 text-sm">
-                                {item.candidateName}
+                            <div className="min-w-0">
+                              <div className="flex items-center gap-1.5 flex-wrap">
+                                <span className="font-bold text-slate-900 text-xs sm:text-sm">
+                                  {item.candidateName}
+                                </span>
+                                <span className="font-mono text-[10px] text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded font-medium">
+                                  {item.rollNumber}
+                                </span>
                               </div>
-                              <div className="text-slate-500 text-xs mt-0.5">
-                                {item.rollNumber} · <span className="text-slate-400">{item.program}</span>
+                              <div className="text-[10px] text-slate-400 mt-0.5 truncate">
+                                {item.program}
                               </div>
                             </div>
                           </div>
                         </td>
 
-                        {/* Document Claimed */}
-                        <td className="py-3.5 px-4">
-                          <div className="font-medium text-slate-900 text-xs">
+                        {/* 2. Simplified: Document Claimed + File Attachment + Date */}
+                        <td className="py-2.5 px-4">
+                          <div className="font-semibold text-slate-900 text-xs leading-snug">
                             {item.documentClaimed}
                           </div>
-                          <span className="text-[11px] text-slate-400 mt-0.5 block">
-                            {item.documentCategory}
-                          </span>
-                        </td>
-
-                        {/* Submitted On & File Link */}
-                        <td className="py-3.5 px-4 whitespace-nowrap">
-                          <div className="text-xs text-slate-600">
-                            {item.submittedOn}
+                          <div className="flex items-center gap-2 mt-0.5 text-[11px] text-slate-500 flex-wrap">
+                            <button
+                              onClick={() => setPreviewDoc(item)}
+                              className="inline-flex items-center gap-1 text-emerald-700 hover:text-emerald-900 font-semibold cursor-pointer hover:underline"
+                              title="Click to view submitted document preview"
+                            >
+                              <FileText className="w-3 h-3 text-emerald-600 shrink-0" />
+                              <span>{item.fileLink}</span>
+                            </button>
+                            <span className="text-slate-300">•</span>
+                            <span className="text-slate-500 text-[10px]">{item.submittedOn}</span>
+                            <span className="text-slate-300">•</span>
+                            <span className="text-slate-400 text-[10px]">{item.documentCategory}</span>
                           </div>
-                          <button
-                            onClick={() => setPreviewDoc(item)}
-                            className="inline-flex items-center gap-1 text-emerald-700 hover:text-emerald-900 text-xs font-medium mt-0.5 cursor-pointer hover:underline"
-                          >
-                            <FileText className="w-3.5 h-3.5" />
-                            <span>View Document</span>
-                          </button>
                         </td>
 
-                        {/* DigiLocker Status */}
-                        <td className="py-3.5 px-4 whitespace-nowrap">
-                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-800 border border-emerald-200">
-                            <Check className="w-3.5 h-3.5 text-emerald-600" />
+                        {/* 3. DigiLocker Status */}
+                        <td className="py-2.5 px-4 whitespace-nowrap">
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
+                            <Check className="w-3 h-3 text-emerald-600" />
                             <span>DigiLocker Verified</span>
                           </span>
                         </td>
 
-                        {/* Actions */}
-                        <td className="py-3.5 px-4 sm:px-6 text-right whitespace-nowrap">
-                          <div className="flex items-center justify-end gap-2">
-                            {/* Verify Button */}
+                        {/* 4. Actions: Compact & Aligned */}
+                        <td className="py-2.5 px-4 sm:px-5 text-right">
+                          <div className="flex items-center justify-end gap-1.5 flex-nowrap">
+                            {/* Verify & Stamp Button */}
                             <button
                               onClick={() => handleVerifyAndStamp(item)}
-                              className="bg-emerald-700 hover:bg-emerald-800 active:scale-95 text-white px-3 py-1.5 rounded-lg text-xs font-semibold transition-all shadow-xs flex items-center gap-1.5 cursor-pointer"
-                              title="Verify and approve"
+                              className="bg-emerald-800 hover:bg-emerald-900 active:scale-95 text-white px-2.5 py-1.5 rounded-xl text-xs font-bold transition-all shadow-xs flex items-center gap-1 cursor-pointer whitespace-nowrap"
+                              title="Verify & Stamp SHA-256 Digest"
                             >
-                              <ShieldCheck className="w-3.5 h-3.5" />
-                              <span>Verify</span>
+                              <ShieldCheck className="w-3.5 h-3.5 text-emerald-300" />
+                              <span>Verify & Stamp</span>
                             </button>
 
-                            {/* Reject Button */}
+                            {/* Reject / Resubmit Button */}
                             <button
                               onClick={() => setRejectModalItem(item)}
-                              className="bg-rose-50 hover:bg-rose-100 active:scale-95 text-rose-700 hover:text-rose-800 border border-rose-200 px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer flex items-center gap-1"
-                              title="Reject submission"
+                              className="bg-rose-50 hover:bg-rose-100 active:scale-95 text-rose-700 hover:text-rose-800 border border-rose-200 px-2 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer flex items-center gap-1 whitespace-nowrap"
+                              title="Reject / Request Resubmission"
                             >
                               <X className="w-3.5 h-3.5" />
                               <span>Reject</span>
@@ -830,182 +796,6 @@ export const CollegePortalView = ({ user, onBack }) => {
               </table>
             </div>
           </div>
-        </div>
-      )}
-
-      {/* TAB 3 CONTENT: Students Directory & Placement Outcomes */}
-      {activeTab === 'students' && (
-        <div className="space-y-4">
-          {/* Summary Metric Cards */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-soft">
-              <span className="text-[11px] font-medium text-slate-500 block">Total Students</span>
-              <span className="text-xl font-bold text-slate-900 mt-0.5 block">{user?.enrolledScholars || 680}</span>
-              <span className="text-[10px] text-slate-400">All departments</span>
-            </div>
-
-            <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-soft">
-              <span className="text-[11px] font-medium text-slate-500 block">Students Placed</span>
-              <span className="text-xl font-bold text-emerald-700 mt-0.5 block">520</span>
-              <span className="text-[10px] text-emerald-600 font-semibold">{user?.placementRate || '76.5%'} placement rate</span>
-            </div>
-
-            <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-soft">
-              <span className="text-[11px] font-medium text-slate-500 block">Clinical Internships</span>
-              <span className="text-xl font-bold text-blue-700 mt-0.5 block">120</span>
-              <span className="text-[10px] text-slate-400">Schedule T & Hospital</span>
-            </div>
-
-            <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-soft">
-              <span className="text-[11px] font-medium text-slate-500 block">Average Package</span>
-              <span className="text-xl font-bold text-slate-900 mt-0.5 block">₹8.40 LPA</span>
-              <span className="text-[10px] text-slate-400">Highest: ₹10.20 LPA</span>
-            </div>
-          </div>
-
-          {/* Search & Filter Toolbar */}
-          <div className="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-soft">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-              <div>
-                <h3 className="text-sm font-bold text-slate-900">
-                  Student Directory ({filteredStudents.length} of {INITIAL_COLLEGE_STUDENTS.length})
-                </h3>
-                <p className="text-xs text-slate-500 mt-0.5">
-                  View student academic credentials and placement status.
-                </p>
-              </div>
-
-              <div className="flex flex-wrap items-center gap-2">
-                <div className="relative min-w-[220px]">
-                  <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
-                  <input
-                    type="text"
-                    placeholder="Search student, roll, company..."
-                    value={studentSearchQuery}
-                    onChange={(e) => setStudentSearchQuery(e.target.value)}
-                    className="w-full bg-slate-50 focus:bg-white border border-slate-200 rounded-xl pl-9 pr-3 py-1.5 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-700 transition-all"
-                  />
-                  {studentSearchQuery && (
-                    <button
-                      onClick={() => setStudentSearchQuery('')}
-                      className="absolute right-2.5 top-2.5 text-slate-400 hover:text-slate-600 cursor-pointer"
-                    >
-                      <X className="w-3.5 h-3.5" />
-                    </button>
-                  )}
-                </div>
-
-                <select
-                  value={studentStatusFilter}
-                  onChange={(e) => setStudentStatusFilter(e.target.value)}
-                  className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-700 cursor-pointer"
-                >
-                  <option value="all">All Status</option>
-                  <option value="Placed">Placed</option>
-                  <option value="Internship">Internship</option>
-                  <option value="Seeking">In Pipeline</option>
-                </select>
-              </div>
-            </div>
-          </div>
-
-          {/* Students Table */}
-          {filteredStudents.length > 0 ? (
-            <div className="bg-white rounded-2xl border border-slate-200/80 shadow-soft overflow-hidden">
-              <div className="overflow-x-auto">
-                <table className="w-full text-left border-collapse">
-                  <thead>
-                    <tr className="bg-slate-50/80 border-b border-slate-200 text-[11px] font-bold uppercase tracking-wider text-slate-500">
-                      <th className="py-3 px-4 sm:px-6">Student</th>
-                      <th className="py-3 px-4">Program & CGPA</th>
-                      <th className="py-3 px-4">Status</th>
-                      <th className="py-3 px-4">Company & Package</th>
-                      <th className="py-3 px-4 sm:px-6">Key Skills</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100 text-xs">
-                    {filteredStudents.map((stu) => (
-                      <tr key={stu.id} className="hover:bg-slate-50/70 transition-colors">
-                        {/* Student */}
-                        <td className="py-3.5 px-4 sm:px-6">
-                          <div className="flex items-center gap-3">
-                            <div className="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-900 font-bold text-xs flex items-center justify-center shrink-0">
-                              {stu.avatar}
-                            </div>
-                            <div>
-                              <div className="font-semibold text-slate-900 text-sm">
-                                {stu.name}
-                              </div>
-                              <div className="text-slate-500 text-xs mt-0.5">
-                                {stu.rollNumber}
-                              </div>
-                            </div>
-                          </div>
-                        </td>
-
-                        {/* Program & CGPA */}
-                        <td className="py-3.5 px-4 whitespace-nowrap">
-                          <div className="font-medium text-slate-900 text-xs">{stu.program}</div>
-                          <span className="text-[11px] text-slate-500 mt-0.5 block">
-                            CGPA: <span className="font-semibold text-slate-700">{stu.cgpa}</span>
-                          </span>
-                        </td>
-
-                        {/* Status */}
-                        <td className="py-3.5 px-4 whitespace-nowrap">
-                          {stu.placementStatus === 'Placed' && (
-                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-800 border border-emerald-200">
-                              <Check className="w-3.5 h-3.5 text-emerald-600" />
-                              <span>Placed</span>
-                            </span>
-                          )}
-                          {stu.placementStatus === 'Internship' && (
-                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-800 border border-blue-200">
-                              <Clock className="w-3.5 h-3.5 text-blue-600" />
-                              <span>Internship</span>
-                            </span>
-                          )}
-                          {stu.placementStatus === 'Seeking' && (
-                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-amber-50 text-amber-800 border border-amber-200">
-                              <span>In Pipeline</span>
-                            </span>
-                          )}
-                        </td>
-
-                        {/* Company & Package */}
-                        <td className="py-3.5 px-4">
-                          <div className="font-medium text-slate-900 text-xs">
-                            {stu.company}
-                          </div>
-                          <span className="text-[11px] text-slate-500 mt-0.5 block font-semibold text-emerald-700">
-                            {stu.package}
-                          </span>
-                        </td>
-
-                        {/* Skills */}
-                        <td className="py-3.5 px-4 sm:px-6">
-                          <div className="flex items-center gap-1.5 flex-wrap">
-                            {stu.skills.map((skill, i) => (
-                              <span
-                                key={i}
-                                className="px-2 py-0.5 rounded-md text-[11px] bg-slate-100 text-slate-600 font-medium"
-                              >
-                                {skill}
-                              </span>
-                            ))}
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          ) : (
-            <div className="bg-white rounded-2xl p-8 border border-slate-200 text-center">
-              <p className="text-xs text-slate-500">No students found matching your filter criteria.</p>
-            </div>
-          )}
         </div>
       )}
 
