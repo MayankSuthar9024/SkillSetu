@@ -19,8 +19,10 @@ import {
 } from 'lucide-react';
 import { INITIAL_FEED_POSTS } from '../data/feedPostsData';
 import { ALL_COURSES } from '../data/coursesData';
+import { useNotifications } from '../context/NotificationContext';
 
 export function JobsPage({ currentUser, onNavigate }) {
+  const { dispatchNotification } = useNotifications();
   const [activeTab, setActiveTab] = useState('explore'); // 'explore' | 'applied'
   const [searchQuery, setSearchQuery] = useState('');
   const [locationFilter, setLocationFilter] = useState('all');
@@ -186,6 +188,19 @@ export function JobsPage({ currentUser, onNavigate }) {
 
     setAppliedList(prev => [newApplication, ...prev]);
     setAppliedModalJob(job);
+
+    // Cross-Stakeholder Notification: Student -> Company (Workflow 1)
+    dispatchNotification({
+      targetRole: 'company',
+      targetRecipientId: job.companyId || (job.company && job.company.toLowerCase().includes('dabur') ? 'EMP-DABUR-QC-89' : null),
+      targetRecipientName: job.company,
+      senderId: currentUser?.id || 'NIA/AY/2026/0491',
+      senderName: currentUser?.name || 'Aarav Sharma',
+      senderRole: 'student',
+      title: `New applicant for ${job.title}`,
+      message: `${currentUser?.name || 'Aarav Sharma'} applied for ${job.title} at ${job.company}. Match Rank: ${job.match}%.`,
+      link: '#dashboard-company'
+    });
   };
 
   // Open course in Skill section

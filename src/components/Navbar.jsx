@@ -18,13 +18,28 @@ import {
   Menu, 
   X, 
   Flame,
-  ShieldCheck
+  ShieldCheck,
+  Bell,
+  CheckCheck,
+  Clock,
+  ExternalLink
 } from 'lucide-react';
+import { useNotifications, formatRelativeTime } from '../context/NotificationContext';
 
-export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpenAuthModal, currentUser, onLogout }) {
+export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpenVerifierModal, onOpenAuthModal, currentUser, onLogout }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('hero');
+
+  const { 
+    roleNotifications, 
+    unreadCount, 
+    markAsRead, 
+    markAllAsRead, 
+    filterMode, 
+    setFilterMode 
+  } = useNotifications();
 
   const navItems = [
     { id: 'hero', label: 'Home' },
@@ -73,13 +88,40 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
     return () => window.removeEventListener('scroll', handleScroll);
   }, [activePage]);
 
-  // Click outside to close profile dropdown
+  // Click outside to close dropdowns
   useEffect(() => {
-    if (!profileDropdownOpen) return;
-    const handleClickOutside = () => setProfileDropdownOpen(false);
+    if (!profileDropdownOpen && !notificationsOpen) return;
+    const handleClickOutside = () => {
+      setProfileDropdownOpen(false);
+      setNotificationsOpen(false);
+    };
     window.addEventListener('click', handleClickOutside);
     return () => window.removeEventListener('click', handleClickOutside);
-  }, [profileDropdownOpen]);
+  }, [profileDropdownOpen, notificationsOpen]);
+
+  // Keyboard navigation: Escape key closes menus (Gap #9)
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setNotificationsOpen(false);
+        setProfileDropdownOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  const handleNotificationClick = (item) => {
+    markAsRead(item.id);
+    setNotificationsOpen(false);
+    if (item.link) {
+      if (item.link.startsWith('#')) {
+        window.location.hash = item.link.slice(1);
+      } else {
+        window.location.href = item.link;
+      }
+    }
+  };
 
   const handleNavClick = (id) => {
     setMobileMenuOpen(false);
@@ -118,6 +160,187 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
   const userAvatar = currentUser?.avatar || 'AS';
   const userName = currentUser?.name || 'Aarav Sharma';
   const userRole = currentUser?.role || 'BAMS Scholar';
+
+  const renderNotificationBell = (isMobile = false) => (
+    <div className="relative">
+      <button
+        type="button"
+        id={isMobile ? 'navbar-bell-mobile' : 'navbar-bell-desktop'}
+        aria-haspopup="menu"
+        aria-expanded={notificationsOpen}
+        aria-label={`Notifications. ${unreadCount} unread`}
+        onClick={(e) => {
+          e.stopPropagation();
+          setNotificationsOpen(prev => !prev);
+          setProfileDropdownOpen(false);
+        }}
+        className={`rounded-xl flex items-center justify-center transition-all cursor-pointer relative border ${
+          isMobile ? 'w-9 h-9' : 'w-10 h-10'
+        } ${
+          notificationsOpen 
+            ? 'bg-emerald-50 text-emerald-900 border-emerald-300 ring-2 ring-emerald-600/20' 
+            : 'bg-white hover:bg-slate-50 text-slate-700 border-slate-200/80 shadow-xs'
+        }`}
+        title="Notifications & Cross-Stakeholder Activity"
+      >
+        <Bell className={isMobile ? 'w-4 h-4' : 'w-4.5 h-4.5'} />
+        {unreadCount > 0 && (
+          <span 
+            aria-live="polite"
+            className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 bg-rose-500 text-white rounded-full text-[10px] font-black flex items-center justify-center ring-2 ring-white shadow-xs"
+          >
+            {unreadCount > 99 ? '99+' : unreadCount}
+          </span>
+        )}
+      </button>
+
+      {notificationsOpen && (
+        <div
+          role="menu"
+          aria-orientation="vertical"
+          onClick={(e) => e.stopPropagation()}
+          className={`absolute ${isMobile ? 'right-[-40px] w-80' : 'right-0 w-80 sm:w-96'} mt-2 bg-white rounded-2xl shadow-2xl border border-slate-200/90 py-2.5 z-50 animate-in fade-in zoom-in-95 text-left`}
+        >
+          {/* Header */}
+          <div className="px-4 pb-2.5 border-b border-slate-100 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="font-extrabold text-xs sm:text-sm text-slate-900">Notifications</span>
+              {unreadCount > 0 ? (
+                <span className="text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200 px-2 py-0.5 rounded-full">
+                  {unreadCount} Unread
+                </span>
+              ) : (
+                <span className="text-[10px] font-bold bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full">
+                  All caught up
+                </span>
+              )}
+            </div>
+            <div className="flex items-center gap-2">
+              {unreadCount > 0 && (
+                <button
+                  type="button"
+                  onClick={markAllAsRead}
+                  className="text-[11px] font-bold text-emerald-800 hover:text-emerald-950 hover:underline flex items-center gap-1 cursor-pointer transition-colors"
+                  title="Mark all notifications as read"
+                >
+                  <CheckCheck className="w-3.5 h-3.5" />
+                  <span>Mark all read</span>
+                </button>
+              )}
+              <button
+                type="button"
+                onClick={() => setNotificationsOpen(false)}
+                className="text-slate-400 hover:text-slate-700 p-1 rounded-lg hover:bg-slate-100 cursor-pointer transition-colors"
+                title="Close notifications (Esc)"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+
+          {/* Filter Toggle: Current Role vs All Stakeholder Feeds */}
+          <div className="px-3 pt-2 pb-1.5 flex gap-1 border-b border-slate-100 bg-slate-50/60">
+            <button
+              type="button"
+              onClick={() => setFilterMode('role')}
+              className={`flex-1 py-1 text-[11px] font-bold rounded-lg transition-all cursor-pointer ${
+                filterMode === 'role'
+                  ? 'bg-white text-emerald-900 shadow-xs border border-slate-200'
+                  : 'text-slate-500 hover:text-slate-800'
+              }`}
+            >
+              My Role
+            </button>
+            <button
+              type="button"
+              onClick={() => setFilterMode('all')}
+              className={`flex-1 py-1 text-[11px] font-bold rounded-lg transition-all cursor-pointer ${
+                filterMode === 'all'
+                  ? 'bg-white text-emerald-900 shadow-xs border border-slate-200'
+                  : 'text-slate-500 hover:text-slate-800'
+              }`}
+            >
+              All Activity
+            </button>
+          </div>
+
+          {/* Notification items list */}
+          <div className="max-h-80 overflow-y-auto divide-y divide-slate-100" tabIndex={0}>
+            {roleNotifications.length === 0 ? (
+              <div className="p-8 text-center">
+                <div className="w-10 h-10 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto mb-2">
+                  <CheckCircle2 className="w-5 h-5" />
+                </div>
+                <p className="text-xs font-bold text-slate-700">No notifications in this view</p>
+                <p className="text-[11px] text-slate-400 mt-0.5">Events from applications, interviews, and NOC requests will sync here automatically.</p>
+              </div>
+            ) : (
+              roleNotifications.map((item) => {
+                const roleBadgeColor = 
+                  item.targetRole === 'company' ? 'bg-amber-50 text-amber-800 border-amber-200' :
+                  item.targetRole === 'student' ? 'bg-emerald-50 text-emerald-800 border-emerald-200' :
+                  item.targetRole === 'college' ? 'bg-blue-50 text-blue-800 border-blue-200' :
+                  'bg-purple-50 text-purple-800 border-purple-200';
+
+                return (
+                  <div
+                    key={item.id}
+                    role="menuitem"
+                    tabIndex={0}
+                    onClick={() => handleNotificationClick(item)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        handleNotificationClick(item);
+                      }
+                    }}
+                    className={`p-3 sm:p-3.5 transition-colors cursor-pointer flex gap-3 items-start outline-none focus:bg-emerald-50/70 hover:bg-slate-50 ${
+                      !item.read ? 'bg-emerald-50/40 border-l-3 border-emerald-600' : ''
+                    }`}
+                  >
+                    <div className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 mt-0.5 border ${roleBadgeColor}`}>
+                      {item.targetRole === 'company' ? <Briefcase className="w-4 h-4" /> :
+                       item.targetRole === 'student' ? <User className="w-4 h-4" /> :
+                       item.targetRole === 'college' ? <Building2 className="w-4 h-4" /> :
+                       <Sparkles className="w-4 h-4" />}
+                    </div>
+
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between gap-1">
+                        <span className="text-[10px] font-extrabold uppercase tracking-wide text-slate-500">
+                          {item.senderName || item.senderRole || 'System'}
+                        </span>
+                        <span className="text-[10px] text-slate-400 flex items-center gap-0.5 shrink-0">
+                          <Clock className="w-3 h-3" />
+                          {formatRelativeTime(item.timestamp)}
+                        </span>
+                      </div>
+                      <h5 className={`text-xs mt-0.5 line-clamp-1 ${!item.read ? 'font-black text-slate-950' : 'font-bold text-slate-800'}`}>
+                        {item.title}
+                      </h5>
+                      <p className="text-[11px] text-slate-600 mt-0.5 line-clamp-2 leading-tight">
+                        {item.message}
+                      </p>
+                      {item.link && (
+                        <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-800 mt-1 hover:underline">
+                          <span>Open workflow</span>
+                          <ExternalLink className="w-2.5 h-2.5" />
+                        </span>
+                      )}
+                    </div>
+
+                    {!item.read && (
+                      <span className="w-2 h-2 rounded-full bg-emerald-600 shrink-0 mt-2" title="Unread" />
+                    )}
+                  </div>
+                );
+              })
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
 
   return (
     <>
@@ -167,7 +390,24 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
           </nav>
 
           {/* Right Action CTAs */}
-          <div className="hidden md:flex gap-3 items-center">
+          <div className="hidden md:flex gap-2.5 items-center">
+            {/* Public Cryptographic Credential Verifier Button */}
+            <button
+              type="button"
+              onClick={() => {
+                if (onOpenVerifierModal) onOpenVerifierModal();
+                else window.dispatchEvent(new CustomEvent('open_credential_verifier'));
+              }}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold text-emerald-900 bg-emerald-50/80 hover:bg-emerald-100 border border-emerald-200/90 transition-all cursor-pointer shadow-2xs hover:shadow-xs active:scale-95 shrink-0"
+              title="Cryptographic Credential Verifier (SHA-256)"
+            >
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
+              <span>Verify Integrity</span>
+            </button>
+
+            {/* Cross-Stakeholder Notification Bell (Hidden on Landing Page) */}
+            {activePage !== 'home' && renderNotificationBell(false)}
+
             {currentUser ? (
               /* Profile PFP Avatar Button (Only when user is signed in) */
               <div className="relative">
@@ -219,6 +459,19 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
                       <span>View Profile Page</span>
                     </button>
 
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setProfileDropdownOpen(false);
+                        if (onOpenVerifierModal) onOpenVerifierModal();
+                        else window.dispatchEvent(new CustomEvent('open_credential_verifier'));
+                      }}
+                      className="w-full text-left px-4 py-2 text-xs font-bold text-slate-800 hover:bg-emerald-50 hover:text-emerald-900 flex items-center gap-2 cursor-pointer"
+                    >
+                      <ShieldCheck className="w-4 h-4 text-emerald-700" />
+                      <span>Verify Credential Integrity</span>
+                    </button>
+
                     <div className="pt-1 mt-1 border-t border-slate-100">
                       <button
                         type="button"
@@ -254,6 +507,9 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
 
           {/* Mobile Action Controls */}
           <div className="md:hidden flex items-center gap-2">
+            {/* Mobile Notification Bell (Hidden on Landing Page) */}
+            {activePage !== 'home' && renderNotificationBell(true)}
+
             {currentUser ? (
               <div className="relative">
                 <button
@@ -289,6 +545,19 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
                     >
                       <User className="w-4 h-4 text-emerald-700" />
                       <span>View Profile Page</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setProfileDropdownOpen(false);
+                        if (onOpenVerifierModal) onOpenVerifierModal();
+                        else window.dispatchEvent(new CustomEvent('open_credential_verifier'));
+                      }}
+                      className="w-full text-left px-4 py-2 text-xs font-bold text-slate-800 hover:bg-emerald-50 hover:text-emerald-900 flex items-center gap-2 cursor-pointer"
+                    >
+                      <ShieldCheck className="w-4 h-4 text-emerald-700" />
+                      <span>Verify Credential Integrity</span>
                     </button>
 
                     <div className="pt-1 mt-1 border-t border-slate-100">
@@ -349,6 +618,18 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
             })}
 
             <div className="pt-4 border-t border-slate-200 space-y-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  if (onOpenVerifierModal) onOpenVerifierModal();
+                  else window.dispatchEvent(new CustomEvent('open_credential_verifier'));
+                }}
+                className="w-full py-3 bg-slate-50 hover:bg-emerald-50 text-slate-800 hover:text-emerald-900 font-bold rounded-xl text-sm flex items-center justify-center gap-2 border border-slate-200 transition-colors cursor-pointer"
+              >
+                <ShieldCheck className="w-4 h-4 text-emerald-700" />
+                <span>Verify Credential Integrity</span>
+              </button>
               {currentUser ? (
                 <>
                   <button

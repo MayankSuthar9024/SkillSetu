@@ -21,24 +21,25 @@ import {
   X,
   Clock,
   Award,
-  Check,
   Building,
   School,
   Calendar,
   Video,
-  Send,
   BellRing,
-  FileCheck,
-  CheckCircle,
-  LayoutGrid,
   List,
-  DollarSign,
-  ArrowUpRight,
-  AlertCircle,
-  Copy
+  LayoutGrid
 } from 'lucide-react';
+import { useNotifications } from '../../context/NotificationContext';
 
 export const CompanyPortalView = ({ user = {} }) => {
+  // ATS Pipeline Stages
+  const PIPELINE_STAGES = [
+    { id: 'Applied', label: 'Applied', color: 'bg-slate-100 text-slate-700 border-slate-200' },
+    { id: 'Shortlisted', label: 'Shortlisted', color: 'bg-emerald-50 text-emerald-800 border-emerald-200' },
+    { id: 'Interview', label: 'Interview', color: 'bg-blue-50 text-blue-800 border-blue-200' },
+    { id: 'Offered', label: 'Offered', color: 'bg-amber-50 text-amber-800 border-amber-200' },
+  ];
+
   // Available Academic Institution Tiers for Targeting
   const INSTITUTION_TIERS = [
     {
@@ -240,175 +241,28 @@ export const CompanyPortalView = ({ user = {} }) => {
     }
   ]);
 
-  const [activeViewTab, setActiveViewTab] = useState('applications'); // 'applications' | 'listings' | 'candidates'
-  const [pipelineLayout, setPipelineLayout] = useState('list'); // 'list' | 'kanban'
-  const [selectedStageFilter, setSelectedStageFilter] = useState('All'); // 'All' | 'Applied' | 'Shortlisted' | 'Interview Scheduled' | 'Offer Extended'
-  const [filterMatch, setFilterMatch] = useState(70);
+  const { dispatchNotification } = useNotifications();
+  const [activeViewTab, setActiveViewTab] = useState('listings'); // 'listings' | 'candidates'
+  const [filterMatch, setFilterMatch] = useState(80);
   const [searchTerm, setSearchTerm] = useState('');
   const [jobSearchTerm, setJobSearchTerm] = useState('');
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
   const [postedSuccess, setPostedSuccess] = useState(false);
-
-  // Scheduled Count state: initial count is 1 (c-3), increments whenever an interview is scheduled!
-  const [scheduledCount, setScheduledCount] = useState(1);
-
-  // Toast Notification State
   const [toastMessage, setToastMessage] = useState(null);
-  const [toastTimer, setToastTimer] = useState(null);
+  const [selectedStageFilter, setSelectedStageFilter] = useState('All');
+  const [pipelineLayout, setPipelineLayout] = useState('list'); // 'list' | 'kanban'
 
-  const showToast = (message) => {
-    if (toastTimer) clearTimeout(toastTimer);
-    setToastMessage(message);
-    const t = setTimeout(() => {
-      setToastMessage(null);
-    }, 4500);
-    setToastTimer(t);
+  const showToast = (msg) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(null), 4000);
   };
 
-  // Schedule Interview Modal State
+  // Interview Scheduling State
   const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
-  const [scheduleCandidate, setScheduleCandidate] = useState(null);
-  const [scheduleForm, setScheduleForm] = useState({
-    date: '2026-09-26',
-    time: '11:00',
-    link: 'https://meet.google.com/ayu-viva-vct',
-    roundType: 'Technical Viva'
-  });
-
-  // Extend Offer Modal State
-  const [isOfferModalOpen, setIsOfferModalOpen] = useState(false);
-  const [offerCandidate, setOfferCandidate] = useState(null);
-  const [offerForm, setOfferForm] = useState({
-    roleTitle: '',
-    ctc: '₹7.5 LPA'
-  });
-
-  // 4 Simple & Clean Pipeline Stages (Unified minimal styling, not overly colorful)
-  const PIPELINE_STAGES = [
-    { id: 'Applied', label: 'Applied', stepNum: '1' },
-    { id: 'Shortlisted', label: 'Shortlisted', stepNum: '2' },
-    { id: 'Interview', label: 'Interview', stepNum: '3' },
-    { id: 'Offered', label: 'Offered', stepNum: '4' }
-  ];
-
-  const isOfferedStatus = (status) => status === 'Offered' || status === 'Offer Extended';
-  const isInterviewStatus = (status) => status === 'Interview' || status === 'Interview Scheduled';
-
-  const getStageIndex = (status) => {
-    if (status === 'Applied') return 0;
-    if (status === 'Shortlisted' || status === 'Shortlist') return 1;
-    if (isInterviewStatus(status)) return 2;
-    if (isOfferedStatus(status)) return 3;
-    return 0;
-  };
-
-  const getStageLabel = (status) => {
-    if (isOfferedStatus(status)) return 'Offered';
-    if (isInterviewStatus(status)) return 'Interview';
-    if (status === 'Shortlisted' || status === 'Shortlist') return 'Shortlisted';
-    return 'Applied';
-  };
-
-  // Stage Advancement Handlers
-  const handleShortlistCandidate = (cand) => {
-    setCandidates(prev => prev.map(c => 
-      c.id === cand.id ? { ...c, status: 'Shortlisted' } : c
-    ));
-    showToast(`Candidate ${cand.name} successfully advanced to Shortlisted! Notification dispatched to candidate.`);
-  };
-
-  const handleOpenSchedule = (cand) => {
-    setScheduleCandidate(cand);
-    setScheduleForm({
-      date: cand.interviewDetails?.date || '2026-09-26',
-      time: cand.interviewDetails?.time || '11:00',
-      link: cand.interviewDetails?.link || 'https://meet.google.com/ayu-viva-vct',
-      roundType: cand.interviewDetails?.roundType || 'Technical Viva'
-    });
-    setIsScheduleModalOpen(true);
-  };
-
-  const handleScheduleSubmit = (e) => {
-    if (e) e.preventDefault();
-    if (!scheduleCandidate) return;
-
-    const candId = scheduleCandidate.id;
-    setCandidates(prev => prev.map(c => 
-      c.id === candId ? {
-        ...c,
-        status: 'Interview',
-        interviewDetails: {
-          date: scheduleForm.date,
-          time: scheduleForm.time,
-          link: scheduleForm.link,
-          roundType: scheduleForm.roundType
-        }
-      } : c
-    ));
-
-    // Increment scheduled count as required
-    setScheduledCount(prev => prev + 1);
-
-    setIsScheduleModalOpen(false);
-    setScheduleCandidate(null);
-
-    // Exact required toast:
-    showToast("Interview Invitation dispatched to candidate's notification center");
-  };
-
-  const handleOpenOffer = (cand) => {
-    setOfferCandidate(cand);
-    setOfferForm({
-      roleTitle: cand.offerDetails?.roleTitle || cand.appliedRole || 'Ayush Research Scientist',
-      ctc: cand.offerDetails?.ctc || '₹7.5 LPA'
-    });
-    setIsOfferModalOpen(true);
-  };
-
-  const handleOfferSubmit = (e) => {
-    if (e) e.preventDefault();
-    if (!offerCandidate) return;
-
-    const candId = offerCandidate.id;
-    const candName = offerCandidate.name;
-
-    setCandidates(prev => prev.map(c => 
-      c.id === candId ? {
-        ...c,
-        status: 'Offered',
-        offerDetails: {
-          roleTitle: offerForm.roleTitle,
-          ctc: offerForm.ctc,
-          extendedDate: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
-        }
-      } : c
-    ));
-
-    setIsOfferModalOpen(false);
-    setOfferCandidate(null);
-
-    showToast(`Official Offer Letter (${offerForm.ctc}) for ${offerForm.roleTitle} extended to ${candName}! Status updated to Offered.`);
-  };
-
-  const handleDirectStageChange = (cand, targetStage) => {
-    if (targetStage === 'Interview' || targetStage === 'Interview Scheduled') {
-      handleOpenSchedule(cand);
-      return;
-    }
-    if (targetStage === 'Offered' || targetStage === 'Offer Extended') {
-      handleOpenOffer(cand);
-      return;
-    }
-    if (targetStage === 'Shortlisted' || targetStage === 'Shortlist') {
-      handleShortlistCandidate(cand);
-      return;
-    }
-    // Moving to Applied
-    setCandidates(prev => prev.map(c => 
-      c.id === cand.id ? { ...c, status: 'Applied' } : c
-    ));
-    showToast(`Candidate ${cand.name} moved to Applied stage.`);
-  };
+  const [schedulingCandidate, setSchedulingCandidate] = useState(null);
+  const [interviewDate, setInterviewDate] = useState('2026-09-25T11:00');
+  const [interviewRound, setInterviewRound] = useState('Technical HPTLC & GMP Assay Round');
+  const [interviewMode, setInterviewMode] = useState('SkillSetu Virtual Proctor Video Room');
 
   // New Opportunity Form State with Candidate Sourcing Scope
   const [opportunityForm, setOpportunityForm] = useState({
@@ -492,14 +346,104 @@ export const CompanyPortalView = ({ user = {} }) => {
     }, 1200);
   };
 
+  const handleShortlist = (id) => {
+    const target = candidates.find(c => c.id === id);
+    setCandidates(prev => prev.map(c => 
+      c.id === id ? { ...c, status: 'Fast-Track Shortlisted' } : c
+    ));
+    if (target) {
+      showToast(`Candidate ${target.name} successfully advanced to Shortlisted! Notification dispatched to student.`);
+      dispatchNotification({
+        targetRole: 'student',
+        targetRecipientId: target.id || 'NIA/AY/2026/0491',
+        targetRecipientName: target.name,
+        senderId: user?.id || 'EMP-DABUR-QC-89',
+        senderName: user?.institution || user?.name || 'Dabur India R&D Division',
+        senderRole: 'company',
+        title: `Shortlisted by ${user?.institution || user?.name || 'Dabur India'}`,
+        message: `${user?.institution || user?.name || 'Dabur India'} reviewed your verifiable profile and shortlisted you for technical interview.`,
+        link: '#dashboard-student'
+      });
+    }
+  };
+
+  const handleOpenScheduleModal = (cand) => {
+    setSchedulingCandidate(cand);
+    setIsScheduleModalOpen(true);
+  };
+
+  const handleConfirmScheduleInterview = (e) => {
+    if (e) e.preventDefault();
+    if (!schedulingCandidate) return;
+
+    setCandidates(prev => prev.map(c => 
+      c.id === schedulingCandidate.id ? { ...c, status: 'Interview Scheduled' } : c
+    ));
+
+    const companyName = user?.institution || user?.name || 'Dabur India R&D Division';
+    const companyId = user?.id || 'EMP-DABUR-QC-89';
+    let formattedDate = 'Upcoming Date';
+    try {
+      formattedDate = new Date(interviewDate).toLocaleString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    } catch {
+      formattedDate = interviewDate;
+    }
+
+    // Cross-Stakeholder Notification: Company -> Student: Interview Scheduled (Workflow 2)
+    dispatchNotification({
+      targetRole: 'student',
+      targetRecipientId: schedulingCandidate.id || 'NIA/AY/2026/0491',
+      targetRecipientName: schedulingCandidate.name,
+      senderId: companyId,
+      senderName: companyName,
+      senderRole: 'company',
+      title: `Interview scheduled with ${companyName}`,
+      message: `${companyName} scheduled an interview for ${interviewRound} on ${formattedDate} (${interviewMode}).`,
+      link: '#dashboard-student'
+    });
+
+    showToast(`Interview confirmed with ${schedulingCandidate.name} for ${formattedDate}! Notification dispatched to student.`);
+    setIsScheduleModalOpen(false);
+    setSchedulingCandidate(null);
+  };
+
+  const handleDirectStageChange = (cand, stageId) => {
+    const statusMap = {
+      'Applied': null, // revert to applied (no special status)
+      'Shortlisted': 'Fast-Track Shortlisted',
+      'Interview': 'Interview Scheduled',
+      'Offered': 'Offered',
+    };
+    const newStatus = statusMap[stageId] ?? cand.status;
+    setCandidates(prev => prev.map(c =>
+      c.id === cand.id ? { ...c, status: newStatus } : c
+    ));
+  };
+
+  const getStageLabel = (status) => {
+    if (!status) return 'Applied';
+    if (status === 'Fast-Track Shortlisted') return 'Shortlisted';
+    if (status === 'Interview Scheduled') return 'Interview';
+    if (status === 'Offered') return 'Offered';
+    return 'Applied';
+  };
+
+  const getStageIndex = (status) => {
+    const stageOrder = ['Applied', 'Shortlisted', 'Interview', 'Offered'];
+    return stageOrder.indexOf(getStageLabel(status));
+  };
+
   const filteredCandidates = candidates.filter(c => {
     const matchesScore = c.match >= filterMatch;
-    const matchesSearch = 
-      c.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    const matchesSearch = !searchTerm ||
+      c.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       c.institution.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (c.appliedRole && c.appliedRole.toLowerCase().includes(searchTerm.toLowerCase())) ||
       c.skills.some(s => s.toLowerCase().includes(searchTerm.toLowerCase()));
-
     const currentStageLabel = getStageLabel(c.status);
     const matchesStage = selectedStageFilter === 'All' || currentStageLabel === selectedStageFilter;
 
@@ -512,6 +456,10 @@ export const CompanyPortalView = ({ user = {} }) => {
     j.targetRegion.toLowerCase().includes(jobSearchTerm.toLowerCase()) ||
     j.targetTiers.some(t => t.toLowerCase().includes(jobSearchTerm.toLowerCase()))
   );
+
+  // Derived counts for metrics cards
+  const scheduledCount = candidates.filter(c => getStageLabel(c.status) === 'Interview').length;
+  const isOfferedStatus = (status) => getStageLabel(status) === 'Offered';
 
   return (
     <div className="space-y-6">
@@ -911,26 +859,6 @@ export const CompanyPortalView = ({ user = {} }) => {
                 />
               </div>
 
-              <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
-                <span className="text-xs text-slate-500 font-medium flex items-center gap-1">
-                  <Sparkles className="w-3.5 h-3.5 text-emerald-600" /> Min Match:
-                </span>
-                <div className="flex gap-1">
-                  {[70, 80, 90].map((threshold) => (
-                    <button
-                      key={threshold}
-                      onClick={() => setFilterMatch(threshold)}
-                      className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                        filterMatch === threshold
-                          ? 'bg-emerald-800 text-white shadow-xs'
-                          : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                      }`}
-                    >
-                      {threshold}%+
-                    </button>
-                  ))}
-                </div>
-              </div>
             </div>
           </div>
 
@@ -1509,268 +1437,119 @@ export const CompanyPortalView = ({ user = {} }) => {
         </div>
       )}
 
-      {/* 1. SCHEDULE INTERVIEW MODAL */}
-      {isScheduleModalOpen && scheduleCandidate && (
+      {/* SCHEDULE INTERVIEW MODAL (WORKFLOW 2: COMPANY -> STUDENT) */}
+      {isScheduleModalOpen && schedulingCandidate && (
         <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white rounded-3xl p-6 sm:p-7 max-w-lg w-full shadow-2xl border border-slate-200 space-y-5 my-8 animate-in zoom-in-95 duration-200">
+          <div className="bg-white rounded-3xl p-6 sm:p-7 max-w-lg w-full shadow-2xl border border-slate-200 space-y-5 my-8 animate-in zoom-in-95">
             {/* Header */}
-            <div className="flex items-start justify-between gap-4 pb-3 border-b border-slate-100">
+            <div className="flex items-start justify-between gap-3 pb-3 border-b border-slate-100">
               <div>
-                <h3 className="text-lg font-black text-slate-900 tracking-tight flex items-center gap-2">
-                  <Calendar className="w-5 h-5 text-amber-700" />
-                  <span>Schedule Interview</span>
+                <h3 className="text-base sm:text-lg font-black text-slate-900 flex items-center gap-2">
+                  <Calendar className="w-5 h-5 text-emerald-800" />
+                  <span>Schedule Technical Interview</span>
                 </h3>
                 <p className="text-xs text-slate-500 mt-0.5">
-                  Configure technical round, session schedule, and dispatch calendar link to candidate.
+                  Coordinate live laboratory assessment and dispatch cross-stakeholder notification.
                 </p>
               </div>
               <button
                 onClick={() => {
                   setIsScheduleModalOpen(false);
-                  setScheduleCandidate(null);
+                  setSchedulingCandidate(null);
                 }}
-                className="p-1.5 rounded-xl hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition-colors cursor-pointer"
+                className="p-1.5 rounded-xl hover:bg-slate-100 text-slate-400 hover:text-slate-700 cursor-pointer"
+                title="Close"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            {/* Candidate Context Pill */}
-            <div className="p-3.5 bg-amber-50/60 rounded-2xl border border-amber-200/80 flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-amber-100 text-amber-900 font-extrabold flex items-center justify-center text-sm shrink-0 border border-amber-200">
-                {scheduleCandidate.name.split(' ').map(n => n[0]).join('')}
+            {/* Candidate Card Summary */}
+            <div className="p-3.5 bg-emerald-50/70 rounded-2xl border border-emerald-200/80 flex items-center justify-between">
+              <div>
+                <h4 className="text-sm font-extrabold text-emerald-950">{schedulingCandidate.name}</h4>
+                <p className="text-[11px] text-emerald-700 font-medium">
+                  {schedulingCandidate.degree} · {schedulingCandidate.institution}
+                </p>
               </div>
-              <div className="text-xs">
-                <strong className="block text-slate-900 font-bold">{scheduleCandidate.name}</strong>
-                <span className="text-slate-500">{scheduleCandidate.degree} · {scheduleCandidate.institution}</span>
-                <span className="block text-amber-800 font-bold mt-0.5">Role: {scheduleCandidate.appliedRole || 'Ayush QC Trainee'}</span>
-              </div>
+              <span className="px-2.5 py-1 rounded-xl bg-white border border-emerald-300 text-xs font-black text-emerald-900 shadow-2xs">
+                {schedulingCandidate.match}% Match
+              </span>
             </div>
 
-            <form onSubmit={handleScheduleSubmit} className="space-y-4">
-              {/* Round Type */}
+            <form onSubmit={handleConfirmScheduleInterview} className="space-y-4">
               <div>
                 <label className="text-xs font-bold text-slate-700 block mb-1">
-                  Evaluation Round Type <span className="text-red-500">*</span>
+                  Interview Assessment Round
                 </label>
-                <div className="grid grid-cols-3 gap-2">
-                  {['Technical Viva', 'HR', 'Clinical Assay'].map((type) => (
-                    <button
-                      key={type}
-                      type="button"
-                      onClick={() => setScheduleForm(prev => ({ ...prev, roundType: type }))}
-                      className={`p-2.5 rounded-xl border text-xs font-bold transition-all cursor-pointer text-center ${
-                        scheduleForm.roundType === type
-                          ? 'bg-amber-600 text-white border-amber-700 shadow-xs'
-                          : 'bg-white hover:bg-slate-50 text-slate-700 border-slate-200'
-                      }`}
-                    >
-                      {type}
-                    </button>
-                  ))}
-                </div>
+                <select
+                  value={interviewRound}
+                  onChange={(e) => setInterviewRound(e.target.value)}
+                  className="w-full p-2.5 text-xs bg-slate-50 rounded-xl border border-slate-200 text-slate-800 font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-700"
+                >
+                  <option value="Technical HPTLC & GMP Assay Round">Technical HPTLC &amp; GMP Assay Round</option>
+                  <option value="Schedule T Cleanroom Viva & Protocol Review">Schedule T Cleanroom Viva &amp; Protocol Review</option>
+                  <option value="Ayurvedic Phytopharmacy & QC Case Evaluation">Ayurvedic Phytopharmacy &amp; QC Case Evaluation</option>
+                  <option value="Final Corporate HR & Stipend Discussion">Final Corporate HR &amp; Stipend Discussion</option>
+                </select>
               </div>
 
-              {/* Date & Time Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="text-xs font-bold text-slate-700 block mb-1">
-                    Interview Date <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="date"
-                    required
-                    value={scheduleForm.date}
-                    onChange={(e) => setScheduleForm(prev => ({ ...prev, date: e.target.value }))}
-                    className="w-full p-2.5 text-xs bg-slate-50 rounded-xl border border-slate-200 text-slate-800 font-semibold focus:outline-none focus:ring-2 focus:ring-amber-600"
-                  />
-                </div>
-                <div>
-                  <label className="text-xs font-bold text-slate-700 block mb-1">
-                    Session Time <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="time"
-                    required
-                    value={scheduleForm.time}
-                    onChange={(e) => setScheduleForm(prev => ({ ...prev, time: e.target.value }))}
-                    className="w-full p-2.5 text-xs bg-slate-50 rounded-xl border border-slate-200 text-slate-800 font-semibold focus:outline-none focus:ring-2 focus:ring-amber-600"
-                  />
-                </div>
-              </div>
-
-              {/* Google Meet / Physical Room Link */}
               <div>
                 <label className="text-xs font-bold text-slate-700 block mb-1">
-                  Google Meet / Physical Room Link <span className="text-red-500">*</span>
+                  Date &amp; Time
                 </label>
-                <div className="relative">
-                  <Video className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                  <input
-                    type="text"
-                    required
-                    placeholder="https://meet.google.com/xyz-abc-def or Lab Room No."
-                    value={scheduleForm.link}
-                    onChange={(e) => setScheduleForm(prev => ({ ...prev, link: e.target.value }))}
-                    className="w-full pl-9 pr-3 py-2.5 text-xs bg-slate-50 rounded-xl border border-slate-200 text-slate-900 font-medium focus:outline-none focus:ring-2 focus:ring-amber-600"
-                  />
-                </div>
-                {/* Presets */}
-                <div className="flex flex-wrap gap-1.5 mt-2">
-                  <span className="text-[10px] text-slate-400 font-bold self-center">Presets:</span>
-                  <button
-                    type="button"
-                    onClick={() => setScheduleForm(prev => ({ ...prev, link: 'https://meet.google.com/ayu-viva-vct' }))}
-                    className="px-2 py-0.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-md text-[10px] font-semibold cursor-pointer"
-                  >
-                    Google Meet
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setScheduleForm(prev => ({ ...prev, link: 'Cleanroom Operations Lab 2B, Haridwar' }))}
-                    className="px-2 py-0.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-md text-[10px] font-semibold cursor-pointer"
-                  >
-                    Cleanroom Lab 2B
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setScheduleForm(prev => ({ ...prev, link: 'Apex Assessment Hall 4A, AIIA Delhi' }))}
-                    className="px-2 py-0.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-md text-[10px] font-semibold cursor-pointer"
-                  >
-                    Apex Boardroom 4A
-                  </button>
-                </div>
+                <input
+                  type="datetime-local"
+                  required
+                  value={interviewDate}
+                  onChange={(e) => setInterviewDate(e.target.value)}
+                  className="w-full p-2.5 text-xs bg-slate-50 rounded-xl border border-slate-200 text-slate-800 font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-700"
+                />
               </div>
 
-              {/* Action Buttons */}
+              <div>
+                <label className="text-xs font-bold text-slate-700 block mb-1">
+                  Interview Venue / Format
+                </label>
+                <select
+                  value={interviewMode}
+                  onChange={(e) => setInterviewMode(e.target.value)}
+                  className="w-full p-2.5 text-xs bg-slate-50 rounded-xl border border-slate-200 text-slate-800 font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-700"
+                >
+                  <option value="SkillSetu Virtual Proctor Video Room">SkillSetu Virtual Proctor Video Room (DigiLocker Stamped)</option>
+                  <option value="On-Site Corporate R&D Laboratory">On-Site Corporate R&amp;D Laboratory (Ghaziabad / Haridwar)</option>
+                  <option value="Hybrid Remote Viva Room">Hybrid Remote Viva Room</option>
+                </select>
+              </div>
+
+              <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 text-[11px] text-slate-600 space-y-1">
+                <div className="flex items-center gap-1.5 font-bold text-slate-800">
+                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-700" />
+                  <span>Real-Time Cross-Stakeholder Sync</span>
+                </div>
+                <p>
+                  Submitting this dispatch immediately sends an in-app notification to the student, logs the event across browser tabs, and flags candidate status in the ATS.
+                </p>
+              </div>
+
+              {/* Modal Footer Actions */}
               <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
                 <button
                   type="button"
                   onClick={() => {
                     setIsScheduleModalOpen(false);
-                    setScheduleCandidate(null);
+                    setSchedulingCandidate(null);
                   }}
-                  className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition-colors cursor-pointer"
+                  className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition-colors cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2.5 bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold rounded-xl shadow-md transition-all cursor-pointer flex items-center gap-1.5 active:scale-95"
+                  className="px-5 py-2 bg-emerald-800 hover:bg-emerald-900 text-white text-xs font-bold rounded-xl shadow-md transition-all cursor-pointer flex items-center gap-1.5 active:scale-95"
                 >
-                  <Calendar className="w-4 h-4 text-amber-200" />
-                  <span>Schedule &amp; Dispatch Invitation</span>
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* 2. EXTEND OFFER MODAL */}
-      {isOfferModalOpen && offerCandidate && (
-        <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white rounded-3xl p-6 sm:p-7 max-w-lg w-full shadow-2xl border border-slate-200 space-y-5 my-8 animate-in zoom-in-95 duration-200">
-            {/* Header */}
-            <div className="flex items-start justify-between gap-4 pb-3 border-b border-slate-100">
-              <div>
-                <h3 className="text-lg font-black text-slate-900 tracking-tight flex items-center gap-2">
-                  <Award className="w-5 h-5 text-emerald-700" />
-                  <span>Extend Official Offer Letter</span>
-                </h3>
-                <p className="text-xs text-slate-500 mt-0.5">
-                  Specify CTC compensation terms and role title to issue formal pre-placement offer.
-                </p>
-              </div>
-              <button
-                onClick={() => {
-                  setIsOfferModalOpen(false);
-                  setOfferCandidate(null);
-                }}
-                className="p-1.5 rounded-xl hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition-colors cursor-pointer"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            {/* Candidate Context Pill */}
-            <div className="p-3.5 bg-emerald-50/70 rounded-2xl border border-emerald-200/80 flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-900 font-extrabold flex items-center justify-center text-sm shrink-0 border border-emerald-200">
-                {offerCandidate.name.split(' ').map(n => n[0]).join('')}
-              </div>
-              <div className="text-xs">
-                <strong className="block text-slate-900 font-bold">{offerCandidate.name}</strong>
-                <span className="text-slate-500">{offerCandidate.degree} · {offerCandidate.institution}</span>
-                <span className="block text-emerald-800 font-bold mt-0.5">Sprint Score: {offerCandidate.sprintScore} · Match: {offerCandidate.match}%</span>
-              </div>
-            </div>
-
-            <form onSubmit={handleOfferSubmit} className="space-y-4">
-              {/* Role Title */}
-              <div>
-                <label className="text-xs font-bold text-slate-700 block mb-1">
-                  Designated Role Title <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  required
-                  placeholder="e.g. Ayurvedic Formulation Research Fellow"
-                  value={offerForm.roleTitle}
-                  onChange={(e) => setOfferForm(prev => ({ ...prev, roleTitle: e.target.value }))}
-                  className="w-full p-2.5 text-xs bg-slate-50 rounded-xl border border-slate-200 text-slate-900 font-bold focus:outline-none focus:ring-2 focus:ring-emerald-700"
-                />
-              </div>
-
-              {/* Offer Letter CTC */}
-              <div>
-                <label className="text-xs font-bold text-slate-700 block mb-1">
-                  Offer Letter CTC / Stipend Package <span className="text-red-500">*</span>
-                </label>
-                <div className="relative">
-                  <DollarSign className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                  <input
-                    type="text"
-                    required
-                    placeholder="e.g. ₹7.5 LPA or ₹32,000 / month"
-                    value={offerForm.ctc}
-                    onChange={(e) => setOfferForm(prev => ({ ...prev, ctc: e.target.value }))}
-                    className="w-full pl-9 pr-3 py-2.5 text-xs bg-slate-50 rounded-xl border border-slate-200 text-slate-900 font-black focus:outline-none focus:ring-2 focus:ring-emerald-700"
-                  />
-                </div>
-                {/* Preset Chips */}
-                <div className="flex flex-wrap gap-1.5 mt-2">
-                  <span className="text-[10px] text-slate-400 font-bold self-center">Presets:</span>
-                  {['₹6.0 LPA', '₹7.5 LPA', '₹9.0 LPA', '₹35,000 / month'].map((pkg) => (
-                    <button
-                      key={pkg}
-                      type="button"
-                      onClick={() => setOfferForm(prev => ({ ...prev, ctc: pkg }))}
-                      className="px-2 py-0.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-md text-[10px] font-semibold cursor-pointer"
-                    >
-                      {pkg}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Action Buttons */}
-              <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsOfferModalOpen(false);
-                    setOfferCandidate(null);
-                  }}
-                  className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition-colors cursor-pointer"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-5 py-2.5 bg-emerald-800 hover:bg-emerald-900 text-white text-xs font-bold rounded-xl shadow-md transition-all cursor-pointer flex items-center gap-1.5 active:scale-95"
-                >
-                  <Award className="w-4 h-4 text-emerald-300" />
-                  <span>Issue &amp; Extend Offer</span>
+                  <Calendar className="w-4 h-4 text-emerald-300" />
+                  <span>Schedule &amp; Dispatch</span>
                 </button>
               </div>
             </form>

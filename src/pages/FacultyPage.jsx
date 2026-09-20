@@ -27,8 +27,10 @@ import {
   X
 } from 'lucide-react';
 import { ComingSoonView } from '../components/ComingSoonView';
+import { useNotifications } from '../context/NotificationContext';
 
 export function FacultyPage({ onNavigate, onOpenReadinessModal, currentUser, initialTab = 'radar' }) {
+  const { dispatchNotification } = useNotifications();
   const [activeTab, setActiveTab] = useState(initialTab); // 'radar' | 'review' | 'author' | 'publish' | 'grants'
 
   useEffect(() => {
@@ -237,6 +239,19 @@ export function FacultyPage({ onNavigate, onOpenReadinessModal, currentUser, ini
 
     setMicroCourses(prev => [newCourse, ...prev]);
     setPublishSuccess(true);
+
+    if (!isDraft) {
+      dispatchNotification({
+        targetRole: 'student',
+        senderId: facultyUser?.id || 'FAC-AIIA-7712',
+        senderName: facultyUser?.name || 'Prof. Meenakshi Joshi',
+        senderRole: 'faculty',
+        title: `New Micro-Course: ${newCourse.title}`,
+        message: `${facultyUser?.name || 'Faculty Preceptor'} published a targeted course for ${newCourse.targetCohort} in ${newCourse.category}.`,
+        link: '#dashboard-student'
+      });
+    }
+
     setTimeout(() => {
       setPublishSuccess(false);
       setIsPostingModalOpen(false);
@@ -256,9 +271,22 @@ export function FacultyPage({ onNavigate, onOpenReadinessModal, currentUser, ini
   };
 
   const handleApprove = (id) => {
+    const targetSub = pendingSubmissions.find(s => s.id === id);
     setPendingSubmissions(prev => prev.map(s => 
       s.id === id ? { ...s, status: 'Audited & Digitally Signed' } : s
     ));
+    if (targetSub) {
+      dispatchNotification({
+        targetRole: 'student',
+        targetRecipientName: targetSub.student,
+        senderId: facultyUser?.id || 'FAC-AIIA-7712',
+        senderName: facultyUser?.name || 'Prof. Meenakshi Joshi',
+        senderRole: 'faculty',
+        title: `Practical Task Audited & Digitally Signed`,
+        message: `${facultyUser?.name || 'Prof. Meenakshi Joshi'} audited and signed your "${targetSub.task}" submission (Accuracy: ${targetSub.accuracy}). Hash: ${targetSub.hash}.`,
+        link: '#dashboard-student'
+      });
+    }
   };
 
   const filteredSubmissions = pendingSubmissions.filter(s => 

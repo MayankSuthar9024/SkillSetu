@@ -41,6 +41,7 @@ import {
   Coins
 } from 'lucide-react';
 import { PLATFORM_METADATA } from '../../data/portalData';
+import { useNotifications } from '../../context/NotificationContext';
 import { 
   DigitalNocModal, 
   getStoredNocRequests, 
@@ -180,6 +181,7 @@ export const CollegePortalView = ({
 }) => {
   // Main Navigation Tabs
   const [activeTab, setActiveTab] = useState(isComplianceOnly ? 'compliance' : initialTab);
+  const { dispatchNotification } = useNotifications();
 
   useEffect(() => {
     if (isComplianceOnly) {
@@ -261,6 +263,20 @@ export const CollegePortalView = ({
       title: 'NOC Approved & Digitally Signed',
       message: `Digital NOC for ${req.studentName} (${req.companyName}) has been approved and cryptographically stamped with Dean's digital signature seal.`
     });
+
+    try {
+      dispatchNotification({
+        targetRole: 'student',
+        targetRecipientId: req.studentId,
+        targetRecipientName: req.studentName,
+        senderId: user?.id || 'AISHE-C-24901',
+        senderName: user?.institution || user?.name || 'National Institute of Ayurveda (Dean Cell)',
+        senderRole: 'college',
+        title: 'Internship NOC Approved & Issued',
+        message: `Your institutional NOC for ${req.companyName} (${req.role}) has been approved and cryptographically stamped with Dean's digital signature seal.`,
+        link: '#dashboard-student'
+      });
+    } catch (e) {}
   };
 
   // Search and Filter State
@@ -457,6 +473,20 @@ export const CollegePortalView = ({
       title: 'NCISM / University Verified & Stamped',
       message: `${item.candidateName}'s "${item.documentClaimed}" has been cryptographically stamped with SHA-256 and registered.`
     });
+
+    try {
+      dispatchNotification({
+        targetRole: 'student',
+        targetRecipientId: item.rollNumber,
+        targetRecipientName: item.candidateName,
+        senderId: user?.id || 'AISHE-C-24901',
+        senderName: user?.institution || user?.name || 'NIA Registrar Cell',
+        senderRole: 'college',
+        title: 'Credential Verified & Stamped',
+        message: `Your submission for "${item.documentClaimed}" has been officially audited and cryptographically sealed with SHA-256 by the Registrar.`,
+        link: '#dashboard-student'
+      });
+    } catch (e) {}
   };
 
   // Handle Rejection / Request Resubmission
@@ -473,6 +503,20 @@ export const CollegePortalView = ({
       title: 'Resubmission Requested',
       message: `Resubmission notification sent to ${item.candidateName} for "${item.documentClaimed}".`
     });
+
+    try {
+      dispatchNotification({
+        targetRole: 'student',
+        targetRecipientId: item.rollNumber,
+        targetRecipientName: item.candidateName,
+        senderId: user?.id || 'AISHE-C-24901',
+        senderName: user?.institution || user?.name || 'NIA Registrar Cell',
+        senderRole: 'college',
+        title: 'Credential Returned for Resubmission',
+        message: `Your submission for "${item.documentClaimed}" was returned with feedback: ${rejectReason}${rejectNote ? ` - Note: "${rejectNote}"` : ''}. Please re-upload.`,
+        link: '#dashboard-student'
+      });
+    } catch (e) {}
 
     setRejectModalItem(null);
     setRejectNote('');
@@ -779,7 +823,7 @@ export const CollegePortalView = ({
           {/* Submissions Table - Simplified, No Horizontal Scroll */}
           {sortedPending.length > 0 ? (
             <div className="bg-white rounded-2xl border border-slate-200/80 shadow-soft overflow-hidden">
-              <div className="w-full">
+              <div className="w-full overflow-x-auto">
                 <table className="w-full text-left border-collapse table-auto">
                   <thead>
                     <tr className="bg-slate-50/90 border-b border-slate-200 text-[11px] font-bold uppercase tracking-wider text-slate-500">

@@ -41,8 +41,10 @@ import sanjayAvatar from '../assets/images/sanjay_avatar.jpg';
 import priyaAvatar from '../assets/images/priya_avatar.jpg';
 import ananyaAvatar from '../assets/images/ananya_avatar.jpg';
 import { INITIAL_FEED_POSTS } from '../data/feedPostsData';
+import { useNotifications } from '../context/NotificationContext';
 
 export function FeedPage({ onNavigate, currentUser, activePortalId, openCreatePostModal, onCloseCreatePostModal }) {
+  const { dispatchNotification } = useNotifications();
   const [activeFilter, setActiveFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [newPostText, setNewPostText] = useState('');
@@ -214,10 +216,36 @@ export function FeedPage({ onNavigate, currentUser, activePortalId, openCreatePo
     setTimeout(() => {
       setNominatedPostIds(prev => [...prev, selectedInternshipForNomination.id]);
       setIsSubmittingNomination(false);
-      const companyName = selectedInternshipForNomination.author.name;
+      const companyName = selectedInternshipForNomination.author?.brandName || selectedInternshipForNomination.author?.name || 'Ayush Enterprise';
       const scholarName = selectedStudentForNomination.split('(')[0].trim();
+      const internshipTitle = selectedInternshipForNomination.title;
       setSelectedInternshipForNomination(null);
       showToast(`Scholar ${scholarName} nominated to ${companyName} with official Preceptor Endorsement & NCISM seal.`);
+
+      // Cross-Stakeholder Notification: Faculty -> Company
+      dispatchNotification({
+        targetRole: 'company',
+        targetRecipientId: selectedInternshipForNomination.author?.id || 'EMP-DABUR-QC-89',
+        targetRecipientName: companyName,
+        senderId: currentUser?.id || 'FAC-AIIA-7712',
+        senderName: currentUser?.name || 'Prof. Meenakshi Joshi',
+        senderRole: 'faculty',
+        title: `Preceptor Nomination: ${scholarName}`,
+        message: `${currentUser?.name || 'Faculty Preceptor'} nominated ${scholarName} for ${internshipTitle}.`,
+        link: '#dashboard-company'
+      });
+
+      // Cross-Stakeholder Notification: Faculty -> Student
+      dispatchNotification({
+        targetRole: 'student',
+        targetRecipientName: scholarName,
+        senderId: currentUser?.id || 'FAC-AIIA-7712',
+        senderName: currentUser?.name || 'Prof. Meenakshi Joshi',
+        senderRole: 'faculty',
+        title: `Preceptor Nomination Endorsement`,
+        message: `${currentUser?.name || 'Faculty Preceptor'} officially endorsed & nominated you for ${internshipTitle} at ${companyName}.`,
+        link: '#dashboard-student'
+      });
     }, 450);
   };
 
@@ -230,9 +258,23 @@ export function FeedPage({ onNavigate, currentUser, activePortalId, openCreatePo
     setTimeout(() => {
       setAppliedPostIds(prev => [...prev, selectedInternship.id]);
       setIsSubmittingApplication(false);
-      const internshipName = selectedInternship.author.name;
+      const internshipName = selectedInternship.author?.brandName || selectedInternship.author?.name || 'Ayush Enterprise';
+      const internshipTitle = selectedInternship.title;
       setSelectedInternship(null);
       showToast(`Application submitted to ${internshipName}. Your verified SkillSetu score (${currentUser?.readiness || '88%'}) has been sent.`);
+
+      // Cross-Stakeholder Notification: Student -> Company
+      dispatchNotification({
+        targetRole: 'company',
+        targetRecipientId: selectedInternship.author?.id || 'EMP-DABUR-QC-89',
+        targetRecipientName: internshipName,
+        senderId: currentUser?.id || 'NIA/AY/2026/0491',
+        senderName: currentUser?.name || 'Aarav Sharma',
+        senderRole: 'student',
+        title: `New applicant for ${internshipTitle}`,
+        message: `${currentUser?.name || 'Aarav Sharma'} applied for ${internshipTitle} at ${internshipName}. Match score: ${currentUser?.readiness || '88%'}.`,
+        link: '#dashboard-company'
+      });
     }, 450);
   };
 

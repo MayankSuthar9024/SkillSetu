@@ -81,7 +81,7 @@ export function MinistryPage({ onNavigate, currentUser }) {
                     Token: {adminUser.id}
                   </span>
                 </div>
-                <h1 className="text-2xl sm:text-4xl font-extrabold text-slate-900 mt-2 tracking-tight font-serif">
+                <h1 className="text-2xl sm:text-4xl font-extrabold text-slate-900 mt-2 tracking-tight">
                   Ministry of Ayush Command Portal
                 </h1>
                 <p className="text-slate-600 text-xs sm:text-sm mt-1 max-w-2xl">
@@ -92,13 +92,13 @@ export function MinistryPage({ onNavigate, currentUser }) {
 
             {/* National High Level Counter */}
             <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
-              <div className="bg-white/10 backdrop-blur-md border border-white/15 px-4 py-2.5 rounded-2xl text-center flex-1 md:flex-initial">
-                <span className="text-[10px] uppercase font-bold text-emerald-200 block">All-India Scholars</span>
-                <span className="text-xl font-extrabold text-white">1,24,500+</span>
+              <div className="bg-emerald-50/90 border border-emerald-200 px-4 py-2.5 rounded-2xl text-center flex-1 md:flex-initial shadow-xs">
+                <span className="text-[10px] uppercase font-extrabold text-emerald-800 tracking-wider block">All-India Scholars</span>
+                <span className="text-xl font-extrabold text-emerald-950 tracking-tight">1,24,500+</span>
               </div>
-              <div className="bg-white/10 backdrop-blur-md border border-white/15 px-4 py-2.5 rounded-2xl text-center flex-1 md:flex-initial">
-                <span className="text-[10px] uppercase font-bold text-purple-200 block">Blockchain Ledger</span>
-                <span className="text-xl font-extrabold text-white">14 Apex Nodes</span>
+              <div className="bg-purple-50/90 border border-purple-200 px-4 py-2.5 rounded-2xl text-center flex-1 md:flex-initial shadow-xs">
+                <span className="text-[10px] uppercase font-extrabold text-purple-800 tracking-wider block">Blockchain Ledger</span>
+                <span className="text-xl font-extrabold text-purple-950 tracking-tight">14 Apex Nodes</span>
               </div>
             </div>
           </div>
@@ -108,19 +108,19 @@ export function MinistryPage({ onNavigate, currentUser }) {
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
           <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-soft text-center space-y-1">
             <span className="text-2xl sm:text-3xl font-extrabold text-slate-900">536+</span>
-            <span className="text-xs text-slate-500 font-semibold block">NCISM Permitted Colleges</span>
+            <span className="text-xs text-slate-600 font-bold block">NCISM Permitted Colleges</span>
           </div>
           <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-soft text-center space-y-1">
             <span className="text-2xl sm:text-3xl font-extrabold text-emerald-800">7,345+</span>
-            <span className="text-xs text-slate-500 font-semibold block">Licensed Pharma Units</span>
+            <span className="text-xs text-slate-600 font-bold block">Licensed Pharma Units</span>
           </div>
           <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-soft text-center space-y-1">
             <span className="text-2xl sm:text-3xl font-extrabold text-purple-800">100% SHA-256</span>
-            <span className="text-xs text-slate-500 font-semibold block">Verifiable Credentials</span>
+            <span className="text-xs text-slate-600 font-bold block">Verifiable Credentials</span>
           </div>
           <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-soft text-center space-y-1">
             <span className="text-2xl sm:text-3xl font-extrabold text-teal-800">88.4%</span>
-            <span className="text-xs text-slate-500 font-semibold block">National Talent Index</span>
+            <span className="text-xs text-slate-600 font-bold block">National Talent Index</span>
           </div>
         </div>
 
@@ -136,7 +136,7 @@ export function MinistryPage({ onNavigate, currentUser }) {
               </h3>
               <span className="text-[10px] font-bold uppercase bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded">Live AI Engine</span>
             </div>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-slate-600 font-medium">
               Select an Indian state to audit live regional skill bottlenecks and compliance.
             </p>
 
@@ -153,12 +153,12 @@ export function MinistryPage({ onNavigate, currentUser }) {
                 >
                   <div>
                     <span className="block font-bold">{st}</span>
-                    <span className={`text-[10px] ${selectedState === st ? 'text-emerald-200' : 'text-slate-400'}`}>
+                    <span className={`text-[10px] ${selectedState === st ? 'text-emerald-100 font-medium' : 'text-slate-600 font-medium'}`}>
                       {stateData[st].scholars} Scholars · {stateData[st].colleges} Colleges
                     </span>
                   </div>
                   <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded ${
-                    selectedState === st ? 'bg-emerald-700 text-white' : 'bg-slate-200 text-slate-700'
+                    selectedState === st ? 'bg-emerald-700 text-white shadow-xs' : 'bg-slate-200 text-slate-800 font-bold'
                   }`}>
                     {stateData[st].readiness}
                   </span>
@@ -186,31 +186,31 @@ export function MinistryPage({ onNavigate, currentUser }) {
             {/* Quick Metrics */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
               <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200 text-center">
-                <span className="text-[10px] text-slate-400 block font-bold">Total Enrolled Scholars</span>
+                <span className="text-[10px] text-slate-600 block font-bold uppercase tracking-wider">Total Enrolled Scholars</span>
                 <strong className="text-base text-slate-900 font-extrabold">{stateData[selectedState].scholars}</strong>
               </div>
               <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200 text-center">
-                <span className="text-[10px] text-slate-400 block font-bold">NCISM Affiliated Colleges</span>
+                <span className="text-[10px] text-slate-600 block font-bold uppercase tracking-wider">NCISM Affiliated Colleges</span>
                 <strong className="text-base text-blue-900 font-extrabold">{stateData[selectedState].colleges}</strong>
               </div>
               <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200 text-center">
-                <span className="text-[10px] text-slate-400 block font-bold">Licensed Pharma Units</span>
+                <span className="text-[10px] text-slate-600 block font-bold uppercase tracking-wider">Licensed Pharma Units</span>
                 <strong className="text-base text-amber-700 font-extrabold">{stateData[selectedState].enterprises}</strong>
               </div>
               <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200 text-center">
-                <span className="text-[10px] text-slate-400 block font-bold">State Audit Status</span>
+                <span className="text-[10px] text-slate-600 block font-bold uppercase tracking-wider">State Audit Status</span>
                 <strong className="text-base text-emerald-700 font-extrabold">100% Verified</strong>
               </div>
             </div>
 
             {/* Deficit Alert Banner */}
-            <div className="p-5 bg-amber-50 rounded-2xl border border-amber-200 space-y-3 text-xs text-amber-950">
+            <div className="p-5 bg-amber-50 rounded-2xl border border-amber-200 space-y-3 text-xs text-amber-950 font-medium">
               <div className="flex items-center gap-2 text-amber-900 font-bold text-sm">
                 <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0" />
                 <span>Algorithm Flagged Skill Deficit Area:</span>
               </div>
               <p className="leading-relaxed">
-                <strong>{stateData[selectedState].deficitArea}</strong> in {selectedState} shows an average student competency gap of 8.2% compared to active employer hiring standards.
+                <strong className="font-extrabold">{stateData[selectedState].deficitArea}</strong> in {selectedState} shows an average student competency gap of 8.2% compared to active employer hiring standards.
               </p>
               
               <div className="flex flex-wrap items-center gap-3 pt-1">
@@ -244,13 +244,13 @@ export function MinistryPage({ onNavigate, currentUser }) {
                 <h3 className="text-base font-extrabold text-slate-900">
                   National Ayush Cryptographic Consortium Nodes
                 </h3>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-slate-600 font-medium">
                   Consensus Standard: Proof of Competency (PoC) · SHA-256 Ledger
                 </p>
               </div>
             </div>
 
-            <span className="text-xs font-mono text-slate-500 bg-slate-100 px-3 py-1 rounded-full">
+            <span className="text-xs text-slate-700 font-semibold bg-slate-100 border border-slate-200 px-3 py-1 rounded-full">
               Block Height #49,821 (Live)
             </span>
           </div>
@@ -260,12 +260,12 @@ export function MinistryPage({ onNavigate, currentUser }) {
               <div key={idx} className="p-4 bg-slate-50 rounded-2xl border border-slate-200 flex flex-col justify-between space-y-2">
                 <div>
                   <strong className="text-slate-900 block font-extrabold">{node.name}</strong>
-                  <span className="text-slate-500 text-[11px]">Location: {node.location}</span>
+                  <span className="text-slate-600 text-[11px] font-medium">Location: {node.location}</span>
                 </div>
 
                 <div className="flex justify-between items-center text-[11px] pt-2 border-t border-slate-200">
                   <span className="text-emerald-700 font-bold">{node.status}</span>
-                  <span className="text-slate-400 font-mono">{node.latency}</span>
+                  <span className="text-slate-600 font-semibold">{node.latency}</span>
                 </div>
               </div>
             ))}
