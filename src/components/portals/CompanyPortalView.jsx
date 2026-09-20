@@ -23,7 +23,19 @@ import {
   Award,
   Check,
   Building,
-  School
+  School,
+  Calendar,
+  Video,
+  Send,
+  BellRing,
+  FileCheck,
+  CheckCircle,
+  LayoutGrid,
+  List,
+  DollarSign,
+  ArrowUpRight,
+  AlertCircle,
+  Copy
 } from 'lucide-react';
 
 export const CompanyPortalView = ({ user = {} }) => {
@@ -142,78 +154,261 @@ export const CompanyPortalView = ({ user = {} }) => {
     }
   ]);
 
-  // Candidates ATS Data
+  // Candidates ATS Data across 4 Pipeline Stages: [Applied, Shortlisted, Interview, Offered]
   const [candidates, setCandidates] = useState([
     {
       id: 'c-1',
       name: 'Aarav Sharma',
-      institution: 'National Institute of Ayurveda (NIA), Jaipur',
+      institution: 'NIA Jaipur',
       tier: 'National Institutes of Excellence (NIA/AIIA)',
       region: 'North Zone',
-      degree: 'BAMS (Final Year)',
+      degree: 'BAMS',
       match: 96,
-      skills: ['HPTLC Standardization', 'Schedule T GMP', 'Rasa Shastra', 'Phytochemistry'],
+      skills: ['HPTLC Standardization', 'Schedule T GMP', 'Rasa Shastra'],
       sprintScore: '94/100',
-      sprintTask: 'Triphala Churna HPTLC Marker Fingerprinting',
+      sprintTask: 'HPTLC Fingerprinting',
       hash: '0x9F4C82E1',
-      status: 'Applied', // 'Applied' | 'Shortlisted' | 'Interview Scheduled' | 'Offered'
-      appliedRole: 'Phytochemistry QC Trainee',
+      status: 'Applied',
+      appliedRole: 'QC Trainee',
       interviewDetails: null,
       offerDetails: null
     },
     {
       id: 'c-2',
       name: 'Pooja Iyer',
-      institution: 'All India Institute of Ayurveda (AIIA), Delhi',
+      institution: 'AIIA Delhi',
       tier: 'National Institutes of Excellence (NIA/AIIA)',
       region: 'North Zone',
-      degree: 'MD Ayurveda (Dravyaguna)',
+      degree: 'MD Ayurveda',
       match: 93,
-      skills: ['Heavy Metal Assay', 'Phytopharmacy', 'Pharmacovigilance', 'HPLC Column Assay'],
+      skills: ['Heavy Metal Assay', 'Phytopharmacy', 'Pharmacovigilance'],
       sprintScore: '91/100',
-      sprintTask: 'NABL Analytical Method Validation',
+      sprintTask: 'NABL Validation',
       hash: '0x7E3A9102',
       status: 'Shortlisted',
-      appliedRole: 'Junior Clinical Trial Coordinator',
+      appliedRole: 'Trial Coordinator',
       interviewDetails: null,
       offerDetails: null
     },
     {
       id: 'c-3',
       name: 'Rohan Deshmukh',
-      institution: 'Government Ayurvedic College, Pune',
+      institution: 'Govt. Ayush College Pune',
       tier: 'State Government Ayush Colleges',
       region: 'Western Zone',
-      degree: 'BAMS Graduate',
+      degree: 'BAMS',
       match: 88,
-      skills: ['GMP Cleanroom Ops', 'Classical Formulations', 'Schedule T'],
+      skills: ['GMP Cleanroom Ops', 'Schedule T'],
       sprintScore: '89/100',
-      sprintTask: 'Avaleha Preparation QC Audit Protocol',
+      sprintTask: 'QC Audit Protocol',
       hash: '0x3D88BC21',
-      status: 'Ready for Review'
+      status: 'Interview',
+      appliedRole: 'Cleanroom Lead',
+      interviewDetails: {
+        date: '2026-09-24',
+        time: '11:00 AM',
+        link: 'https://meet.google.com/ayush-tech-viva',
+        roundType: 'Technical Viva'
+      },
+      offerDetails: null
     },
     {
       id: 'c-4',
       name: 'Sneha Kulkarni',
-      institution: 'Dr. D. Y. Patil Deemed Ayush University, Navi Mumbai',
+      institution: 'DY Patil University Mumbai',
       tier: 'Private Deemed Universities',
       region: 'Western Zone',
-      degree: 'BAMS Intern',
+      degree: 'BAMS',
       match: 84,
-      skills: ['Clinical Diagnostics', 'ADR Reporting', 'Pulse Diagnosis'],
+      skills: ['Clinical Diagnostics', 'ADR Reporting'],
       sprintScore: '86/100',
-      sprintTask: 'Good Clinical Practice Protocol Verification',
+      sprintTask: 'GCP Verification',
       hash: '0x5B29E381',
-      status: 'Ready for Review'
+      status: 'Offered',
+      appliedRole: 'Pharmacovigilance Associate',
+      interviewDetails: {
+        date: '2026-09-15',
+        time: '02:30 PM',
+        link: 'Conference Room 4B, Dabur Clinical Labs',
+        roundType: 'Clinical Assay'
+      },
+      offerDetails: {
+        ctc: '₹6.5 LPA',
+        roleTitle: 'Pharmacovigilance Associate',
+        extendedDate: 'Sep 18, 2026'
+      }
     }
   ]);
 
-  const [activeViewTab, setActiveViewTab] = useState('listings'); // 'listings' | 'candidates'
-  const [filterMatch, setFilterMatch] = useState(80);
+  const [activeViewTab, setActiveViewTab] = useState('applications'); // 'applications' | 'listings' | 'candidates'
+  const [pipelineLayout, setPipelineLayout] = useState('list'); // 'list' | 'kanban'
+  const [selectedStageFilter, setSelectedStageFilter] = useState('All'); // 'All' | 'Applied' | 'Shortlisted' | 'Interview Scheduled' | 'Offer Extended'
+  const [filterMatch, setFilterMatch] = useState(70);
   const [searchTerm, setSearchTerm] = useState('');
   const [jobSearchTerm, setJobSearchTerm] = useState('');
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
   const [postedSuccess, setPostedSuccess] = useState(false);
+
+  // Scheduled Count state: initial count is 1 (c-3), increments whenever an interview is scheduled!
+  const [scheduledCount, setScheduledCount] = useState(1);
+
+  // Toast Notification State
+  const [toastMessage, setToastMessage] = useState(null);
+  const [toastTimer, setToastTimer] = useState(null);
+
+  const showToast = (message) => {
+    if (toastTimer) clearTimeout(toastTimer);
+    setToastMessage(message);
+    const t = setTimeout(() => {
+      setToastMessage(null);
+    }, 4500);
+    setToastTimer(t);
+  };
+
+  // Schedule Interview Modal State
+  const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
+  const [scheduleCandidate, setScheduleCandidate] = useState(null);
+  const [scheduleForm, setScheduleForm] = useState({
+    date: '2026-09-26',
+    time: '11:00',
+    link: 'https://meet.google.com/ayu-viva-vct',
+    roundType: 'Technical Viva'
+  });
+
+  // Extend Offer Modal State
+  const [isOfferModalOpen, setIsOfferModalOpen] = useState(false);
+  const [offerCandidate, setOfferCandidate] = useState(null);
+  const [offerForm, setOfferForm] = useState({
+    roleTitle: '',
+    ctc: '₹7.5 LPA'
+  });
+
+  // 4 Simple & Clean Pipeline Stages (Unified minimal styling, not overly colorful)
+  const PIPELINE_STAGES = [
+    { id: 'Applied', label: 'Applied', stepNum: '1' },
+    { id: 'Shortlisted', label: 'Shortlisted', stepNum: '2' },
+    { id: 'Interview', label: 'Interview', stepNum: '3' },
+    { id: 'Offered', label: 'Offered', stepNum: '4' }
+  ];
+
+  const isOfferedStatus = (status) => status === 'Offered' || status === 'Offer Extended';
+  const isInterviewStatus = (status) => status === 'Interview' || status === 'Interview Scheduled';
+
+  const getStageIndex = (status) => {
+    if (status === 'Applied') return 0;
+    if (status === 'Shortlisted' || status === 'Shortlist') return 1;
+    if (isInterviewStatus(status)) return 2;
+    if (isOfferedStatus(status)) return 3;
+    return 0;
+  };
+
+  const getStageLabel = (status) => {
+    if (isOfferedStatus(status)) return 'Offered';
+    if (isInterviewStatus(status)) return 'Interview';
+    if (status === 'Shortlisted' || status === 'Shortlist') return 'Shortlisted';
+    return 'Applied';
+  };
+
+  // Stage Advancement Handlers
+  const handleShortlistCandidate = (cand) => {
+    setCandidates(prev => prev.map(c => 
+      c.id === cand.id ? { ...c, status: 'Shortlisted' } : c
+    ));
+    showToast(`Candidate ${cand.name} successfully advanced to Shortlisted! Notification dispatched to candidate.`);
+  };
+
+  const handleOpenSchedule = (cand) => {
+    setScheduleCandidate(cand);
+    setScheduleForm({
+      date: cand.interviewDetails?.date || '2026-09-26',
+      time: cand.interviewDetails?.time || '11:00',
+      link: cand.interviewDetails?.link || 'https://meet.google.com/ayu-viva-vct',
+      roundType: cand.interviewDetails?.roundType || 'Technical Viva'
+    });
+    setIsScheduleModalOpen(true);
+  };
+
+  const handleScheduleSubmit = (e) => {
+    if (e) e.preventDefault();
+    if (!scheduleCandidate) return;
+
+    const candId = scheduleCandidate.id;
+    setCandidates(prev => prev.map(c => 
+      c.id === candId ? {
+        ...c,
+        status: 'Interview',
+        interviewDetails: {
+          date: scheduleForm.date,
+          time: scheduleForm.time,
+          link: scheduleForm.link,
+          roundType: scheduleForm.roundType
+        }
+      } : c
+    ));
+
+    // Increment scheduled count as required
+    setScheduledCount(prev => prev + 1);
+
+    setIsScheduleModalOpen(false);
+    setScheduleCandidate(null);
+
+    // Exact required toast:
+    showToast("Interview Invitation dispatched to candidate's notification center");
+  };
+
+  const handleOpenOffer = (cand) => {
+    setOfferCandidate(cand);
+    setOfferForm({
+      roleTitle: cand.offerDetails?.roleTitle || cand.appliedRole || 'Ayush Research Scientist',
+      ctc: cand.offerDetails?.ctc || '₹7.5 LPA'
+    });
+    setIsOfferModalOpen(true);
+  };
+
+  const handleOfferSubmit = (e) => {
+    if (e) e.preventDefault();
+    if (!offerCandidate) return;
+
+    const candId = offerCandidate.id;
+    const candName = offerCandidate.name;
+
+    setCandidates(prev => prev.map(c => 
+      c.id === candId ? {
+        ...c,
+        status: 'Offered',
+        offerDetails: {
+          roleTitle: offerForm.roleTitle,
+          ctc: offerForm.ctc,
+          extendedDate: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+        }
+      } : c
+    ));
+
+    setIsOfferModalOpen(false);
+    setOfferCandidate(null);
+
+    showToast(`Official Offer Letter (${offerForm.ctc}) for ${offerForm.roleTitle} extended to ${candName}! Status updated to Offered.`);
+  };
+
+  const handleDirectStageChange = (cand, targetStage) => {
+    if (targetStage === 'Interview' || targetStage === 'Interview Scheduled') {
+      handleOpenSchedule(cand);
+      return;
+    }
+    if (targetStage === 'Offered' || targetStage === 'Offer Extended') {
+      handleOpenOffer(cand);
+      return;
+    }
+    if (targetStage === 'Shortlisted' || targetStage === 'Shortlist') {
+      handleShortlistCandidate(cand);
+      return;
+    }
+    // Moving to Applied
+    setCandidates(prev => prev.map(c => 
+      c.id === cand.id ? { ...c, status: 'Applied' } : c
+    ));
+    showToast(`Candidate ${cand.name} moved to Applied stage.`);
+  };
 
   // New Opportunity Form State with Candidate Sourcing Scope
   const [opportunityForm, setOpportunityForm] = useState({
@@ -297,19 +492,19 @@ export const CompanyPortalView = ({ user = {} }) => {
     }, 1200);
   };
 
-  const handleShortlist = (id) => {
-    setCandidates(prev => prev.map(c => 
-      c.id === cand.id ? { ...c, status: 'Shortlisted' } : c
-    ));
-    showToast(`Candidate ${cand.name} successfully advanced to Shortlisted! Notification dispatched to student.`);
-  };
+  const filteredCandidates = candidates.filter(c => {
+    const matchesScore = c.match >= filterMatch;
+    const matchesSearch = 
+      c.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+      c.institution.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (c.appliedRole && c.appliedRole.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      c.skills.some(s => s.toLowerCase().includes(searchTerm.toLowerCase()));
 
-  const filteredCandidates = candidates.filter(c => 
-    c.match >= filterMatch && 
-    (c.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-     c.institution.toLowerCase().includes(searchTerm.toLowerCase()) ||
-     c.skills.some(s => s.toLowerCase().includes(searchTerm.toLowerCase())))
-  );
+    const currentStageLabel = getStageLabel(c.status);
+    const matchesStage = selectedStageFilter === 'All' || currentStageLabel === selectedStageFilter;
+
+    return matchesScore && matchesSearch && matchesStage;
+  });
 
   const filteredJobs = postedJobs.filter(j => 
     j.title.toLowerCase().includes(jobSearchTerm.toLowerCase()) ||
@@ -322,17 +517,20 @@ export const CompanyPortalView = ({ user = {} }) => {
     <div className="space-y-6">
       {/* Toast Notification Alert */}
       {toastMessage && (
-        <div className="fixed bottom-6 right-6 z-50 bg-slate-900 text-white px-5 py-4 rounded-2xl shadow-2xl border border-emerald-500/40 flex items-center gap-3 animate-in slide-in-from-bottom-5 duration-300 max-w-lg">
-          <div className="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
-            <BellRing className="w-4 h-4 text-emerald-400 animate-bounce" />
+        <div className="fixed bottom-6 right-6 z-50 bg-slate-900/95 backdrop-blur-md text-white px-5 py-4 rounded-2xl shadow-2xl border border-emerald-500/40 flex items-center gap-3 animate-in slide-in-from-bottom-5 duration-300 max-w-lg">
+          <div className="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0 border border-emerald-500/30">
+            <BellRing className="w-5 h-5 text-emerald-400 animate-bounce" />
           </div>
-          <div className="text-xs">
-            <p className="font-bold text-emerald-300">Pipeline Update Dispatched</p>
-            <p className="text-slate-200 mt-0.5 leading-snug">{toastMessage}</p>
+          <div className="text-xs flex-1">
+            <p className="font-extrabold text-emerald-300 flex items-center gap-1.5">
+              <span>Recruiter Pipeline Notification</span>
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+            </p>
+            <p className="text-slate-200 mt-0.5 leading-snug font-medium">{toastMessage}</p>
           </div>
           <button 
             onClick={() => setToastMessage(null)}
-            className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 cursor-pointer ml-auto"
+            className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 cursor-pointer ml-auto transition-colors"
             title="Dismiss notification"
           >
             <X className="w-4 h-4" />
@@ -376,29 +574,54 @@ export const CompanyPortalView = ({ user = {} }) => {
         </div>
       </div>
 
-      {/* Recruiter Quick Metrics */}
+      {/* Recruiter Quick Metrics with Live Increment Counter */}
       <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
-        <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-soft text-center">
+        <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-soft text-center hover:border-emerald-200 transition-all">
           <span className="text-2xl font-extrabold text-slate-900">{postedJobs.length}</span>
           <span className="text-xs text-slate-500 block mt-0.5">Active Posted Roles</span>
         </div>
-        <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-soft text-center">
-          <span className="text-2xl font-extrabold text-emerald-800">{filteredCandidates.length}</span>
-          <span className="text-xs text-slate-500 block mt-0.5">Matched Candidates (&gt;80%)</span>
+        <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-soft text-center hover:border-emerald-200 transition-all">
+          <span className="text-2xl font-extrabold text-emerald-800">{candidates.length}</span>
+          <span className="text-xs text-slate-500 block mt-0.5">Received Applications</span>
         </div>
-        <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-soft text-center">
-          <span className="text-2xl font-extrabold text-amber-700">100%</span>
-          <span className="text-xs text-slate-500 block mt-0.5">Pre-Audited Proof of Work</span>
+        <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-soft text-center hover:border-amber-300 transition-all bg-gradient-to-b from-white to-amber-50/20">
+          <div className="flex items-center justify-center gap-2">
+            <span className="text-2xl font-extrabold text-amber-700">{scheduledCount}</span>
+            <span className="text-[10px] font-extrabold text-amber-800 bg-amber-100 px-2 py-0.5 rounded-full border border-amber-200 flex items-center gap-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
+              Live ATS
+            </span>
+          </div>
+          <span className="text-xs text-slate-500 block mt-0.5">Interviews Scheduled</span>
         </div>
-        <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-soft text-center">
-          <span className="text-2xl font-extrabold text-purple-700">3 Tiers</span>
-          <span className="text-xs text-slate-500 block mt-0.5">Academic Sourcing Reach</span>
+        <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-soft text-center hover:border-purple-200 transition-all">
+          <span className="text-2xl font-extrabold text-purple-700">
+            {candidates.filter(c => isOfferedStatus(c.status)).length}
+          </span>
+          <span className="text-xs text-slate-500 block mt-0.5">Offers Extended</span>
         </div>
       </div>
 
-      {/* View Switcher Tabs: Recruiter Listings Table vs Candidate Talent Pool */}
-      <div className="flex items-center justify-between gap-4 border-b border-slate-200 pb-3">
-        <div className="flex items-center gap-2">
+      {/* View Switcher Tabs: Received Applications vs Recruiter Listings Table */}
+      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 pb-3">
+        <div className="flex items-center gap-2 flex-wrap">
+          <button
+            onClick={() => setActiveViewTab('applications')}
+            className={`px-4 py-2 rounded-xl text-xs font-extrabold transition-all cursor-pointer flex items-center gap-2 ${
+              activeViewTab === 'applications' || activeViewTab === 'candidates'
+                ? 'bg-emerald-800 text-white shadow-xs'
+                : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200/80'
+            }`}
+          >
+            <Users className="w-3.5 h-3.5" />
+            <span>Received Applications</span>
+            <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
+              activeViewTab === 'applications' || activeViewTab === 'candidates' ? 'bg-emerald-900 text-emerald-100' : 'bg-slate-100 text-slate-700'
+            }`}>
+              {candidates.length}
+            </span>
+          </button>
+
           <button
             onClick={() => setActiveViewTab('listings')}
             className={`px-4 py-2 rounded-xl text-xs font-extrabold transition-all cursor-pointer flex items-center gap-2 ${
@@ -413,23 +636,6 @@ export const CompanyPortalView = ({ user = {} }) => {
               activeViewTab === 'listings' ? 'bg-emerald-900 text-emerald-100' : 'bg-slate-100 text-slate-700'
             }`}>
               {postedJobs.length}
-            </span>
-          </button>
-
-          <button
-            onClick={() => setActiveViewTab('candidates')}
-            className={`px-4 py-2 rounded-xl text-xs font-extrabold transition-all cursor-pointer flex items-center gap-2 ${
-              activeViewTab === 'candidates'
-                ? 'bg-emerald-800 text-white shadow-xs'
-                : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200/80'
-            }`}
-          >
-            <Users className="w-3.5 h-3.5" />
-            <span>Matched Talent Pool</span>
-            <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
-              activeViewTab === 'candidates' ? 'bg-emerald-900 text-emerald-100' : 'bg-slate-100 text-slate-700'
-            }`}>
-              {candidates.length}
             </span>
           </button>
         </div>
@@ -606,127 +812,440 @@ export const CompanyPortalView = ({ user = {} }) => {
         </div>
       )}
 
-      {/* TAB 2: CANDIDATE PIPELINE */}
-      {activeViewTab === 'candidates' && (
+      {/* TAB 2: RECEIVED APPLICATIONS & ADVANCEMENT PIPELINE */}
+      {(activeViewTab === 'applications' || activeViewTab === 'candidates') && (
         <div className="space-y-4">
-          {/* Candidate ATS Search & Filter Bar */}
-          <div className="bg-white rounded-3xl p-5 border border-slate-200/80 shadow-soft flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="relative w-full sm:w-96">
-              <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
-              <input
-                type="text"
-                placeholder="Search candidates by name, skill, institution, or region..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-9 pr-4 py-2 text-xs bg-slate-50 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-700 font-medium text-slate-800"
-              />
+          {/* Simple Clean Header Bar */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold">
+                <Users className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="text-sm font-extrabold text-slate-900">
+                  Applications ({candidates.length})
+                </h3>
+                <p className="text-xs text-slate-500 font-medium">
+                  Pipeline: Applied → Shortlisted → Interview → Offered
+                </p>
+              </div>
             </div>
 
-            <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
-              <span className="text-xs text-slate-500 font-semibold flex items-center gap-1">
-                <Filter className="w-3.5 h-3.5" /> Minimum Vector Match:
-              </span>
-              <div className="flex gap-1.5">
-                {[70, 80, 90].map((threshold) => (
-                  <button
-                    key={threshold}
-                    onClick={() => setFilterMatch(threshold)}
-                    className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                      filterMatch === threshold
-                        ? 'bg-emerald-800 text-white shadow-xs'
-                        : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                    }`}
-                  >
-                    {threshold}%+
-                  </button>
-                ))}
-              </div>
+            {/* Layout Toggle: List vs Kanban */}
+            <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200 shrink-0 self-start sm:self-auto">
+              <button
+                onClick={() => setPipelineLayout('list')}
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                  pipelineLayout === 'list'
+                    ? 'bg-white text-slate-900 shadow-xs'
+                    : 'text-slate-500 hover:text-slate-800'
+                }`}
+              >
+                <List className="w-3.5 h-3.5" />
+                <span>List</span>
+              </button>
+              <button
+                onClick={() => setPipelineLayout('kanban')}
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                  pipelineLayout === 'kanban'
+                    ? 'bg-white text-slate-900 shadow-xs'
+                    : 'text-slate-500 hover:text-slate-800'
+                }`}
+              >
+                <LayoutGrid className="w-3.5 h-3.5" />
+                <span>Kanban</span>
+              </button>
             </div>
           </div>
 
-          {/* Candidate Pipeline Cards */}
-          <div className="space-y-4">
-            {filteredCandidates.map((cand) => (
-              <div key={cand.id} className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-soft hover:shadow-elevated transition-all space-y-4">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-800 font-extrabold text-base flex items-center justify-center border border-emerald-200">
-                      {cand.name.split(' ').map(n => n[0]).join('')}
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <h4 className="text-base font-extrabold text-slate-900">{cand.name}</h4>
-                        <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-700 border border-slate-200">
-                          {cand.region}
-                        </span>
-                      </div>
-                      <p className="text-xs text-slate-500">{cand.degree} · {cand.institution}</p>
-                    </div>
-                  </div>
+          {/* Candidate Search & 4-Stage Filter Bar */}
+          <div className="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-xs space-y-3">
+            {/* 4 Short Stage Filter Pills */}
+            <div className="flex items-center justify-between flex-wrap gap-2 pb-2.5 border-b border-slate-100">
+              <div className="flex items-center gap-1.5 flex-wrap">
+                <span className="text-xs font-bold text-slate-500 mr-1 flex items-center gap-1">
+                  <Filter className="w-3.5 h-3.5 text-slate-400" /> Stage:
+                </span>
+                {['All', 'Applied', 'Shortlisted', 'Interview', 'Offered'].map((stage) => {
+                  const count = stage === 'All'
+                    ? candidates.length
+                    : candidates.filter(c => getStageLabel(c.status) === stage).length;
+                  const isSelected = selectedStageFilter === stage;
 
-                  <div className="flex items-center gap-2">
-                    <span className="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 font-extrabold text-xs">
-                      {cand.match}% Vector Match
-                    </span>
-                    <span className="px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 font-mono text-xs">
-                      Hash: {cand.hash}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Practical Proof of Work Box */}
-                <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200/80 grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-                  <div>
-                    <span className="text-[10px] text-slate-400 uppercase font-bold block">Practical Sprint Task</span>
-                    <strong className="text-slate-800 font-semibold">{cand.sprintTask}</strong>
-                  </div>
-                  <div>
-                    <span className="text-[10px] text-slate-400 uppercase font-bold block">Sprint Score &amp; Accuracy</span>
-                    <strong className="text-emerald-800 font-extrabold">{cand.sprintScore}</strong>
-                  </div>
-                  <div>
-                    <span className="text-[10px] text-slate-400 uppercase font-bold block">Verified Skills</span>
-                    <div className="flex flex-wrap gap-1 mt-1">
-                      {cand.skills.map((s, idx) => (
-                        <span key={idx} className="px-1.5 py-0.5 bg-white border border-slate-200 text-slate-700 text-[10px] rounded font-medium">
-                          {s}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Action Bar */}
-                <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
-                  <span className="text-xs text-slate-500 flex items-center gap-1 font-medium">
-                    <ShieldCheck className="w-4 h-4 text-emerald-700" />
-                    Verified by Apex Ayush Faculty Mentor
-                  </span>
-
-                  <div className="flex items-center gap-2">
+                  return (
                     <button
-                      onClick={() => handleShortlist(cand.id)}
-                      disabled={cand.status === 'Fast-Track Shortlisted'}
-                      className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                        cand.status === 'Fast-Track Shortlisted'
-                          ? 'bg-emerald-100 text-emerald-900 cursor-default border border-emerald-300'
-                          : 'bg-emerald-800 hover:bg-emerald-900 text-white shadow-xs'
+                      key={stage}
+                      onClick={() => setSelectedStageFilter(stage)}
+                      className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 border ${
+                        isSelected
+                          ? 'bg-emerald-800 text-white border-emerald-900 shadow-xs'
+                          : 'bg-white hover:bg-slate-50 text-slate-600 border-slate-200'
                       }`}
                     >
-                      {cand.status === 'Fast-Track Shortlisted' ? (
-                        <span className="flex items-center gap-1.5">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700" />
-                          <span>Shortlisted for Interview</span>
-                        </span>
-                      ) : (
-                        'Fast-Track Candidate'
-                      )}
+                      <span>{stage}</span>
+                      <span className={`px-1.5 py-0.2 rounded-md text-[10px] font-black ${
+                        isSelected ? 'bg-emerald-950 text-emerald-200' : 'bg-slate-100 text-slate-600'
+                      }`}>
+                        {count}
+                      </span>
                     </button>
-                  </div>
+                  );
+                })}
+              </div>
+
+              <span className="text-xs text-slate-400 font-medium">
+                {filteredCandidates.length} of {candidates.length} candidates
+              </span>
+            </div>
+
+            {/* Search & Min Match */}
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+              <div className="relative w-full sm:w-80">
+                <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                <input
+                  type="text"
+                  placeholder="Search candidates by name, role, skill..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full pl-9 pr-3 py-1.5 text-xs bg-slate-50 rounded-xl border border-slate-200 focus:outline-none focus:ring-1 focus:ring-emerald-700 font-medium text-slate-800"
+                />
+              </div>
+
+              <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+                <span className="text-xs text-slate-500 font-medium flex items-center gap-1">
+                  <Sparkles className="w-3.5 h-3.5 text-emerald-600" /> Min Match:
+                </span>
+                <div className="flex gap-1">
+                  {[70, 80, 90].map((threshold) => (
+                    <button
+                      key={threshold}
+                      onClick={() => setFilterMatch(threshold)}
+                      className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                        filterMatch === threshold
+                          ? 'bg-emerald-800 text-white shadow-xs'
+                          : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                      }`}
+                    >
+                      {threshold}%+
+                    </button>
+                  ))}
                 </div>
               </div>
-            ))}
+            </div>
           </div>
+
+          {/* VIEW 1: CLEAN ATS LIST VIEW */}
+          {pipelineLayout === 'list' && (
+            <div className="space-y-3">
+              {filteredCandidates.length === 0 ? (
+                <div className="bg-white rounded-2xl p-8 text-center border border-slate-200 shadow-xs space-y-2">
+                  <div className="w-10 h-10 rounded-xl bg-slate-100 text-slate-400 flex items-center justify-center mx-auto">
+                    <Search className="w-5 h-5" />
+                  </div>
+                  <h4 className="text-sm font-bold text-slate-800">No applicants found</h4>
+                  <p className="text-xs text-slate-500">
+                    Try adjusting your stage filter or search term.
+                  </p>
+                  <button
+                    onClick={() => {
+                      setSelectedStageFilter('All');
+                      setSearchTerm('');
+                      setFilterMatch(70);
+                    }}
+                    className="px-3 py-1.5 bg-emerald-800 text-white rounded-lg text-xs font-bold cursor-pointer hover:bg-emerald-900"
+                  >
+                    Reset Filters
+                  </button>
+                </div>
+              ) : (
+                filteredCandidates.map((cand) => {
+                  const currentStageIdx = getStageIndex(cand.status);
+                  const currentStageLabel = getStageLabel(cand.status);
+
+                  return (
+                    <div 
+                      key={cand.id} 
+                      className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/80 shadow-xs hover:shadow-soft hover:border-emerald-200 transition-all space-y-3"
+                    >
+                      {/* Top Row: Candidate Info & Stage Pill */}
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <div className="flex items-center gap-2.5">
+                          <div className="w-9 h-9 rounded-xl bg-emerald-800 text-white font-black text-xs flex items-center justify-center shrink-0">
+                            {cand.name.split(' ').map(n => n[0]).join('')}
+                          </div>
+                          <div>
+                            <div className="flex items-center gap-1.5 flex-wrap">
+                              <h4 className="text-sm font-black text-slate-900">{cand.name}</h4>
+                              <span className="text-xs text-slate-600 font-semibold">· {cand.degree}</span>
+                            </div>
+                            <p className="text-xs text-slate-500">
+                              <span className="font-bold text-slate-700">{cand.appliedRole}</span> · <span className="font-medium text-slate-500">{cand.institution}</span>
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* Match % & Status Pill */}
+                        <div className="flex items-center gap-2 self-start sm:self-auto">
+                          <span className="px-2 py-0.5 rounded-lg bg-emerald-50 text-emerald-800 font-bold text-xs border border-emerald-200 flex items-center gap-1">
+                            <Sparkles className="w-3 h-3 text-emerald-600" />
+                            {cand.match}%
+                          </span>
+                          <span className="px-2 py-0.5 rounded-lg text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
+                            {currentStageLabel}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* 4 PIPELINE STAGES — Emerald Theme */}
+                      <div className="bg-slate-50 p-1 rounded-xl border border-slate-200 flex items-center justify-between gap-1 overflow-x-auto">
+                        {PIPELINE_STAGES.map((stage, idx) => {
+                          const isCurrent = currentStageLabel === stage.label;
+                          const isPast = currentStageIdx > idx;
+
+                          return (
+                            <button
+                              key={stage.id}
+                              type="button"
+                              onClick={() => handleDirectStageChange(cand, stage.id)}
+                              className={`flex-1 py-1.5 px-2.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 whitespace-nowrap ${
+                                isCurrent
+                                  ? 'bg-emerald-800 text-white shadow-xs'
+                                  : isPast
+                                  ? 'bg-emerald-50 text-emerald-800 border border-emerald-200 hover:bg-emerald-100'
+                                  : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 hover:text-slate-800'
+                              }`}
+                              title={`Click to switch to ${stage.label}`}
+                            >
+                              <span className={`w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-black ${
+                                isCurrent
+                                  ? 'bg-white/20 text-white'
+                                  : isPast
+                                  ? 'bg-emerald-200 text-emerald-800'
+                                  : 'bg-slate-100 text-slate-500'
+                              }`}>
+                                {isPast ? '✓' : stage.stepNum}
+                              </span>
+                              <span>{stage.label}</span>
+                            </button>
+                          );
+                        })}
+                      </div>
+
+                      {/* Interview Details Banner */}
+                      {currentStageLabel === 'Interview' && cand.interviewDetails && (
+                        <div className="px-3 py-1.5 bg-emerald-50/60 rounded-lg border border-emerald-200 flex items-center justify-between gap-2 text-xs text-emerald-900">
+                          <div className="flex items-center gap-1.5">
+                            <Calendar className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
+                            <span className="font-bold text-emerald-900">{cand.interviewDetails.roundType}:</span>
+                            <span className="font-medium text-emerald-800">{cand.interviewDetails.date} · {cand.interviewDetails.time}</span>
+                            <span className="text-emerald-600 text-[11px] font-semibold hidden sm:inline">(Meet Link)</span>
+                          </div>
+                          <button
+                            onClick={() => handleOpenSchedule(cand)}
+                            className="px-2.5 py-0.5 bg-white hover:bg-emerald-100 text-emerald-800 border border-emerald-300 rounded text-xs font-bold transition-colors cursor-pointer"
+                          >
+                            Reschedule
+                          </button>
+                        </div>
+                      )}
+
+                      {/* Offer Details Banner */}
+                      {currentStageLabel === 'Offered' && cand.offerDetails && (
+                        <div className="px-3 py-1.5 bg-emerald-50/60 rounded-lg border border-emerald-200 flex items-center justify-between gap-2 text-xs text-emerald-900">
+                          <div className="flex items-center gap-1.5">
+                            <Award className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
+                            <span className="font-bold text-emerald-900">Offered:</span>
+                            <span className="font-medium text-emerald-800">{cand.offerDetails.roleTitle} · <strong className="text-emerald-900 font-extrabold">{cand.offerDetails.ctc}</strong></span>
+                          </div>
+                          <button
+                            onClick={() => handleOpenOffer(cand)}
+                            className="px-2.5 py-0.5 bg-white hover:bg-emerald-100 text-emerald-800 border border-emerald-300 rounded text-xs font-bold transition-colors cursor-pointer"
+                          >
+                            Modify
+                          </button>
+                        </div>
+                      )}
+
+                      {/* Bottom Row: Sprint + CTA */}
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-0.5 text-xs text-slate-500">
+                        <div className="flex items-center gap-1.5">
+                          <span className="font-bold text-slate-700">Sprint: {cand.sprintScore.split('/')[0]}%</span>
+                          <span className="text-slate-300">·</span>
+                          <span className="font-medium text-slate-600">{cand.sprintTask}</span>
+                        </div>
+
+                        <div className="flex items-center gap-2 self-end sm:self-auto">
+                          {currentStageLabel === 'Applied' && (
+                            <button
+                              onClick={() => handleShortlistCandidate(cand)}
+                              className="px-3 py-1 bg-emerald-800 hover:bg-emerald-900 text-white rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1 shadow-xs"
+                            >
+                              <CheckCircle2 className="w-3.5 h-3.5" />
+                              <span>Shortlist</span>
+                            </button>
+                          )}
+                          {currentStageLabel === 'Shortlisted' && (
+                            <button
+                              onClick={() => handleOpenSchedule(cand)}
+                              className="px-3 py-1 bg-emerald-800 hover:bg-emerald-900 text-white rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1 shadow-xs"
+                            >
+                              <Calendar className="w-3.5 h-3.5" />
+                              <span>Schedule Interview</span>
+                            </button>
+                          )}
+                          {currentStageLabel === 'Interview' && (
+                            <button
+                              onClick={() => handleOpenOffer(cand)}
+                              className="px-3 py-1 bg-emerald-800 hover:bg-emerald-900 text-white rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1 shadow-xs"
+                            >
+                              <Award className="w-3.5 h-3.5 text-emerald-200" />
+                              <span>Extend Offer</span>
+                            </button>
+                          )}
+                          {currentStageLabel === 'Offered' && (
+                            <span className="px-2.5 py-0.5 bg-emerald-100 text-emerald-800 border border-emerald-200 rounded-lg text-xs font-bold flex items-center gap-1">
+                              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                              <span>Offered</span>
+                            </span>
+                          )}
+
+                          {/* Quick Jump Dropdown */}
+                          <select
+                            value={currentStageLabel}
+                            onChange={(e) => handleDirectStageChange(cand, e.target.value)}
+                            className="py-1 px-1.5 text-xs bg-white rounded-lg border border-slate-200 text-slate-700 font-medium focus:outline-none focus:ring-2 focus:ring-emerald-700"
+                            title="Jump to Stage"
+                          >
+                            <option value="Applied">Applied</option>
+                            <option value="Shortlisted">Shortlisted</option>
+                            <option value="Interview">Interview</option>
+                            <option value="Offered">Offered</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })
+              )}
+            </div>
+          )}
+
+          {/* VIEW 2: KANBAN 4-COLUMN BOARD */}
+          {pipelineLayout === 'kanban' && (
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+              {PIPELINE_STAGES.map((stage) => {
+                const stageCandidates = candidates.filter(c => getStageLabel(c.status) === stage.label);
+
+                return (
+                  <div 
+                    key={stage.id} 
+                    className="bg-slate-50/80 rounded-2xl p-3 border border-slate-200/90 flex flex-col space-y-2.5 min-h-[450px]"
+                  >
+                    {/* Column Header */}
+                    <div className="flex items-center justify-between pb-2 border-b border-slate-200">
+                      <div className="flex items-center gap-1.5">
+                        <span className="w-2 h-2 rounded-full bg-slate-500" />
+                        <h4 className="text-xs font-bold text-slate-900">{stage.label}</h4>
+                      </div>
+                      <span className="px-1.5 py-0.2 rounded-full text-[10px] font-bold bg-white border border-slate-200 text-slate-700">
+                        {stageCandidates.length}
+                      </span>
+                    </div>
+
+                    {/* Column Cards */}
+                    <div className="space-y-2 flex-1 overflow-y-auto">
+                      {stageCandidates.length === 0 ? (
+                        <div className="p-4 text-center text-slate-400 text-xs italic">
+                          No candidates
+                        </div>
+                      ) : (
+                        stageCandidates.map((cand) => (
+                          <div 
+                            key={cand.id} 
+                            className="bg-white rounded-xl p-3 border border-slate-200/90 shadow-2xs hover:shadow-xs transition-all space-y-2 text-xs"
+                          >
+                            <div className="flex items-start justify-between gap-1.5">
+                              <div>
+                                <h5 className="font-bold text-slate-900">{cand.name}</h5>
+                                <p className="text-[10px] text-slate-500">{cand.institution.split(',')[0]}</p>
+                              </div>
+                              <span className="px-1.5 py-0.2 rounded text-[10px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
+                                {cand.match}%
+                              </span>
+                            </div>
+
+                            <p className="text-[10px] text-slate-600">
+                              Role: <strong className="text-slate-800">{cand.appliedRole || 'QC Specialist'}</strong>
+                            </p>
+
+                            {/* Interview Snippet */}
+                            {isInterviewStatus(cand.status) && cand.interviewDetails && (
+                              <div className="p-1.5 bg-slate-50 rounded-lg border border-slate-200 text-[10px] text-slate-700 space-y-0.5">
+                                <div className="font-semibold text-slate-800 flex items-center gap-1">
+                                  <Calendar className="w-3 h-3 text-slate-500" />
+                                  <span>{cand.interviewDetails.roundType}</span>
+                                </div>
+                                <div className="text-slate-500">{cand.interviewDetails.date} · {cand.interviewDetails.time}</div>
+                              </div>
+                            )}
+
+                            {/* Offer Snippet */}
+                            {isOfferedStatus(cand.status) && cand.offerDetails && (
+                              <div className="p-1.5 bg-slate-50 rounded-lg border border-slate-200 text-[10px] text-slate-700 flex items-center justify-between">
+                                <div className="font-semibold text-slate-800 flex items-center gap-1">
+                                  <Award className="w-3 h-3 text-slate-500" />
+                                  <span>Offered</span>
+                                </div>
+                                <div className="font-bold text-slate-900">{cand.offerDetails.ctc}</div>
+                              </div>
+                            )}
+
+                            {/* Action Button */}
+                            <div className="pt-1 border-t border-slate-100">
+                              {stage.label === 'Applied' && (
+                                <button
+                                  onClick={() => handleShortlistCandidate(cand)}
+                                  className="w-full py-1 bg-slate-900 hover:bg-slate-800 text-white rounded-md text-[10px] font-semibold transition-all cursor-pointer text-center"
+                                >
+                                  Shortlist →
+                                </button>
+                              )}
+                              {stage.label === 'Shortlisted' && (
+                                <button
+                                  onClick={() => handleOpenSchedule(cand)}
+                                  className="w-full py-1 bg-slate-900 hover:bg-slate-800 text-white rounded-md text-[10px] font-semibold transition-all cursor-pointer text-center flex items-center justify-center gap-1"
+                                >
+                                  <Calendar className="w-3 h-3" />
+                                  <span>Schedule</span>
+                                </button>
+                              )}
+                              {stage.label === 'Interview' && (
+                                <button
+                                  onClick={() => handleOpenOffer(cand)}
+                                  className="w-full py-1 bg-slate-900 hover:bg-slate-800 text-white rounded-md text-[10px] font-semibold transition-all cursor-pointer text-center flex items-center justify-center gap-1"
+                                >
+                                  <Award className="w-3 h-3 text-slate-300" />
+                                  <span>Extend Offer</span>
+                                </button>
+                              )}
+                              {stage.label === 'Offered' && (
+                                <button
+                                  onClick={() => handleOpenOffer(cand)}
+                                  className="w-full py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 rounded-md text-[10px] font-semibold transition-all cursor-pointer text-center"
+                                >
+                                  Modify Offer
+                                </button>
+                              )}
+                            </div>
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
       )}
 
@@ -983,6 +1502,275 @@ export const CompanyPortalView = ({ user = {} }) => {
                 >
                   <CheckCircle2 className="w-4 h-4 text-emerald-300" />
                   <span>Deploy Opportunity</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* 1. SCHEDULE INTERVIEW MODAL */}
+      {isScheduleModalOpen && scheduleCandidate && (
+        <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
+          <div className="bg-white rounded-3xl p-6 sm:p-7 max-w-lg w-full shadow-2xl border border-slate-200 space-y-5 my-8 animate-in zoom-in-95 duration-200">
+            {/* Header */}
+            <div className="flex items-start justify-between gap-4 pb-3 border-b border-slate-100">
+              <div>
+                <h3 className="text-lg font-black text-slate-900 tracking-tight flex items-center gap-2">
+                  <Calendar className="w-5 h-5 text-amber-700" />
+                  <span>Schedule Interview</span>
+                </h3>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Configure technical round, session schedule, and dispatch calendar link to candidate.
+                </p>
+              </div>
+              <button
+                onClick={() => {
+                  setIsScheduleModalOpen(false);
+                  setScheduleCandidate(null);
+                }}
+                className="p-1.5 rounded-xl hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition-colors cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Candidate Context Pill */}
+            <div className="p-3.5 bg-amber-50/60 rounded-2xl border border-amber-200/80 flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-amber-100 text-amber-900 font-extrabold flex items-center justify-center text-sm shrink-0 border border-amber-200">
+                {scheduleCandidate.name.split(' ').map(n => n[0]).join('')}
+              </div>
+              <div className="text-xs">
+                <strong className="block text-slate-900 font-bold">{scheduleCandidate.name}</strong>
+                <span className="text-slate-500">{scheduleCandidate.degree} · {scheduleCandidate.institution}</span>
+                <span className="block text-amber-800 font-bold mt-0.5">Role: {scheduleCandidate.appliedRole || 'Ayush QC Trainee'}</span>
+              </div>
+            </div>
+
+            <form onSubmit={handleScheduleSubmit} className="space-y-4">
+              {/* Round Type */}
+              <div>
+                <label className="text-xs font-bold text-slate-700 block mb-1">
+                  Evaluation Round Type <span className="text-red-500">*</span>
+                </label>
+                <div className="grid grid-cols-3 gap-2">
+                  {['Technical Viva', 'HR', 'Clinical Assay'].map((type) => (
+                    <button
+                      key={type}
+                      type="button"
+                      onClick={() => setScheduleForm(prev => ({ ...prev, roundType: type }))}
+                      className={`p-2.5 rounded-xl border text-xs font-bold transition-all cursor-pointer text-center ${
+                        scheduleForm.roundType === type
+                          ? 'bg-amber-600 text-white border-amber-700 shadow-xs'
+                          : 'bg-white hover:bg-slate-50 text-slate-700 border-slate-200'
+                      }`}
+                    >
+                      {type}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Date & Time Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="text-xs font-bold text-slate-700 block mb-1">
+                    Interview Date <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="date"
+                    required
+                    value={scheduleForm.date}
+                    onChange={(e) => setScheduleForm(prev => ({ ...prev, date: e.target.value }))}
+                    className="w-full p-2.5 text-xs bg-slate-50 rounded-xl border border-slate-200 text-slate-800 font-semibold focus:outline-none focus:ring-2 focus:ring-amber-600"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs font-bold text-slate-700 block mb-1">
+                    Session Time <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="time"
+                    required
+                    value={scheduleForm.time}
+                    onChange={(e) => setScheduleForm(prev => ({ ...prev, time: e.target.value }))}
+                    className="w-full p-2.5 text-xs bg-slate-50 rounded-xl border border-slate-200 text-slate-800 font-semibold focus:outline-none focus:ring-2 focus:ring-amber-600"
+                  />
+                </div>
+              </div>
+
+              {/* Google Meet / Physical Room Link */}
+              <div>
+                <label className="text-xs font-bold text-slate-700 block mb-1">
+                  Google Meet / Physical Room Link <span className="text-red-500">*</span>
+                </label>
+                <div className="relative">
+                  <Video className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="text"
+                    required
+                    placeholder="https://meet.google.com/xyz-abc-def or Lab Room No."
+                    value={scheduleForm.link}
+                    onChange={(e) => setScheduleForm(prev => ({ ...prev, link: e.target.value }))}
+                    className="w-full pl-9 pr-3 py-2.5 text-xs bg-slate-50 rounded-xl border border-slate-200 text-slate-900 font-medium focus:outline-none focus:ring-2 focus:ring-amber-600"
+                  />
+                </div>
+                {/* Presets */}
+                <div className="flex flex-wrap gap-1.5 mt-2">
+                  <span className="text-[10px] text-slate-400 font-bold self-center">Presets:</span>
+                  <button
+                    type="button"
+                    onClick={() => setScheduleForm(prev => ({ ...prev, link: 'https://meet.google.com/ayu-viva-vct' }))}
+                    className="px-2 py-0.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-md text-[10px] font-semibold cursor-pointer"
+                  >
+                    Google Meet
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setScheduleForm(prev => ({ ...prev, link: 'Cleanroom Operations Lab 2B, Haridwar' }))}
+                    className="px-2 py-0.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-md text-[10px] font-semibold cursor-pointer"
+                  >
+                    Cleanroom Lab 2B
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setScheduleForm(prev => ({ ...prev, link: 'Apex Assessment Hall 4A, AIIA Delhi' }))}
+                    className="px-2 py-0.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-md text-[10px] font-semibold cursor-pointer"
+                  >
+                    Apex Boardroom 4A
+                  </button>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsScheduleModalOpen(false);
+                    setScheduleCandidate(null);
+                  }}
+                  className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition-colors cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-5 py-2.5 bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold rounded-xl shadow-md transition-all cursor-pointer flex items-center gap-1.5 active:scale-95"
+                >
+                  <Calendar className="w-4 h-4 text-amber-200" />
+                  <span>Schedule &amp; Dispatch Invitation</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* 2. EXTEND OFFER MODAL */}
+      {isOfferModalOpen && offerCandidate && (
+        <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
+          <div className="bg-white rounded-3xl p-6 sm:p-7 max-w-lg w-full shadow-2xl border border-slate-200 space-y-5 my-8 animate-in zoom-in-95 duration-200">
+            {/* Header */}
+            <div className="flex items-start justify-between gap-4 pb-3 border-b border-slate-100">
+              <div>
+                <h3 className="text-lg font-black text-slate-900 tracking-tight flex items-center gap-2">
+                  <Award className="w-5 h-5 text-emerald-700" />
+                  <span>Extend Official Offer Letter</span>
+                </h3>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Specify CTC compensation terms and role title to issue formal pre-placement offer.
+                </p>
+              </div>
+              <button
+                onClick={() => {
+                  setIsOfferModalOpen(false);
+                  setOfferCandidate(null);
+                }}
+                className="p-1.5 rounded-xl hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition-colors cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Candidate Context Pill */}
+            <div className="p-3.5 bg-emerald-50/70 rounded-2xl border border-emerald-200/80 flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-900 font-extrabold flex items-center justify-center text-sm shrink-0 border border-emerald-200">
+                {offerCandidate.name.split(' ').map(n => n[0]).join('')}
+              </div>
+              <div className="text-xs">
+                <strong className="block text-slate-900 font-bold">{offerCandidate.name}</strong>
+                <span className="text-slate-500">{offerCandidate.degree} · {offerCandidate.institution}</span>
+                <span className="block text-emerald-800 font-bold mt-0.5">Sprint Score: {offerCandidate.sprintScore} · Match: {offerCandidate.match}%</span>
+              </div>
+            </div>
+
+            <form onSubmit={handleOfferSubmit} className="space-y-4">
+              {/* Role Title */}
+              <div>
+                <label className="text-xs font-bold text-slate-700 block mb-1">
+                  Designated Role Title <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. Ayurvedic Formulation Research Fellow"
+                  value={offerForm.roleTitle}
+                  onChange={(e) => setOfferForm(prev => ({ ...prev, roleTitle: e.target.value }))}
+                  className="w-full p-2.5 text-xs bg-slate-50 rounded-xl border border-slate-200 text-slate-900 font-bold focus:outline-none focus:ring-2 focus:ring-emerald-700"
+                />
+              </div>
+
+              {/* Offer Letter CTC */}
+              <div>
+                <label className="text-xs font-bold text-slate-700 block mb-1">
+                  Offer Letter CTC / Stipend Package <span className="text-red-500">*</span>
+                </label>
+                <div className="relative">
+                  <DollarSign className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. ₹7.5 LPA or ₹32,000 / month"
+                    value={offerForm.ctc}
+                    onChange={(e) => setOfferForm(prev => ({ ...prev, ctc: e.target.value }))}
+                    className="w-full pl-9 pr-3 py-2.5 text-xs bg-slate-50 rounded-xl border border-slate-200 text-slate-900 font-black focus:outline-none focus:ring-2 focus:ring-emerald-700"
+                  />
+                </div>
+                {/* Preset Chips */}
+                <div className="flex flex-wrap gap-1.5 mt-2">
+                  <span className="text-[10px] text-slate-400 font-bold self-center">Presets:</span>
+                  {['₹6.0 LPA', '₹7.5 LPA', '₹9.0 LPA', '₹35,000 / month'].map((pkg) => (
+                    <button
+                      key={pkg}
+                      type="button"
+                      onClick={() => setOfferForm(prev => ({ ...prev, ctc: pkg }))}
+                      className="px-2 py-0.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-md text-[10px] font-semibold cursor-pointer"
+                    >
+                      {pkg}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsOfferModalOpen(false);
+                    setOfferCandidate(null);
+                  }}
+                  className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition-colors cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-5 py-2.5 bg-emerald-800 hover:bg-emerald-900 text-white text-xs font-bold rounded-xl shadow-md transition-all cursor-pointer flex items-center gap-1.5 active:scale-95"
+                >
+                  <Award className="w-4 h-4 text-emerald-300" />
+                  <span>Issue &amp; Extend Offer</span>
                 </button>
               </div>
             </form>
