@@ -28,6 +28,11 @@ import { useNotifications, formatRelativeTime } from '../context/NotificationCon
 
 import { StudentPortalView } from '../components/portals/StudentPortalView';
 import { CompanyPortalView } from '../components/portals/CompanyPortalView';
+<<<<<<< HEAD
+import { CompanyConsoleView } from '../components/portals/CompanyConsoleView';
+import { FacultyPortalView } from '../components/portals/FacultyPortalView';
+=======
+>>>>>>> 9ca885b29da6fb0a6f09eeb45d273158f00dcd7b
 import { CollegePortalView } from '../components/portals/CollegePortalView';
 import { CollegeStudentsView } from '../components/portals/CollegeStudentsView';
 
@@ -336,7 +341,16 @@ export const StakeholderDashboard = ({
                 }}
               />
             )}
-            {activePortalId === 'company' && <CompanyPortalView user={user} />}
+            {activePortalId === 'company' && (
+              <CompanyConsoleView 
+                user={user} 
+                onNavigateToATS={() => {
+                  setActiveTab('jobs');
+                  window.location.hash = 'jobs';
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+              />
+            )}
             {activePortalId === 'faculty' && (
               <FacultyPage currentUser={user} onOpenReadinessModal={handleOpenReadiness} />
             )}
@@ -389,10 +403,8 @@ export const StakeholderDashboard = ({
 
   const companyNavItems = [
     { id: 'feed', label: 'Feed', icon: Home },
-    { id: 'courses', label: 'Courses', icon: BookOpen },
     { id: 'console', label: 'Company Console', icon: Layers },
-    { id: 'jobs', label: 'Talent ATS', icon: Briefcase },
-    { id: 'network', label: 'Industry', icon: Building2 }
+    { id: 'jobs', label: 'Talent ATS', icon: Briefcase }
   ];
 
   const facultyNavItems = [
