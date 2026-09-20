@@ -459,11 +459,14 @@ export function SkillPage({ onNavigate, onOpenReadinessModal, selectedCourse = n
             </div>
           </div>
           <button
-            onClick={handleInitiateAssessment}
+            onClick={() => {
+              if (onNavigate) onNavigate('assessment');
+              else window.location.hash = 'assessment';
+            }}
             className="w-full sm:w-auto px-6 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs transition-colors flex items-center justify-center gap-2 shrink-0 cursor-pointer shadow-xs"
           >
             <Play className="w-3.5 h-3.5 fill-slate-950" />
-            <span>Start Assessment</span>
+            <span>Launch Branch Diagnostic Exam</span>
           </button>
         </div>
 
