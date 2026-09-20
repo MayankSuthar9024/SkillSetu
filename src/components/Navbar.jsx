@@ -391,20 +391,6 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
 
           {/* Right Action CTAs */}
           <div className="hidden md:flex gap-2.5 items-center">
-            {/* Public Cryptographic Credential Verifier Button */}
-            <button
-              type="button"
-              onClick={() => {
-                if (onOpenVerifierModal) onOpenVerifierModal();
-                else window.dispatchEvent(new CustomEvent('open_credential_verifier'));
-              }}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold text-emerald-900 bg-emerald-50/80 hover:bg-emerald-100 border border-emerald-200/90 transition-all cursor-pointer shadow-2xs hover:shadow-xs active:scale-95 shrink-0"
-              title="Cryptographic Credential Verifier (SHA-256)"
-            >
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
-              <span>Verify Integrity</span>
-            </button>
-
             {/* Cross-Stakeholder Notification Bell (Hidden on Landing Page) */}
             {activePage !== 'home' && renderNotificationBell(false)}
 

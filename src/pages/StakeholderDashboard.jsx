@@ -362,7 +362,6 @@ export const StakeholderDashboard = ({
 
   const companyNavItems = [
     { id: 'feed', label: 'Feed', icon: Home },
-    { id: 'courses', label: 'Courses', icon: BookOpen },
     { id: 'console', label: 'Company Console', icon: Layers },
     { id: 'jobs', label: 'Talent ATS', icon: Briefcase },
     { id: 'network', label: 'Industry', icon: Building2 }
@@ -458,20 +457,9 @@ export const StakeholderDashboard = ({
             })}
           </nav>
 
-          {/* Right Action Icons (Verify, Notifications, User PFP Avatar Button) */}
+          {/* Right Action Icons (Notifications, User PFP Avatar Button) */}
           <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             
-            {/* Cryptographic Credential Verifier Quick Button */}
-            <button
-              type="button"
-              onClick={() => handleOpenVerifier()}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-emerald-900 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200/90 transition-all cursor-pointer shadow-2xs hover:shadow-xs active:scale-95 shrink-0"
-              title="Cryptographic Credential Verifier (SHA-256)"
-            >
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
-              <span className="hidden sm:inline">Verify Integrity</span>
-            </button>
-
             {/* Notifications Bell */}
             <div className="relative">
               <button
