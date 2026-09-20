@@ -25,11 +25,21 @@ import {
   School,
   Calendar,
   Video,
-  BellRing
+  BellRing,
+  List,
+  LayoutGrid
 } from 'lucide-react';
 import { useNotifications } from '../../context/NotificationContext';
 
 export const CompanyPortalView = ({ user = {} }) => {
+  // ATS Pipeline Stages
+  const PIPELINE_STAGES = [
+    { id: 'Applied', label: 'Applied', color: 'bg-slate-100 text-slate-700 border-slate-200' },
+    { id: 'Shortlisted', label: 'Shortlisted', color: 'bg-emerald-50 text-emerald-800 border-emerald-200' },
+    { id: 'Interview', label: 'Interview', color: 'bg-blue-50 text-blue-800 border-blue-200' },
+    { id: 'Offered', label: 'Offered', color: 'bg-amber-50 text-amber-800 border-amber-200' },
+  ];
+
   // Available Academic Institution Tiers for Targeting
   const INSTITUTION_TIERS = [
     {
@@ -238,6 +248,14 @@ export const CompanyPortalView = ({ user = {} }) => {
   const [jobSearchTerm, setJobSearchTerm] = useState('');
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
   const [postedSuccess, setPostedSuccess] = useState(false);
+  const [toastMessage, setToastMessage] = useState(null);
+  const [selectedStageFilter, setSelectedStageFilter] = useState('All');
+  const [pipelineLayout, setPipelineLayout] = useState('list'); // 'list' | 'kanban'
+
+  const showToast = (msg) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(null), 4000);
+  };
 
   // Interview Scheduling State
   const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
@@ -394,6 +412,38 @@ export const CompanyPortalView = ({ user = {} }) => {
     setSchedulingCandidate(null);
   };
 
+  const handleDirectStageChange = (cand, stageId) => {
+    const statusMap = {
+      'Applied': null, // revert to applied (no special status)
+      'Shortlisted': 'Fast-Track Shortlisted',
+      'Interview': 'Interview Scheduled',
+      'Offered': 'Offered',
+    };
+    const newStatus = statusMap[stageId] ?? cand.status;
+    setCandidates(prev => prev.map(c =>
+      c.id === cand.id ? { ...c, status: newStatus } : c
+    ));
+  };
+
+  const getStageLabel = (status) => {
+    if (!status) return 'Applied';
+    if (status === 'Fast-Track Shortlisted') return 'Shortlisted';
+    if (status === 'Interview Scheduled') return 'Interview';
+    if (status === 'Offered') return 'Offered';
+    return 'Applied';
+  };
+
+  const getStageIndex = (status) => {
+    const stageOrder = ['Applied', 'Shortlisted', 'Interview', 'Offered'];
+    return stageOrder.indexOf(getStageLabel(status));
+  };
+
+  const filteredCandidates = candidates.filter(c => {
+    const matchesScore = c.match >= filterMatch;
+    const matchesSearch = !searchTerm ||
+      c.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      c.institution.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      c.skills.some(s => s.toLowerCase().includes(searchTerm.toLowerCase()));
     const currentStageLabel = getStageLabel(c.status);
     const matchesStage = selectedStageFilter === 'All' || currentStageLabel === selectedStageFilter;
 
@@ -805,45 +855,6 @@ export const CompanyPortalView = ({ user = {} }) => {
                 />
               </div>
 
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <button
-                      onClick={() => handleOpenScheduleModal(cand)}
-                      className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
-                        cand.status === 'Interview Scheduled'
-                          ? 'bg-blue-50 text-blue-900 border border-blue-200'
-                          : 'bg-slate-100 hover:bg-slate-200 text-slate-800'
-                      }`}
-                    >
-                      <Calendar className="w-3.5 h-3.5 text-blue-700" />
-                      <span>{cand.status === 'Interview Scheduled' ? 'Reschedule Interview' : 'Schedule Interview'}</span>
-                    </button>
-
-                    <button
-                      onClick={() => handleShortlist(cand.id)}
-                      disabled={cand.status === 'Fast-Track Shortlisted' || cand.status === 'Interview Scheduled'}
-                      className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                        cand.status === 'Fast-Track Shortlisted' || cand.status === 'Interview Scheduled'
-                          ? 'bg-emerald-100 text-emerald-900 cursor-default border border-emerald-300'
-                          : 'bg-emerald-800 hover:bg-emerald-900 text-white shadow-xs'
-                      }`}
-                    >
-                      {cand.status === 'Interview Scheduled' ? (
-                        <span className="flex items-center gap-1.5">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-blue-700" />
-                          <span>Interview Scheduled</span>
-                        </span>
-                      ) : cand.status === 'Fast-Track Shortlisted' ? (
-                        <span className="flex items-center gap-1.5">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700" />
-                          <span>Shortlisted for Interview</span>
-                        </span>
-                      ) : (
-                        'Fast-Track Candidate'
-                      )}
-                    </button>
-                  ))}
-                </div>
-              </div>
             </div>
           </div>
 
