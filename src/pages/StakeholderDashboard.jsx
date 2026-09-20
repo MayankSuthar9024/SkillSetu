@@ -23,6 +23,7 @@ import { PORTALS_DATA, PLATFORM_METADATA } from '../data/portalData';
 
 import { StudentPortalView } from '../components/portals/StudentPortalView';
 import { CompanyPortalView } from '../components/portals/CompanyPortalView';
+import { CompanyConsoleView } from '../components/portals/CompanyConsoleView';
 import { FacultyPortalView } from '../components/portals/FacultyPortalView';
 import { CollegePortalView } from '../components/portals/CollegePortalView';
 import { CollegeStudentsView } from '../components/portals/CollegeStudentsView';
@@ -280,7 +281,16 @@ export const StakeholderDashboard = ({
                 }}
               />
             )}
-            {activePortalId === 'company' && <CompanyPortalView user={user} />}
+            {activePortalId === 'company' && (
+              <CompanyConsoleView 
+                user={user} 
+                onNavigateToATS={() => {
+                  setActiveTab('jobs');
+                  window.location.hash = 'jobs';
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+              />
+            )}
             {activePortalId === 'faculty' && (
               <ComingSoonView onBack={() => setActiveTab('feed')} />
             )}
@@ -314,10 +324,8 @@ export const StakeholderDashboard = ({
 
   const companyNavItems = [
     { id: 'feed', label: 'Feed', icon: Home },
-    { id: 'courses', label: 'Courses', icon: BookOpen },
     { id: 'console', label: 'Company Console', icon: Layers },
-    { id: 'jobs', label: 'Talent ATS', icon: Briefcase },
-    { id: 'network', label: 'Industry', icon: Building2 }
+    { id: 'jobs', label: 'Talent ATS', icon: Briefcase }
   ];
 
   const facultyNavItems = [

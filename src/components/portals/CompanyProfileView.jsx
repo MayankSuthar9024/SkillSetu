@@ -14,7 +14,8 @@ import {
   ExternalLink,
   Sparkles,
   FileCheck2,
-  Calendar
+  Calendar,
+  Check
 } from 'lucide-react';
 import { CompanyPortalView } from './CompanyPortalView';
 import { PORTALS_DATA } from '../../data/portalData';
@@ -22,18 +23,24 @@ import vikramAvatar from '../../assets/images/vikram_avatar.jpg';
 import ayushHeroBanner from '../../assets/images/ayush_hero_banner.jpg';
 
 export const CompanyProfileView = ({ user, onNavigate, onBack, isPublicView = false }) => {
-  const [activeTab, setActiveTab] = useState('pipeline'); // 'pipeline' | 'overview' | 'listings'
+  const [activeTab, setActiveTab] = useState(isPublicView ? 'overview' : 'pipeline'); // 'pipeline' | 'overview' | 'listings'
+  const [toastMessage, setToastMessage] = useState(null);
 
   const defaultUser = PORTALS_DATA.find(p => p.id === 'company')?.profileUser;
   const companyUser = user || defaultUser;
 
+  const showToast = (msg) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(null), 4000);
+  };
+
   const profile = {
-    brandName: companyUser?.institution || 'Dabur Research & Development Center',
+    brandName: companyUser?.institution || companyUser?.name || 'Dabur Research & Development Center',
     leadName: companyUser?.name || 'Dr. Vikram Sethi',
     leadRole: companyUser?.role || 'Industry Recruiter & R&D Lead',
     partnerId: companyUser?.id || 'EMP-DABUR-QC-89',
     email: companyUser?.email || 'recruitment.rd@dabur.com',
-    location: 'Sahibabad Industrial Area, Ghaziabad, NCR 201010',
+    location: companyUser?.location || 'Sahibabad Industrial Area, Ghaziabad, NCR 201010',
     website: 'https://www.dabur.com/ayush-rd',
     founded: '1884 (Pharma R&D Division 1994)',
     accreditations: [
@@ -50,6 +57,7 @@ export const CompanyProfileView = ({ user, onNavigate, onBack, isPublicView = fa
 
   const activeJobs = [
     {
+      id: 'job-1',
       title: 'Junior Formulations Officer (Schedule T GMP)',
       dept: 'R&D Quality Assurance',
       location: 'Ghaziabad, NCR',
@@ -58,6 +66,7 @@ export const CompanyProfileView = ({ user, onNavigate, onBack, isPublicView = fa
       type: 'Full Time'
     },
     {
+      id: 'job-2',
       title: 'HPTLC & Botanical Fingerprinting Analyst',
       dept: 'Phytochemistry Division',
       location: 'New Delhi / NCR',
@@ -66,6 +75,7 @@ export const CompanyProfileView = ({ user, onNavigate, onBack, isPublicView = fa
       type: 'Full Time'
     },
     {
+      id: 'job-3',
       title: 'Ayush Clinical Trial Coordinator',
       dept: 'Human Evidence & Safety Trials',
       location: 'New Delhi',
@@ -78,6 +88,14 @@ export const CompanyProfileView = ({ user, onNavigate, onBack, isPublicView = fa
   return (
     <div className="min-h-screen bg-[#f3f7f5] text-slate-900 pb-16 font-sans">
       
+      {/* Toast Notification Alert */}
+      {toastMessage && (
+        <div className="fixed bottom-6 right-6 z-50 bg-slate-900 text-white px-5 py-3 rounded-2xl shadow-xl border border-emerald-500 flex items-center gap-3 animate-in fade-in">
+          <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+          <span className="text-xs font-semibold">{toastMessage}</span>
+        </div>
+      )}
+
       {/* Top Header Back Navigation */}
       {onBack && (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-2">
@@ -86,7 +104,7 @@ export const CompanyProfileView = ({ user, onNavigate, onBack, isPublicView = fa
             className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold text-slate-700 hover:text-emerald-950 bg-white border border-slate-200 shadow-xs hover:shadow-sm transition-all cursor-pointer"
           >
             <ArrowLeft className="w-4 h-4 text-emerald-700" />
-            <span>Back to Dashboard</span>
+            <span>Back</span>
           </button>
         </div>
       )}
@@ -108,7 +126,7 @@ export const CompanyProfileView = ({ user, onNavigate, onBack, isPublicView = fa
             
             {/* Regulatory Badge in Top Right */}
             <div className="absolute top-4 right-4 flex items-center gap-2">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/90 backdrop-blur-md text-[11px] font-extrabold text-emerald-900 shadow-sm border border-emerald-200">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/95 backdrop-blur-md text-[11px] font-extrabold text-emerald-900 shadow-sm border border-emerald-200">
                 <ShieldCheck className="w-4 h-4 text-emerald-700" />
                 <span>Verified Ayush Enterprise</span>
               </span>
@@ -146,27 +164,29 @@ export const CompanyProfileView = ({ user, onNavigate, onBack, isPublicView = fa
 
               {/* Action Buttons */}
               <div className="flex items-center gap-2.5 w-full sm:w-auto pt-2 sm:pt-0">
-                <button
-                  onClick={() => setActiveTab('pipeline')}
-                  className="flex-1 sm:flex-none px-4 py-2.5 bg-emerald-800 hover:bg-emerald-900 text-white text-xs font-bold rounded-xl shadow-xs hover:shadow-md transition-all flex items-center justify-center gap-1.5 cursor-pointer"
-                >
-                  <Briefcase className="w-3.5 h-3.5" />
-                  <span>Open Talent ATS</span>
-                </button>
+                {!isPublicView && (
+                  <button
+                    onClick={() => setActiveTab('pipeline')}
+                    className="flex-1 sm:flex-none px-4 py-2.5 bg-emerald-800 hover:bg-emerald-900 text-white text-xs font-bold rounded-xl shadow-xs hover:shadow-md transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+                  >
+                    <Briefcase className="w-3.5 h-3.5" />
+                    <span>Open Talent ATS</span>
+                  </button>
+                )}
                 <a
                   href={profile.website}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-3 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl transition-colors flex items-center justify-center gap-1"
+                  className="px-3.5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl transition-colors flex items-center justify-center gap-1.5"
                 >
                   <Globe className="w-3.5 h-3.5" />
-                  <span className="hidden sm:inline">Official Site</span>
+                  <span>Official Website</span>
                   <ExternalLink className="w-3 h-3 ml-0.5 text-slate-400" />
                 </a>
               </div>
             </div>
 
-            {/* Address, Contact & Partner Info - Placed cleanly below banner */}
+            {/* Address, Contact & Partner Info */}
             <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-slate-600 mb-4 pt-0.5">
               <span className="flex items-center gap-1.5">
                 <MapPin className="w-4 h-4 text-emerald-700 shrink-0" />
@@ -209,17 +229,6 @@ export const CompanyProfileView = ({ user, onNavigate, onBack, isPublicView = fa
             {/* Navigation Tabs */}
             <div className="flex flex-wrap items-center gap-2 pt-5 mt-4 border-t border-slate-100">
               <button
-                onClick={() => setActiveTab('pipeline')}
-                className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
-                  activeTab === 'pipeline'
-                    ? 'bg-emerald-800 text-white shadow-xs'
-                    : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
-                }`}
-              >
-                <Briefcase className="w-3.5 h-3.5 shrink-0" />
-                <span>Recruiter ATS & Pipeline</span>
-              </button>
-              <button
                 onClick={() => setActiveTab('overview')}
                 className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
                   activeTab === 'overview'
@@ -228,7 +237,7 @@ export const CompanyProfileView = ({ user, onNavigate, onBack, isPublicView = fa
                 }`}
               >
                 <Building2 className="w-3.5 h-3.5 shrink-0" />
-                <span>Overview & Certifications</span>
+                <span>Overview &amp; Certifications</span>
               </button>
               <button
                 onClick={() => setActiveTab('listings')}
@@ -241,20 +250,24 @@ export const CompanyProfileView = ({ user, onNavigate, onBack, isPublicView = fa
                 <Layers className="w-3.5 h-3.5 shrink-0" />
                 <span>Job Listings ({profile.activeListings})</span>
               </button>
+              <button
+                onClick={() => setActiveTab('pipeline')}
+                className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
+                  activeTab === 'pipeline'
+                    ? 'bg-emerald-800 text-white shadow-xs'
+                    : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                }`}
+              >
+                <Briefcase className="w-3.5 h-3.5 shrink-0" />
+                <span>{isPublicView ? 'Recruiter ATS Preview' : 'Recruiter ATS & Pipeline'}</span>
+              </button>
             </div>
 
           </div>
 
         </div>
 
-        {/* Tab Content 1: ATS Recruitment Pipeline */}
-        {activeTab === 'pipeline' && (
-          <div className="space-y-4 animate-fadeIn">
-            <CompanyPortalView user={companyUser} />
-          </div>
-        )}
-
-        {/* Tab Content 2: Enterprise Overview & Certifications */}
+        {/* Tab Content 1: Enterprise Overview & Certifications */}
         {activeTab === 'overview' && (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-fadeIn">
             
@@ -263,16 +276,16 @@ export const CompanyProfileView = ({ user, onNavigate, onBack, isPublicView = fa
               <div>
                 <h3 className="text-base font-extrabold text-slate-900 flex items-center gap-2">
                   <Award className="w-5 h-5 text-emerald-700" />
-                  <span>Research Division Mandate & Quality Benchmarks</span>
+                  <span>Research Division Mandate &amp; Quality Benchmarks</span>
                 </h3>
                 <p className="text-xs text-slate-600 mt-2 leading-relaxed">
-                  The Dabur Research & Development Center acts as the clinical and pharmacological innovation backbone for botanical formulations. We employ strict Ayush Schedule T Good Manufacturing Practices (GMP) and standardized spectroscopic fingerprinting to guarantee therapeutic potency and batch reproducibility.
+                  The Dabur Research &amp; Development Center acts as the clinical and pharmacological innovation backbone for botanical formulations. We employ strict Ayush Schedule T Good Manufacturing Practices (GMP) and standardized spectroscopic fingerprinting to guarantee therapeutic potency and batch reproducibility.
                 </p>
               </div>
 
               <div className="space-y-3">
                 <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">
-                  Regulatory Accreditations & Audited Standards
+                  Regulatory Accreditations &amp; Audited Standards
                 </h4>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {profile.accreditations.map((acc, idx) => (
@@ -298,7 +311,7 @@ export const CompanyProfileView = ({ user, onNavigate, onBack, isPublicView = fa
             {/* Right Column: Contact & R&D Facilities */}
             <div className="space-y-6">
               <div className="bg-white rounded-3xl border border-slate-200 p-6 shadow-soft space-y-4">
-                <h3 className="text-sm font-extrabold text-slate-900">R&D Headquarters</h3>
+                <h3 className="text-sm font-extrabold text-slate-900">R&amp;D Headquarters</h3>
                 <div className="space-y-2.5 text-xs text-slate-600">
                   <div className="flex items-start gap-2">
                     <MapPin className="w-4 h-4 text-slate-400 shrink-0 mt-0.5" />
@@ -316,10 +329,10 @@ export const CompanyProfileView = ({ user, onNavigate, onBack, isPublicView = fa
 
                 <div className="pt-3 border-t border-slate-100">
                   <button
-                    onClick={() => setActiveTab('pipeline')}
-                    className="w-full py-2.5 bg-emerald-800 hover:bg-emerald-900 text-white text-xs font-bold rounded-xl transition-all shadow-xs"
+                    onClick={() => setActiveTab('listings')}
+                    className="w-full py-2.5 bg-emerald-800 hover:bg-emerald-900 text-white text-xs font-bold rounded-xl transition-all shadow-xs cursor-pointer"
                   >
-                    View Active Candidates
+                    View Active Openings ({profile.activeListings}) →
                   </button>
                 </div>
               </div>
@@ -328,12 +341,12 @@ export const CompanyProfileView = ({ user, onNavigate, onBack, isPublicView = fa
           </div>
         )}
 
-        {/* Tab Content 3: Active Job Listings */}
+        {/* Tab Content 2: Active Job Listings */}
         {activeTab === 'listings' && (
           <div className="space-y-4 animate-fadeIn">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-              {activeJobs.map((job, idx) => (
-                <div key={idx} className="bg-white rounded-3xl border border-slate-200 p-6 shadow-soft flex flex-col justify-between hover:border-emerald-500/60 transition-all">
+              {activeJobs.map((job) => (
+                <div key={job.id} className="bg-white rounded-3xl border border-slate-200 p-6 shadow-soft flex flex-col justify-between hover:border-emerald-500/60 transition-all">
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
                       <span className="px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-800 font-bold text-[10px] border border-emerald-200">
@@ -352,17 +365,33 @@ export const CompanyProfileView = ({ user, onNavigate, onBack, isPublicView = fa
                     </div>
                   </div>
 
-                  <div className="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between">
+                  <div className="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between gap-2">
                     <button
-                      onClick={() => setActiveTab('pipeline')}
-                      className="w-full py-2 bg-emerald-800 hover:bg-emerald-900 text-white font-bold text-xs rounded-xl transition-all cursor-pointer text-center"
+                      onClick={() => showToast(`Application submitted for ${job.title} with verified SkillSetu credentials.`)}
+                      className="flex-1 py-2 bg-emerald-800 hover:bg-emerald-900 text-white font-bold text-xs rounded-xl transition-all cursor-pointer text-center"
                     >
-                      Manage Applications in ATS →
+                      Apply with Score
                     </button>
+                    {!isPublicView && (
+                      <button
+                        onClick={() => setActiveTab('pipeline')}
+                        className="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition-all cursor-pointer text-center"
+                        title="Manage in ATS"
+                      >
+                        ATS
+                      </button>
+                    )}
                   </div>
                 </div>
               ))}
             </div>
+          </div>
+        )}
+
+        {/* Tab Content 3: ATS Recruitment Pipeline */}
+        {activeTab === 'pipeline' && (
+          <div className="space-y-4 animate-fadeIn">
+            <CompanyPortalView user={companyUser} />
           </div>
         )}
 

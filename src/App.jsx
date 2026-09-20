@@ -20,6 +20,7 @@ import { MessagePage } from './pages/MessagePage';
 import { CoursesPage } from './pages/CoursesPage';
 import { JobsPage } from './pages/JobsPage';
 import { AssessmentPage } from './pages/AssessmentPage';
+import { CompanyPage } from './pages/CompanyPage';
 
 export function App() {
   const [activePage, setActivePage] = useState('home'); // 'home' | 'features' | 'about' | 'opportunities' | 'skill' | 'industry' | 'courses' | 'feed' | 'profile' | 'messages' | 'login' | 'portals' | 'dashboard'
@@ -66,14 +67,12 @@ export function App() {
         const portalCfg = PORTALS_DATA.find(p => p.id === 'college');
         setCurrentUser(portalCfg?.profileUser || null);
       } else if (hash === 'company' || hash === 'company-portal' || hash === 'portal-company') {
-        const companyUser = PORTALS_DATA.find(p => p.id === 'company')?.profileUser;
-        setActivePortalId('company');
-        setCurrentUser(companyUser);
-        try {
-          localStorage.setItem('skillsetu_user', JSON.stringify(companyUser));
-          localStorage.setItem('skillsetu_portal', 'company');
-        } catch {}
-        setActivePage('dashboard');
+        if (currentUser && (currentUser?.roleType === 'company' || activePortalId === 'company')) {
+          setActivePortalId('company');
+          setActivePage('dashboard');
+        } else {
+          setActivePage('company');
+        }
       } else if (['how-it-works', 'features', 'comparison'].includes(hash)) {
         setActivePage('home');
         setTimeout(() => {
@@ -181,8 +180,15 @@ export function App() {
     if (page === 'login' || page === 'portals') {
       handleOpenAuth();
     } else if (page === 'company' || page === 'company-portal') {
-      const companyUser = PORTALS_DATA.find(p => p.id === 'company')?.profileUser;
-      handleLoginSuccess('company', companyUser);
+      if (currentUser?.roleType === 'company') {
+        setActivePortalId('company');
+        setActivePage('dashboard');
+        window.location.hash = 'dashboard-company';
+      } else {
+        setActivePage('company');
+        window.location.hash = 'company';
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } else if (page === 'dashboard') {
       setActivePage('dashboard');
       window.location.hash = `dashboard-${activePortalId}`;
@@ -448,6 +454,17 @@ export function App() {
             <IndustryPage
               onNavigate={handleNavigate}
               onOpenAuthModal={handleOpenAuth}
+            />
+          </div>
+        )}
+
+        {/* COMPANY & ENTERPRISE PORTAL PAGE */}
+        {activePage === 'company' && (
+          <div className="animate-fadeIn">
+            <CompanyPage
+              onNavigate={handleNavigate}
+              onBack={() => handleNavigate('home')}
+              user={activeUser}
             />
           </div>
         )}
