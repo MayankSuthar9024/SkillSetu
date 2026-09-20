@@ -38,6 +38,7 @@ import {
 } from 'lucide-react';
 import { HERO_STATS, PLATFORM_METADATA } from '../../data/portalData';
 import { TPOPlacementCommandCenter } from './TPOPlacementCommandCenter';
+import { useNotifications } from '../../context/NotificationContext';
 
 // Helper to generate a realistic SHA-256 cryptographic digest
 export const generateSha256Hash = (rollNumber, company) => {
@@ -494,6 +495,18 @@ export const DigitalNocModal = ({ isOpen, onClose, noc }) => {
           </div>
           <div className="flex items-center gap-2">
             <button
+              type="button"
+              onClick={() => {
+                const hashVal = noc.sha256Hash || noc.referenceNo || noc.id;
+                window.dispatchEvent(new CustomEvent('open_credential_verifier', { detail: { query: hashVal } }));
+              }}
+              className="px-3.5 py-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-900 border border-emerald-300 text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs"
+              title="Verify cryptographic integrity of this NOC"
+            >
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-700" />
+              <span>Verify Integrity</span>
+            </button>
+            <button
               onClick={onClose}
               className="px-4 py-2 rounded-xl border border-slate-200 text-xs font-bold text-slate-600 hover:bg-slate-100 cursor-pointer"
             >
@@ -525,6 +538,7 @@ export const StudentPortalView = ({ user, onNavigateToSkills }) => {
     abcId: '164 Credits'
   };
   const safeUser = (user && user.name) ? user : (HERO_STATS?.profileUser || defaultUser);
+  const { dispatchNotification } = useNotifications();
   const [activeTab, setActiveTab] = useState('tpo');
   const [selectedAssessmentOption, setSelectedAssessmentOption] = useState(null);
   const [hasAwardedBonus, setHasAwardedBonus] = useState(false);
@@ -644,6 +658,19 @@ export const StudentPortalView = ({ user, onNavigateToSkills }) => {
       type: 'success',
       title: 'NOC Application Submitted',
       message: `Your NOC clearance request for ${newRequest.companyName} has been routed to the TPO Command Center.`
+    });
+
+    // Cross-Stakeholder Notification: Student -> College TPO (Workflow 3)
+    dispatchNotification({
+      targetRole: 'college',
+      targetRecipientId: 'AISHE-C-24901',
+      targetRecipientName: safeUser.institution || 'National Institute of Ayurveda (NIA), Jaipur',
+      senderId: safeUser.id || 'NIA/AY/2026/0491',
+      senderName: safeUser.name || 'Aarav Sharma',
+      senderRole: 'student',
+      title: `${safeUser.name || 'Aarav Sharma'} requested an NOC`,
+      message: `${safeUser.name || 'Aarav Sharma'} submitted an NOC clearance request for ${newRequest.role} at ${newRequest.companyName} (Ref: ${newRequest.referenceNo}).`,
+      link: '#dashboard-college'
     });
   };
 
@@ -891,6 +918,21 @@ export const StudentPortalView = ({ user, onNavigateToSkills }) => {
       ...prev,
       [jobId]: true
     }));
+
+    const appliedJob = jobsList.find(j => j.id === jobId);
+    if (appliedJob) {
+      dispatchNotification({
+        targetRole: 'company',
+        targetRecipientId: appliedJob.company.toLowerCase().includes('dabur') ? 'EMP-DABUR-QC-89' : null,
+        targetRecipientName: appliedJob.company,
+        senderId: safeUser.id || 'NIA/AY/2026/0491',
+        senderName: safeUser.name || 'Aarav Sharma',
+        senderRole: 'student',
+        title: `New applicant for ${appliedJob.title}`,
+        message: `${safeUser.name || 'Aarav Sharma'} applied for ${appliedJob.title} at ${appliedJob.company}. Match: ${appliedJob.match}%.`,
+        link: '#dashboard-company'
+      });
+    }
   };
 
   return (
@@ -916,6 +958,15 @@ export const StudentPortalView = ({ user, onNavigateToSkills }) => {
                 <ShieldCheck className="w-3.5 h-3.5 text-teal-600 shrink-0" />
                 <span>APAAR: {safeUser.apaarId || '9841-2041-8891'} • ABC Bank: {safeUser.abcCredits || '164 Credits'} (DigiLocker Verified)</span>
               </span>
+              <button
+                type="button"
+                onClick={() => window.dispatchEvent(new CustomEvent('open_credential_verifier'))}
+                className="px-3 py-1 rounded-full text-xs font-bold bg-emerald-800 hover:bg-emerald-900 text-white flex items-center gap-1.5 shadow-xs transition-all cursor-pointer active:scale-95 shrink-0"
+                title="Verify cryptographic integrity of student credentials"
+              >
+                <ShieldCheck className="w-3.5 h-3.5 text-emerald-300" />
+                <span>Verify Credential Integrity</span>
+              </button>
             </div>
             <p className="text-xs text-slate-500 mt-1 break-words">
               {safeUser.degree} · {safeUser.institution} · Roll: <span className="font-mono font-semibold text-slate-700">{safeUser.id}</span>

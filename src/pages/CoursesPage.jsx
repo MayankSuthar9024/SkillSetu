@@ -18,14 +18,412 @@ import {
   ShoppingBag,
   Star,
   ArrowLeft,
-  ExternalLink
+  ExternalLink,
+  ShieldCheck,
+  Award,
+  Building2,
+  GraduationCap,
+  Filter,
+  Users,
+  FileText,
+  Check,
+  Landmark,
+  TrendingUp,
+  AlertCircle,
+  FileCheck
 } from 'lucide-react';
 
 import courseGmpPoster from '../assets/images/course_gmp_poster.jpg';
 import courseGcpPoster from '../assets/images/course_gcp_poster.jpg';
 import ayushHeroBanner from '../assets/images/ayush_hero_banner.jpg';
 
+// Standardized National Ayush Course Types Directory for Ministry Oversight
+export const MINISTRY_COURSE_TYPES = [
+  {
+    id: 'type-gmp',
+    domainCode: 'DOMAIN-01',
+    category: 'Manufacturing & GMP',
+    title: 'Schedule T GMP & Industrial Manufacturing Protocols',
+    statutoryBadge: 'NCISM Pre-Internship Mandatory',
+    badgeColor: 'bg-emerald-100 text-emerald-900 border-emerald-300',
+    description: 'Mandatory technical training modules covering Indian pharmaceutical manufacturing requirements under Schedule T of Drugs and Cosmetics Rules 1945. Focuses on premises layout, cleanroom hygiene, HVAC pressure cascades, equipment calibration, and batch manufacturing records (BMR).',
+    durationFormat: '90–120 Mins Micro-Credentials',
+    academicCredits: '2 Credits (Transferable via ABC Bank)',
+    targetCohort: 'BAMS Final Year, MD Scholars & Pharma Trainees',
+    accreditingBody: 'NCISM & Drugs Controller General of India (DCGI)',
+    preceptorInstitutes: 'All India Institute of Ayurveda (AIIA), National Institute of Ayurveda (NIA), Dabur R&D Centre',
+    nationalEnrollment: '4,120 Scholars',
+    activeModulesCount: '4 Modules Active',
+    auditStatus: 'Approved & Accredited',
+    curriculumSummary: 'Standardized factory-floor readiness curriculum bridging the 55% Day-1 industry skill deficit in GMP compliance.',
+    competencies: [
+      'Schedule T Premises Rules',
+      'Cleanroom HVAC & Particle Classification',
+      'Batch Manufacturing Records (BMR)',
+      'Contamination Control SOPs',
+      'QA/QC Auditing Protocols'
+    ],
+    detailedModules: [
+      { name: 'Module 1: Schedule T Legal Provisions & Plant Layout', duration: '30 mins', provider: 'AIIA New Delhi' },
+      { name: 'Module 2: Cleanroom Air Handling & HVAC Maintenance', duration: '30 mins', provider: 'Dabur R&D' },
+      { name: 'Module 3: In-Process Quality Controls & BMR Documentation', duration: '30 mins', provider: 'NIA Jaipur' },
+      { name: 'Module 4: WHO-GMP & Ayush Standard Mark Audit Protocols', duration: '30 mins', provider: 'NCISM Preceptor Cell' }
+    ]
+  },
+  {
+    id: 'type-gcp',
+    domainCode: 'DOMAIN-02',
+    category: 'Clinical Research',
+    title: 'Good Clinical Practice (GCP) & Botanical Drug Trials (ICH E6-R3)',
+    statutoryBadge: 'ICMR / CDSCO Aligned',
+    badgeColor: 'bg-blue-100 text-blue-900 border-blue-300',
+    description: 'Statutory curriculum on international and national ethical guidelines for conducting clinical trials on ASU (Ayurveda, Siddha, Unani) herbal formulations. Enforces patient safety, informed consent, trial registry (CTRI) compliance, and trial lifecycle data integrity.',
+    durationFormat: '120 Mins Micro-Credentials + 8 Weeks MOOC',
+    academicCredits: '3 Credits (Transferable via ABC Bank)',
+    targetCohort: 'MD/MS Dravyaguna & Kayachikitsa Scholars, Clinical Fellows',
+    accreditingBody: 'Central Drugs Standard Control Organization (CDSCO) & ICMR',
+    preceptorInstitutes: 'AIIMS New Delhi, AIIA Clinical Trials Cell, CCRAS',
+    nationalEnrollment: '3,890 Scholars',
+    activeModulesCount: '5 Modules Active',
+    auditStatus: 'Approved & Accredited',
+    curriculumSummary: 'Ensures botanical clinical evaluations meet global GCP standards with biometric logging and transparent ethical clearance.',
+    competencies: [
+      'ICH E6(R3) Principles',
+      'Institutional Ethics Committee (IEC) Clearances',
+      'Informed Consent Process in Botanical Trials',
+      'Adverse Event Reporting (ADR)',
+      'CTRI Protocol Registration'
+    ],
+    detailedModules: [
+      { name: 'Module 1: Ethical Principles & Human Subject Rights', duration: '30 mins', provider: 'AIIMS New Delhi' },
+      { name: 'Module 2: Informed Consent Documentation in ASU Trials', duration: '25 mins', provider: 'AIIA Clinical Cell' },
+      { name: 'Module 3: Investigator Brochure & Protocol Design', duration: '35 mins', provider: 'CCRAS' },
+      { name: 'Module 4: CTRI Registration & Data Integrity Systems', duration: '30 mins', provider: 'CDSCO Advisory Wing' }
+    ]
+  },
+  {
+    id: 'type-qa',
+    domainCode: 'DOMAIN-03',
+    category: 'Quality Assurance / QA',
+    title: 'Phytochemical Standardization & High-Performance Chromatography (HPTLC)',
+    statutoryBadge: 'API & Pharmacopoeial Standard',
+    badgeColor: 'bg-amber-100 text-amber-900 border-amber-300',
+    description: 'Analytical chemistry framework for classical formulations and herbal extracts. Imparts practical knowledge of High-Performance Thin-Layer Chromatography (HPTLC), Atomic Absorption Spectroscopy (AAS) for heavy metals, pesticide residue analysis, and microbial limits.',
+    durationFormat: '12 Weeks (NPTEL / SWAYAM Partnered)',
+    academicCredits: '3 Credits (Transferable via ABC Bank)',
+    targetCohort: 'Ayush Researchers, QC Analysts, Phytochemists',
+    accreditingBody: 'Pharmacopoeia Commission for Indian Medicine & Homoeopathy (PCIM&H)',
+    preceptorInstitutes: 'IIT Madras, National Institute of Ayurveda, Patanjali Research Foundation',
+    nationalEnrollment: '4,450 Scholars',
+    activeModulesCount: '4 Modules Active',
+    auditStatus: 'Approved & Accredited',
+    curriculumSummary: 'Hands-on laboratory standardization ensuring raw herb authentication and pharmacopoeial marker compliance.',
+    competencies: [
+      'HPTLC Fingerprint Profiling',
+      'AAS Heavy Metal Assays (Pb, Cd, As, Hg)',
+      'Pesticide Residue Limits (USP/API)',
+      'Raw Herb Authentication Markers',
+      'Stability Testing & Shelf-Life Assessment'
+    ],
+    detailedModules: [
+      { name: 'Module 1: Chromatographic Separation Fundamentals', duration: '3 Weeks', provider: 'IIT Madras' },
+      { name: 'Module 2: Fingerprint Profiling of Classical Kwathas', duration: '3 Weeks', provider: 'Patanjali R&D' },
+      { name: 'Module 3: Heavy Metal Limits & Spectroscopic Quantification', duration: '3 Weeks', provider: 'NIA Jaipur' },
+      { name: 'Module 4: Pharmacopoeial Monographs & Assay Audits', duration: '3 Weeks', provider: 'PCIM&H' }
+    ]
+  },
+  {
+    id: 'type-pv',
+    domainCode: 'DOMAIN-04',
+    category: 'Pharmacovigilance',
+    title: 'National Pharmacovigilance & Adverse Drug Reaction (ADR) Monitoring',
+    statutoryBadge: 'National Pharmacovigilance Programme',
+    badgeColor: 'bg-rose-100 text-rose-900 border-rose-300',
+    description: 'Statutory drug safety monitoring curriculum establishing the National Pharmacovigilance Programme for ASU drugs. Covers causality assessment (WHO-UMC criteria), yellow-form incident filing, signal detection, and regulatory pharmacovigilance inspections.',
+    durationFormat: '90 Mins Practical Certification',
+    academicCredits: '2 Credits (Certificate Program)',
+    targetCohort: 'Hospital Resident Doctors, Medical Officers, Ayush Pharmacists',
+    accreditingBody: 'National Pharmacovigilance Coordination Centre (NPvCC) & Ministry of Ayush',
+    preceptorInstitutes: 'All India Institute of Ayurveda (National Apex Node), State Peripheral Centres',
+    nationalEnrollment: '2,980 Scholars',
+    activeModulesCount: '3 Modules Active',
+    auditStatus: 'Approved & Accredited',
+    curriculumSummary: 'Comprehensive clinical safety vigilance training for real-time incident reporting and public health assurance.',
+    competencies: [
+      'ADR Causality Assessment (WHO-UMC)',
+      'Yellow-Form Regulatory Filing',
+      'Herbal-Drug Interaction Monitoring',
+      'Safety Signal Processing',
+      'Clinical Risk Communications'
+    ],
+    detailedModules: [
+      { name: 'Module 1: Introduction to Ayush Pharmacovigilance Program', duration: '30 mins', provider: 'NPvCC / AIIA' },
+      { name: 'Module 2: WHO-UMC Causality Assessment Algorithm', duration: '30 mins', provider: 'National Apex Node' },
+      { name: 'Module 3: Electronic Submission & Risk Minimization Protocols', duration: '30 mins', provider: 'Ministry of Ayush' }
+    ]
+  },
+  {
+    id: 'type-mooc',
+    domainCode: 'DOMAIN-05',
+    category: 'Academic Credit MOOCs',
+    title: 'SWAYAM & NPTEL National Online Credit Transfer Modules',
+    statutoryBadge: 'NEP 2020 Multi-Disciplinary Credit Banking',
+    badgeColor: 'bg-teal-100 text-teal-950 border-teal-300',
+    description: 'National multi-institutional semester-long MOOC bridges hosted on SWAYAM. Fully recognized by UGC and NCISM for direct credit transfer into student Academic Bank of Credits (ABC) accounts to remediate identified regional curricular deficits.',
+    durationFormat: '8 to 12 Weeks (Full Semester)',
+    academicCredits: '3 to 4 Credits (NEP 2020 ABC Bank)',
+    targetCohort: 'All Ayush Undergraduates & Postgraduates across 536 Colleges',
+    accreditingBody: 'Ministry of Education / UGC / NCISM',
+    preceptorInstitutes: 'IIT Madras, IIT Kharagpur, AIIMS New Delhi, PGIMER Chandigarh',
+    nationalEnrollment: '5,400 Scholars',
+    activeModulesCount: '6 MOOCs Active',
+    auditStatus: 'Approved & Credit-Linked',
+    curriculumSummary: 'UGC-accredited MOOC framework empowering students with automated transfer of up to 4 semester credits.',
+    competencies: [
+      'Analytical Instrumentation',
+      'Clinical Biostatistics & Epidemiology',
+      'Pharmaceutical Biochemical Engineering',
+      'Evidence-Based Ayush Protocol Design'
+    ],
+    detailedModules: [
+      { name: 'Module 1: Analytical Chemistry in Herbal Formulations', duration: '12 Weeks', provider: 'IIT Madras' },
+      { name: 'Module 2: Clinical Trials Management & Ethics', duration: '8 Weeks', provider: 'AIIMS New Delhi' },
+      { name: 'Module 3: Pharmaceutical Engineering & Schedule T', duration: '12 Weeks', provider: 'IIT Kharagpur' },
+      { name: 'Module 4: Biostatistics for Ayush Clinical Trials', duration: '8 Weeks', provider: 'PGIMER Chandigarh' }
+    ]
+  },
+  {
+    id: 'type-formulation',
+    domainCode: 'DOMAIN-06',
+    category: 'Classical Formulations',
+    title: 'Bhaishajya Kalpana & Pilot Plant Batch Scale-Up',
+    statutoryBadge: 'Schedule T Pilot Plant Standards',
+    badgeColor: 'bg-purple-100 text-purple-900 border-purple-300',
+    description: 'Industrial transition curriculum converting small-scale laboratory preparation into Schedule T pilot plant batch manufacturing. Covers classical Rasa Shastra formulations, automated extraction, standardization of dosage forms, and packaging integrity.',
+    durationFormat: '90 Mins Practical Demonstration',
+    academicCredits: '2 Credits (Certificate Program)',
+    targetCohort: 'BAMS Final Year, M.D. (Rasa Shastra & Bhaishajya Kalpana)',
+    accreditingBody: 'NCISM Minimum Standards of Education',
+    preceptorInstitutes: 'National Institute of Ayurveda (NIA), Kerala Ayurveda, Kottakkal Arya Vaidya Sala',
+    nationalEnrollment: '2,680 Scholars',
+    activeModulesCount: '3 Modules Active',
+    auditStatus: 'Approved & Accredited',
+    curriculumSummary: 'Scalability protocols bridging benchtop classical preparation and Schedule T industrial manufacturing lines.',
+    competencies: [
+      'Pilot Plant Extraction Scaling',
+      'Rasa Bhasma Standard Operating Procedures',
+      'Modern Dosage Form Conversion (Tablets/Syrups)',
+      'In-Process Quality Control (IPQC)',
+      'Primary & Secondary Packaging Standards'
+    ],
+    detailedModules: [
+      { name: 'Module 1: Batch Scalability & Pilot Extraction Setup', duration: '30 mins', provider: 'NIA Jaipur' },
+      { name: 'Module 2: Quality SOPs in Classical Rasa Preparations', duration: '30 mins', provider: 'Kottakkal Arya Vaidya Sala' },
+      { name: 'Module 3: Tablet Compression, Packaging & Stability Logs', duration: '30 mins', provider: 'Kerala Ayurveda' }
+    ]
+  }
+];
+
+// Dedicated Ministry Curriculum Directory & Course Types Overview (No retail course cards)
+export function MinistryCoursesOverview() {
+  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedDetailType, setSelectedDetailType] = useState(null);
+
+  const categories = [
+    'All', 
+    'Manufacturing & GMP', 
+    'Clinical Research', 
+    'Quality Assurance / QA', 
+    'Pharmacovigilance', 
+    'Academic Credit MOOCs', 
+    'Classical Formulations'
+  ];
+
+  const filteredTypes = MINISTRY_COURSE_TYPES.filter(type => {
+    const matchesCategory = selectedCategory === 'All' || type.category === selectedCategory;
+    const q = searchQuery.toLowerCase();
+    const matchesSearch = 
+      type.title.toLowerCase().includes(q) ||
+      type.description.toLowerCase().includes(q) ||
+      type.targetCohort.toLowerCase().includes(q) ||
+      type.accreditingBody.toLowerCase().includes(q) ||
+      type.preceptorInstitutes.toLowerCase().includes(q) ||
+      type.competencies.some(c => c.toLowerCase().includes(q));
+    return matchesCategory && matchesSearch;
+  });
+
+  return (
+    <div className="min-h-screen bg-[#f3f7f5] py-6 sm:py-8 px-4 sm:px-6 lg:px-8 font-sans text-slate-900 space-y-6 max-w-6xl mx-auto animate-in fade-in duration-300">
+      
+      {/* 1. Clean, Simple Header */}
+      <div className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <span className="text-xs font-bold text-emerald-800 uppercase tracking-wider block mb-1">
+            Ministry of Ayush
+          </span>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+            Available Course Types
+          </h1>
+          <p className="text-xs sm:text-sm text-slate-600 mt-1 font-medium">
+            Accredited course categories and basic specifications under Ministry oversight.
+          </p>
+        </div>
+        <div className="shrink-0">
+          <span className="px-3 py-1.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
+            {filteredTypes.length} Types Available
+          </span>
+        </div>
+      </div>
+
+      {/* 2. Search & Category Filters */}
+      <div className="space-y-3">
+        <div className="relative">
+          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+          <input
+            type="text"
+            placeholder="Search course types..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-9 pr-4 py-2.5 text-xs bg-white border border-slate-200 rounded-xl font-medium focus:outline-none focus:ring-2 focus:ring-emerald-700 shadow-xs"
+          />
+        </div>
+
+        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1">
+          {categories.map((cat) => (
+            <button
+              key={cat}
+              type="button"
+              onClick={() => setSelectedCategory(cat)}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer shrink-0 ${
+                selectedCategory === cat
+                  ? 'bg-emerald-800 text-white shadow-xs'
+                  : 'bg-white hover:bg-slate-100 text-slate-700 border border-slate-200'
+              }`}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* 3. Simplified Course Type Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {filteredTypes.map((type) => (
+          <div 
+            key={type.id}
+            className="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-xs hover:shadow-md transition-all flex flex-col justify-between space-y-4"
+          >
+            <div className="space-y-2.5">
+              <div className="flex items-center justify-between gap-2">
+                <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200">
+                  {type.category}
+                </span>
+                <span className="text-[11px] font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                  {type.domainCode}
+                </span>
+              </div>
+
+              <h3 className="text-base font-extrabold text-slate-900 leading-snug">
+                {type.title}
+              </h3>
+
+              <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed">
+                {type.curriculumSummary || type.description}
+              </p>
+
+              {/* Clean Basic Info in simple rows */}
+              <div className="pt-2 border-t border-slate-100 grid grid-cols-2 gap-2 text-xs">
+                <div>
+                  <span className="text-[10px] text-slate-400 font-bold uppercase block">Duration</span>
+                  <span className="text-slate-800 font-semibold">{type.durationFormat.split('+')[0].trim()}</span>
+                </div>
+                <div>
+                  <span className="text-[10px] text-slate-400 font-bold uppercase block">Credits</span>
+                  <span className="text-emerald-800 font-bold">{type.academicCredits.split(' ')[0]} Credits</span>
+                </div>
+                <div className="col-span-2">
+                  <span className="text-[10px] text-slate-400 font-bold uppercase block">Accrediting Authority</span>
+                  <span className="text-slate-700 font-medium truncate block">{type.accreditingBody}</span>
+                </div>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setSelectedDetailType(type)}
+              className="w-full py-2 bg-slate-50 hover:bg-emerald-50 hover:text-emerald-900 text-slate-700 border border-slate-200 hover:border-emerald-300 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5"
+            >
+              <FileText className="w-3.5 h-3.5" />
+              <span>View Course Modules</span>
+            </button>
+          </div>
+        ))}
+      </div>
+
+      {/* 4. Lightweight Modal for Course Modules */}
+      {selectedDetailType && (
+        <div className="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-xl border border-slate-200 space-y-4">
+            <div className="flex items-start justify-between gap-4 border-b border-slate-100 pb-3">
+              <div>
+                <span className="text-xs font-bold text-slate-500 uppercase">{selectedDetailType.category}</span>
+                <h3 className="text-base font-extrabold text-slate-900">{selectedDetailType.title}</h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setSelectedDetailType(null)}
+                className="p-1 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition-colors cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="space-y-2">
+              <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">Standard Modules</span>
+              <div className="space-y-1.5 max-h-60 overflow-y-auto pr-1">
+                {selectedDetailType.detailedModules.map((mod, i) => (
+                  <div key={i} className="p-2.5 bg-slate-50 rounded-xl border border-slate-200/80 flex items-center justify-between text-xs">
+                    <span className="font-semibold text-slate-800">{mod.name}</span>
+                    <span className="text-[10px] text-slate-500 font-bold bg-white px-2 py-0.5 rounded border border-slate-200 shrink-0 ml-2">
+                      {mod.duration}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="pt-2 border-t border-slate-100 flex justify-end">
+              <button
+                type="button"
+                onClick={() => setSelectedDetailType(null)}
+                className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold cursor-pointer"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+    </div>
+  );
+}
+
 export function CoursesPage({ currentUser, activePortalId }) {
+  // Check if current view is Ministry of Ayush Portal
+  const isMinistryPortal = activePortalId === 'admin' || 
+                           activePortalId === 'ministry' || 
+                           currentUser?.roleType === 'admin' ||
+                           currentUser?.role?.toLowerCase().includes('ministry') ||
+                           currentUser?.role?.toLowerCase().includes('director general') ||
+                           currentUser?.institution?.toLowerCase().includes('ministry');
+
+  // Ministry portal gets high-level curriculum oversight & course types directory (No retail course cards)
+  if (isMinistryPortal) {
+    return <MinistryCoursesOverview />;
+  }
+
   // Only faculty members can post courses; students can only view and buy/watch posted courses
   const isFacultyPortal = activePortalId === 'faculty';
   

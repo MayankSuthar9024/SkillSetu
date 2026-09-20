@@ -988,7 +988,19 @@ export function StudentProfileView({ user, onNavigate, onBack, isPublicView }) {
               </div>
 
               {/* Modal Footer */}
-              <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
+              <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-100 flex-wrap">
+                <button
+                  type="button"
+                  onClick={() => {
+                    const hashToVerify = previewDoc.hash ? previewDoc.hash.replace(/^SHA256:\s*/i, '').trim() : '';
+                    window.dispatchEvent(new CustomEvent('open_credential_verifier', { detail: { query: hashToVerify } }));
+                  }}
+                  className="px-3.5 py-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-900 border border-emerald-300 font-bold text-xs flex items-center gap-1.5 transition-colors cursor-pointer"
+                  title="Verify SHA-256 against Ayush Academic Registry"
+                >
+                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-700" />
+                  <span>Verify Hash Integrity</span>
+                </button>
                 <button
                   type="button"
                   onClick={() => setPreviewDoc(null)}
@@ -1189,7 +1201,17 @@ export function StudentProfileView({ user, onNavigate, onBack, isPublicView }) {
                           </div>
                         </div>
 
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
+                          <button
+                            type="button"
+                            onClick={() => window.dispatchEvent(new CustomEvent('open_credential_verifier'))}
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-emerald-50 text-slate-800 hover:text-emerald-900 border border-slate-200 text-xs font-bold transition-all cursor-pointer active:scale-95 shadow-2xs"
+                            title="Verify cryptographic integrity of stored credentials"
+                          >
+                            <ShieldCheck className="w-3.5 h-3.5 text-emerald-700" />
+                            <span>Verify Credential Integrity</span>
+                          </button>
+
                           <button
                             type="button"
                             onClick={() => {

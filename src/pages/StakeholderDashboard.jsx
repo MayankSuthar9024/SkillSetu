@@ -17,16 +17,19 @@ import {
   BookOpen,
   X,
   ShieldCheck,
-  Users
+  Users,
+  CheckCheck,
+  Clock,
+  ExternalLink,
+  CheckCircle2
 } from 'lucide-react';
 import { PORTALS_DATA, PLATFORM_METADATA } from '../data/portalData';
+import { useNotifications, formatRelativeTime } from '../context/NotificationContext';
 
 import { StudentPortalView } from '../components/portals/StudentPortalView';
 import { CompanyPortalView } from '../components/portals/CompanyPortalView';
-import { FacultyPortalView } from '../components/portals/FacultyPortalView';
 import { CollegePortalView } from '../components/portals/CollegePortalView';
 import { CollegeStudentsView } from '../components/portals/CollegeStudentsView';
-import { MinistryAdminPortalView } from '../components/portals/MinistryAdminPortalView';
 
 import { FeedPage } from './FeedPage';
 import { ProfilePage } from './ProfilePage';
@@ -48,8 +51,15 @@ export const StakeholderDashboard = ({
   onLogout,
   onBackToHome,
   contrastMode,
-  onToggleContrast
+  onToggleContrast,
+  onOpenReadinessModal,
+  onOpenVerifierModal
 }) => {
+  const [selectedCourse, setSelectedCourse] = useState(null);
+
+  const handleOpenReadiness = onOpenReadinessModal || (() => window.dispatchEvent(new CustomEvent('open_readiness_modal')));
+  const handleOpenVerifier = onOpenVerifierModal || ((query) => window.dispatchEvent(new CustomEvent('open_credential_verifier', { detail: { query } })));
+
   const [activeTab, setActiveTab] = useState(() => {
     if (typeof window !== 'undefined') {
       const hash = window.location.hash.replace('#', '');
@@ -108,12 +118,26 @@ export const StakeholderDashboard = ({
   const currentPortalConfig = PORTALS_DATA.find(p => p.id === activePortalId) || PORTALS_DATA[0];
   const user = currentUser || currentPortalConfig.profileUser;
 
-  const notifications = [
-    { id: 1, title: 'Prof. Meenakshi Joshi sent you a new message in Chat', time: '5m ago', unread: true },
-    { id: 2, title: 'Dabur R&D Centre viewed your SkillSetu Profile', time: '10m ago', unread: true },
-    { id: 3, title: 'Dr. Ananya Vaidya liked your Nadi Pariksha comment', time: '1h ago', unread: true },
-    { id: 4, title: 'New Job Match: Junior Ayurvedic Physician at AVP', time: '3h ago', unread: false },
-  ];
+  const { 
+    roleNotifications, 
+    unreadCount, 
+    markAsRead, 
+    markAllAsRead, 
+    filterMode, 
+    setFilterMode 
+  } = useNotifications();
+
+  const handleDashboardNotificationClick = (item) => {
+    markAsRead(item.id);
+    setNotificationsOpen(false);
+    if (item.link) {
+      if (item.link.startsWith('#')) {
+        window.location.hash = item.link.slice(1);
+      } else {
+        window.location.href = item.link;
+      }
+    }
+  };
 
   const handleOpenCreatePost = () => {
     setActiveTab('feed');
@@ -191,7 +215,7 @@ export const StakeholderDashboard = ({
                   </p>
                 </div>
               </div>
-              <FacultyPage currentUser={user} onOpenReadinessModal={() => {}} />
+              <FacultyPage currentUser={user} onOpenReadinessModal={handleOpenReadiness} />
             </div>
           );
         }
@@ -205,22 +229,27 @@ export const StakeholderDashboard = ({
               if (page === 'messages') setActiveTab('messages');
               else if (page === 'profile') setActiveTab('profile');
               else if (page === 'feed') setActiveTab('feed');
-              else if (page === 'skills') setActiveTab('skills');
+              else if (page === 'skills') {
+                if (data?.course) setSelectedCourse(data.course);
+                setActiveTab('skills');
+              }
             }}
           />
         );
       case 'skills':
         if (activePortalId === 'faculty') {
-          return <ComingSoonView onBack={() => setActiveTab('feed')} />;
+          return <FacultyPage currentUser={user} initialTab="radar" onOpenReadinessModal={handleOpenReadiness} />;
         }
         return (
           <SkillPage
+            selectedCourse={selectedCourse}
+            onClearSelectedCourse={() => setSelectedCourse(null)}
             onNavigate={(page) => {
-              if (page === 'opportunities') setActiveTab('jobs');
+              if (page === 'opportunities' || page === 'jobs') setActiveTab('jobs');
               else if (page === 'feed') setActiveTab('feed');
               else if (page === 'assessment') setActiveTab('assessment');
             }}
-            onOpenReadinessModal={() => alert('Launching Skill Readiness Diagnostic Engine...')}
+            onOpenReadinessModal={handleOpenReadiness}
           />
         );
       case 'assessment':
@@ -282,7 +311,7 @@ export const StakeholderDashboard = ({
             )}
             {activePortalId === 'company' && <CompanyPortalView user={user} />}
             {activePortalId === 'faculty' && (
-              <ComingSoonView onBack={() => setActiveTab('feed')} />
+              <FacultyPage currentUser={user} onOpenReadinessModal={handleOpenReadiness} />
             )}
             {activePortalId === 'college' && (
               <CollegePortalView 
@@ -300,7 +329,26 @@ export const StakeholderDashboard = ({
           </div>
         );
       default:
-        return <FeedPage onNavigate={() => {}} currentUser={user} activePortalId={activePortalId} />;
+        return (
+          <FeedPage 
+            onNavigate={(page, targetUser) => {
+              if (page === 'profile') {
+                setViewingUser(targetUser || null);
+                setActiveTab('profile');
+              } else if (page === 'messages') {
+                setActiveTab('messages');
+              } else if (page === 'opportunities' || page === 'jobs') {
+                setActiveTab('jobs');
+              } else if (page === 'skill' || page === 'skills') {
+                setActiveTab('skills');
+              } else if (page === 'industry' || page === 'network') {
+                setActiveTab('network');
+              }
+            }} 
+            currentUser={user} 
+            activePortalId={activePortalId} 
+          />
+        );
     }
   };
 
@@ -410,47 +458,146 @@ export const StakeholderDashboard = ({
             })}
           </nav>
 
-          {/* Right Action Icons (Notifications, User PFP Avatar Button) */}
+          {/* Right Action Icons (Verify, Notifications, User PFP Avatar Button) */}
           <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             
+            {/* Cryptographic Credential Verifier Quick Button */}
+            <button
+              type="button"
+              onClick={() => handleOpenVerifier()}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-emerald-900 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200/90 transition-all cursor-pointer shadow-2xs hover:shadow-xs active:scale-95 shrink-0"
+              title="Cryptographic Credential Verifier (SHA-256)"
+            >
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
+              <span className="hidden sm:inline">Verify Integrity</span>
+            </button>
+
             {/* Notifications Bell */}
             <div className="relative">
               <button
                 onClick={() => setNotificationsOpen(!notificationsOpen)}
-                className="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center transition-colors cursor-pointer relative"
+                aria-haspopup="menu"
+                aria-expanded={notificationsOpen}
+                aria-label={`Notifications. ${unreadCount} unread`}
+                className={`w-9 h-9 rounded-xl flex items-center justify-center transition-colors cursor-pointer relative ${
+                  notificationsOpen ? 'bg-emerald-50 text-emerald-900 ring-2 ring-emerald-600/30' : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
+                }`}
                 title="Notifications"
               >
                 <Bell className="w-4 h-4" />
-                <span className="absolute -top-1 -right-1 w-4 h-4 bg-rose-500 text-white rounded-full text-[9px] font-extrabold flex items-center justify-center">
-                  2
-                </span>
+                {unreadCount > 0 && (
+                  <span 
+                    aria-live="polite"
+                    className="absolute -top-1 -right-1 min-w-[16px] h-[16px] px-1 bg-rose-500 text-white rounded-full text-[9px] font-black flex items-center justify-center ring-2 ring-white"
+                  >
+                    {unreadCount > 99 ? '99+' : unreadCount}
+                  </span>
+                )}
               </button>
 
               {notificationsOpen && (
                 <div 
-                  onMouseLeave={() => setNotificationsOpen(false)}
-                  className="absolute right-0 mt-2 w-72 sm:w-80 bg-white rounded-2xl shadow-2xl border border-slate-200 py-3 z-50 animate-in fade-in"
+                  role="menu"
+                  aria-orientation="vertical"
+                  onClick={(e) => e.stopPropagation()}
+                  className="absolute right-0 mt-2 w-80 sm:w-96 bg-white rounded-2xl shadow-2xl border border-slate-200 py-3 z-50 animate-in fade-in zoom-in-95 text-left"
                 >
                   <div className="px-4 pb-2 border-b border-slate-100 flex justify-between items-center">
                     <div className="flex items-center gap-2">
                       <span className="font-extrabold text-xs text-slate-900">Notifications</span>
-                      <span className="text-[10px] text-emerald-800 font-bold bg-emerald-50 px-2 py-0.5 rounded">2 New</span>
+                      {unreadCount > 0 ? (
+                        <span className="text-[10px] text-rose-700 font-bold bg-rose-50 border border-rose-200 px-2 py-0.5 rounded">
+                          {unreadCount} New
+                        </span>
+                      ) : (
+                        <span className="text-[10px] text-slate-600 font-medium bg-slate-100 px-2 py-0.5 rounded">
+                          Caught up
+                        </span>
+                      )}
                     </div>
+                    <div className="flex items-center gap-2">
+                      {unreadCount > 0 && (
+                        <button
+                          type="button"
+                          onClick={markAllAsRead}
+                          className="text-[11px] font-bold text-emerald-800 hover:underline flex items-center gap-1 cursor-pointer"
+                          title="Mark all as read"
+                        >
+                          <CheckCheck className="w-3.5 h-3.5" />
+                          <span>Mark read</span>
+                        </button>
+                      )}
+                      <button
+                        onClick={() => setNotificationsOpen(false)}
+                        className="text-slate-400 hover:text-slate-600 p-1 rounded-lg text-xs cursor-pointer"
+                        title="Close notifications"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Filter tabs */}
+                  <div className="px-3 py-1.5 flex gap-1 border-b border-slate-100 bg-slate-50/60 text-xs">
                     <button
-                      onClick={() => setNotificationsOpen(false)}
-                      className="text-slate-400 hover:text-slate-600 p-1 rounded-lg text-xs cursor-pointer"
-                      title="Close notifications"
+                      type="button"
+                      onClick={() => setFilterMode('role')}
+                      className={`flex-1 py-1 text-[10px] font-bold rounded-lg transition-all cursor-pointer ${
+                        filterMode === 'role' ? 'bg-white text-emerald-900 shadow-xs border border-slate-200' : 'text-slate-500 hover:text-slate-800'
+                      }`}
                     >
-                      <X className="w-4 h-4" />
+                      My Role
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setFilterMode('all')}
+                      className={`flex-1 py-1 text-[10px] font-bold rounded-lg transition-all cursor-pointer ${
+                        filterMode === 'all' ? 'bg-white text-emerald-900 shadow-xs border border-slate-200' : 'text-slate-500 hover:text-slate-800'
+                      }`}
+                    >
+                      All Feeds
                     </button>
                   </div>
-                  <div className="divide-y divide-slate-100 max-h-64 overflow-y-auto">
-                    {notifications.map((n) => (
-                      <div key={n.id} className={`p-3 text-xs hover:bg-slate-50 cursor-pointer ${n.unread ? 'bg-emerald-50/40 font-semibold' : 'text-slate-600'}`}>
-                        <p className="text-slate-900">{n.title}</p>
-                        <span className="text-[10px] text-slate-400 mt-0.5 block">{n.time}</span>
+
+                  <div className="divide-y divide-slate-100 max-h-72 overflow-y-auto" tabIndex={0}>
+                    {roleNotifications.length === 0 ? (
+                      <div className="p-6 text-center">
+                        <CheckCircle2 className="w-8 h-8 text-emerald-600 mx-auto mb-1.5" />
+                        <p className="text-xs font-bold text-slate-700">No new notifications</p>
+                        <p className="text-[10px] text-slate-400 mt-0.5">Application and interview events will appear here.</p>
                       </div>
-                    ))}
+                    ) : (
+                      roleNotifications.map((n) => (
+                        <div 
+                          key={n.id} 
+                          role="menuitem"
+                          tabIndex={0}
+                          onClick={() => handleDashboardNotificationClick(n)}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                              e.preventDefault();
+                              handleDashboardNotificationClick(n);
+                            }
+                          }}
+                          className={`p-3 text-xs hover:bg-slate-50 cursor-pointer transition-colors outline-none focus:bg-emerald-50/60 ${
+                            !n.read ? 'bg-emerald-50/40 font-semibold border-l-3 border-emerald-600' : 'text-slate-600'
+                          }`}
+                        >
+                          <div className="flex items-center justify-between text-[10px] text-slate-400 mb-0.5">
+                            <span className="font-extrabold uppercase text-slate-500">{n.senderName || n.senderRole}</span>
+                            <span className="flex items-center gap-0.5"><Clock className="w-3 h-3" />{formatRelativeTime(n.timestamp)}</span>
+                          </div>
+                          <p className="text-slate-900 font-bold">{n.title}</p>
+                          <p className="text-[11px] text-slate-600 font-normal mt-0.5 line-clamp-2">{n.message}</p>
+                          {n.link && (
+                            <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-800 mt-1 hover:underline">
+                              <span>Go to workflow</span>
+                              <ExternalLink className="w-2.5 h-2.5" />
+                            </span>
+                          )}
+                        </div>
+                      ))
+                    )}
                   </div>
                 </div>
               )}
