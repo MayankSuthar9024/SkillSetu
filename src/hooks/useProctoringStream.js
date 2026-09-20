@@ -2,13 +2,15 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 
 /**
  * useProctoringStream
- * Custom hook managing camera stream, real-time video frame motion/device detection,
- * automatic disqualification on tab switches or erratic movements / secondary devices.
+ * Custom hook managing camera stream, real-time computer vision / MediaPipe
+ * multi-face & face absence detection, motion/secondary device heuristics,
+ * integrity violation audit ledger, and degradation status.
  */
 export function useProctoringStream({
   isActive = false,
   onDisqualify,
-  onTabSwitch
+  onTabSwitch,
+  allowDegradedMode = false
 } = {}) {
   const [stream, setStream] = useState(null);
   const [cameraActive, setCameraActive] = useState(false);
@@ -19,12 +21,44 @@ export function useProctoringStream({
   const [sessionStartTime, setSessionStartTime] = useState(null);
   const [rapidMovementDetected, setRapidMovementDetected] = useState(false);
 
+  // Proctoring status: 'ok' | 'degraded' | 'blocked'
+  const [proctoringStatus, setProctoringStatus] = useState('blocked');
+
+  // Face detection states
+  const [faceAbsent, setFaceAbsent] = useState(false);
+  const [faceAbsentCountdown, setFaceAbsentCountdown] = useState(null);
+  const [faceCount, setFaceCount] = useState(0);
+  const [multipleFacesDetected, setMultipleFacesDetected] = useState(false);
+
+  // Audit violations ledger
+  const [proctoringViolations, setProctoringViolations] = useState([]);
+
   const streamRef = useRef(null);
   const motionCanvasRef = useRef(null);
   const prevFrameDataRef = useRef(null);
   const motionAnimFrameRef = useRef(null);
   const consecutiveViolationsRef = useRef(0);
+  const consecutiveMultiFacesRef = useRef(0);
   const hasDisqualifiedRef = useRef(false);
+
+  const faceDetectorRef = useRef(null);
+  const mediaPipeDetectorRef = useRef(null);
+  const faceAbsentStartTimeRef = useRef(null);
+  const mediaPipeResultRef = useRef({ count: 0, hasFaces: false });
+
+  // Record a standardized violation
+  const recordViolation = useCallback((type, severity, message) => {
+    const violation = {
+      id: `viol-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
+      type,
+      severity, // 'low' | 'medium' | 'high'
+      message,
+      timestamp: new Date().toISOString()
+    };
+    setProctoringViolations(prev => [...prev.slice(-49), violation]);
+    console.warn(`[Proctoring Violation - ${severity.toUpperCase()}] ${type}: ${message}`);
+    return violation;
+  }, []);
 
   // Clean stop of all tracks
   const stopStream = useCallback(() => {
@@ -53,6 +87,7 @@ export function useProctoringStream({
     setCameraError(null);
     hasDisqualifiedRef.current = false;
     consecutiveViolationsRef.current = 0;
+    consecutiveMultiFacesRef.current = 0;
 
     try {
       if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
@@ -72,6 +107,7 @@ export function useProctoringStream({
       setStream(mediaStream);
       setCameraActive(true);
       setCameraDisconnected(false);
+      setProctoringStatus('ok');
       setSessionStartTime(new Date().toISOString());
 
       // Monitor camera track state (ended / muted)
@@ -80,7 +116,9 @@ export function useProctoringStream({
         videoTrack.onended = () => {
           setCameraDisconnected(true);
           setCameraActive(false);
-          if (isActive && !hasDisqualifiedRef.current && onDisqualify) {
+          setProctoringStatus(allowDegradedMode ? 'degraded' : 'blocked');
+          recordViolation('CAMERA_LOST', 'high', 'Camera stream disconnected or disabled during active test.');
+          if (isActive && !hasDisqualifiedRef.current && onDisqualify && !allowDegradedMode) {
             hasDisqualifiedRef.current = true;
             onDisqualify('Camera stream disconnected or disabled during test.');
           }
@@ -88,6 +126,7 @@ export function useProctoringStream({
         videoTrack.onmute = () => {
           setCameraDisconnected(true);
           setCameraActive(false);
+          recordViolation('CAMERA_LOST', 'medium', 'Camera video feed muted by operating system.');
         };
         videoTrack.onunmute = () => {
           setCameraDisconnected(false);
@@ -101,7 +140,7 @@ export function useProctoringStream({
       console.error('Camera permission failed:', err);
       let message = 'Camera access was blocked or is unavailable.';
       if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
-        message = 'Camera permission was denied. Please allow camera access in your browser settings to proceed.';
+        message = 'Camera permission was denied. Please allow camera access in browser settings.';
       } else if (err.name === 'NotFoundError' || err.name === 'DevicesNotFoundError') {
         message = 'No webcam was detected on this device. Please connect a working camera.';
       } else if (err.name === 'NotReadableError' || err.name === 'TrackStartError') {
@@ -109,12 +148,19 @@ export function useProctoringStream({
       }
       setCameraError(message);
       setCameraActive(false);
+      setProctoringStatus(allowDegradedMode ? 'degraded' : 'blocked');
       setIsRequesting(false);
       return { success: false, error: message };
     }
-  }, [isActive, onDisqualify]);
+  }, [isActive, onDisqualify, allowDegradedMode, recordViolation]);
 
-  // Tab switch listener - automatically disqualifies the test when user switches tabs
+  // Enable degraded mode if candidate has no camera or permission issue
+  const enableDegradedMode = useCallback(() => {
+    setProctoringStatus('degraded');
+    recordViolation('DEGRADED_MODE', 'medium', 'Assessment running in unmonitored / degraded proctoring mode.');
+  }, [recordViolation]);
+
+  // Tab switch listener - automatically logs and flags tab switching
   useEffect(() => {
     if (!isActive) return;
 
@@ -122,37 +168,24 @@ export function useProctoringStream({
       if (document.hidden) {
         setTabSwitchCount(prev => {
           const next = prev + 1;
+          recordViolation('TAB_SWITCH', 'high', `Tab switch #${next} detected. Academic window unfocused.`);
           if (onTabSwitch) onTabSwitch(next);
           return next;
         });
 
-        if (!hasDisqualifiedRef.current && onDisqualify) {
+        // If threshold exceeded (> 2 tab switches), trigger disqualification
+        if (tabSwitchCount >= 2 && !hasDisqualifiedRef.current && onDisqualify) {
           hasDisqualifiedRef.current = true;
-          onDisqualify('Tab switch detected! Academic test policy strictly prohibits switching tabs or minimizing the test window.');
+          onDisqualify('Tab switch limit exceeded! Academic test policy strictly prohibits switching windows.');
         }
       }
     };
 
-    const handleWindowBlur = () => {
-      // Optional subtle guard for window defocusing
-    };
-
     document.addEventListener('visibilitychange', handleVisibilityChange);
-    window.addEventListener('blur', handleWindowBlur);
-
     return () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
-      window.removeEventListener('blur', handleWindowBlur);
     };
-  }, [isActive, onDisqualify, onTabSwitch]);
-
-  const [faceAbsent, setFaceAbsent] = useState(false);
-  const [faceAbsentCountdown, setFaceAbsentCountdown] = useState(null);
-
-  const faceDetectorRef = useRef(null);
-  const mediaPipeDetectorRef = useRef(null);
-  const faceAbsentStartTimeRef = useRef(null);
-  const mediaPipeResultRef = useRef(null);
+  }, [isActive, onDisqualify, onTabSwitch, tabSwitchCount, recordViolation]);
 
   // Initialize Google MediaPipe FaceDetection if available
   useEffect(() => {
@@ -166,21 +199,21 @@ export function useProctoringStream({
           minDetectionConfidence: 0.5
         });
         faceDetection.onResults((results) => {
-          const hasFaces = results && results.detections && results.detections.length > 0;
-          mediaPipeResultRef.current = hasFaces;
+          const count = results?.detections?.length || 0;
+          mediaPipeResultRef.current = { count, hasFaces: count > 0 };
         });
         mediaPipeDetectorRef.current = faceDetection;
-        console.log('[Proctoring] Google MediaPipe Face Detection initialized.');
       } else if (typeof window !== 'undefined' && 'FaceDetector' in window) {
+        // Native Shape Detection API
         // eslint-disable-next-line no-undef
-        faceDetectorRef.current = new window.FaceDetector({ fastMode: true, maxDetectedFaces: 2 });
+        faceDetectorRef.current = new window.FaceDetector({ fastMode: true, maxDetectedFaces: 5 });
       }
     } catch (e) {
       console.warn('[Proctoring] Neural face detector initialization fallback:', e);
     }
   }, []);
 
-  // Computer Vision motion, face presence & secondary device analyzer
+  // Computer Vision motion, face presence & multiple face analyzer
   useEffect(() => {
     if (!isActive || !stream) {
       if (motionAnimFrameRef.current) {
@@ -190,10 +223,11 @@ export function useProctoringStream({
       faceAbsentStartTimeRef.current = null;
       setFaceAbsent(false);
       setFaceAbsentCountdown(null);
+      setMultipleFacesDetected(false);
+      setFaceCount(0);
       return;
     }
 
-    // Obtain video element (favor active rendered DOM video if mounted, else fallback)
     let video = document.getElementById('proctor-pip-video');
     let fallbackVideo = null;
     if (!video) {
@@ -212,7 +246,7 @@ export function useProctoringStream({
 
     if (!motionCanvasRef.current) {
       motionCanvasRef.current = document.createElement('canvas');
-      motionCanvasRef.current.width = 64; // Low res for lightweight real-time diffing
+      motionCanvasRef.current.width = 64;
       motionCanvasRef.current.height = 48;
     }
     const canvas = motionCanvasRef.current;
@@ -224,47 +258,44 @@ export function useProctoringStream({
     const analyzeFrame = async () => {
       if (!streamRef.current) return;
 
-      // Re-query in case DOM video mounted after hook
       const activeVideo = document.getElementById('proctor-pip-video') || video;
-
       const now = performance.now();
-      // Sample every ~200ms
-      if (now - lastCheckTime >= 200 && activeVideo && (activeVideo.readyState >= 2 || activeVideo.currentTime > 0)) {
+
+      // Sample every ~250ms
+      if (now - lastCheckTime >= 250 && activeVideo && (activeVideo.readyState >= 2 || activeVideo.currentTime > 0)) {
         lastCheckTime = now;
         try {
           ctx.drawImage(activeVideo, 0, 0, 64, 48);
           const currentFrame = ctx.getImageData(0, 0, 64, 48);
           const currentPixels = currentFrame.data;
 
-          // 1. Check Face Presence via Google MediaPipe Neural Network (BlazeFace)
+          // 1. Check Face Presence & Multi-face via MediaPipe or Native FaceDetector or fallback
           if (mediaPipeDetectorRef.current) {
-            // MediaPipe processes the live video element directly via WebAssembly
             mediaPipeDetectorRef.current.send({ image: activeVideo }).catch(() => {});
-            if (mediaPipeResultRef.current !== null) {
-              evaluateFacePresence(mediaPipeResultRef.current, now);
-            }
+            const res = mediaPipeResultRef.current;
+            evaluateFaceState(res.count, now);
           } else if (faceDetectorRef.current && !isDetectingFace) {
             isDetectingFace = true;
             faceDetectorRef.current.detect(canvas)
               .then(faces => {
                 isDetectingFace = false;
-                const hasFaceDetected = faces && faces.length > 0;
-                evaluateFacePresence(hasFaceDetected, now);
+                const count = faces ? faces.length : 0;
+                evaluateFaceState(count, now);
               })
               .catch(() => {
                 isDetectingFace = false;
-                const detected = fallbackFacePresence(currentPixels);
-                evaluateFacePresence(detected, now);
+                const fallbackResult = fallbackFaceClusterDetection(currentPixels);
+                evaluateFaceState(fallbackResult.count, now);
               });
           } else {
-            const detected = fallbackFacePresence(currentPixels);
-            evaluateFacePresence(detected, now);
+            const fallbackResult = fallbackFaceClusterDetection(currentPixels);
+            evaluateFaceState(fallbackResult.count, now);
           }
 
-          // 2. Motion and Device Glare Analysis
+          // 2. Motion and Device Screen Glare Analysis
           if (prevFrameDataRef.current) {
             let diffScore = 0;
-            let brightVarianceCount = 0; // To spot illuminated secondary screens/mobile screens held up
+            let brightVarianceCount = 0;
             const totalPixels = 64 * 48;
 
             for (let i = 0; i < currentPixels.length; i += 4) {
@@ -273,35 +304,28 @@ export function useProctoringStream({
               const bDiff = Math.abs(currentPixels[i + 2] - prevFrameDataRef.current[i + 2]);
               const avgDiff = (rDiff + gDiff + bDiff) / 3;
 
-              if (avgDiff > 40) {
-                diffScore++;
-              }
+              if (avgDiff > 40) diffScore++;
 
-              // Check for high brightness glare indicative of phone screens/mobile devices
               const luminance = 0.299 * currentPixels[i] + 0.587 * currentPixels[i + 1] + 0.114 * currentPixels[i + 2];
-              if (luminance > 235 && avgDiff > 35) {
-                brightVarianceCount++;
-              }
+              if (luminance > 235 && avgDiff > 35) brightVarianceCount++;
             }
 
             const motionRatio = diffScore / totalPixels;
             const screenGlowRatio = brightVarianceCount / totalPixels;
 
-            const isRapidMotion = motionRatio > 0.42;
-            const isDeviceGlow = screenGlowRatio > 0.08;
+            const isRapidMotion = motionRatio > 0.45;
+            const isDeviceGlow = screenGlowRatio > 0.10;
 
             if (isRapidMotion || isDeviceGlow) {
               consecutiveViolationsRef.current += 1;
               setRapidMovementDetected(true);
 
-              if (consecutiveViolationsRef.current >= 3) {
-                if (!hasDisqualifiedRef.current && onDisqualify) {
-                  hasDisqualifiedRef.current = true;
-                  const reason = isDeviceGlow
-                    ? 'Unauthorized secondary device/mobile phone usage detected on camera.'
-                    : 'Erratic and excessive movement detected outside normal test posture.';
-                  onDisqualify(reason);
-                }
+              if (consecutiveViolationsRef.current === 3) {
+                recordViolation(
+                  isDeviceGlow ? 'SECONDARY_DEVICE' : 'ERRATIC_MOTION',
+                  'medium',
+                  isDeviceGlow ? 'Unauthorized illuminated secondary device detected in frame.' : 'Rapid erratic head/body movement detected.'
+                );
               }
             } else {
               setRapidMovementDetected(false);
@@ -318,85 +342,87 @@ export function useProctoringStream({
       motionAnimFrameRef.current = requestAnimationFrame(analyzeFrame);
     };
 
-    // Robust Face presence detector using YCrCb skin chrominance + physiological facial feature clustering
-    // Specifically prevents curtains, wooden shelves, and background clothes from causing false face presence.
-    function fallbackFacePresence(pixels) {
-      let skinPixels = 0;
-      let focalPixels = 0;
-      let eyeLevelEdges = 0;
+    // Evaluates spatial clusters to detect face presence and identify multiple distinct faces
+    function fallbackFaceClusterDetection(pixels) {
+      let leftCluster = 0;
+      let centerCluster = 0;
+      let rightCluster = 0;
 
-      // Focus on the central 40% width and 50% height (where candidate's face directly sits in test posture)
-      // x: 18..46, y: 10..34 (out of 64x48)
-      for (let y = 10; y < 34; y++) {
-        for (let x = 18; x < 46; x++) {
-          focalPixels++;
+      for (let y = 10; y < 38; y++) {
+        for (let x = 8; x < 56; x++) {
           const idx = (y * 64 + x) * 4;
           const r = pixels[idx];
           const g = pixels[idx + 1];
           const b = pixels[idx + 2];
 
-          // Standard RGB to YCrCb
           const Y  = 0.299 * r + 0.587 * g + 0.114 * b;
           const Cr = 0.5 * r - 0.4187 * g - 0.0813 * b + 128;
           const Cb = -0.1687 * r - 0.3313 * g + 0.5 * b + 128;
 
-          // Human skin locus:
-          // Must meet Y luminance range and specific narrow Cr/Cb cluster
           const isSkin = (Cr >= 135 && Cr <= 170) && (Cb >= 85 && Cb <= 126) && (Y >= 40 && Y <= 220);
-
-          // Skin tones require Red > Green and Green > Blue (rules out yellowish/orange curtains or brown wood)
           const isPhysiologicalSkin = isSkin && (r > g + 8) && (g > b);
 
           if (isPhysiologicalSkin) {
-            skinPixels++;
-          }
-
-          // Edge contrast across eye-level (y between 14 and 24)
-          if (y >= 14 && y <= 24 && x < 45) {
-            const nextIdx = idx + 4;
-            const diff = Math.abs(r - pixels[nextIdx]) + Math.abs(g - pixels[nextIdx + 1]);
-            if (diff > 45) {
-              eyeLevelEdges++;
-            }
+            if (x < 24) leftCluster++;
+            else if (x <= 40) centerCluster++;
+            else rightCluster++;
           }
         }
       }
 
-      const skinRatio = skinPixels / focalPixels;
-      const eyeEdgeRatio = eyeLevelEdges / focalPixels;
+      const hasCenterFace = centerCluster >= 70;
+      const hasLeftFace = leftCluster >= 65;
+      const hasRightFace = rightCluster >= 65;
 
-      // In normal webcam sitting position:
-      // A candidate face occupies >= 22% of the central focal box with active eye-level feature edges.
-      // Background rooms, hanging clothes, walls, and empty chairs score below 12%.
-      const hasFace = skinRatio >= 0.20 && eyeEdgeRatio >= 0.025;
-      return hasFace;
+      let count = 0;
+      if (hasCenterFace) count++;
+      if (hasLeftFace && !hasCenterFace) count++;
+      if (hasLeftFace && hasCenterFace && leftCluster > 90) count++;
+      if (hasRightFace && hasCenterFace && rightCluster > 90) count++;
+
+      return { count: Math.min(count, 3), hasFaces: count > 0 };
     }
 
-    // Helper: Handle 3-second face disappearance threshold
-    function evaluateFacePresence(isPresent, timestamp) {
-      if (isPresent) {
-        if (faceAbsentStartTimeRef.current) {
-          console.log('[Proctoring] Face re-acquired');
+    // Handles face presence and multi-face count
+    function evaluateFaceState(count, timestamp) {
+      setFaceCount(count);
+
+      // 1. Multiple faces check (> 1 face)
+      if (count > 1) {
+        consecutiveMultiFacesRef.current += 1;
+        setMultipleFacesDetected(true);
+        if (consecutiveMultiFacesRef.current === 3) {
+          recordViolation('MULTIPLE_FACES', 'high', `Multiple individuals (${count} faces) detected in camera frame.`);
         }
+      } else {
+        consecutiveMultiFacesRef.current = 0;
+        setMultipleFacesDetected(false);
+      }
+
+      // 2. Face absent check (0 faces)
+      if (count > 0) {
         faceAbsentStartTimeRef.current = null;
         setFaceAbsent(false);
         setFaceAbsentCountdown(null);
       } else {
         if (!faceAbsentStartTimeRef.current) {
           faceAbsentStartTimeRef.current = timestamp;
-          console.warn('[Proctoring] Face disappeared from view. Countdown initiated.');
         }
         const elapsed = timestamp - faceAbsentStartTimeRef.current;
-        const remainingSeconds = Math.max(0, Math.ceil((3000 - elapsed) / 1000));
+        const remainingSeconds = Math.max(0, Math.ceil((4000 - elapsed) / 1000));
         setFaceAbsent(true);
         setFaceAbsentCountdown(remainingSeconds);
 
-        // Disqualify if face disappears for more than 3 seconds (3000ms)
-        if (elapsed >= 3000) {
-          if (!hasDisqualifiedRef.current && onDisqualify) {
+        // Record violation when face disappears for > 2 seconds
+        if (elapsed >= 2000 && remainingSeconds === 2) {
+          recordViolation('FACE_ABSENT', 'medium', 'Candidate face disappeared from camera viewport.');
+        }
+
+        // Auto-disqualify if face absent > 4 seconds and not in degraded mode
+        if (elapsed >= 4000) {
+          if (!hasDisqualifiedRef.current && onDisqualify && proctoringStatus === 'ok') {
             hasDisqualifiedRef.current = true;
-            console.error('[Proctoring] Disqualified: Face absent for > 3s.');
-            onDisqualify('Face disappeared from camera view for more than 3 seconds.');
+            onDisqualify('Face disappeared from camera view for more than 4 seconds.');
           }
         }
       }
@@ -412,9 +438,9 @@ export function useProctoringStream({
       video.pause();
       video.srcObject = null;
     };
-  }, [isActive, stream, onDisqualify]);
+  }, [isActive, stream, onDisqualify, proctoringStatus, recordViolation]);
 
-  // Clean teardown on unmount or when isActive flips to false
+  // Clean teardown on unmount
   useEffect(() => {
     return () => {
       stopStream();
@@ -425,16 +451,20 @@ export function useProctoringStream({
   const getProctoringMetadata = useCallback((disqualifiedReason = null) => {
     return {
       proctoring_metadata: {
+        proctoring_status: proctoringStatus,
         camera_verified: Boolean(cameraActive || sessionStartTime),
         tab_switch_count: tabSwitchCount,
         disqualified: Boolean(disqualifiedReason),
         disqualification_reason: disqualifiedReason,
         face_absent: faceAbsent,
+        multiple_faces_detected: multipleFacesDetected,
+        total_violations_recorded: proctoringViolations.length,
+        violations: proctoringViolations,
         session_started_at: sessionStartTime || new Date().toISOString(),
         session_ended_at: new Date().toISOString()
       }
     };
-  }, [cameraActive, sessionStartTime, tabSwitchCount, faceAbsent]);
+  }, [cameraActive, sessionStartTime, tabSwitchCount, faceAbsent, multipleFacesDetected, proctoringStatus, proctoringViolations]);
 
   return {
     stream,
@@ -444,10 +474,16 @@ export function useProctoringStream({
     tabSwitchCount,
     cameraDisconnected,
     rapidMovementDetected,
+    proctoringStatus,
     faceAbsent,
     faceAbsentCountdown,
+    faceCount,
+    multipleFacesDetected,
+    proctoringViolations,
     requestCamera,
     stopStream,
+    enableDegradedMode,
+    recordViolation,
     getProctoringMetadata
   };
 }

@@ -70,9 +70,25 @@ export function FeedPage({ onNavigate, currentUser, activePortalId, openCreatePo
   const [visibleCount, setVisibleCount] = useState(5);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
 
+  // Check if current user is in a non-student portal (company, faculty, college, admin)
+  const isNonStudentPortal = Boolean(
+    activePortalId === 'company' ||
+    activePortalId === 'faculty' ||
+    activePortalId === 'college' ||
+    activePortalId === 'admin' ||
+    currentUser?.roleType === 'company' ||
+    currentUser?.roleType === 'faculty' ||
+    currentUser?.roleType === 'college' ||
+    currentUser?.roleType === 'admin'
+  );
+
+  // Apply button and application actions are strictly restricted to student scholars
+  const isStudentUser = !isNonStudentPortal;
+
   // Check if current logged-in user is a faculty member / preceptor / professor
   const isFacultyUser = Boolean(
     activePortalId === 'faculty' ||
+    currentUser?.roleType === 'faculty' ||
     currentUser?.role?.toLowerCase().includes('faculty') ||
     currentUser?.role?.toLowerCase().includes('professor') ||
     currentUser?.role?.toLowerCase().includes('preceptor') ||
@@ -172,12 +188,9 @@ export function FeedPage({ onNavigate, currentUser, activePortalId, openCreatePo
     }
   };
 
-  // Open the Apply Internship Modal (for students) or redirect to Nominate (for faculty)
+  // Open the Apply Internship Modal (strictly for students)
   const handleOpenApplyModal = (post) => {
-    if (isFacultyUser) {
-      handleOpenNominateModal(post);
-      return;
-    }
+    if (!isStudentUser) return;
     setSelectedInternship(post);
     setApplyCoverNote(`Dear ${post.author.name} Recruiting Team,\n\nI am eager to apply for this intensive internship. My SkillSetu verified diagnostic score is ${currentUser?.readiness || '88%'}, and I have completed accredited micro-sprints in Schedule T GMP and HPLC Standardization.`);
   };
@@ -527,8 +540,8 @@ export function FeedPage({ onNavigate, currentUser, activePortalId, openCreatePo
                           {post.title}
                         </h2>
                         
-                        {/* Internship Specs Grid Card (Visible only to students, hidden on faculty portal feed) */}
-                        {post.isInternship && !isFacultyUser && (
+                        {/* Internship Specs Grid Card */}
+                        {post.isInternship && (
                           <div className="my-3 p-3 bg-slate-50 border border-slate-200/90 rounded-xl space-y-2.5">
                             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
                               <div className="bg-white p-2 rounded-lg border border-slate-200 shadow-2xs">
@@ -555,26 +568,28 @@ export function FeedPage({ onNavigate, currentUser, activePortalId, openCreatePo
                                 <span className="font-medium text-slate-700">{post.eligibility}</span>
                               </div>
 
-                              {/* Prominent Action Button: Apply for Student */}
-                              <div className="w-full sm:w-auto">
-                                {isApplied ? (
-                                  <button
-                                    disabled
-                                    className="w-full sm:w-auto bg-emerald-50 text-emerald-800 border border-emerald-300 font-bold text-xs px-3.5 py-1.5 rounded-lg flex items-center justify-center gap-1 cursor-default"
-                                  >
-                                    <Check className="w-3.5 h-3.5 text-emerald-700 stroke-[3]" />
-                                    <span>Applied</span>
-                                  </button>
-                                ) : (
-                                  <button
-                                    onClick={() => handleOpenApplyModal(post)}
-                                    className="w-full sm:w-auto bg-emerald-800 hover:bg-emerald-700 text-white font-bold text-xs px-4 py-1.5 rounded-lg shadow-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer active:scale-95"
-                                  >
-                                    <Briefcase className="w-3.5 h-3.5" />
-                                    <span>Apply Internship</span>
-                                  </button>
-                                )}
-                              </div>
+                              {/* Prominent Action Button: Apply strictly for Student Portal */}
+                              {isStudentUser && (
+                                <div className="w-full sm:w-auto">
+                                  {isApplied ? (
+                                    <button
+                                      disabled
+                                      className="w-full sm:w-auto bg-emerald-50 text-emerald-800 border border-emerald-300 font-bold text-xs px-3.5 py-1.5 rounded-lg flex items-center justify-center gap-1 cursor-default"
+                                    >
+                                      <Check className="w-3.5 h-3.5 text-emerald-700 stroke-[3]" />
+                                      <span>Applied</span>
+                                    </button>
+                                  ) : (
+                                    <button
+                                      onClick={() => handleOpenApplyModal(post)}
+                                      className="w-full sm:w-auto bg-emerald-800 hover:bg-emerald-700 text-white font-bold text-xs px-4 py-1.5 rounded-lg shadow-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer active:scale-95"
+                                    >
+                                      <Briefcase className="w-3.5 h-3.5" />
+                                      <span>Apply Internship</span>
+                                    </button>
+                                  )}
+                                </div>
+                              )}
                             </div>
                           </div>
                         )}
@@ -623,7 +638,7 @@ export function FeedPage({ onNavigate, currentUser, activePortalId, openCreatePo
                       </div>
 
                       <div className="flex items-center gap-2">
-                        {post.isInternship && !isFacultyUser && !isApplied && (
+                        {post.isInternship && isStudentUser && !isApplied && (
                           <button
                             onClick={() => handleOpenApplyModal(post)}
                             className="text-emerald-900 bg-emerald-50 hover:bg-emerald-100 font-bold text-[11px] px-2.5 py-1 rounded border border-emerald-200 transition-all cursor-pointer flex items-center gap-1"

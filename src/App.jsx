@@ -19,6 +19,7 @@ import { ProfilePage } from './pages/ProfilePage';
 import { MessagePage } from './pages/MessagePage';
 import { CoursesPage } from './pages/CoursesPage';
 import { JobsPage } from './pages/JobsPage';
+import { AssessmentPage } from './pages/AssessmentPage';
 
 export function App() {
   const [activePage, setActivePage] = useState('home'); // 'home' | 'features' | 'about' | 'opportunities' | 'skill' | 'industry' | 'courses' | 'feed' | 'profile' | 'messages' | 'login' | 'portals' | 'dashboard'
@@ -77,8 +78,8 @@ export function App() {
         } else {
           setActivePage('skill');
         }
-      } else if (['about', 'opportunities', 'industry', 'courses', 'feed', 'profile', 'messages'].includes(hash)) {
-        setActivePage(hash);
+      } else if (['about', 'opportunities', 'industry', 'courses', 'feed', 'profile', 'messages', 'assessment', 'diagnostic'].includes(hash)) {
+        setActivePage(hash === 'diagnostic' ? 'assessment' : hash);
       } else if (!hash || hash === 'home') {
         if (currentUser) {
           setActivePage('dashboard');
@@ -158,9 +159,9 @@ export function App() {
     }
 
     if (currentUser) {
-      if (['feed', 'messages', 'jobs', 'skills', 'skill', 'courses', 'network', 'console', 'profile'].includes(page)) {
+      if (['feed', 'messages', 'jobs', 'skills', 'skill', 'courses', 'network', 'console', 'profile', 'assessment', 'diagnostic'].includes(page)) {
         setActivePage('dashboard');
-        window.location.hash = page === 'skill' ? 'skills' : page;
+        window.location.hash = page === 'skill' ? 'skills' : page === 'diagnostic' ? 'assessment' : page;
         window.scrollTo({ top: 0, behavior: 'smooth' });
         return;
       }
@@ -406,6 +407,16 @@ export function App() {
             <SkillPage
               onNavigate={handleNavigate}
               onOpenReadinessModal={() => setIsReadinessModalOpen(true)}
+            />
+          </div>
+        )}
+
+        {/* DIAGNOSTIC ASSESSMENT ENGINE PAGE */}
+        {(activePage === 'assessment' || activePage === 'diagnostic') && (
+          <div className="animate-fadeIn">
+            <AssessmentPage
+              onNavigate={handleNavigate}
+              currentUser={activeUser}
             />
           </div>
         )}

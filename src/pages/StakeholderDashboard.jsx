@@ -38,6 +38,7 @@ import { CompanyPage } from './CompanyPage';
 import { MinistryPage } from './MinistryPage';
 import { CoursesPage } from './CoursesPage';
 import { JobsPage } from './JobsPage';
+import { AssessmentPage } from './AssessmentPage';
 import { ComingSoonView } from '../components/ComingSoonView';
 
 export const StakeholderDashboard = ({
@@ -52,9 +53,10 @@ export const StakeholderDashboard = ({
   const [activeTab, setActiveTab] = useState(() => {
     if (typeof window !== 'undefined') {
       const hash = window.location.hash.replace('#', '');
-      if (['feed', 'courses', 'console', 'jobs', 'skills', 'network', 'profile', 'messages', 'students', 'accreditation'].includes(hash)) {
+      if (['feed', 'courses', 'console', 'jobs', 'skills', 'network', 'profile', 'messages', 'students', 'accreditation', 'assessment'].includes(hash)) {
         return hash;
       }
+      if (hash === 'diagnostic') return 'assessment';
       if (hash === 'skill') return 'skills';
       if (hash === 'opportunities') return 'jobs';
       if (hash === 'industry') return 'network';
@@ -62,7 +64,7 @@ export const StakeholderDashboard = ({
       if (hash === 'compliance' || hash === 'accreditation' || hash === 'reporting' || hash === 'nirf' || hash === 'naac') return 'accreditation';
     }
     return activePortalId === 'student' || activePortalId === 'faculty' || activePortalId === 'college' ? 'feed' : 'console';
-  }); // 'feed' | 'messages' | 'jobs' | 'skills' | 'network' | 'console' | 'profile' | 'courses' | 'students' | 'accreditation'
+  }); // 'feed' | 'messages' | 'jobs' | 'skills' | 'network' | 'console' | 'profile' | 'courses' | 'students' | 'accreditation' | 'assessment'
   const [viewingUser, setViewingUser] = useState(null);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
@@ -72,8 +74,10 @@ export const StakeholderDashboard = ({
   React.useEffect(() => {
     const handleHash = () => {
       const hash = window.location.hash.replace('#', '');
-      if (['feed', 'courses', 'console', 'jobs', 'skills', 'network', 'profile', 'messages', 'students', 'accreditation'].includes(hash)) {
+      if (['feed', 'courses', 'console', 'jobs', 'skills', 'network', 'profile', 'messages', 'students', 'accreditation', 'assessment'].includes(hash)) {
         setActiveTab(hash);
+      } else if (hash === 'diagnostic') {
+        setActiveTab('assessment');
       } else if (hash === 'skill') {
         setActiveTab('skills');
       } else if (hash === 'opportunities') {
@@ -133,6 +137,7 @@ export const StakeholderDashboard = ({
               else if (page === 'industry') setActiveTab('network');
             }}
             currentUser={user}
+            activePortalId={activePortalId}
             openCreatePostModal={openCreatePostModal}
           />
         );
@@ -213,8 +218,22 @@ export const StakeholderDashboard = ({
             onNavigate={(page) => {
               if (page === 'opportunities') setActiveTab('jobs');
               else if (page === 'feed') setActiveTab('feed');
+              else if (page === 'assessment') setActiveTab('assessment');
             }}
             onOpenReadinessModal={() => alert('Launching Skill Readiness Diagnostic Engine...')}
+          />
+        );
+      case 'assessment':
+      case 'diagnostic':
+        return (
+          <AssessmentPage
+            currentUser={user}
+            onNavigate={(page) => {
+              if (page === 'profile') setActiveTab('profile');
+              else if (page === 'skills') setActiveTab('skills');
+              else if (page === 'feed') setActiveTab('feed');
+              else setActiveTab(page);
+            }}
           />
         );
       case 'network':
@@ -281,7 +300,7 @@ export const StakeholderDashboard = ({
           </div>
         );
       default:
-        return <FeedPage onNavigate={() => {}} currentUser={user} />;
+        return <FeedPage onNavigate={() => {}} currentUser={user} activePortalId={activePortalId} />;
     }
   };
 
