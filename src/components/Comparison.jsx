@@ -43,9 +43,10 @@ export function Comparison() {
 
         {/* 100% Fully Responsive Comparison Table (No horizontal scrolling or text clipping) */}
         <div className="rounded-2xl border border-slate-200 bg-white shadow-xs w-full max-w-4xl mx-auto overflow-hidden">
-          <table className="w-full table-fixed text-left border-collapse">
-            <thead>
-              <tr className="bg-slate-50 border-b border-slate-200 text-slate-700 font-bold uppercase text-[9px] xs:text-[10.5px] sm:text-xs">
+          <div className="w-full overflow-x-auto">
+            <table className="w-full table-fixed text-left border-collapse">
+              <thead>
+                <tr className="bg-slate-50 border-b border-slate-200 text-slate-700 font-bold uppercase text-[9px] xs:text-[10.5px] sm:text-xs">
                 <th className="py-3 sm:py-4 px-2 sm:px-5 w-[37%] sm:w-[46%] tracking-normal sm:tracking-wider">
                   Key Capability
                 </th>
@@ -99,6 +100,7 @@ export function Comparison() {
               ))}
             </tbody>
           </table>
+          </div>
         </div>
 
       </div>

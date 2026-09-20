@@ -457,6 +457,10 @@ export const CompanyPortalView = ({ user = {} }) => {
     j.targetTiers.some(t => t.toLowerCase().includes(jobSearchTerm.toLowerCase()))
   );
 
+  // Derived counts for metrics cards
+  const scheduledCount = candidates.filter(c => getStageLabel(c.status) === 'Interview').length;
+  const isOfferedStatus = (status) => getStageLabel(status) === 'Offered';
+
   return (
     <div className="space-y-6">
       {/* Toast Notification Alert */}

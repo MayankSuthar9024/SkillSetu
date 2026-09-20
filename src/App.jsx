@@ -20,8 +20,12 @@ import { MessagePage } from './pages/MessagePage';
 import { CoursesPage } from './pages/CoursesPage';
 import { JobsPage } from './pages/JobsPage';
 import { AssessmentPage } from './pages/AssessmentPage';
+<<<<<<< HEAD
+import { CompanyPage } from './pages/CompanyPage';
+=======
 import { NotificationProvider } from './context/NotificationContext';
 import CredentialVerifierModal from './components/CredentialVerifierModal';
+>>>>>>> 9ca885b29da6fb0a6f09eeb45d273158f00dcd7b
 
 export function App() {
   const [activePage, setActivePage] = useState('home'); // 'home' | 'features' | 'about' | 'opportunities' | 'skill' | 'industry' | 'courses' | 'feed' | 'profile' | 'messages' | 'login' | 'portals' | 'dashboard'
@@ -72,14 +76,12 @@ export function App() {
         const portalCfg = PORTALS_DATA.find(p => p.id === 'college');
         setCurrentUser(portalCfg?.profileUser || null);
       } else if (hash === 'company' || hash === 'company-portal' || hash === 'portal-company') {
-        const companyUser = PORTALS_DATA.find(p => p.id === 'company')?.profileUser;
-        setActivePortalId('company');
-        setCurrentUser(companyUser);
-        try {
-          localStorage.setItem('skillsetu_user', JSON.stringify(companyUser));
-          localStorage.setItem('skillsetu_portal', 'company');
-        } catch {}
-        setActivePage('dashboard');
+        if (currentUser && (currentUser?.roleType === 'company' || activePortalId === 'company')) {
+          setActivePortalId('company');
+          setActivePage('dashboard');
+        } else {
+          setActivePage('company');
+        }
       } else if (['how-it-works', 'features', 'comparison'].includes(hash)) {
         setActivePage('home');
         setTimeout(() => {
@@ -141,7 +143,7 @@ export function App() {
     try {
       localStorage.setItem('skillsetu_user', JSON.stringify(user));
       localStorage.setItem('skillsetu_portal', portalId);
-    } catch {}
+    } catch { }
     setActivePage('dashboard');
     window.location.hash = `dashboard-${portalId}`;
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -156,7 +158,7 @@ export function App() {
       try {
         localStorage.setItem('skillsetu_user', JSON.stringify(userObj));
         localStorage.setItem('skillsetu_portal', newPortalId);
-      } catch {}
+      } catch { }
       window.location.hash = `dashboard-${newPortalId}`;
     } else {
       setActivePage('login');
@@ -169,7 +171,7 @@ export function App() {
     try {
       localStorage.removeItem('skillsetu_user');
       localStorage.removeItem('skillsetu_portal');
-    } catch {}
+    } catch { }
     setCurrentUser(null);
     setActivePage('home');
     window.location.hash = '';
@@ -208,8 +210,15 @@ export function App() {
     if (page === 'login' || page === 'portals') {
       handleOpenAuth();
     } else if (page === 'company' || page === 'company-portal') {
-      const companyUser = PORTALS_DATA.find(p => p.id === 'company')?.profileUser;
-      handleLoginSuccess('company', companyUser);
+      if (currentUser?.roleType === 'company') {
+        setActivePortalId('company');
+        setActivePage('dashboard');
+        window.location.hash = 'dashboard-company';
+      } else {
+        setActivePage('company');
+        window.location.hash = 'company';
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } else if (page === 'dashboard') {
       setActivePage('dashboard');
       window.location.hash = `dashboard-${activePortalId}`;
@@ -281,271 +290,282 @@ export function App() {
     return (
       <div className="min-h-screen bg-surface text-on-surface font-sans flex flex-col antialiased w-full max-w-full overflow-x-hidden">
 
-      {/* Shared Sticky Navbar */}
-      <Navbar
-        activePage={activePage}
-        setActivePage={handleNavigate}
-        onOpenReadinessModal={() => setIsReadinessModalOpen(true)}
-        onOpenVerifierModal={() => setIsVerifierModalOpen(true)}
-        onOpenAuthModal={handleOpenAuth}
-        currentUser={currentUser}
-        onLogout={handleLogout}
-      />
-
-      {/* Main Content Area Based on Active Page */}
-      <main className="flex-grow pt-20 pb-12 w-full max-w-full overflow-x-hidden">
-
-        {/* HOME PAGE */}
-        {activePage === 'home' && (
-          <div className="animate-fadeIn">
-            <Hero
-              onGetStarted={() => handleOpenAuth()}
-              onSeeHowItWorks={handleSeeHowItWorks}
-              onOpenReadinessModal={() => setIsReadinessModalOpen(true)}
-            />
-            <HowItWorks onOpenReadinessModal={() => setIsReadinessModalOpen(true)} />
-            <Features onOpenReadinessModal={() => setIsReadinessModalOpen(true)} />
-            <AboutEcosystem onOpenReadinessModal={() => setIsReadinessModalOpen(true)} />
-            <Comparison />
-            <FaqSection
-              onOpenReadinessModal={() => setIsReadinessModalOpen(true)}
-              onOpenAuthModal={handleOpenAuth}
-            />
-          </div>
-        )}
-
-        {/* HOW IT WORKS PAGE */}
-        {activePage === 'how-it-works' && (
-          <div className="animate-fadeIn">
-            <div className="hero-grid-bg border-b border-outline-variant/30 py-12 px-4 text-center">
-              <div className="max-w-container-max mx-auto">
-                <span className="text-xs font-bold uppercase tracking-wider text-primary bg-white/90 border border-emerald-200/80 px-3.5 py-1.5 rounded-full shadow-2xs">
-                  Step-by-Step Architecture
-                </span>
-                <h1 className="font-display-lg text-3xl sm:text-5xl font-extrabold text-on-surface mt-4 tracking-tight">
-                  How SkillSetu Connects Ayush Talent to Industry
-                </h1>
-                <p className="text-sm sm:text-base text-on-surface-variant max-w-2xl mx-auto mt-2">
-                  A standardized clinical competency journey backed by national academic benchmarks and healthcare employers.
-                </p>
-              </div>
-            </div>
-            <HowItWorks onOpenReadinessModal={() => setIsReadinessModalOpen(true)} />
-          </div>
-        )}
-
-        {/* FEATURES PAGE */}
-        {activePage === 'features' && (
-          <div className="animate-fadeIn">
-            <div className="hero-grid-bg border-b border-outline-variant/30 py-12 px-4 text-center">
-              <div className="max-w-container-max mx-auto">
-                <span className="text-xs font-bold uppercase tracking-wider text-primary bg-white/90 border border-emerald-200/80 px-3.5 py-1.5 rounded-full shadow-2xs">
-                  Platform Capabilities
-                </span>
-                <h1 className="font-display-lg text-3xl sm:text-5xl font-extrabold text-on-surface mt-4 tracking-tight">
-                  All SkillSetu Features & Infrastructure
-                </h1>
-                <p className="text-sm sm:text-base text-on-surface-variant max-w-2xl mx-auto mt-2">
-                  Unified competency scoring, micro-sprints, and verifiable credentials for India's Ayush practitioners.
-                </p>
-              </div>
-            </div>
-            <Features onOpenReadinessModal={() => setIsReadinessModalOpen(true)} />
-          </div>
-        )}
-
-        {/* ABOUT PAGE */}
-        {activePage === 'about' && (
-          <div className="animate-fadeIn">
-            <div className="hero-grid-bg border-b border-outline-variant/30 py-12 px-4 text-center">
-              <div className="max-w-container-max mx-auto">
-                <span className="text-xs font-bold uppercase tracking-wider text-primary bg-white/90 border border-emerald-200/80 px-3.5 py-1.5 rounded-full shadow-2xs">
-                  Ecosystem Overview
-                </span>
-                <h1 className="font-display-lg text-3xl sm:text-5xl font-extrabold text-on-surface mt-4 tracking-tight">
-                  About SkillSetu National Ayush Platform
-                </h1>
-                <p className="text-sm sm:text-base text-on-surface-variant max-w-2xl mx-auto mt-2">
-                  Connecting students, colleges, industry partners, and the Ministry under one standardized national framework.
-                </p>
-              </div>
-            </div>
-            <AboutEcosystem onOpenReadinessModal={() => setIsReadinessModalOpen(true)} />
-          </div>
-        )}
-
-        {/* OPPORTUNITIES PAGE */}
-        {activePage === 'opportunities' && (
-          <div className="animate-fadeIn">
-            <div className="hero-grid-bg border-b border-outline-variant/30 py-12 px-4 text-center">
-              <div className="max-w-container-max mx-auto">
-                <span className="text-xs font-bold uppercase tracking-wider text-primary bg-white/90 border border-emerald-200/80 px-3.5 py-1.5 rounded-full shadow-2xs">
-                  Active Career Board
-                </span>
-                <h1 className="font-display-lg text-3xl sm:text-5xl font-extrabold text-on-surface mt-4 tracking-tight">
-                  Placement & Internship Opportunities
-                </h1>
-                <p className="text-sm sm:text-base text-on-surface-variant max-w-2xl mx-auto mt-2">
-                  Top Ayush hospitals, research foundations, and pharmaceutical leaders recruiting verified clinical candidates.
-                </p>
-              </div>
-            </div>
-
-            <div className="py-12 px-4 max-w-container-max mx-auto">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-                {[
-                  { title: 'Junior Ayurvedic Physician', hospital: 'AVP Research Foundation', location: 'Coimbatore', scoreReq: '80%+ Readiness', stipend: '₹45,000 / month', tag: 'BAMS' },
-                  { title: 'Naturopathy Wellness Specialist', hospital: 'Soukya Holistic Health', location: 'Bengaluru', scoreReq: '75%+ Readiness', stipend: '₹50,000 / month', tag: 'BNYS' },
-                  { title: 'Unani Clinical Officer', hospital: 'Central Council for Research in Unani', location: 'New Delhi', scoreReq: '82%+ Readiness', stipend: '₹55,000 / month', tag: 'BUMS' },
-                  { title: 'Siddha Herbal Pharmacologist', hospital: 'National Institute of Siddha', location: 'Chennai', scoreReq: '78%+ Readiness', stipend: '₹42,000 / month', tag: 'BSMS' },
-                  { title: 'Homoeopathic Clinical Research Fellow', hospital: 'NIH Kolkata', location: 'Kolkata', scoreReq: '85%+ Readiness', stipend: '₹60,000 / month', tag: 'BHMS' },
-                  { title: 'Ayush Tele-Consultant Specialist', hospital: 'Patanjali Wellness Network', location: 'Haridwar / Remote', scoreReq: '75%+ Readiness', stipend: '₹40,000 / month', tag: 'BAMS / BHMS' },
-                ].map((opp, idx) => (
-                  <div key={idx} className="opportunity-card group bg-surface-container-lowest border border-outline-variant/30 rounded-3xl p-6 soft-shadow flex flex-col justify-between hover:border-primary/40 transition-all">
-                    <div>
-                      <div className="flex justify-between items-start mb-3">
-                        <span className="bg-primary-container text-on-primary-container text-xs font-bold px-3 py-1 rounded-lg">
-                          {opp.tag}
-                        </span>
-                        <span className="text-xs font-bold text-tertiary bg-secondary-container px-3 py-1 rounded-full border border-secondary-container/40">
-                          {opp.scoreReq}
-                        </span>
-                      </div>
-                      <h3 className="font-headline-md text-lg font-bold text-on-surface mb-1 group-hover:text-primary transition-colors">{opp.title}</h3>
-                      <div className="text-xs font-semibold text-outline mb-1">{opp.hospital}</div>
-                      <div className="text-xs text-on-surface-variant flex items-center gap-1 mb-4">
-                        <span className="material-symbols-outlined text-sm text-primary">location_on</span>
-                        <span>{opp.location}</span>
-                      </div>
-                    </div>
-
-                    <div className="pt-4 border-t border-outline-variant/20 flex justify-between items-center">
-                      <span className="text-xs font-bold text-primary font-mono">{opp.stipend}</span>
-                      <button
-                        onClick={() => handleOpenAuth()}
-                        className="shimmer-btn bg-primary text-on-primary text-xs font-bold px-4 py-2 rounded-xl hover:bg-primary/90 transition-all cursor-pointer"
-                      >
-                        Apply with Score
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <div className="bg-surface-bright border border-outline-variant/30 rounded-3xl p-8 text-center max-w-xl mx-auto shadow-xs">
-                <h3 className="font-bold text-xl text-on-surface mb-2">Are you an Employer or Ayush Hospital?</h3>
-                <p className="text-xs text-on-surface-variant mb-4 leading-relaxed">Post clinical opportunities and recruit verified candidates directly from the SkillSetu talent engine.</p>
-                <button
-                  onClick={() => handleNavigate('company')}
-                  className="shimmer-btn bg-primary text-on-primary font-bold text-sm px-6 py-2.5 rounded-xl hover:bg-primary/90 transition-all cursor-pointer shadow-soft"
-                >
-                  Enter Recruiter & ATS Portal
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* SKILL HUB PAGE */}
-        {activePage === 'skill' && (
-          <div className="animate-fadeIn">
-            <SkillPage
-              onNavigate={handleNavigate}
-              onOpenReadinessModal={() => setIsReadinessModalOpen(true)}
-            />
-          </div>
-        )}
-
-        {/* DIAGNOSTIC ASSESSMENT ENGINE PAGE */}
-        {(activePage === 'assessment' || activePage === 'diagnostic') && (
-          <div className="animate-fadeIn">
-            <AssessmentPage
-              onNavigate={handleNavigate}
-              currentUser={activeUser}
-            />
-          </div>
-        )}
-
-        {/* JOBS & APPLICATIONS PAGE */}
-        {activePage === 'jobs' && (
-          <div className="animate-fadeIn py-6 px-4 max-w-7xl mx-auto">
-            <JobsPage
-              currentUser={activeUser}
-              onNavigate={handleNavigate}
-            />
-          </div>
-        )}
-
-        {/* INDUSTRY PAGE */}
-        {activePage === 'industry' && (
-          <div className="animate-fadeIn">
-            <IndustryPage
-              onNavigate={handleNavigate}
-              onOpenAuthModal={handleOpenAuth}
-            />
-          </div>
-        )}
-
-        {/* COURSES PAGE */}
-        {activePage === 'courses' && (
-          <div className="animate-fadeIn">
-            <CoursesPage
-              currentUser={activeUser}
-              activePortalId={activePortalId}
-            />
-          </div>
-        )}
-
-        {/* COMMUNITY FEED PAGE */}
-        {activePage === 'feed' && (
-          <div className="animate-fadeIn py-6 px-4 max-w-7xl mx-auto">
-            <FeedPage
-              onNavigate={handleNavigate}
-              currentUser={activeUser}
-              activePortalId={activePortalId}
-            />
-          </div>
-        )}
-
-        {/* PROFILE PAGE */}
-        {activePage === 'profile' && (
-          <div className="animate-fadeIn py-6 px-4 max-w-7xl mx-auto">
-            <ProfilePage
-              onNavigate={handleNavigate}
-              currentUser={activeUser}
-              activePortalId={activePortalId}
-              onBack={() => handleNavigate('home')}
-            />
-          </div>
-        )}
-
-        {/* MESSAGES PAGE */}
-        {activePage === 'messages' && (
-          <div className="animate-fadeIn py-6 px-4 max-w-7xl mx-auto">
-            <MessagePage
-              onNavigate={handleNavigate}
-              currentUser={activeUser}
-            />
-          </div>
-        )}
-
-      </main>
-
-      {/* Shared Footer - Removed from landing page per user flow specification */}
-      {activePage !== 'home' && (
-        <Footer
-          onNavigate={(page) => {
-            if (page === 'login') {
-              handleOpenAuth();
-            } else {
-              handleNavigate(page);
-            }
-          }}
-          onSeeHowItWorks={handleSeeHowItWorks}
+        {/* Shared Sticky Navbar */}
+        <Navbar
+          activePage={activePage}
+          setActivePage={handleNavigate}
+          onOpenReadinessModal={() => setIsReadinessModalOpen(true)}
+          onOpenVerifierModal={() => setIsVerifierModalOpen(true)}
+          onOpenAuthModal={handleOpenAuth}
+          currentUser={currentUser}
+          onLogout={handleLogout}
         />
-      )}
 
-    </div>
+        {/* Main Content Area Based on Active Page */}
+        <main className="flex-grow pt-20 pb-12 w-full max-w-full overflow-x-hidden">
+
+          {/* HOME PAGE */}
+          {activePage === 'home' && (
+            <div className="animate-fadeIn">
+              <Hero
+                onGetStarted={() => handleOpenAuth()}
+                onSeeHowItWorks={handleSeeHowItWorks}
+                onOpenReadinessModal={() => setIsReadinessModalOpen(true)}
+              />
+              <HowItWorks onOpenReadinessModal={() => setIsReadinessModalOpen(true)} />
+              <Features onOpenReadinessModal={() => setIsReadinessModalOpen(true)} />
+              <AboutEcosystem onOpenReadinessModal={() => setIsReadinessModalOpen(true)} />
+              <Comparison />
+              <FaqSection
+                onOpenReadinessModal={() => setIsReadinessModalOpen(true)}
+                onOpenAuthModal={handleOpenAuth}
+              />
+            </div>
+          )}
+
+          {/* HOW IT WORKS PAGE */}
+          {activePage === 'how-it-works' && (
+            <div className="animate-fadeIn">
+              <div className="hero-grid-bg border-b border-outline-variant/30 py-12 px-4 text-center">
+                <div className="max-w-container-max mx-auto">
+                  <span className="text-xs font-bold uppercase tracking-wider text-primary bg-white/90 border border-emerald-200/80 px-3.5 py-1.5 rounded-full shadow-2xs">
+                    Step-by-Step Architecture
+                  </span>
+                  <h1 className="font-display-lg text-3xl sm:text-5xl font-extrabold text-on-surface mt-4 tracking-tight">
+                    How SkillSetu Connects Ayush Talent to Industry
+                  </h1>
+                  <p className="text-sm sm:text-base text-on-surface-variant max-w-2xl mx-auto mt-2">
+                    A standardized clinical competency journey backed by national academic benchmarks and healthcare employers.
+                  </p>
+                </div>
+              </div>
+              <HowItWorks onOpenReadinessModal={() => setIsReadinessModalOpen(true)} />
+            </div>
+          )}
+
+          {/* FEATURES PAGE */}
+          {activePage === 'features' && (
+            <div className="animate-fadeIn">
+              <div className="hero-grid-bg border-b border-outline-variant/30 py-12 px-4 text-center">
+                <div className="max-w-container-max mx-auto">
+                  <span className="text-xs font-bold uppercase tracking-wider text-primary bg-white/90 border border-emerald-200/80 px-3.5 py-1.5 rounded-full shadow-2xs">
+                    Platform Capabilities
+                  </span>
+                  <h1 className="font-display-lg text-3xl sm:text-5xl font-extrabold text-on-surface mt-4 tracking-tight">
+                    All SkillSetu Features & Infrastructure
+                  </h1>
+                  <p className="text-sm sm:text-base text-on-surface-variant max-w-2xl mx-auto mt-2">
+                    Unified competency scoring, micro-sprints, and verifiable credentials for India's Ayush practitioners.
+                  </p>
+                </div>
+              </div>
+              <Features onOpenReadinessModal={() => setIsReadinessModalOpen(true)} />
+            </div>
+          )}
+
+          {/* ABOUT PAGE */}
+          {activePage === 'about' && (
+            <div className="animate-fadeIn">
+              <div className="hero-grid-bg border-b border-outline-variant/30 py-12 px-4 text-center">
+                <div className="max-w-container-max mx-auto">
+                  <span className="text-xs font-bold uppercase tracking-wider text-primary bg-white/90 border border-emerald-200/80 px-3.5 py-1.5 rounded-full shadow-2xs">
+                    Ecosystem Overview
+                  </span>
+                  <h1 className="font-display-lg text-3xl sm:text-5xl font-extrabold text-on-surface mt-4 tracking-tight">
+                    About SkillSetu National Ayush Platform
+                  </h1>
+                  <p className="text-sm sm:text-base text-on-surface-variant max-w-2xl mx-auto mt-2">
+                    Connecting students, colleges, industry partners, and the Ministry under one standardized national framework.
+                  </p>
+                </div>
+              </div>
+              <AboutEcosystem onOpenReadinessModal={() => setIsReadinessModalOpen(true)} />
+            </div>
+          )}
+
+          {/* OPPORTUNITIES PAGE */}
+          {activePage === 'opportunities' && (
+            <div className="animate-fadeIn">
+              <div className="hero-grid-bg border-b border-outline-variant/30 py-12 px-4 text-center">
+                <div className="max-w-container-max mx-auto">
+                  <span className="text-xs font-bold uppercase tracking-wider text-primary bg-white/90 border border-emerald-200/80 px-3.5 py-1.5 rounded-full shadow-2xs">
+                    Active Career Board
+                  </span>
+                  <h1 className="font-display-lg text-3xl sm:text-5xl font-extrabold text-on-surface mt-4 tracking-tight">
+                    Placement & Internship Opportunities
+                  </h1>
+                  <p className="text-sm sm:text-base text-on-surface-variant max-w-2xl mx-auto mt-2">
+                    Top Ayush hospitals, research foundations, and pharmaceutical leaders recruiting verified clinical candidates.
+                  </p>
+                </div>
+              </div>
+
+              <div className="py-12 px-4 max-w-container-max mx-auto">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                  {[
+                    { title: 'Junior Ayurvedic Physician', hospital: 'AVP Research Foundation', location: 'Coimbatore', scoreReq: '80%+ Readiness', stipend: '₹45,000 / month', tag: 'BAMS' },
+                    { title: 'Naturopathy Wellness Specialist', hospital: 'Soukya Holistic Health', location: 'Bengaluru', scoreReq: '75%+ Readiness', stipend: '₹50,000 / month', tag: 'BNYS' },
+                    { title: 'Unani Clinical Officer', hospital: 'Central Council for Research in Unani', location: 'New Delhi', scoreReq: '82%+ Readiness', stipend: '₹55,000 / month', tag: 'BUMS' },
+                    { title: 'Siddha Herbal Pharmacologist', hospital: 'National Institute of Siddha', location: 'Chennai', scoreReq: '78%+ Readiness', stipend: '₹42,000 / month', tag: 'BSMS' },
+                    { title: 'Homoeopathic Clinical Research Fellow', hospital: 'NIH Kolkata', location: 'Kolkata', scoreReq: '85%+ Readiness', stipend: '₹60,000 / month', tag: 'BHMS' },
+                    { title: 'Ayush Tele-Consultant Specialist', hospital: 'Patanjali Wellness Network', location: 'Haridwar / Remote', scoreReq: '75%+ Readiness', stipend: '₹40,000 / month', tag: 'BAMS / BHMS' },
+                  ].map((opp, idx) => (
+                    <div key={idx} className="opportunity-card group bg-surface-container-lowest border border-outline-variant/30 rounded-3xl p-6 soft-shadow flex flex-col justify-between hover:border-primary/40 transition-all">
+                      <div>
+                        <div className="flex justify-between items-start mb-3">
+                          <span className="bg-primary-container text-on-primary-container text-xs font-bold px-3 py-1 rounded-lg">
+                            {opp.tag}
+                          </span>
+                          <span className="text-xs font-bold text-tertiary bg-secondary-container px-3 py-1 rounded-full border border-secondary-container/40">
+                            {opp.scoreReq}
+                          </span>
+                        </div>
+                        <h3 className="font-headline-md text-lg font-bold text-on-surface mb-1 group-hover:text-primary transition-colors">{opp.title}</h3>
+                        <div className="text-xs font-semibold text-outline mb-1">{opp.hospital}</div>
+                        <div className="text-xs text-on-surface-variant flex items-center gap-1 mb-4">
+                          <span className="material-symbols-outlined text-sm text-primary">location_on</span>
+                          <span>{opp.location}</span>
+                        </div>
+                      </div>
+
+                      <div className="pt-4 border-t border-outline-variant/20 flex justify-between items-center">
+                        <span className="text-xs font-bold text-primary font-mono">{opp.stipend}</span>
+                        <button
+                          onClick={() => handleOpenAuth()}
+                          className="shimmer-btn bg-primary text-on-primary text-xs font-bold px-4 py-2 rounded-xl hover:bg-primary/90 transition-all cursor-pointer"
+                        >
+                          Apply with Score
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="bg-surface-bright border border-outline-variant/30 rounded-3xl p-8 text-center max-w-xl mx-auto shadow-xs">
+                  <h3 className="font-bold text-xl text-on-surface mb-2">Are you an Employer or Ayush Hospital?</h3>
+                  <p className="text-xs text-on-surface-variant mb-4 leading-relaxed">Post clinical opportunities and recruit verified candidates directly from the SkillSetu talent engine.</p>
+                  <button
+                    onClick={() => handleNavigate('company')}
+                    className="shimmer-btn bg-primary text-on-primary font-bold text-sm px-6 py-2.5 rounded-xl hover:bg-primary/90 transition-all cursor-pointer shadow-soft"
+                  >
+                    Enter Recruiter & ATS Portal
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* SKILL HUB PAGE */}
+          {activePage === 'skill' && (
+            <div className="animate-fadeIn">
+              <SkillPage
+                onNavigate={handleNavigate}
+                onOpenReadinessModal={() => setIsReadinessModalOpen(true)}
+              />
+            </div>
+          )}
+
+          {/* DIAGNOSTIC ASSESSMENT ENGINE PAGE */}
+          {(activePage === 'assessment' || activePage === 'diagnostic') && (
+            <div className="animate-fadeIn">
+              <AssessmentPage
+                onNavigate={handleNavigate}
+                currentUser={activeUser}
+              />
+            </div>
+          )}
+
+          {/* JOBS & APPLICATIONS PAGE */}
+          {activePage === 'jobs' && (
+            <div className="animate-fadeIn py-6 px-4 max-w-7xl mx-auto">
+              <JobsPage
+                currentUser={activeUser}
+                onNavigate={handleNavigate}
+              />
+            </div>
+          )}
+
+          {/* INDUSTRY PAGE */}
+          {activePage === 'industry' && (
+            <div className="animate-fadeIn">
+              <IndustryPage
+                onNavigate={handleNavigate}
+                onOpenAuthModal={handleOpenAuth}
+              />
+            </div>
+          )}
+
+          {/* COMPANY & ENTERPRISE PORTAL PAGE */}
+          {activePage === 'company' && (
+            <div className="animate-fadeIn">
+              <CompanyPage
+                onNavigate={handleNavigate}
+                onBack={() => handleNavigate('home')}
+                user={activeUser}
+              />
+            </div>
+          )}
+
+          {/* COURSES PAGE */}
+          {activePage === 'courses' && (
+            <div className="animate-fadeIn">
+              <CoursesPage
+                currentUser={activeUser}
+                activePortalId={activePortalId}
+              />
+            </div>
+          )}
+
+          {/* COMMUNITY FEED PAGE */}
+          {activePage === 'feed' && (
+            <div className="animate-fadeIn py-6 px-4 max-w-7xl mx-auto">
+              <FeedPage
+                onNavigate={handleNavigate}
+                currentUser={activeUser}
+                activePortalId={activePortalId}
+              />
+            </div>
+          )}
+
+          {/* PROFILE PAGE */}
+          {activePage === 'profile' && (
+            <div className="animate-fadeIn py-6 px-4 max-w-7xl mx-auto">
+              <ProfilePage
+                onNavigate={handleNavigate}
+                currentUser={activeUser}
+                activePortalId={activePortalId}
+                onBack={() => handleNavigate('home')}
+              />
+            </div>
+          )}
+
+          {/* MESSAGES PAGE */}
+          {activePage === 'messages' && (
+            <div className="animate-fadeIn py-6 px-4 max-w-7xl mx-auto">
+              <MessagePage
+                onNavigate={handleNavigate}
+                currentUser={activeUser}
+              />
+            </div>
+          )}
+
+        </main>
+
+        {/* Shared Footer - Removed from landing page per user flow specification */}
+        {activePage !== 'home' && (
+          <Footer
+            onNavigate={(page) => {
+              if (page === 'login') {
+                handleOpenAuth();
+              } else {
+                handleNavigate(page);
+              }
+            }}
+            onSeeHowItWorks={handleSeeHowItWorks}
+          />
+        )}
+
+      </div>
     );
   };
 

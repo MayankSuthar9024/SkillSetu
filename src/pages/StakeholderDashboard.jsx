@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
-import { 
-  LogOut, 
+import React, { useState, useEffect, useRef } from 'react';
+import {
+  LogOut,
   LogIn,
-  Search, 
-  Flame, 
-  User, 
-  Briefcase, 
-  Award, 
-  Bell, 
+  Search,
+  Flame,
+  User,
+  Briefcase,
+  Award,
+  Bell,
   Building2,
   Layers,
   Home,
@@ -28,6 +28,8 @@ import { useNotifications, formatRelativeTime } from '../context/NotificationCon
 
 import { StudentPortalView } from '../components/portals/StudentPortalView';
 import { CompanyPortalView } from '../components/portals/CompanyPortalView';
+import { CompanyConsoleView } from '../components/portals/CompanyConsoleView';
+import { FacultyPortalView } from '../components/portals/FacultyPortalView';
 import { CollegePortalView } from '../components/portals/CollegePortalView';
 import { CollegeStudentsView } from '../components/portals/CollegeStudentsView';
 
@@ -79,6 +81,33 @@ export const StakeholderDashboard = ({
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [openCreatePostModal, setOpenCreatePostModal] = useState(false);
+  const profileDropdownRef = useRef(null);
+
+  // Click-outside: auto-close profile dropdown and notifications panel
+  useEffect(() => {
+    if (!profileDropdownOpen && !notificationsOpen) return;
+    const handleOutsideClick = (e) => {
+      if (profileDropdownRef.current && !profileDropdownRef.current.contains(e.target)) {
+        setProfileDropdownOpen(false);
+      }
+      setNotificationsOpen(false);
+    };
+    // Use mousedown so it fires before onClick of other elements
+    document.addEventListener('mousedown', handleOutsideClick);
+    return () => document.removeEventListener('mousedown', handleOutsideClick);
+  }, [profileDropdownOpen, notificationsOpen]);
+
+  // Keyboard: Escape closes both panels
+  useEffect(() => {
+    const handleEsc = (e) => {
+      if (e.key === 'Escape') {
+        setProfileDropdownOpen(false);
+        setNotificationsOpen(false);
+      }
+    };
+    document.addEventListener('keydown', handleEsc);
+    return () => document.removeEventListener('keydown', handleEsc);
+  }, []);
 
   // Sync hash changes
   React.useEffect(() => {
@@ -118,13 +147,13 @@ export const StakeholderDashboard = ({
   const currentPortalConfig = PORTALS_DATA.find(p => p.id === activePortalId) || PORTALS_DATA[0];
   const user = currentUser || currentPortalConfig.profileUser;
 
-  const { 
-    roleNotifications, 
-    unreadCount, 
-    markAsRead, 
-    markAllAsRead, 
-    filterMode, 
-    setFilterMode 
+  const {
+    roleNotifications,
+    unreadCount,
+    markAsRead,
+    markAllAsRead,
+    filterMode,
+    setFilterMode
   } = useNotifications();
 
   const handleDashboardNotificationClick = (item) => {
@@ -271,7 +300,7 @@ export const StakeholderDashboard = ({
             onNavigate={(page) => {
               if (page === 'opportunities') setActiveTab('jobs');
             }}
-            onOpenAuthModal={() => {}}
+            onOpenAuthModal={() => { }}
           />
         );
       case 'courses':
@@ -286,9 +315,9 @@ export const StakeholderDashboard = ({
       case 'accreditation':
       case 'compliance':
         return (
-          <CollegePortalView 
-            user={user} 
-            initialTab="compliance" 
+          <CollegePortalView
+            user={user}
+            initialTab="compliance"
             isComplianceOnly={true}
             onNavigateToAccreditation={() => {
               setActiveTab('accreditation');
@@ -300,8 +329,8 @@ export const StakeholderDashboard = ({
         return (
           <div className="space-y-6">
             {activePortalId === 'student' && (
-              <StudentPortalView 
-                user={user} 
+              <StudentPortalView
+                user={user}
                 onNavigateToSkills={() => {
                   setActiveTab('skills');
                   window.location.hash = 'skills';
@@ -309,14 +338,23 @@ export const StakeholderDashboard = ({
                 }}
               />
             )}
-            {activePortalId === 'company' && <CompanyPortalView user={user} />}
+            {activePortalId === 'company' && (
+              <CompanyConsoleView
+                user={user}
+                onNavigateToATS={() => {
+                  setActiveTab('jobs');
+                  window.location.hash = 'jobs';
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+              />
+            )}
             {activePortalId === 'faculty' && (
               <FacultyPage currentUser={user} onOpenReadinessModal={handleOpenReadiness} />
             )}
             {activePortalId === 'college' && (
-              <CollegePortalView 
-                user={user} 
-                initialTab="queue" 
+              <CollegePortalView
+                user={user}
+                initialTab="queue"
                 isComplianceOnly={false}
                 onNavigateToAccreditation={() => {
                   setActiveTab('accreditation');
@@ -330,7 +368,7 @@ export const StakeholderDashboard = ({
         );
       default:
         return (
-          <FeedPage 
+          <FeedPage
             onNavigate={(page, targetUser) => {
               if (page === 'profile') {
                 setViewingUser(targetUser || null);
@@ -344,9 +382,9 @@ export const StakeholderDashboard = ({
               } else if (page === 'industry' || page === 'network') {
                 setActiveTab('network');
               }
-            }} 
-            currentUser={user} 
-            activePortalId={activePortalId} 
+            }}
+            currentUser={user}
+            activePortalId={activePortalId}
           />
         );
     }
@@ -363,8 +401,7 @@ export const StakeholderDashboard = ({
   const companyNavItems = [
     { id: 'feed', label: 'Feed', icon: Home },
     { id: 'console', label: 'Company Console', icon: Layers },
-    { id: 'jobs', label: 'Talent ATS', icon: Briefcase },
-    { id: 'network', label: 'Industry', icon: Building2 }
+    { id: 'jobs', label: 'Talent ATS', icon: Briefcase }
   ];
 
   const facultyNavItems = [
@@ -396,13 +433,26 @@ export const StakeholderDashboard = ({
 
   return (
     <div className="min-h-screen bg-[#f3f7f5] flex flex-col font-sans text-slate-900 overflow-x-hidden relative">
-      
+
       {/* Sticky Top Header Navigation */}
       <header className="bg-white border-b border-slate-200/90 shadow-xs sticky top-0 z-40">
-        
+
+        {/* Mobile Back-to-Console breadcrumb — shown when the user is in a sub-tab on mobile */}
+        {isMobile && !['feed', 'console'].includes(activeTab) && (
+          <div className="md:hidden px-4 py-1.5 border-b border-slate-100 bg-slate-50/80">
+            <button
+              onClick={() => { setActiveTab('console'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+              className="inline-flex items-center gap-1.5 text-[11px] font-bold text-emerald-800 hover:text-emerald-950 transition-colors cursor-pointer"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
+              <span>Back to Portal</span>
+            </button>
+          </div>
+        )}
+
         {/* Main Header Bar */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-2 sm:gap-4">
-          
+
           {/* Brand Logo */}
           <div className="flex items-center gap-3 shrink-0">
             <button
@@ -443,11 +493,10 @@ export const StakeholderDashboard = ({
                     setViewingUser(null);
                     setActiveTab(item.id);
                   }}
-                  className={`flex flex-col items-center justify-center px-3 py-1.5 rounded-xl text-xs transition-all cursor-pointer relative ${
-                    isActive
+                  className={`flex flex-col items-center justify-center px-3 py-1.5 rounded-xl text-xs transition-all cursor-pointer relative ${isActive
                       ? 'text-emerald-800 font-extrabold bg-emerald-50/80 border border-emerald-200/80'
                       : 'text-slate-600 hover:text-emerald-800 hover:bg-slate-100 font-semibold'
-                  }`}
+                    }`}
                   title={item.label}
                 >
                   <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-emerald-800' : 'text-slate-500'}`} />
@@ -467,14 +516,13 @@ export const StakeholderDashboard = ({
                 aria-haspopup="menu"
                 aria-expanded={notificationsOpen}
                 aria-label={`Notifications. ${unreadCount} unread`}
-                className={`w-9 h-9 rounded-xl flex items-center justify-center transition-colors cursor-pointer relative ${
-                  notificationsOpen ? 'bg-emerald-50 text-emerald-900 ring-2 ring-emerald-600/30' : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
-                }`}
+                className={`w-9 h-9 rounded-xl flex items-center justify-center transition-colors cursor-pointer relative ${notificationsOpen ? 'bg-emerald-50 text-emerald-900 ring-2 ring-emerald-600/30' : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
+                  }`}
                 title="Notifications"
               >
                 <Bell className="w-4 h-4" />
                 {unreadCount > 0 && (
-                  <span 
+                  <span
                     aria-live="polite"
                     className="absolute -top-1 -right-1 min-w-[16px] h-[16px] px-1 bg-rose-500 text-white rounded-full text-[9px] font-black flex items-center justify-center ring-2 ring-white"
                   >
@@ -484,7 +532,7 @@ export const StakeholderDashboard = ({
               </button>
 
               {notificationsOpen && (
-                <div 
+                <div
                   role="menu"
                   aria-orientation="vertical"
                   onClick={(e) => e.stopPropagation()}
@@ -530,18 +578,16 @@ export const StakeholderDashboard = ({
                     <button
                       type="button"
                       onClick={() => setFilterMode('role')}
-                      className={`flex-1 py-1 text-[10px] font-bold rounded-lg transition-all cursor-pointer ${
-                        filterMode === 'role' ? 'bg-white text-emerald-900 shadow-xs border border-slate-200' : 'text-slate-500 hover:text-slate-800'
-                      }`}
+                      className={`flex-1 py-1 text-[10px] font-bold rounded-lg transition-all cursor-pointer ${filterMode === 'role' ? 'bg-white text-emerald-900 shadow-xs border border-slate-200' : 'text-slate-500 hover:text-slate-800'
+                        }`}
                     >
                       My Role
                     </button>
                     <button
                       type="button"
                       onClick={() => setFilterMode('all')}
-                      className={`flex-1 py-1 text-[10px] font-bold rounded-lg transition-all cursor-pointer ${
-                        filterMode === 'all' ? 'bg-white text-emerald-900 shadow-xs border border-slate-200' : 'text-slate-500 hover:text-slate-800'
-                      }`}
+                      className={`flex-1 py-1 text-[10px] font-bold rounded-lg transition-all cursor-pointer ${filterMode === 'all' ? 'bg-white text-emerald-900 shadow-xs border border-slate-200' : 'text-slate-500 hover:text-slate-800'
+                        }`}
                     >
                       All Feeds
                     </button>
@@ -556,8 +602,8 @@ export const StakeholderDashboard = ({
                       </div>
                     ) : (
                       roleNotifications.map((n) => (
-                        <div 
-                          key={n.id} 
+                        <div
+                          key={n.id}
                           role="menuitem"
                           tabIndex={0}
                           onClick={() => handleDashboardNotificationClick(n)}
@@ -567,9 +613,8 @@ export const StakeholderDashboard = ({
                               handleDashboardNotificationClick(n);
                             }
                           }}
-                          className={`p-3 text-xs hover:bg-slate-50 cursor-pointer transition-colors outline-none focus:bg-emerald-50/60 ${
-                            !n.read ? 'bg-emerald-50/40 font-semibold border-l-3 border-emerald-600' : 'text-slate-600'
-                          }`}
+                          className={`p-3 text-xs hover:bg-slate-50 cursor-pointer transition-colors outline-none focus:bg-emerald-50/60 ${!n.read ? 'bg-emerald-50/40 font-semibold border-l-3 border-emerald-600' : 'text-slate-600'
+                            }`}
                         >
                           <div className="flex items-center justify-between text-[10px] text-slate-400 mb-0.5">
                             <span className="font-extrabold uppercase text-slate-500">{n.senderName || n.senderRole}</span>
@@ -592,15 +637,20 @@ export const StakeholderDashboard = ({
             </div>
 
             {/* User Profile PFP Avatar Button */}
-            <div className="relative">
+            <div className="relative" ref={profileDropdownRef}>
               <button
-                onClick={() => {
-                  setViewingUser(null);
-                  setActiveTab('profile');
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setProfileDropdownOpen(prev => !prev);
+                  setNotificationsOpen(false);
                 }}
-                onMouseEnter={() => setProfileDropdownOpen(true)}
-                className="w-9 h-9 rounded-xl bg-emerald-800 text-white font-extrabold text-xs flex items-center justify-center shadow-xs hover:ring-2 hover:ring-emerald-600 transition-all cursor-pointer shrink-0 overflow-hidden border border-emerald-900/20"
-                title={`View Profile Page (${user.name})`}
+                className={`w-9 h-9 rounded-xl bg-emerald-800 text-white font-extrabold text-xs flex items-center justify-center shadow-xs transition-all cursor-pointer shrink-0 overflow-hidden border border-emerald-900/20 ${profileDropdownOpen
+                    ? 'ring-2 ring-emerald-500'
+                    : 'hover:ring-2 hover:ring-emerald-600'
+                  }`}
+                title={`Profile menu (${user.name})`}
+                aria-haspopup="menu"
+                aria-expanded={profileDropdownOpen}
               >
                 {user.avatarImage ? (
                   <img src={user.avatarImage} alt={user.name} className="w-full h-full object-cover" />
@@ -610,9 +660,11 @@ export const StakeholderDashboard = ({
               </button>
 
               {profileDropdownOpen && (
-                <div 
-                  onMouseLeave={() => setProfileDropdownOpen(false)}
-                  className="absolute right-0 mt-2 w-56 bg-white rounded-2xl shadow-2xl border border-slate-200 py-2 z-50 animate-in fade-in"
+                <div
+                  role="menu"
+                  aria-orientation="vertical"
+                  onClick={(e) => e.stopPropagation()}
+                  className="absolute right-0 mt-2 w-56 bg-white rounded-2xl shadow-2xl border border-slate-200 py-2 z-50 animate-in fade-in zoom-in-95"
                 >
                   <div className="px-4 py-2 border-b border-slate-100">
                     <span className="font-extrabold text-xs text-slate-900 block truncate">{user.name}</span>
@@ -620,12 +672,13 @@ export const StakeholderDashboard = ({
                   </div>
 
                   <button
+                    role="menuitem"
                     onClick={() => {
+                      setProfileDropdownOpen(false);
                       setViewingUser(null);
                       setActiveTab('profile');
-                      setProfileDropdownOpen(false);
                     }}
-                    className="w-full text-left px-4 py-2 text-xs font-bold text-slate-800 hover:bg-emerald-50 hover:text-emerald-900 flex items-center gap-2 cursor-pointer"
+                    className="w-full text-left px-4 py-2 text-xs font-bold text-slate-800 hover:bg-emerald-50 hover:text-emerald-900 flex items-center gap-2 cursor-pointer transition-colors"
                   >
                     <User className="w-4 h-4 text-emerald-700" />
                     <span>View Profile Page</span>
@@ -633,6 +686,7 @@ export const StakeholderDashboard = ({
 
                   <div className="pt-1 mt-1 border-t border-slate-100">
                     <button
+                      role="menuitem"
                       onClick={() => {
                         setProfileDropdownOpen(false);
                         onLogout();
@@ -647,7 +701,7 @@ export const StakeholderDashboard = ({
               )}
             </div>
 
-            </div>
+          </div>
 
         </div>
 
@@ -683,13 +737,12 @@ export const StakeholderDashboard = ({
         <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-xl border-t border-slate-200 shadow-2xl px-2 py-2 rounded-t-3xl">
           {activePortalId === 'faculty' ? (
             <div className="grid grid-cols-5 items-center w-full max-w-lg mx-auto">
-              
+
               {/* 1. Feed */}
               <button
                 onClick={() => { setActiveTab('feed'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                className={`flex flex-col items-center justify-center py-1 w-full text-xs transition-all cursor-pointer ${
-                  activeTab === 'feed' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-medium'
-                }`}
+                className={`flex flex-col items-center justify-center py-1 w-full text-xs transition-all cursor-pointer ${activeTab === 'feed' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-medium'
+                  }`}
               >
                 <Home className={`w-5 h-5 shrink-0 ${activeTab === 'feed' ? 'text-emerald-700' : 'text-slate-500'}`} />
                 <span className="text-[10px] mt-0.5 font-bold">Feed</span>
@@ -698,9 +751,8 @@ export const StakeholderDashboard = ({
               {/* 2. Courses */}
               <button
                 onClick={() => { setActiveTab('courses'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                className={`flex flex-col items-center justify-center py-1 w-full text-xs transition-all cursor-pointer ${
-                  activeTab === 'courses' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-medium'
-                }`}
+                className={`flex flex-col items-center justify-center py-1 w-full text-xs transition-all cursor-pointer ${activeTab === 'courses' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-medium'
+                  }`}
               >
                 <BookOpen className={`w-5 h-5 shrink-0 ${activeTab === 'courses' ? 'text-emerald-700' : 'text-slate-500'}`} />
                 <span className="text-[10px] mt-0.5 font-bold">Courses</span>
@@ -722,9 +774,8 @@ export const StakeholderDashboard = ({
               {/* 4. Faculty Console */}
               <button
                 onClick={() => { setActiveTab('console'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                className={`flex flex-col items-center justify-center py-1 w-full text-xs transition-all cursor-pointer ${
-                  activeTab === 'console' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-medium'
-                }`}
+                className={`flex flex-col items-center justify-center py-1 w-full text-xs transition-all cursor-pointer ${activeTab === 'console' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-medium'
+                  }`}
               >
                 <Layers className={`w-5 h-5 shrink-0 ${activeTab === 'console' ? 'text-emerald-700' : 'text-slate-500'}`} />
                 <span className="text-[10px] mt-0.5 font-bold">Console</span>
@@ -733,18 +784,76 @@ export const StakeholderDashboard = ({
               {/* 5. Department Radar */}
               <button
                 onClick={() => { setActiveTab('skills'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                className={`flex flex-col items-center justify-center py-1 w-full text-xs transition-all cursor-pointer ${
-                  activeTab === 'skills' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-medium'
-                }`}
+                className={`flex flex-col items-center justify-center py-1 w-full text-xs transition-all cursor-pointer ${activeTab === 'skills' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-medium'
+                  }`}
               >
                 <BarChart3 className={`w-5 h-5 shrink-0 ${activeTab === 'skills' ? 'text-emerald-700' : 'text-slate-500'}`} />
                 <span className="text-[10px] mt-0.5 font-bold">Radar</span>
               </button>
 
             </div>
+          ) : activePortalId === 'company' ? (
+            // ── Company Portal Mobile Nav ─────────────────────────────────
+            // Matches desktop companyNavItems: Feed · Courses · Console (Building2) · Talent ATS · Industry
+            <div className="grid grid-cols-5 items-center w-full max-w-lg mx-auto">
+
+              {/* 1. Feed */}
+              <button
+                onClick={() => { setActiveTab('feed'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                className={`flex flex-col items-center justify-center py-1 w-full text-xs transition-all cursor-pointer ${activeTab === 'feed' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-medium'
+                  }`}
+              >
+                <Home className={`w-5 h-5 shrink-0 ${activeTab === 'feed' ? 'text-emerald-700' : 'text-slate-500'}`} />
+                <span className="text-[10px] mt-0.5 font-bold">Feed</span>
+              </button>
+
+              {/* 2. Courses */}
+              <button
+                onClick={() => { setActiveTab('courses'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                className={`flex flex-col items-center justify-center py-1 w-full text-xs transition-all cursor-pointer ${activeTab === 'courses' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-medium'
+                  }`}
+              >
+                <BookOpen className={`w-5 h-5 shrink-0 ${activeTab === 'courses' ? 'text-emerald-700' : 'text-slate-500'}`} />
+                <span className="text-[10px] mt-0.5 font-bold">Courses</span>
+              </button>
+
+              {/* 3. Center Elevated Floating Green (+) Button */}
+              <div className="flex items-center justify-center relative -mt-7 w-full">
+                <div className="w-13 h-13 rounded-full bg-white flex items-center justify-center shadow-lg border border-slate-100 p-0.5">
+                  <button
+                    onClick={handleOpenCreatePost}
+                    className="w-11 h-11 rounded-full bg-emerald-800 hover:bg-emerald-900 active:scale-95 text-white flex items-center justify-center shadow-md hover:shadow-lg transition-all cursor-pointer group"
+                    title="Create Post / New Opportunity"
+                  >
+                    <Plus className="w-5 h-5 stroke-[2.5] group-hover:rotate-90 transition-transform duration-300" />
+                  </button>
+                </div>
+              </div>
+
+              {/* 4. Company Console — uses Building2 icon (matches desktop) */}
+              <button
+                onClick={() => { setActiveTab('console'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                className={`flex flex-col items-center justify-center py-1 w-full text-xs transition-all cursor-pointer ${activeTab === 'console' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-medium'
+                  }`}
+              >
+                <Building2 className={`w-5 h-5 shrink-0 ${activeTab === 'console' ? 'text-emerald-700' : 'text-slate-500'}`} />
+                <span className="text-[10px] mt-0.5 font-bold">Console</span>
+              </button>
+
+              {/* 5. Talent ATS */}
+              <button
+                onClick={() => { setActiveTab('jobs'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                className={`flex flex-col items-center justify-center py-1 w-full text-xs transition-all cursor-pointer ${activeTab === 'jobs' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-medium'
+                  }`}
+              >
+                <Briefcase className={`w-5 h-5 shrink-0 ${activeTab === 'jobs' ? 'text-emerald-700' : 'text-slate-500'}`} />
+                <span className="text-[10px] mt-0.5 font-bold">Talent ATS</span>
+              </button>
+
+            </div>
           ) : activePortalId === 'college' ? (
             <div className="grid grid-cols-5 items-center w-full max-w-md mx-auto px-1">
-              
+
               {/* 1. Feed */}
               <button
                 onClick={() => {
@@ -752,9 +861,8 @@ export const StakeholderDashboard = ({
                   setActiveTab('feed');
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
-                className={`flex flex-col items-center justify-center py-1 w-full text-xs transition-all cursor-pointer ${
-                  activeTab === 'feed' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-medium'
-                }`}
+                className={`flex flex-col items-center justify-center py-1 w-full text-xs transition-all cursor-pointer ${activeTab === 'feed' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-medium'
+                  }`}
               >
                 <Home className={`w-5 h-5 shrink-0 ${activeTab === 'feed' ? 'text-emerald-700' : 'text-slate-500'}`} />
                 <span className="text-[10px] mt-0.5 font-bold">Feed</span>
@@ -767,9 +875,8 @@ export const StakeholderDashboard = ({
                   setActiveTab('console');
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
-                className={`flex flex-col items-center justify-center py-1 w-full text-xs transition-all cursor-pointer ${
-                  activeTab === 'console' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-medium'
-                }`}
+                className={`flex flex-col items-center justify-center py-1 w-full text-xs transition-all cursor-pointer ${activeTab === 'console' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-medium'
+                  }`}
               >
                 <ShieldCheck className={`w-5 h-5 shrink-0 ${activeTab === 'console' ? 'text-emerald-700' : 'text-slate-500'}`} />
                 <span className="text-[10px] mt-0.5 font-bold">Verification</span>
@@ -795,9 +902,8 @@ export const StakeholderDashboard = ({
                   setActiveTab('students');
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
-                className={`flex flex-col items-center justify-center py-1 w-full text-xs transition-all cursor-pointer ${
-                  activeTab === 'students' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-medium'
-                }`}
+                className={`flex flex-col items-center justify-center py-1 w-full text-xs transition-all cursor-pointer ${activeTab === 'students' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-medium'
+                  }`}
               >
                 <Users className={`w-5 h-5 shrink-0 ${activeTab === 'students' ? 'text-emerald-700' : 'text-slate-500'}`} />
                 <span className="text-[10px] mt-0.5 font-bold">Student</span>
@@ -810,9 +916,8 @@ export const StakeholderDashboard = ({
                   setActiveTab('accreditation');
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
-                className={`flex flex-col items-center justify-center py-1 w-full text-xs transition-all cursor-pointer ${
-                  activeTab === 'accreditation' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-medium'
-                }`}
+                className={`flex flex-col items-center justify-center py-1 w-full text-xs transition-all cursor-pointer ${activeTab === 'accreditation' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-medium'
+                  }`}
               >
                 <Award className={`w-5 h-5 shrink-0 ${activeTab === 'accreditation' ? 'text-emerald-700' : 'text-slate-500'}`} />
                 <span className="text-[10px] mt-0.5 font-bold">Accreditation</span>
@@ -820,14 +925,14 @@ export const StakeholderDashboard = ({
 
             </div>
           ) : (
+            // ── Student / Admin (ministry) default mobile nav ─────────────
             <div className="grid grid-cols-5 items-center w-full max-w-md mx-auto px-1">
-              
+
               {/* 1. Home */}
               <button
                 onClick={() => { setActiveTab('feed'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                className={`flex flex-col items-center justify-center py-1 w-full text-xs transition-all cursor-pointer ${
-                  activeTab === 'feed' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-medium'
-                }`}
+                className={`flex flex-col items-center justify-center py-1 w-full text-xs transition-all cursor-pointer ${activeTab === 'feed' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-medium'
+                  }`}
               >
                 <Home className={`w-5 h-5 shrink-0 ${activeTab === 'feed' ? 'text-emerald-700' : 'text-slate-500'}`} />
                 <span className="text-[10px] mt-0.5 font-bold">Home</span>
@@ -836,9 +941,8 @@ export const StakeholderDashboard = ({
               {/* 2. Portal */}
               <button
                 onClick={() => { setActiveTab('console'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                className={`flex flex-col items-center justify-center py-1 w-full text-xs transition-all cursor-pointer ${
-                  activeTab === 'console' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-medium'
-                }`}
+                className={`flex flex-col items-center justify-center py-1 w-full text-xs transition-all cursor-pointer ${activeTab === 'console' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-medium'
+                  }`}
               >
                 <Layers className={`w-5 h-5 shrink-0 ${activeTab === 'console' ? 'text-emerald-700' : 'text-slate-500'}`} />
                 <span className="text-[10px] mt-0.5 font-bold">Portal</span>
@@ -860,9 +964,8 @@ export const StakeholderDashboard = ({
               {/* 4. Skills */}
               <button
                 onClick={() => { setActiveTab('skills'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                className={`flex flex-col items-center justify-center py-1 w-full text-xs transition-all cursor-pointer ${
-                  activeTab === 'skills' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-medium'
-                }`}
+                className={`flex flex-col items-center justify-center py-1 w-full text-xs transition-all cursor-pointer ${activeTab === 'skills' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-medium'
+                  }`}
               >
                 <BarChart3 className={`w-5 h-5 shrink-0 ${activeTab === 'skills' ? 'text-emerald-700' : 'text-slate-500'}`} />
                 <span className="text-[10px] mt-0.5 font-bold">Skills</span>
@@ -871,9 +974,8 @@ export const StakeholderDashboard = ({
               {/* 5. Jobs */}
               <button
                 onClick={() => { setActiveTab('jobs'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                className={`flex flex-col items-center justify-center py-1 w-full text-xs transition-all cursor-pointer ${
-                  activeTab === 'jobs' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-medium'
-                }`}
+                className={`flex flex-col items-center justify-center py-1 w-full text-xs transition-all cursor-pointer ${activeTab === 'jobs' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-medium'
+                  }`}
               >
                 <Briefcase className={`w-5 h-5 shrink-0 ${activeTab === 'jobs' ? 'text-emerald-700' : 'text-slate-500'}`} />
                 <span className="text-[10px] mt-0.5 font-bold">Jobs</span>

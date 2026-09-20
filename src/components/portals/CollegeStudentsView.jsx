@@ -1151,7 +1151,7 @@ export const CollegeStudentsView = ({ user }) => {
             ) : (
               /* TABLE VIEW (ACCESSIBLE VIA VIEW MODE TOGGLE) */
               <div className="bg-white rounded-2xl border border-slate-200/80 shadow-soft overflow-hidden">
-                <div className="w-full">
+                <div className="w-full overflow-x-auto">
                   <table className="w-full text-left border-collapse table-auto">
                     <thead>
                       <tr className="bg-slate-50/90 border-b border-slate-200 text-[11px] font-bold uppercase tracking-wider text-slate-500">
