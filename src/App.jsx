@@ -20,6 +20,7 @@ import { MessagePage } from './pages/MessagePage';
 import { CoursesPage } from './pages/CoursesPage';
 import { JobsPage } from './pages/JobsPage';
 import { AssessmentPage } from './pages/AssessmentPage';
+import { NotificationProvider } from './context/NotificationContext';
 
 export function App() {
   const [activePage, setActivePage] = useState('home'); // 'home' | 'features' | 'about' | 'opportunities' | 'skill' | 'industry' | 'courses' | 'feed' | 'profile' | 'messages' | 'login' | 'portals' | 'dashboard'
@@ -206,36 +207,37 @@ export function App() {
     }
   };
 
-  // 1. DEDICATED PORTAL SELECTION / LOGIN PAGE
-  if (!currentUser && (activePage === 'login' || activePage === 'portals')) {
-    return (
-      <PortalSelectPage
-        onBackToHome={handleBackToHome}
-        onLoginSuccess={handleLoginSuccess}
-        contrastMode={contrastMode}
-        onToggleContrast={handleToggleContrast}
-      />
-    );
-  }
+  const renderAppContent = () => {
+    // 1. DEDICATED PORTAL SELECTION / LOGIN PAGE
+    if (!currentUser && (activePage === 'login' || activePage === 'portals')) {
+      return (
+        <PortalSelectPage
+          onBackToHome={handleBackToHome}
+          onLoginSuccess={handleLoginSuccess}
+          contrastMode={contrastMode}
+          onToggleContrast={handleToggleContrast}
+        />
+      );
+    }
 
-  // 2. AUTHENTICATED STAKEHOLDER DASHBOARD (Once signed in, user stays on platform)
-  if (currentUser || activePage === 'dashboard') {
-    return (
-      <StakeholderDashboard
-        activePortalId={activePortalId}
-        currentUser={currentUser || PORTALS_DATA[0].profileUser}
-        onSwitchPortal={handleSwitchPortal}
-        onLogout={handleLogout}
-        onBackToHome={() => { }}
-        contrastMode={contrastMode}
-        onToggleContrast={handleToggleContrast}
-      />
-    );
-  }
+    // 2. AUTHENTICATED STAKEHOLDER DASHBOARD (Once signed in, user stays on platform)
+    if (currentUser || activePage === 'dashboard') {
+      return (
+        <StakeholderDashboard
+          activePortalId={activePortalId}
+          currentUser={currentUser || PORTALS_DATA[0].profileUser}
+          onSwitchPortal={handleSwitchPortal}
+          onLogout={handleLogout}
+          onBackToHome={() => { }}
+          contrastMode={contrastMode}
+          onToggleContrast={handleToggleContrast}
+        />
+      );
+    }
 
-  // 3. MAIN LANDING PAGES (Home, Features, About, Opportunities)
-  return (
-    <div className="min-h-screen bg-surface text-on-surface font-sans flex flex-col antialiased w-full max-w-full overflow-x-hidden">
+    // 3. MAIN LANDING PAGES (Home, Features, About, Opportunities)
+    return (
+      <div className="min-h-screen bg-surface text-on-surface font-sans flex flex-col antialiased w-full max-w-full overflow-x-hidden">
 
       {/* Shared Sticky Navbar */}
       <Navbar
@@ -507,6 +509,13 @@ export function App() {
       )}
 
     </div>
+    );
+  };
+
+  return (
+    <NotificationProvider activePortalId={activePortalId} currentUser={currentUser}>
+      {renderAppContent()}
+    </NotificationProvider>
   );
 }
 

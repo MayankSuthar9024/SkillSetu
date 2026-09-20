@@ -21,10 +21,13 @@ import {
   X,
   Clock,
   Award,
-  Check,
   Building,
-  School
+  School,
+  Calendar,
+  Video,
+  BellRing
 } from 'lucide-react';
+import { useNotifications } from '../../context/NotificationContext';
 
 export const CompanyPortalView = ({ user = {} }) => {
   // Available Academic Institution Tiers for Targeting
@@ -208,12 +211,20 @@ export const CompanyPortalView = ({ user = {} }) => {
     }
   ]);
 
+  const { dispatchNotification } = useNotifications();
   const [activeViewTab, setActiveViewTab] = useState('listings'); // 'listings' | 'candidates'
   const [filterMatch, setFilterMatch] = useState(80);
   const [searchTerm, setSearchTerm] = useState('');
   const [jobSearchTerm, setJobSearchTerm] = useState('');
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
   const [postedSuccess, setPostedSuccess] = useState(false);
+
+  // Interview Scheduling State
+  const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
+  const [schedulingCandidate, setSchedulingCandidate] = useState(null);
+  const [interviewDate, setInterviewDate] = useState('2026-09-25T11:00');
+  const [interviewRound, setInterviewRound] = useState('Technical HPTLC & GMP Assay Round');
+  const [interviewMode, setInterviewMode] = useState('SkillSetu Virtual Proctor Video Room');
 
   // New Opportunity Form State with Candidate Sourcing Scope
   const [opportunityForm, setOpportunityForm] = useState({
@@ -298,10 +309,69 @@ export const CompanyPortalView = ({ user = {} }) => {
   };
 
   const handleShortlist = (id) => {
+    const target = candidates.find(c => c.id === id);
     setCandidates(prev => prev.map(c => 
-      c.id === cand.id ? { ...c, status: 'Shortlisted' } : c
+      c.id === id ? { ...c, status: 'Fast-Track Shortlisted' } : c
     ));
-    showToast(`Candidate ${cand.name} successfully advanced to Shortlisted! Notification dispatched to student.`);
+    if (target) {
+      showToast(`Candidate ${target.name} successfully advanced to Shortlisted! Notification dispatched to student.`);
+      dispatchNotification({
+        targetRole: 'student',
+        targetRecipientId: target.id || 'NIA/AY/2026/0491',
+        targetRecipientName: target.name,
+        senderId: user?.id || 'EMP-DABUR-QC-89',
+        senderName: user?.institution || user?.name || 'Dabur India R&D Division',
+        senderRole: 'company',
+        title: `Shortlisted by ${user?.institution || user?.name || 'Dabur India'}`,
+        message: `${user?.institution || user?.name || 'Dabur India'} reviewed your verifiable profile and shortlisted you for technical interview.`,
+        link: '#dashboard-student'
+      });
+    }
+  };
+
+  const handleOpenScheduleModal = (cand) => {
+    setSchedulingCandidate(cand);
+    setIsScheduleModalOpen(true);
+  };
+
+  const handleConfirmScheduleInterview = (e) => {
+    if (e) e.preventDefault();
+    if (!schedulingCandidate) return;
+
+    setCandidates(prev => prev.map(c => 
+      c.id === schedulingCandidate.id ? { ...c, status: 'Interview Scheduled' } : c
+    ));
+
+    const companyName = user?.institution || user?.name || 'Dabur India R&D Division';
+    const companyId = user?.id || 'EMP-DABUR-QC-89';
+    let formattedDate = 'Upcoming Date';
+    try {
+      formattedDate = new Date(interviewDate).toLocaleString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    } catch {
+      formattedDate = interviewDate;
+    }
+
+    // Cross-Stakeholder Notification: Company -> Student: Interview Scheduled (Workflow 2)
+    dispatchNotification({
+      targetRole: 'student',
+      targetRecipientId: schedulingCandidate.id || 'NIA/AY/2026/0491',
+      targetRecipientName: schedulingCandidate.name,
+      senderId: companyId,
+      senderName: companyName,
+      senderRole: 'company',
+      title: `Interview scheduled with ${companyName}`,
+      message: `${companyName} scheduled an interview for ${interviewRound} on ${formattedDate} (${interviewMode}).`,
+      link: '#dashboard-student'
+    });
+
+    showToast(`Interview confirmed with ${schedulingCandidate.name} for ${formattedDate}! Notification dispatched to student.`);
+    setIsScheduleModalOpen(false);
+    setSchedulingCandidate(null);
   };
 
   const filteredCandidates = candidates.filter(c => 
@@ -703,17 +773,34 @@ export const CompanyPortalView = ({ user = {} }) => {
                     Verified by Apex Ayush Faculty Mentor
                   </span>
 
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <button
+                      onClick={() => handleOpenScheduleModal(cand)}
+                      className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                        cand.status === 'Interview Scheduled'
+                          ? 'bg-blue-50 text-blue-900 border border-blue-200'
+                          : 'bg-slate-100 hover:bg-slate-200 text-slate-800'
+                      }`}
+                    >
+                      <Calendar className="w-3.5 h-3.5 text-blue-700" />
+                      <span>{cand.status === 'Interview Scheduled' ? 'Reschedule Interview' : 'Schedule Interview'}</span>
+                    </button>
+
                     <button
                       onClick={() => handleShortlist(cand.id)}
-                      disabled={cand.status === 'Fast-Track Shortlisted'}
+                      disabled={cand.status === 'Fast-Track Shortlisted' || cand.status === 'Interview Scheduled'}
                       className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                        cand.status === 'Fast-Track Shortlisted'
+                        cand.status === 'Fast-Track Shortlisted' || cand.status === 'Interview Scheduled'
                           ? 'bg-emerald-100 text-emerald-900 cursor-default border border-emerald-300'
                           : 'bg-emerald-800 hover:bg-emerald-900 text-white shadow-xs'
                       }`}
                     >
-                      {cand.status === 'Fast-Track Shortlisted' ? (
+                      {cand.status === 'Interview Scheduled' ? (
+                        <span className="flex items-center gap-1.5">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-blue-700" />
+                          <span>Interview Scheduled</span>
+                        </span>
+                      ) : cand.status === 'Fast-Track Shortlisted' ? (
                         <span className="flex items-center gap-1.5">
                           <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700" />
                           <span>Shortlisted for Interview</span>
@@ -983,6 +1070,126 @@ export const CompanyPortalView = ({ user = {} }) => {
                 >
                   <CheckCircle2 className="w-4 h-4 text-emerald-300" />
                   <span>Deploy Opportunity</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* SCHEDULE INTERVIEW MODAL (WORKFLOW 2: COMPANY -> STUDENT) */}
+      {isScheduleModalOpen && schedulingCandidate && (
+        <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
+          <div className="bg-white rounded-3xl p-6 sm:p-7 max-w-lg w-full shadow-2xl border border-slate-200 space-y-5 my-8 animate-in zoom-in-95">
+            {/* Header */}
+            <div className="flex items-start justify-between gap-3 pb-3 border-b border-slate-100">
+              <div>
+                <h3 className="text-base sm:text-lg font-black text-slate-900 flex items-center gap-2">
+                  <Calendar className="w-5 h-5 text-emerald-800" />
+                  <span>Schedule Technical Interview</span>
+                </h3>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Coordinate live laboratory assessment and dispatch cross-stakeholder notification.
+                </p>
+              </div>
+              <button
+                onClick={() => {
+                  setIsScheduleModalOpen(false);
+                  setSchedulingCandidate(null);
+                }}
+                className="p-1.5 rounded-xl hover:bg-slate-100 text-slate-400 hover:text-slate-700 cursor-pointer"
+                title="Close"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Candidate Card Summary */}
+            <div className="p-3.5 bg-emerald-50/70 rounded-2xl border border-emerald-200/80 flex items-center justify-between">
+              <div>
+                <h4 className="text-sm font-extrabold text-emerald-950">{schedulingCandidate.name}</h4>
+                <p className="text-[11px] text-emerald-700 font-medium">
+                  {schedulingCandidate.degree} · {schedulingCandidate.institution}
+                </p>
+              </div>
+              <span className="px-2.5 py-1 rounded-xl bg-white border border-emerald-300 text-xs font-black text-emerald-900 shadow-2xs">
+                {schedulingCandidate.match}% Match
+              </span>
+            </div>
+
+            <form onSubmit={handleConfirmScheduleInterview} className="space-y-4">
+              <div>
+                <label className="text-xs font-bold text-slate-700 block mb-1">
+                  Interview Assessment Round
+                </label>
+                <select
+                  value={interviewRound}
+                  onChange={(e) => setInterviewRound(e.target.value)}
+                  className="w-full p-2.5 text-xs bg-slate-50 rounded-xl border border-slate-200 text-slate-800 font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-700"
+                >
+                  <option value="Technical HPTLC & GMP Assay Round">Technical HPTLC &amp; GMP Assay Round</option>
+                  <option value="Schedule T Cleanroom Viva & Protocol Review">Schedule T Cleanroom Viva &amp; Protocol Review</option>
+                  <option value="Ayurvedic Phytopharmacy & QC Case Evaluation">Ayurvedic Phytopharmacy &amp; QC Case Evaluation</option>
+                  <option value="Final Corporate HR & Stipend Discussion">Final Corporate HR &amp; Stipend Discussion</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="text-xs font-bold text-slate-700 block mb-1">
+                  Date &amp; Time
+                </label>
+                <input
+                  type="datetime-local"
+                  required
+                  value={interviewDate}
+                  onChange={(e) => setInterviewDate(e.target.value)}
+                  className="w-full p-2.5 text-xs bg-slate-50 rounded-xl border border-slate-200 text-slate-800 font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-700"
+                />
+              </div>
+
+              <div>
+                <label className="text-xs font-bold text-slate-700 block mb-1">
+                  Interview Venue / Format
+                </label>
+                <select
+                  value={interviewMode}
+                  onChange={(e) => setInterviewMode(e.target.value)}
+                  className="w-full p-2.5 text-xs bg-slate-50 rounded-xl border border-slate-200 text-slate-800 font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-700"
+                >
+                  <option value="SkillSetu Virtual Proctor Video Room">SkillSetu Virtual Proctor Video Room (DigiLocker Stamped)</option>
+                  <option value="On-Site Corporate R&D Laboratory">On-Site Corporate R&amp;D Laboratory (Ghaziabad / Haridwar)</option>
+                  <option value="Hybrid Remote Viva Room">Hybrid Remote Viva Room</option>
+                </select>
+              </div>
+
+              <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 text-[11px] text-slate-600 space-y-1">
+                <div className="flex items-center gap-1.5 font-bold text-slate-800">
+                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-700" />
+                  <span>Real-Time Cross-Stakeholder Sync</span>
+                </div>
+                <p>
+                  Submitting this dispatch immediately sends an in-app notification to the student, logs the event across browser tabs, and flags candidate status in the ATS.
+                </p>
+              </div>
+
+              {/* Modal Footer Actions */}
+              <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsScheduleModalOpen(false);
+                    setSchedulingCandidate(null);
+                  }}
+                  className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition-colors cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-5 py-2 bg-emerald-800 hover:bg-emerald-900 text-white text-xs font-bold rounded-xl shadow-md transition-all cursor-pointer flex items-center gap-1.5 active:scale-95"
+                >
+                  <Calendar className="w-4 h-4 text-emerald-300" />
+                  <span>Schedule &amp; Dispatch</span>
                 </button>
               </div>
             </form>

@@ -38,6 +38,7 @@ import {
 } from 'lucide-react';
 import { HERO_STATS, PLATFORM_METADATA } from '../../data/portalData';
 import { TPOPlacementCommandCenter } from './TPOPlacementCommandCenter';
+import { useNotifications } from '../../context/NotificationContext';
 
 // Helper to generate a realistic SHA-256 cryptographic digest
 export const generateSha256Hash = (rollNumber, company) => {
@@ -525,6 +526,7 @@ export const StudentPortalView = ({ user, onNavigateToSkills }) => {
     abcId: '164 Credits'
   };
   const safeUser = (user && user.name) ? user : (HERO_STATS?.profileUser || defaultUser);
+  const { dispatchNotification } = useNotifications();
   const [activeTab, setActiveTab] = useState('tpo');
   const [selectedAssessmentOption, setSelectedAssessmentOption] = useState(null);
   const [hasAwardedBonus, setHasAwardedBonus] = useState(false);
@@ -644,6 +646,19 @@ export const StudentPortalView = ({ user, onNavigateToSkills }) => {
       type: 'success',
       title: 'NOC Application Submitted',
       message: `Your NOC clearance request for ${newRequest.companyName} has been routed to the TPO Command Center.`
+    });
+
+    // Cross-Stakeholder Notification: Student -> College TPO (Workflow 3)
+    dispatchNotification({
+      targetRole: 'college',
+      targetRecipientId: 'AISHE-C-24901',
+      targetRecipientName: safeUser.institution || 'National Institute of Ayurveda (NIA), Jaipur',
+      senderId: safeUser.id || 'NIA/AY/2026/0491',
+      senderName: safeUser.name || 'Aarav Sharma',
+      senderRole: 'student',
+      title: `${safeUser.name || 'Aarav Sharma'} requested an NOC`,
+      message: `${safeUser.name || 'Aarav Sharma'} submitted an NOC clearance request for ${newRequest.role} at ${newRequest.companyName} (Ref: ${newRequest.referenceNo}).`,
+      link: '#dashboard-college'
     });
   };
 
@@ -891,6 +906,21 @@ export const StudentPortalView = ({ user, onNavigateToSkills }) => {
       ...prev,
       [jobId]: true
     }));
+
+    const appliedJob = jobsList.find(j => j.id === jobId);
+    if (appliedJob) {
+      dispatchNotification({
+        targetRole: 'company',
+        targetRecipientId: appliedJob.company.toLowerCase().includes('dabur') ? 'EMP-DABUR-QC-89' : null,
+        targetRecipientName: appliedJob.company,
+        senderId: safeUser.id || 'NIA/AY/2026/0491',
+        senderName: safeUser.name || 'Aarav Sharma',
+        senderRole: 'student',
+        title: `New applicant for ${appliedJob.title}`,
+        message: `${safeUser.name || 'Aarav Sharma'} applied for ${appliedJob.title} at ${appliedJob.company}. Match: ${appliedJob.match}%.`,
+        link: '#dashboard-company'
+      });
+    }
   };
 
   return (
