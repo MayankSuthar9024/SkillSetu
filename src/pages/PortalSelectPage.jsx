@@ -13,7 +13,8 @@ import {
   EyeOff, 
   Check, 
   CheckCircle2,
-  User
+  User,
+  Sparkles
 } from 'lucide-react';
 import { PORTALS_DATA, PLATFORM_METADATA } from '../data/portalData';
 import { ComingSoonPage } from '../components/ComingSoonPage';

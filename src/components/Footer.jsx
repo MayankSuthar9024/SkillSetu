@@ -107,6 +107,14 @@ export function Footer({ onNavigate, onSeeHowItWorks }) {
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
               </button>
             </li>
+            <li>
+              <button 
+                onClick={() => onNavigate('company')} 
+                className="text-slate-600 hover:text-emerald-800 transition-colors font-medium hover:underline cursor-pointer"
+              >
+                Pharma & Industry Portal
+              </button>
+            </li>
           </ul>
         </div>
 
