@@ -28,11 +28,8 @@ import { useNotifications, formatRelativeTime } from '../context/NotificationCon
 
 import { StudentPortalView } from '../components/portals/StudentPortalView';
 import { CompanyPortalView } from '../components/portals/CompanyPortalView';
-<<<<<<< HEAD
 import { CompanyConsoleView } from '../components/portals/CompanyConsoleView';
 import { FacultyPortalView } from '../components/portals/FacultyPortalView';
-=======
->>>>>>> 9ca885b29da6fb0a6f09eeb45d273158f00dcd7b
 import { CollegePortalView } from '../components/portals/CollegePortalView';
 import { CollegeStudentsView } from '../components/portals/CollegeStudentsView';
 
@@ -509,20 +506,9 @@ export const StakeholderDashboard = ({
             })}
           </nav>
 
-          {/* Right Action Icons (Verify, Notifications, User PFP Avatar Button) */}
+          {/* Right Action Icons (Notifications, User PFP Avatar Button) */}
           <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-
-            {/* Cryptographic Credential Verifier Quick Button */}
-            <button
-              type="button"
-              onClick={() => handleOpenVerifier()}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-emerald-900 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200/90 transition-all cursor-pointer shadow-2xs hover:shadow-xs active:scale-95 shrink-0"
-              title="Cryptographic Credential Verifier (SHA-256)"
-            >
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
-              <span className="hidden sm:inline">Verify Integrity</span>
-            </button>
-
+            
             {/* Notifications Bell */}
             <div className="relative">
               <button
