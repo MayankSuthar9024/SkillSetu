@@ -64,6 +64,14 @@ export function App() {
         setActivePortalId('college');
         const portalCfg = PORTALS_DATA.find(p => p.id === 'college');
         setCurrentUser(portalCfg?.profileUser || null);
+      } else if (hash === 'company' || hash === 'company-portal' || hash === 'portal-company') {
+        const companyUser = PORTALS_DATA.find(p => p.id === 'company')?.profileUser;
+        setActivePortalId('company');
+        setCurrentUser(companyUser);
+        try {
+          localStorage.setItem('skillsetu_user', JSON.stringify(companyUser));
+          localStorage.setItem('skillsetu_portal', 'company');
+        } catch {}
         setActivePage('dashboard');
       } else if (['how-it-works', 'features', 'comparison'].includes(hash)) {
         setActivePage('home');
@@ -171,6 +179,9 @@ export function App() {
     }
     if (page === 'login' || page === 'portals') {
       handleOpenAuth();
+    } else if (page === 'company' || page === 'company-portal') {
+      const companyUser = PORTALS_DATA.find(p => p.id === 'company')?.profileUser;
+      handleLoginSuccess('company', companyUser);
     } else if (page === 'dashboard') {
       setActivePage('dashboard');
       window.location.hash = `dashboard-${activePortalId}`;
@@ -390,10 +401,10 @@ export function App() {
                 <h3 className="font-bold text-xl text-on-surface mb-2">Are you an Employer or Ayush Hospital?</h3>
                 <p className="text-xs text-on-surface-variant mb-4 leading-relaxed">Post clinical opportunities and recruit verified candidates directly from the SkillSetu talent engine.</p>
                 <button
-                  onClick={() => handleOpenAuth()}
+                  onClick={() => handleNavigate('company')}
                   className="shimmer-btn bg-primary text-on-primary font-bold text-sm px-6 py-2.5 rounded-xl hover:bg-primary/90 transition-all cursor-pointer shadow-soft"
                 >
-                  Register as Employer
+                  Enter Recruiter & ATS Portal
                 </button>
               </div>
             </div>
