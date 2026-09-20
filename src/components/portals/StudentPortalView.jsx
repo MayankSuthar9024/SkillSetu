@@ -495,6 +495,18 @@ export const DigitalNocModal = ({ isOpen, onClose, noc }) => {
           </div>
           <div className="flex items-center gap-2">
             <button
+              type="button"
+              onClick={() => {
+                const hashVal = noc.sha256Hash || noc.referenceNo || noc.id;
+                window.dispatchEvent(new CustomEvent('open_credential_verifier', { detail: { query: hashVal } }));
+              }}
+              className="px-3.5 py-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-900 border border-emerald-300 text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs"
+              title="Verify cryptographic integrity of this NOC"
+            >
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-700" />
+              <span>Verify Integrity</span>
+            </button>
+            <button
               onClick={onClose}
               className="px-4 py-2 rounded-xl border border-slate-200 text-xs font-bold text-slate-600 hover:bg-slate-100 cursor-pointer"
             >
@@ -946,6 +958,15 @@ export const StudentPortalView = ({ user, onNavigateToSkills }) => {
                 <ShieldCheck className="w-3.5 h-3.5 text-teal-600 shrink-0" />
                 <span>APAAR: {safeUser.apaarId || '9841-2041-8891'} • ABC Bank: {safeUser.abcCredits || '164 Credits'} (DigiLocker Verified)</span>
               </span>
+              <button
+                type="button"
+                onClick={() => window.dispatchEvent(new CustomEvent('open_credential_verifier'))}
+                className="px-3 py-1 rounded-full text-xs font-bold bg-emerald-800 hover:bg-emerald-900 text-white flex items-center gap-1.5 shadow-xs transition-all cursor-pointer active:scale-95 shrink-0"
+                title="Verify cryptographic integrity of student credentials"
+              >
+                <ShieldCheck className="w-3.5 h-3.5 text-emerald-300" />
+                <span>Verify Credential Integrity</span>
+              </button>
             </div>
             <p className="text-xs text-slate-500 mt-1 break-words">
               {safeUser.degree} · {safeUser.institution} · Roll: <span className="font-mono font-semibold text-slate-700">{safeUser.id}</span>

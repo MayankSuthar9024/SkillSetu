@@ -21,10 +21,13 @@ import { CoursesPage } from './pages/CoursesPage';
 import { JobsPage } from './pages/JobsPage';
 import { AssessmentPage } from './pages/AssessmentPage';
 import { NotificationProvider } from './context/NotificationContext';
+import CredentialVerifierModal from './components/CredentialVerifierModal';
 
 export function App() {
   const [activePage, setActivePage] = useState('home'); // 'home' | 'features' | 'about' | 'opportunities' | 'skill' | 'industry' | 'courses' | 'feed' | 'profile' | 'messages' | 'login' | 'portals' | 'dashboard'
   const [isReadinessModalOpen, setIsReadinessModalOpen] = useState(false);
+  const [isVerifierModalOpen, setIsVerifierModalOpen] = useState(false);
+  const [verifierInitialQuery, setVerifierInitialQuery] = useState('');
   const [activePortalId, setActivePortalId] = useState('student');
   const [currentUser, setCurrentUser] = useState(() => {
     try {
@@ -52,7 +55,9 @@ export function App() {
   useEffect(() => {
     const handleHashChange = () => {
       const hash = window.location.hash.replace('#', '');
-      if (hash === 'login' || hash === 'portals' || hash === 'portal-select') {
+      if (hash === 'verify' || hash === 'verifier') {
+        setIsVerifierModalOpen(true);
+      } else if (hash === 'login' || hash === 'portals' || hash === 'portal-select') {
         setActivePage('login');
       } else if (hash.startsWith('dashboard')) {
         const role = hash.split('-')[1];
@@ -94,6 +99,27 @@ export function App() {
     window.addEventListener('hashchange', handleHashChange);
     return () => window.removeEventListener('hashchange', handleHashChange);
   }, [currentUser]);
+
+  // Window event listener for global verification and readiness diagnostic triggers
+  useEffect(() => {
+    const handleOpenVerifier = (e) => {
+      if (e?.detail?.query) {
+        setVerifierInitialQuery(e.detail.query);
+      } else {
+        setVerifierInitialQuery('');
+      }
+      setIsVerifierModalOpen(true);
+    };
+    const handleOpenReadiness = () => {
+      setIsReadinessModalOpen(true);
+    };
+    window.addEventListener('open_credential_verifier', handleOpenVerifier);
+    window.addEventListener('open_readiness_modal', handleOpenReadiness);
+    return () => {
+      window.removeEventListener('open_credential_verifier', handleOpenVerifier);
+      window.removeEventListener('open_readiness_modal', handleOpenReadiness);
+    };
+  }, []);
 
   const handleOpenAuth = () => {
     setActivePage('login');
@@ -231,6 +257,11 @@ export function App() {
           onBackToHome={() => { }}
           contrastMode={contrastMode}
           onToggleContrast={handleToggleContrast}
+          onOpenReadinessModal={() => setIsReadinessModalOpen(true)}
+          onOpenVerifierModal={(query) => {
+            if (query) setVerifierInitialQuery(query);
+            setIsVerifierModalOpen(true);
+          }}
         />
       );
     }
@@ -244,6 +275,7 @@ export function App() {
         activePage={activePage}
         setActivePage={handleNavigate}
         onOpenReadinessModal={() => setIsReadinessModalOpen(true)}
+        onOpenVerifierModal={() => setIsVerifierModalOpen(true)}
         onOpenAuthModal={handleOpenAuth}
         currentUser={currentUser}
         onLogout={handleLogout}
@@ -488,12 +520,6 @@ export function App() {
 
       </main>
 
-      {/* Global Readiness Diagnostic Modal */}
-      <ReadinessModal
-        isOpen={isReadinessModalOpen}
-        onClose={() => setIsReadinessModalOpen(false)}
-      />
-
       {/* Shared Footer - Removed from landing page per user flow specification */}
       {activePage !== 'home' && (
         <Footer
@@ -515,6 +541,22 @@ export function App() {
   return (
     <NotificationProvider activePortalId={activePortalId} currentUser={currentUser}>
       {renderAppContent()}
+
+      {/* Global Readiness Diagnostic Modal */}
+      <ReadinessModal
+        isOpen={isReadinessModalOpen}
+        onClose={() => setIsReadinessModalOpen(false)}
+      />
+
+      {/* Global Cryptographic Credential Verifier Modal */}
+      <CredentialVerifierModal
+        isOpen={isVerifierModalOpen}
+        onClose={() => {
+          setIsVerifierModalOpen(false);
+          setVerifierInitialQuery('');
+        }}
+        initialQuery={verifierInitialQuery}
+      />
     </NotificationProvider>
   );
 }

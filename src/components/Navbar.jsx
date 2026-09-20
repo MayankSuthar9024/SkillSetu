@@ -26,7 +26,7 @@ import {
 } from 'lucide-react';
 import { useNotifications, formatRelativeTime } from '../context/NotificationContext';
 
-export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpenAuthModal, currentUser, onLogout }) {
+export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpenVerifierModal, onOpenAuthModal, currentUser, onLogout }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
@@ -390,9 +390,23 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
           </nav>
 
           {/* Right Action CTAs */}
-          <div className="hidden md:flex gap-3 items-center">
-            {/* Cross-Stakeholder Notification Bell */}
-            {renderNotificationBell(false)}
+          <div className="hidden md:flex gap-2.5 items-center">
+            {/* Public Cryptographic Credential Verifier Button */}
+            <button
+              type="button"
+              onClick={() => {
+                if (onOpenVerifierModal) onOpenVerifierModal();
+                else window.dispatchEvent(new CustomEvent('open_credential_verifier'));
+              }}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold text-emerald-900 bg-emerald-50/80 hover:bg-emerald-100 border border-emerald-200/90 transition-all cursor-pointer shadow-2xs hover:shadow-xs active:scale-95 shrink-0"
+              title="Cryptographic Credential Verifier (SHA-256)"
+            >
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
+              <span>Verify Integrity</span>
+            </button>
+
+            {/* Cross-Stakeholder Notification Bell (Hidden on Landing Page) */}
+            {activePage !== 'home' && renderNotificationBell(false)}
 
             {currentUser ? (
               /* Profile PFP Avatar Button (Only when user is signed in) */
@@ -445,6 +459,19 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
                       <span>View Profile Page</span>
                     </button>
 
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setProfileDropdownOpen(false);
+                        if (onOpenVerifierModal) onOpenVerifierModal();
+                        else window.dispatchEvent(new CustomEvent('open_credential_verifier'));
+                      }}
+                      className="w-full text-left px-4 py-2 text-xs font-bold text-slate-800 hover:bg-emerald-50 hover:text-emerald-900 flex items-center gap-2 cursor-pointer"
+                    >
+                      <ShieldCheck className="w-4 h-4 text-emerald-700" />
+                      <span>Verify Credential Integrity</span>
+                    </button>
+
                     <div className="pt-1 mt-1 border-t border-slate-100">
                       <button
                         type="button"
@@ -480,8 +507,8 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
 
           {/* Mobile Action Controls */}
           <div className="md:hidden flex items-center gap-2">
-            {/* Mobile Notification Bell */}
-            {renderNotificationBell(true)}
+            {/* Mobile Notification Bell (Hidden on Landing Page) */}
+            {activePage !== 'home' && renderNotificationBell(true)}
 
             {currentUser ? (
               <div className="relative">
@@ -518,6 +545,19 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
                     >
                       <User className="w-4 h-4 text-emerald-700" />
                       <span>View Profile Page</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setProfileDropdownOpen(false);
+                        if (onOpenVerifierModal) onOpenVerifierModal();
+                        else window.dispatchEvent(new CustomEvent('open_credential_verifier'));
+                      }}
+                      className="w-full text-left px-4 py-2 text-xs font-bold text-slate-800 hover:bg-emerald-50 hover:text-emerald-900 flex items-center gap-2 cursor-pointer"
+                    >
+                      <ShieldCheck className="w-4 h-4 text-emerald-700" />
+                      <span>Verify Credential Integrity</span>
                     </button>
 
                     <div className="pt-1 mt-1 border-t border-slate-100">
@@ -578,6 +618,18 @@ export function Navbar({ activePage, setActivePage, onOpenReadinessModal, onOpen
             })}
 
             <div className="pt-4 border-t border-slate-200 space-y-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  if (onOpenVerifierModal) onOpenVerifierModal();
+                  else window.dispatchEvent(new CustomEvent('open_credential_verifier'));
+                }}
+                className="w-full py-3 bg-slate-50 hover:bg-emerald-50 text-slate-800 hover:text-emerald-900 font-bold rounded-xl text-sm flex items-center justify-center gap-2 border border-slate-200 transition-colors cursor-pointer"
+              >
+                <ShieldCheck className="w-4 h-4 text-emerald-700" />
+                <span>Verify Credential Integrity</span>
+              </button>
               {currentUser ? (
                 <>
                   <button

@@ -28,10 +28,8 @@ import { useNotifications, formatRelativeTime } from '../context/NotificationCon
 
 import { StudentPortalView } from '../components/portals/StudentPortalView';
 import { CompanyPortalView } from '../components/portals/CompanyPortalView';
-import { FacultyPortalView } from '../components/portals/FacultyPortalView';
 import { CollegePortalView } from '../components/portals/CollegePortalView';
 import { CollegeStudentsView } from '../components/portals/CollegeStudentsView';
-import { MinistryAdminPortalView } from '../components/portals/MinistryAdminPortalView';
 
 import { FeedPage } from './FeedPage';
 import { ProfilePage } from './ProfilePage';
@@ -53,8 +51,15 @@ export const StakeholderDashboard = ({
   onLogout,
   onBackToHome,
   contrastMode,
-  onToggleContrast
+  onToggleContrast,
+  onOpenReadinessModal,
+  onOpenVerifierModal
 }) => {
+  const [selectedCourse, setSelectedCourse] = useState(null);
+
+  const handleOpenReadiness = onOpenReadinessModal || (() => window.dispatchEvent(new CustomEvent('open_readiness_modal')));
+  const handleOpenVerifier = onOpenVerifierModal || ((query) => window.dispatchEvent(new CustomEvent('open_credential_verifier', { detail: { query } })));
+
   const [activeTab, setActiveTab] = useState(() => {
     if (typeof window !== 'undefined') {
       const hash = window.location.hash.replace('#', '');
@@ -210,7 +215,7 @@ export const StakeholderDashboard = ({
                   </p>
                 </div>
               </div>
-              <FacultyPage currentUser={user} onOpenReadinessModal={() => {}} />
+              <FacultyPage currentUser={user} onOpenReadinessModal={handleOpenReadiness} />
             </div>
           );
         }
@@ -224,22 +229,27 @@ export const StakeholderDashboard = ({
               if (page === 'messages') setActiveTab('messages');
               else if (page === 'profile') setActiveTab('profile');
               else if (page === 'feed') setActiveTab('feed');
-              else if (page === 'skills') setActiveTab('skills');
+              else if (page === 'skills') {
+                if (data?.course) setSelectedCourse(data.course);
+                setActiveTab('skills');
+              }
             }}
           />
         );
       case 'skills':
         if (activePortalId === 'faculty') {
-          return <ComingSoonView onBack={() => setActiveTab('feed')} />;
+          return <FacultyPage currentUser={user} initialTab="radar" onOpenReadinessModal={handleOpenReadiness} />;
         }
         return (
           <SkillPage
+            selectedCourse={selectedCourse}
+            onClearSelectedCourse={() => setSelectedCourse(null)}
             onNavigate={(page) => {
-              if (page === 'opportunities') setActiveTab('jobs');
+              if (page === 'opportunities' || page === 'jobs') setActiveTab('jobs');
               else if (page === 'feed') setActiveTab('feed');
               else if (page === 'assessment') setActiveTab('assessment');
             }}
-            onOpenReadinessModal={() => alert('Launching Skill Readiness Diagnostic Engine...')}
+            onOpenReadinessModal={handleOpenReadiness}
           />
         );
       case 'assessment':
@@ -301,7 +311,7 @@ export const StakeholderDashboard = ({
             )}
             {activePortalId === 'company' && <CompanyPortalView user={user} />}
             {activePortalId === 'faculty' && (
-              <ComingSoonView onBack={() => setActiveTab('feed')} />
+              <FacultyPage currentUser={user} onOpenReadinessModal={handleOpenReadiness} />
             )}
             {activePortalId === 'college' && (
               <CollegePortalView 
@@ -319,7 +329,26 @@ export const StakeholderDashboard = ({
           </div>
         );
       default:
-        return <FeedPage onNavigate={() => {}} currentUser={user} activePortalId={activePortalId} />;
+        return (
+          <FeedPage 
+            onNavigate={(page, targetUser) => {
+              if (page === 'profile') {
+                setViewingUser(targetUser || null);
+                setActiveTab('profile');
+              } else if (page === 'messages') {
+                setActiveTab('messages');
+              } else if (page === 'opportunities' || page === 'jobs') {
+                setActiveTab('jobs');
+              } else if (page === 'skill' || page === 'skills') {
+                setActiveTab('skills');
+              } else if (page === 'industry' || page === 'network') {
+                setActiveTab('network');
+              }
+            }} 
+            currentUser={user} 
+            activePortalId={activePortalId} 
+          />
+        );
     }
   };
 
@@ -429,9 +458,20 @@ export const StakeholderDashboard = ({
             })}
           </nav>
 
-          {/* Right Action Icons (Notifications, User PFP Avatar Button) */}
+          {/* Right Action Icons (Verify, Notifications, User PFP Avatar Button) */}
           <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             
+            {/* Cryptographic Credential Verifier Quick Button */}
+            <button
+              type="button"
+              onClick={() => handleOpenVerifier()}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-emerald-900 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200/90 transition-all cursor-pointer shadow-2xs hover:shadow-xs active:scale-95 shrink-0"
+              title="Cryptographic Credential Verifier (SHA-256)"
+            >
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
+              <span className="hidden sm:inline">Verify Integrity</span>
+            </button>
+
             {/* Notifications Bell */}
             <div className="relative">
               <button

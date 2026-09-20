@@ -44,6 +44,7 @@ import {
   CameraDisconnectedBanner 
 } from '../components/ProctoringMonitor';
 import { AyushSixAxisRadarChart } from '../components/AyushSixAxisRadarChart';
+import { useNotifications } from '../context/NotificationContext';
 
 const STORAGE_SESSION_KEY = 'skillsetu_test_session';
 const STORAGE_RADAR_KEY = 'skillsetu_active_branch_radar';
@@ -61,6 +62,7 @@ const BranchIcon = ({ iconName, className = "w-5 h-5" }) => {
 };
 
 export function AssessmentPage({ onNavigate, currentUser }) {
+  const { dispatchNotification } = useNotifications();
   // Engine State: 'branch_selection' | 'resume_prompt' | 'proctoring_check' | 'test_active' | 'test_completed' | 'disqualified'
   const [engineState, setEngineState] = useState('branch_selection');
   const [selectedBranchId, setSelectedBranchId] = useState('cs_healthcare_informatics');
@@ -324,12 +326,23 @@ export function AssessmentPage({ onNavigate, currentUser }) {
 
       // Notify other views via custom window event
       window.dispatchEvent(new CustomEvent('skillsetu_radar_updated', { detail: fullResultPayload }));
+
+      // Dispatch cross-stakeholder notification to student
+      dispatchNotification({
+        targetRole: 'student',
+        senderId: 'SYSTEM-PROCTOR',
+        senderName: 'SkillSetu AI Proctor',
+        senderRole: 'system',
+        title: `Diagnostic Assessment Completed (${fullResultPayload.overallScore}%)`,
+        message: `You scored ${fullResultPayload.overallScore}% in ${activeSession.branchTitle}. Six-axis competency radar updated.`,
+        link: '#dashboard-student'
+      });
     } catch (e) {
       console.error('Error persisting test results', e);
     }
 
     setEngineState('test_completed');
-  }, [activeSession, answers, getProctoringMetadata, stopStream]);
+  }, [activeSession, answers, getProctoringMetadata, stopStream, dispatchNotification]);
 
   // Format time as MM:SS
   const formatTime = (secs) => {

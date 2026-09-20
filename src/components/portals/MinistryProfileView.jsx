@@ -25,16 +25,21 @@ export const MinistryProfileView = ({ user, onNavigate, onBack }) => {
   const [activeTab, setActiveTab] = useState('overview'); // 'overview' | 'directives' | 'councils' | 'standards'
   const [isFollowing, setIsFollowing] = useState(false);
 
-  const ministryName = user?.brandName || user?.name || 'Central Council for Research in Ayurvedic Sciences (CCRAS)';
+  const userName = user?.name || 'Shri Sanjay K. Verma';
+  const roleTitle = user?.role || 'Director General & National Admin';
+  const councilCode = user?.councilCode || user?.id || 'GOI-AYUSH-SEC-01';
+  const institution = user?.institution || 'Ministry of Ayush, Government of India';
   const location = user?.location || 'Janakpuri, New Delhi 110058, India';
-  const councilCode = user?.councilCode || user?.id || 'CCRAS-GOI-AYUSH-01';
-  const roleTitle = user?.role || 'Apex Ministry Body & Regulatory Directorate';
   const website = user?.website || 'https://ccras.nic.in';
   const coverImage = user?.coverImage || 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=1600&q=80';
   const avatarImage = user?.avatarImage || sanjayAvatar;
-  const bio = user?.bio || `${ministryName} is the apex autonomous body under the Ministry of Ayush for the formulation, co-ordination, development and promotion of research on scientific lines in Ayurvedic sciences across 30 premier peripheral institutes.`;
+  
+  const bio = user?.bio || `${userName} serves as the ${roleTitle} at the ${institution}. In this apex capacity, he oversees national statutory Ayush curriculum standards, Schedule T GMP pharmaceutical compliance, NEP 2020 Academic Bank of Credits (ABC) integration, and blockchain-verified talent credentialing across 536 permitted institutions and 7,300+ licensed pharma enterprises.`;
 
-  const ministryPosts = getPostsByAuthor(user?.id || ministryName);
+  let ministryPosts = getPostsByAuthor(user?.id || user?.name);
+  if (ministryPosts.length === 0) {
+    ministryPosts = getPostsByAuthor('ccras-directorate');
+  }
 
   const councils = [
     { name: 'CCRAS (Ayurvedic Sciences)', focus: 'Classical Formulation & Botanical Standardizations', institutes: '30 Centers' },
@@ -97,7 +102,7 @@ export const MinistryProfileView = ({ user, onNavigate, onBack }) => {
         <div className="h-44 sm:h-56 w-full bg-gradient-to-r from-purple-950 via-slate-900 to-emerald-950 relative">
           <img 
             src={coverImage} 
-            alt={ministryName} 
+            alt={userName} 
             className="w-full h-full object-cover opacity-40 mix-blend-overlay"
           />
           <div className="absolute top-4 right-4 bg-purple-950/85 backdrop-blur-md text-purple-200 border border-purple-500/30 px-3.5 py-1.5 rounded-full text-xs font-bold flex items-center gap-1.5 shadow-sm">
@@ -107,52 +112,68 @@ export const MinistryProfileView = ({ user, onNavigate, onBack }) => {
         </div>
 
         <div className="px-6 pb-6 pt-0 relative">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 -mt-16 md:-mt-20 mb-4">
-            <div className="flex items-end gap-4">
-              <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-3xl bg-white p-2 border-4 border-white shadow-xl relative z-10 shrink-0">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-5 -mt-14 sm:-mt-18 mb-4">
+            <div className="flex flex-col sm:flex-row sm:items-end gap-5">
+              {/* Avatar Container with generous white border & shadow */}
+              <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-3xl bg-white p-1.5 border-4 border-white shadow-xl relative z-10 shrink-0">
                 <div className="w-full h-full rounded-2xl bg-gradient-to-br from-emerald-800 to-purple-950 text-white font-extrabold text-3xl flex items-center justify-center overflow-hidden">
-                  <img src={avatarImage} alt={ministryName} className="w-full h-full object-cover" />
+                  <img src={avatarImage} alt={userName} className="w-full h-full object-cover" />
                 </div>
               </div>
 
-              <div className="pt-2 md:pt-0">
+              {/* Core Name, Title & Institution Details */}
+              <div className="pb-1">
                 <div className="flex items-center gap-2 flex-wrap">
                   <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-                    {ministryName}
+                    {userName}
                   </h1>
-                  <CheckCircle2 className="w-6 h-6 text-emerald-600 fill-emerald-100 shrink-0" />
+                  <CheckCircle2 className="w-5 h-5 text-emerald-600 fill-emerald-100 shrink-0" />
+                  <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-purple-50 text-purple-900 border border-purple-200">
+                    Apex Authority
+                  </span>
                 </div>
-                <p className="text-xs sm:text-sm font-semibold text-slate-600 mt-1">
-                  {roleTitle} • <span className="text-purple-800 font-bold font-mono">Code: {councilCode}</span>
+                <p className="text-xs sm:text-sm font-semibold text-slate-700 mt-1 flex items-center gap-1.5 flex-wrap">
+                  <span>{roleTitle}</span>
+                  <span className="text-slate-400">•</span>
+                  <span className="text-purple-900 font-bold">Code: {councilCode}</span>
+                </p>
+                <p className="text-xs text-slate-500 font-medium mt-0.5">
+                  {institution}
                 </p>
               </div>
             </div>
 
-            <div className="flex items-center gap-3 shrink-0 pt-2 md:pt-0">
+            {/* Actions */}
+            <div className="flex items-center gap-3 shrink-0 pb-1">
               <a
                 href={website}
                 target="_blank"
                 rel="noreferrer"
-                className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all"
+                className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all shadow-2xs"
               >
+                <Globe className="w-3.5 h-3.5 text-slate-600" />
                 <span>Official Portal</span>
               </a>
             </div>
           </div>
 
           {/* Quick Info Tags */}
-          <div className="flex flex-wrap items-center gap-4 pt-3 border-t border-slate-100 text-xs text-slate-600 font-medium">
-            <span className="flex items-center gap-1.5">
-              <MapPin className="w-4 h-4 text-emerald-700 shrink-0" />
-              {location}
+          <div className="flex flex-wrap items-center gap-2.5 pt-3 border-t border-slate-100 text-xs text-slate-600 font-medium">
+            <span className="flex items-center gap-1.5 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200/80">
+              <MapPin className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
+              <span>{location}</span>
             </span>
-            <span className="flex items-center gap-1.5">
-              <Globe className="w-4 h-4 text-emerald-700 shrink-0" />
-              {website}
+            <a href={website} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200/80 hover:text-emerald-800 transition-colors">
+              <Globe className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
+              <span>{website}</span>
+            </a>
+            <span className="flex items-center gap-1.5 text-purple-900 font-bold bg-purple-50 px-3 py-1.5 rounded-xl border border-purple-200">
+              <Landmark className="w-3.5 h-3.5 text-purple-700" />
+              <span>28 States &amp; 8 UTs Jurisdiction</span>
             </span>
-            <span className="flex items-center gap-1.5 text-purple-800 font-bold bg-purple-50 px-2.5 py-0.5 rounded-md border border-purple-200">
-              <Landmark className="w-3.5 h-3.5" />
-              28 States &amp; 8 UTs Jurisdiction
+            <span className="flex items-center gap-1.5 text-emerald-900 font-bold bg-emerald-50 px-3 py-1.5 rounded-xl border border-emerald-200">
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-700" />
+              <span>14 Apex Nodes Synchronized</span>
             </span>
           </div>
         </div>
