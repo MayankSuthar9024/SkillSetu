@@ -391,14 +391,37 @@ export function StudentProfileView({ user, onNavigate, onBack, isPublicView }) {
     setActiveMediaModal(type);
   };
 
-  const skillMatrix = [
-    { name: 'Nadi Pariksha (Pulse Diagnostics)', score: 92, status: 'Mastered', percentile: '98th' },
-    { name: 'Dravyaguna Phytochemistry & HPLC', score: 88, status: 'Verified', percentile: '94th' },
-    { name: 'Schedule T GMP Cleanroom Protocol', score: 94, status: 'Mastered', percentile: '99th' },
-    { name: 'GCP Clinical Trial Protocols', score: 85, status: 'Verified', percentile: '91st' },
-    { name: 'Panchakarma Clinical Management', score: 82, status: 'Proficient', percentile: '89th' },
-    { name: 'Rasa Shastra Quality Testing', score: 86, status: 'Verified', percentile: '93rd' },
+  const defaultAyushMatrix = [
+    { name: 'Nadi Pariksha', fullName: 'Nadi Pariksha (Pulse Diagnostics)', score: 92, status: 'Mastered', percentile: '98th' },
+    { name: 'Dravyaguna HPLC', fullName: 'Dravyaguna Phytochemistry & HPLC', score: 88, status: 'Verified', percentile: '94th' },
+    { name: 'Schedule T GMP', fullName: 'Schedule T GMP Cleanroom Protocol', score: 94, status: 'Mastered', percentile: '99th' },
+    { name: 'Ayush GCP Trials', fullName: 'GCP Clinical Trial Protocols', score: 85, status: 'Verified', percentile: '91st' },
+    { name: 'Panchakarma Care', fullName: 'Panchakarma Clinical Management', score: 82, status: 'Proficient', percentile: '89th' },
+    { name: 'Rasa Shastra QC', fullName: 'Rasa Shastra Quality Testing', score: 86, status: 'Verified', percentile: '93rd' },
   ];
+
+  // Load dynamically assessed branch radar if available
+  const [activeBranchRadar, setActiveBranchRadar] = useState(() => {
+    try {
+      const saved = localStorage.getItem('skillsetu_active_branch_radar');
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
+  });
+
+  useEffect(() => {
+    const handleRadarUpdate = (e) => {
+      if (e.detail) {
+        setActiveBranchRadar(e.detail);
+      }
+    };
+    window.addEventListener('skillsetu_radar_updated', handleRadarUpdate);
+    return () => window.removeEventListener('skillsetu_radar_updated', handleRadarUpdate);
+  }, []);
+
+  const skillMatrix = activeBranchRadar?.radarMatrix || defaultAyushMatrix;
+  const currentBranchTitle = activeBranchRadar?.branchTitle || 'Ayush 6-Axis Competency Radar';
 
   const badges = [
     { title: 'Digital Nadi Pariksha Master', issuer: 'All India Institute of Ayurveda', date: 'Jan 2026', code: 'AYUSH-BADGE-9912', status: 'Active' },
@@ -1020,15 +1043,25 @@ export function StudentProfileView({ user, onNavigate, onBack, isPublicView }) {
                 </div>
                 <div>
                   <h3 className="font-bold text-base sm:text-lg text-slate-900 flex items-center gap-2">
-                    Ayush 6-Axis Competency Radar &amp; Qualifications
+                    {currentBranchTitle} &amp; Qualifications
                   </h3>
                   <p className="text-xs text-slate-500 mt-0.5 font-normal">
-                    Core competency benchmarks, institutional records &amp; verified identities
+                    {activeBranchRadar ? 'Verified branch diagnostic assessment results & competency benchmarks' : 'Core competency benchmarks, institutional records & verified identities'}
                   </p>
                 </div>
               </div>
 
               <div className="flex items-center gap-2">
+                <button
+                  onClick={() => {
+                    if (onNavigate) onNavigate('assessment');
+                    else window.location.hash = 'assessment';
+                  }}
+                  className="px-3 py-1.5 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-white text-xs font-bold transition-all shadow-2xs flex items-center gap-1.5 cursor-pointer"
+                >
+                  <Sparkles className="w-3.5 h-3.5" />
+                  <span>{activeBranchRadar ? 'Recalibrate Radar' : 'Take Diagnostic'}</span>
+                </button>
                 <span className="px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-emerald-50 text-emerald-800 border border-emerald-200">
                   6 Evaluated Axes
                 </span>
@@ -1044,7 +1077,11 @@ export function StudentProfileView({ user, onNavigate, onBack, isPublicView }) {
                   {/* Left Column: Real 6-Axis Ayush Radar Chart & Academic Records */}
                   <div className="lg:col-span-7 xl:col-span-8 space-y-6">
                     {/* Real 6-Axis Radar Chart Component (Seamless plain mode) */}
-                    <AyushSixAxisRadarChart skillMatrix={skillMatrix} plain={true} />
+                    <AyushSixAxisRadarChart 
+                      skillMatrix={skillMatrix} 
+                      plain={true} 
+                      branchTitle={currentBranchTitle}
+                    />
 
                     {/* Academic Qualifications Table (Clean & Concise) */}
                     <div className="bg-white rounded-2xl border border-slate-200/90 shadow-2xs overflow-hidden">

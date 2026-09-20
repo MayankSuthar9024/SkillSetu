@@ -27,7 +27,9 @@ import {
   ShieldCheck,
   ArrowUpDown,
   ArrowUp,
-  ArrowDown
+  ArrowDown,
+  LayoutGrid,
+  List
 } from 'lucide-react';
 
 export const INITIAL_COLLEGE_STUDENTS = [
@@ -630,8 +632,9 @@ export const AVAILABLE_OPPORTUNITIES = [
 ];
 
 export const CollegeStudentsView = ({ user }) => {
-  // Navigation Tabs: 'students' (Student Directory & Basic Data - DEFAULT) | 'openings' (Available Roles & Internships)
+  // Navigation Tabs: 'students' (Student Directory - DEFAULT) | 'openings' (Available Roles & Internships)
   const [activeTab, setActiveTab] = useState('students');
+  const [viewMode, setViewMode] = useState('cards'); // 'cards' | 'table'
 
   // Opportunities Filtering
   const [opportunityTypeFilter, setOpportunityTypeFilter] = useState('all'); // 'all' | 'role' | 'internship'
@@ -752,6 +755,9 @@ export const CollegeStudentsView = ({ user }) => {
   // Count metrics
   const fullTimeRolesCount = AVAILABLE_OPPORTUNITIES.filter((o) => o.type === 'role').length;
   const internshipsCount = AVAILABLE_OPPORTUNITIES.filter((o) => o.type === 'internship').length;
+  const placedCount = INITIAL_COLLEGE_STUDENTS.filter((s) => s.placementStatus === 'Placed').length;
+  const internCount = INITIAL_COLLEGE_STUDENTS.filter((s) => s.placementStatus === 'Internship').length;
+  const seekingCount = INITIAL_COLLEGE_STUDENTS.filter((s) => s.placementStatus === 'Seeking').length;
 
   return (
     <div className="space-y-6 font-sans max-w-7xl mx-auto pb-12">
@@ -771,114 +777,46 @@ export const CollegeStudentsView = ({ user }) => {
         </div>
       )}
 
-      {/* Header Banner */}
-      <div className="bg-white rounded-3xl border border-slate-200/80 p-6 sm:p-7 shadow-soft flex flex-col sm:flex-row sm:items-center justify-between gap-5">
-        <div>
-          <div className="flex items-center gap-2 mb-1.5 flex-wrap">
-            <span className="px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-200/80 inline-flex items-center gap-1.5">
-              <Users className="w-3.5 h-3.5 text-emerald-700" />
-              <span>Institutional Student Registry & Academic Directory</span>
-            </span>
-            <span className="text-xs text-slate-400 font-medium">Session 2025–2026</span>
-          </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-            Student Registry & Career Desk
-          </h1>
-          <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-3xl leading-relaxed">
-            Review student basic data, NCISM registrations, ABHA IDs, academic performance transcripts, DigiLocker verified credentials, and campus placements for {user?.institution || 'National Institute of Ayurveda'}.
-          </p>
-        </div>
-
-        <div className="flex items-center gap-2.5 shrink-0">
-          <button
-            onClick={handleExportReport}
-            className="px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs flex items-center gap-2 transition-all cursor-pointer shadow-xs hover:shadow-md"
-          >
-            <Download className="w-3.5 h-3.5" />
-            <span>Export Student Dossier</span>
-          </button>
-        </div>
-      </div>
-
-      {/* Summary Metric Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-soft flex items-start gap-3.5">
-          <div className="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-200/60 flex items-center justify-center shrink-0">
-            <GraduationCap className="w-5 h-5" />
-          </div>
-          <div>
-            <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Enrolled Scholars</span>
-            <span className="text-2xl font-extrabold text-slate-900 mt-0.5 block">{user?.enrolledScholars || 680}</span>
-            <span className="text-[11px] text-slate-500 font-medium">All 14 Specialties</span>
-          </div>
-        </div>
-
-        <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-soft flex items-start gap-3.5">
-          <div className="w-11 h-11 rounded-xl bg-teal-50 text-teal-700 border border-teal-200/60 flex items-center justify-center shrink-0">
-            <Award className="w-5 h-5" />
-          </div>
-          <div>
-            <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Academic Average</span>
-            <span className="text-2xl font-extrabold text-teal-800 mt-0.5 block">8.72 CGPA</span>
-            <span className="text-[11px] text-teal-800 font-semibold">NCISM High Distinction</span>
-          </div>
-        </div>
-
-        <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-soft flex items-start gap-3.5">
-          <div className="w-11 h-11 rounded-xl bg-blue-50 text-blue-700 border border-blue-200/60 flex items-center justify-center shrink-0">
-            <Clock className="w-5 h-5" />
-          </div>
-          <div>
-            <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Clinical Attendance</span>
-            <span className="text-2xl font-extrabold text-blue-800 mt-0.5 block">92.4%</span>
-            <span className="text-[11px] text-blue-800 font-semibold">Statutory Exam Compliant</span>
-          </div>
-        </div>
-
-        <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-soft flex items-start gap-3.5">
-          <div className="w-11 h-11 rounded-xl bg-purple-50 text-purple-700 border border-purple-200/60 flex items-center justify-center shrink-0">
-            <TrendingUp className="w-5 h-5" />
-          </div>
-          <div>
-            <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Career Outcomes</span>
-            <span className="text-2xl font-extrabold text-purple-900 mt-0.5 block">640 Total</span>
-            <span className="text-[11px] text-purple-800 font-semibold">520 Placed · 120 Interns</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Tab Navigation Switcher */}
-      <div className="flex items-center gap-3 border-b border-slate-200/80 pb-3">
+      {/* Tabs Navigation */}
+      <div className="flex flex-wrap items-center gap-2 border-b border-slate-200 pb-2">
         <button
           onClick={() => setActiveTab('students')}
-          className={`px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm flex items-center gap-2 transition-all cursor-pointer ${
+          className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 ${
             activeTab === 'students'
-              ? 'bg-slate-900 text-white shadow-xs'
-              : 'bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-50 border border-slate-200'
+              ? 'bg-emerald-800 text-white shadow-xs'
+              : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
           }`}
         >
           <Users className="w-4 h-4" />
-          <span>Student Directory & Basic Data</span>
-          <span className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold ${
-            activeTab === 'students' ? 'bg-slate-800 text-slate-200' : 'bg-slate-100 text-slate-700'
-          }`}>
+          <span>Student Directory</span>
+          <span
+            className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold ${
+              activeTab === 'students'
+                ? 'bg-emerald-700 text-emerald-100'
+                : 'bg-slate-100 text-slate-700'
+            }`}
+          >
             {filteredStudents.length} Listed
           </span>
         </button>
 
         <button
           onClick={() => setActiveTab('openings')}
-          className={`px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm flex items-center gap-2 transition-all cursor-pointer ${
+          className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 ${
             activeTab === 'openings'
-              ? 'bg-slate-900 text-white shadow-xs'
-              : 'bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-50 border border-slate-200'
+              ? 'bg-emerald-800 text-white shadow-xs'
+              : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
           }`}
         >
           <Briefcase className="w-4 h-4" />
-          <span>Available Roles & Internships</span>
-          <span className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold ${
-            activeTab === 'openings' ? 'bg-slate-800 text-slate-200' : 'bg-slate-100 text-slate-700'
-          }`}>
+          <span>Roles &amp; Internships</span>
+          <span
+            className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold ${
+              activeTab === 'openings'
+                ? 'bg-emerald-700 text-emerald-100'
+                : 'bg-emerald-100 text-emerald-800'
+            }`}
+          >
             {AVAILABLE_OPPORTUNITIES.length} Active
           </span>
         </button>
@@ -889,67 +827,112 @@ export const CollegeStudentsView = ({ user }) => {
       {/* ========================================================================= */}
       {activeTab === 'students' && (
         <div className="space-y-4">
-          {/* Search & Filter Toolbar */}
-          <div className="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-soft space-y-3">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
+          {/* Header Toolbar (Matching NOC Clearances UI) */}
+          <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/80 shadow-soft space-y-3.5">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
                 <div className="flex items-center gap-2">
-                  <h3 className="text-sm font-bold text-slate-900">
-                    Enrolled Students Directory
+                  <h3 className="text-base font-bold text-slate-900">
+                    Student Directory
                   </h3>
                   <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-slate-100 text-slate-700 border border-slate-200">
-                    {sortedStudents.length} of {INITIAL_COLLEGE_STUDENTS.length}
+                    {sortedStudents.length} Enrolled
                   </span>
                 </div>
                 <p className="text-xs text-slate-500 mt-0.5">
-                  Click on table headers to sort by CGPA, Attendance, Name, or Status.
+                  Academic transcripts, clinical attendance, and career placement records.
                 </p>
               </div>
 
-              {/* Toolbar Controls */}
-              <div className="flex flex-wrap items-center gap-2">
-                {/* Search Bar */}
-                <div className="relative min-w-[200px] flex-1 sm:flex-initial">
-                  <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
-                  <input
-                    type="text"
-                    placeholder="Search candidate, roll, skill..."
-                    value={studentSearchQuery}
-                    onChange={(e) => setStudentSearchQuery(e.target.value)}
-                    className="w-full bg-slate-50 focus:bg-white border border-slate-200 rounded-xl pl-9 pr-7 py-1.5 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-700 transition-all"
-                  />
-                  {studentSearchQuery && (
-                    <button
-                      onClick={() => setStudentSearchQuery('')}
-                      className="absolute right-2.5 top-2 text-slate-400 hover:text-slate-600 cursor-pointer"
-                    >
-                      <X className="w-3.5 h-3.5" />
-                    </button>
-                  )}
+              {/* Minimal Metric Summary & Export Button */}
+              <div className="flex items-center gap-2.5 flex-wrap">
+                <div className="flex items-center gap-2 text-xs bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200/70">
+                  <span className="text-slate-500">Enrolled: <strong className="text-slate-800 font-bold">{user?.enrolledScholars || 680}</strong></span>
+                  <span className="text-slate-300">·</span>
+                  <span className="text-teal-700">Avg CGPA: <strong className="text-teal-800 font-bold">8.72</strong></span>
+                  <span className="text-slate-300">·</span>
+                  <span className="text-blue-700">Attendance: <strong className="text-blue-800 font-bold">92.4%</strong></span>
+                  <span className="text-slate-300">·</span>
+                  <span className="text-emerald-700">Placed: <strong className="text-emerald-800 font-bold">520</strong></span>
                 </div>
 
-                {/* Quick Sort Selector */}
-                <div className="flex items-center gap-1.5 bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-1.5 text-xs">
-                  <ArrowUpDown className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                  <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Sort:</span>
-                  <select
-                    value={`${sortField}-${sortDirection}`}
-                    onChange={(e) => {
-                      const [field, dir] = e.target.value.split('-');
-                      setSortField(field);
-                      setSortDirection(dir);
-                    }}
-                    className="bg-transparent font-semibold text-slate-800 text-xs focus:outline-none cursor-pointer"
+                <button
+                  onClick={handleExportReport}
+                  className="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-black text-white font-bold text-xs flex items-center gap-1.5 transition-all shadow-xs cursor-pointer"
+                  title="Export Student Dossier as CSV"
+                >
+                  <Download className="w-3.5 h-3.5" />
+                  <span>Export</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Filter and Search Bar */}
+            <div className="pt-3 border-t border-slate-100 flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
+              {/* Search Box */}
+              <div className="relative flex-1 max-w-md">
+                <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
+                <input
+                  type="text"
+                  placeholder="Search candidate, roll, skill, company..."
+                  value={studentSearchQuery}
+                  onChange={(e) => setStudentSearchQuery(e.target.value)}
+                  className="w-full pl-9 pr-8 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-700 focus:bg-white transition-all"
+                />
+                {studentSearchQuery && (
+                  <button
+                    onClick={() => setStudentSearchQuery('')}
+                    className="absolute right-2.5 top-2 text-slate-400 hover:text-slate-600 cursor-pointer"
                   >
-                    <option value="cgpa-desc">Highest CGPA</option>
-                    <option value="cgpa-asc">Lowest CGPA</option>
-                    <option value="attendance-desc">Highest Attendance</option>
-                    <option value="attendance-asc">Lowest Attendance</option>
-                    <option value="name-asc">Name (A → Z)</option>
-                    <option value="name-desc">Name (Z → A)</option>
-                    <option value="rollNumber-asc">Roll No. (Asc)</option>
-                    <option value="placementStatus-desc">Placement Priority</option>
-                  </select>
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                )}
+              </div>
+
+              {/* Status Filter Buttons + Dropdowns + View Mode Toggle */}
+              <div className="flex items-center gap-2 flex-wrap">
+                {/* Status Filter Pills */}
+                <div className="flex items-center gap-1 overflow-x-auto">
+                  <button
+                    onClick={() => setStudentStatusFilter('all')}
+                    className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                      studentStatusFilter === 'all'
+                        ? 'bg-emerald-800 text-white shadow-2xs'
+                        : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                    }`}
+                  >
+                    All ({INITIAL_COLLEGE_STUDENTS.length})
+                  </button>
+                  <button
+                    onClick={() => setStudentStatusFilter('Placed')}
+                    className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                      studentStatusFilter === 'Placed'
+                        ? 'bg-emerald-700 text-white shadow-2xs'
+                        : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                    }`}
+                  >
+                    Placed ({placedCount})
+                  </button>
+                  <button
+                    onClick={() => setStudentStatusFilter('Internship')}
+                    className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                      studentStatusFilter === 'Internship'
+                        ? 'bg-blue-700 text-white shadow-2xs'
+                        : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                    }`}
+                  >
+                    Intern ({internCount})
+                  </button>
+                  <button
+                    onClick={() => setStudentStatusFilter('Seeking')}
+                    className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                      studentStatusFilter === 'Seeking'
+                        ? 'bg-amber-700 text-white shadow-2xs'
+                        : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                    }`}
+                  >
+                    Pipeline ({seekingCount})
+                  </button>
                 </div>
 
                 {/* Program Filter */}
@@ -964,247 +947,422 @@ export const CollegeStudentsView = ({ user }) => {
                   <option value="M.Pharm">M.Pharm</option>
                 </select>
 
-                {/* Status Filter */}
-                <select
-                  value={studentStatusFilter}
-                  onChange={(e) => setStudentStatusFilter(e.target.value)}
-                  className="bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-1.5 text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-700 cursor-pointer"
-                >
-                  <option value="all">All Status</option>
-                  <option value="Placed">Placed</option>
-                  <option value="Internship">Clinical Intern</option>
-                  <option value="Seeking">In Pipeline</option>
-                </select>
+                {/* Quick Sort Dropdown */}
+                <div className="flex items-center gap-1 bg-slate-50 border border-slate-200 rounded-xl px-2 py-1.5 text-xs">
+                  <ArrowUpDown className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                  <select
+                    value={`${sortField}-${sortDirection}`}
+                    onChange={(e) => {
+                      const [field, dir] = e.target.value.split('-');
+                      setSortField(field);
+                      setSortDirection(dir);
+                    }}
+                    className="bg-transparent font-semibold text-slate-800 text-xs focus:outline-none cursor-pointer"
+                  >
+                    <option value="cgpa-desc">Highest CGPA</option>
+                    <option value="cgpa-asc">Lowest CGPA</option>
+                    <option value="attendance-desc">Highest Attendance</option>
+                    <option value="name-asc">Name (A → Z)</option>
+                    <option value="rollNumber-asc">Roll No.</option>
+                  </select>
+                </div>
+
+                {/* View Mode Switcher */}
+                <div className="flex items-center bg-slate-100 p-0.5 rounded-xl border border-slate-200">
+                  <button
+                    onClick={() => setViewMode('cards')}
+                    className={`p-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1 ${
+                      viewMode === 'cards'
+                        ? 'bg-white text-emerald-800 shadow-2xs'
+                        : 'text-slate-500 hover:text-slate-800'
+                    }`}
+                    title="Card View"
+                  >
+                    <LayoutGrid className="w-3.5 h-3.5" />
+                  </button>
+                  <button
+                    onClick={() => setViewMode('table')}
+                    className={`p-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1 ${
+                      viewMode === 'table'
+                        ? 'bg-white text-emerald-800 shadow-2xs'
+                        : 'text-slate-500 hover:text-slate-800'
+                    }`}
+                    title="Table View"
+                  >
+                    <List className="w-3.5 h-3.5" />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Clean, Short & Compact Students Directory Table */}
+          {/* MAIN STUDENTS CONTENT: CARDS VIEW (DEFAULT) OR TABLE VIEW */}
           {sortedStudents.length > 0 ? (
-            <div className="bg-white rounded-2xl border border-slate-200/80 shadow-soft overflow-hidden">
-              <div className="w-full">
-                <table className="w-full text-left border-collapse table-auto">
-                  <thead>
-                    <tr className="bg-slate-50/90 border-b border-slate-200 text-[11px] font-bold uppercase tracking-wider text-slate-500">
-                      {/* Sortable: Student & Roll */}
-                      <th
-                        onClick={() => handleSort('name')}
-                        className="py-3 px-4 sm:px-5 cursor-pointer select-none hover:bg-slate-100 transition-colors group w-[26%]"
-                        title="Click to sort by Name"
-                      >
-                        <div className="flex items-center gap-1.5">
-                          <span>Student & Identity</span>
-                          {sortField === 'name' ? (
-                            sortDirection === 'asc' ? (
-                              <ArrowUp className="w-3.5 h-3.5 text-emerald-700 stroke-[2.5]" />
-                            ) : (
-                              <ArrowDown className="w-3.5 h-3.5 text-emerald-700 stroke-[2.5]" />
-                            )
-                          ) : (
-                            <ArrowUpDown className="w-3 h-3 text-slate-300 group-hover:text-slate-500 transition-colors" />
-                          )}
+            viewMode === 'cards' ? (
+              /* CARD VIEW - EXACT MATCH TO NOC CLEARANCES UI */
+              <div className="space-y-4">
+                {sortedStudents.map((stu) => (
+                  <div
+                    key={stu.id}
+                    className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-soft space-y-4 transition-all hover:border-slate-300"
+                  >
+                    {/* Top Row: Student Identity & Request Meta */}
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-800 font-bold text-sm flex items-center justify-center shrink-0 border border-emerald-200">
+                          {stu.avatar || stu.name.split(' ').map((n) => n[0]).join('')}
                         </div>
-                      </th>
-
-                      {/* Sortable: Program */}
-                      <th
-                        onClick={() => handleSort('program')}
-                        className="py-3 px-4 cursor-pointer select-none hover:bg-slate-100 transition-colors group w-[18%]"
-                        title="Click to sort by Program"
-                      >
-                        <div className="flex items-center gap-1.5">
-                          <span>Program & Mentor</span>
-                          {sortField === 'program' ? (
-                            sortDirection === 'asc' ? (
-                              <ArrowUp className="w-3.5 h-3.5 text-emerald-700 stroke-[2.5]" />
-                            ) : (
-                              <ArrowDown className="w-3.5 h-3.5 text-emerald-700 stroke-[2.5]" />
-                            )
-                          ) : (
-                            <ArrowUpDown className="w-3 h-3 text-slate-300 group-hover:text-slate-500 transition-colors" />
-                          )}
-                        </div>
-                      </th>
-
-                      {/* Sortable: Academic CGPA & Attendance */}
-                      <th
-                        onClick={() => handleSort('cgpa')}
-                        className="py-3 px-4 cursor-pointer select-none hover:bg-slate-100 transition-colors group w-[16%]"
-                        title="Click to sort by CGPA"
-                      >
-                        <div className="flex items-center gap-1.5">
-                          <span>Academic & Attendance</span>
-                          {sortField === 'cgpa' ? (
-                            sortDirection === 'asc' ? (
-                              <ArrowUp className="w-3.5 h-3.5 text-emerald-700 stroke-[2.5]" />
-                            ) : (
-                              <ArrowDown className="w-3.5 h-3.5 text-emerald-700 stroke-[2.5]" />
-                            )
-                          ) : sortField === 'attendance' ? (
-                            sortDirection === 'asc' ? (
-                              <ArrowUp className="w-3.5 h-3.5 text-emerald-700 stroke-[2.5]" />
-                            ) : (
-                              <ArrowDown className="w-3.5 h-3.5 text-emerald-700 stroke-[2.5]" />
-                            )
-                          ) : (
-                            <ArrowUpDown className="w-3 h-3 text-slate-300 group-hover:text-slate-500 transition-colors" />
-                          )}
-                        </div>
-                      </th>
-
-                      {/* Sortable: Placement Status */}
-                      <th
-                        onClick={() => handleSort('placementStatus')}
-                        className="py-3 px-4 cursor-pointer select-none hover:bg-slate-100 transition-colors group w-[18%]"
-                        title="Click to sort by Placement Status"
-                      >
-                        <div className="flex items-center gap-1.5">
-                          <span>Placement Status</span>
-                          {sortField === 'placementStatus' ? (
-                            sortDirection === 'asc' ? (
-                              <ArrowUp className="w-3.5 h-3.5 text-emerald-700 stroke-[2.5]" />
-                            ) : (
-                              <ArrowDown className="w-3.5 h-3.5 text-emerald-700 stroke-[2.5]" />
-                            )
-                          ) : (
-                            <ArrowUpDown className="w-3 h-3 text-slate-300 group-hover:text-slate-500 transition-colors" />
-                          )}
-                        </div>
-                      </th>
-
-                      {/* Key Competencies (Single row badges) */}
-                      <th className="py-3 px-4 w-[12%]">
-                        <span>Key Competencies</span>
-                      </th>
-
-                      {/* Action */}
-                      <th className="py-3 px-4 sm:px-5 text-right w-[10%]">
-                        <span>Action</span>
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100 text-xs">
-                    {sortedStudents.map((stu) => (
-                      <tr
-                        key={stu.id}
-                        className="hover:bg-slate-50/80 transition-colors cursor-pointer group"
-                        onClick={() => setSelectedStudentDossier(stu)}
-                      >
-                        {/* Student Identity: Short & Clean (Avatar, Name, Roll No inline, NCISM & Gender subline) */}
-                        <td className="py-2.5 px-4 sm:px-5">
-                          <div className="flex items-center gap-2.5">
-                            <div className="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-900 font-bold text-xs flex items-center justify-center shrink-0">
-                              {stu.avatar}
-                            </div>
-                            <div className="min-w-0">
-                              <div className="flex items-center gap-1.5 flex-wrap">
-                                <span className="font-bold text-slate-900 text-xs sm:text-sm group-hover:text-emerald-800 transition-colors">
-                                  {stu.name}
-                                </span>
-                                <span className="font-mono text-[10px] text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded font-medium">
-                                  {stu.rollNumber}
-                                </span>
-                              </div>
-                              <div className="text-[10px] text-slate-400 mt-0.5">
-                                {stu.ncismReg} · <span className="text-slate-500">{stu.gender}</span>
-                              </div>
-                            </div>
-                          </div>
-                        </td>
-
-                        {/* Program & Preceptor: Short & Clean */}
-                        <td className="py-2.5 px-4">
-                          <div className="font-semibold text-slate-800 text-xs">
-                            {stu.program}{' '}
-                            <span className="text-slate-400 font-normal text-[11px]">
-                              · {stu.semester.split('(')[0].trim()}
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <h4 className="text-base font-bold text-slate-900">{stu.name}</h4>
+                            <span className="font-mono text-xs font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200/60">
+                              {stu.rollNumber}
                             </span>
                           </div>
-                          <div className="text-[10px] text-slate-400 mt-0.5 truncate max-w-[170px]">
-                            {stu.preceptor}
-                          </div>
-                        </td>
+                          <p className="text-xs text-slate-500 mt-0.5">
+                            {stu.program} · {stu.semester.split('(')[0].trim()} · Mentor: {stu.preceptor}
+                          </p>
+                        </div>
+                      </div>
 
-                        {/* Performance & Attendance: Compact & Crisp */}
-                        <td className="py-2.5 px-4">
-                          <div className="flex items-center gap-1.5">
-                            <span className="text-xs font-black text-slate-900">{stu.cgpa} CGPA</span>
-                            <span className="px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
-                              {stu.attendance}
-                            </span>
-                          </div>
-                          <div className="text-[10px] text-slate-400 mt-0.5">
-                            {stu.clinicalHours} clinical
-                          </div>
-                        </td>
+                      <div className="flex items-center gap-2">
+                        <span
+                          className={`px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5 ${
+                            stu.placementStatus === 'Placed'
+                              ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                              : stu.placementStatus === 'Internship'
+                              ? 'bg-blue-50 text-blue-700 border border-blue-200'
+                              : 'bg-amber-50 text-amber-700 border border-amber-200'
+                          }`}
+                        >
+                          {stu.placementStatus === 'Placed' ? (
+                            <>
+                              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                              <span>Placed · {stu.package}</span>
+                            </>
+                          ) : stu.placementStatus === 'Internship' ? (
+                            <>
+                              <Clock className="w-3.5 h-3.5 text-blue-600" />
+                              <span>Clinical Intern</span>
+                            </>
+                          ) : (
+                            <>
+                              <Clock className="w-3.5 h-3.5 text-amber-600" />
+                              <span>Placement Pipeline</span>
+                            </>
+                          )}
+                        </span>
+                      </div>
+                    </div>
 
-                        {/* Placement Status: Clean inline badge & company */}
-                        <td className="py-2.5 px-4">
-                          <div className="flex items-center gap-1.5 flex-wrap">
-                            {stu.placementStatus === 'Placed' && (
-                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
-                                <Check className="w-3 h-3 text-emerald-600" />
-                                <span>Placed</span>
-                              </span>
-                            )}
-                            {stu.placementStatus === 'Internship' && (
-                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold bg-blue-50 text-blue-800 border border-blue-200">
-                                <Clock className="w-3 h-3 text-blue-600" />
-                                <span>Intern</span>
-                              </span>
-                            )}
-                            {stu.placementStatus === 'Seeking' && (
-                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold bg-amber-50 text-amber-800 border border-amber-200">
-                                <span>Pipeline</span>
-                              </span>
-                            )}
-                            <span className="text-xs font-semibold text-slate-800">
-                              {stu.company}
-                            </span>
-                          </div>
-                          <div className="text-[10px] text-emerald-700 font-bold mt-0.5">
-                            {stu.package}
-                          </div>
-                        </td>
+                    {/* Clean 2-Section Grid (Matching Screenshot 1) */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                      {/* Left: Career & Placement Specifications */}
+                      <div className="bg-slate-50/70 rounded-xl p-3.5 space-y-2 border border-slate-200/60">
+                        <div className="flex items-center gap-1.5 text-slate-500 font-bold text-[11px] uppercase tracking-wider">
+                          <Briefcase className="w-3.5 h-3.5 text-slate-400" />
+                          <span>Career &amp; Placement</span>
+                        </div>
+                        <div>
+                          <h5 className="text-sm font-bold text-slate-900">{stu.company}</h5>
+                          <p className="text-slate-600 font-medium">{stu.role}</p>
+                        </div>
+                        <div className="flex items-center gap-4 text-slate-500 pt-0.5">
+                          <span>Package: <strong className="text-emerald-800 font-semibold">{stu.package}</strong></span>
+                          <span>Batch: <strong className="text-slate-800 font-semibold">{stu.batch}</strong></span>
+                        </div>
 
-                        {/* Verified Competencies: Single line pills without wrapping */}
-                        <td className="py-2.5 px-4">
-                          <div className="flex items-center gap-1">
-                            {stu.skills.slice(0, 2).map((skill, i) => (
+                        <div className="pt-2 border-t border-slate-200/60 flex items-center justify-between">
+                          <span className="text-slate-500 font-medium">Key Skills:</span>
+                          <div className="flex items-center gap-1 overflow-hidden">
+                            {stu.skills.slice(0, 3).map((skill, i) => (
                               <span
                                 key={i}
-                                className="px-2 py-0.5 rounded-md text-[10px] bg-slate-100 text-slate-700 font-medium whitespace-nowrap"
+                                className="px-2 py-0.5 rounded-md text-[10px] bg-white border border-slate-200 text-slate-700 font-medium whitespace-nowrap"
                               >
                                 {skill}
                               </span>
                             ))}
-                            {stu.skills.length > 2 && (
-                              <span className="px-1.5 py-0.5 rounded text-[10px] bg-emerald-50 text-emerald-800 font-bold border border-emerald-200/60 whitespace-nowrap">
-                                +{stu.skills.length - 2}
+                            {stu.skills.length > 3 && (
+                              <span className="px-1.5 py-0.5 rounded text-[10px] bg-emerald-50 text-emerald-800 font-bold border border-emerald-200/60">
+                                +{stu.skills.length - 3}
                               </span>
                             )}
                           </div>
-                        </td>
+                        </div>
+                      </div>
 
-                        {/* Action: Clean View Basic Data Button */}
-                        <td className="py-2.5 px-4 sm:px-5 text-right">
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setSelectedStudentDossier(stu);
-                            }}
-                            className="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-emerald-800 hover:text-white text-slate-700 text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ml-auto shadow-2xs group-hover:bg-emerald-800 group-hover:text-white whitespace-nowrap"
-                          >
-                            <FileText className="w-3.5 h-3.5" />
-                            <span>Basic Data</span>
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                      {/* Right: Academic Standing & Clinical Audit */}
+                      <div className="bg-slate-50/70 rounded-xl p-3.5 space-y-2 border border-slate-200/60">
+                        <div className="flex items-center justify-between text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+                          <span className="flex items-center gap-1.5">
+                            <ShieldCheck className="w-3.5 h-3.5 text-slate-400" />
+                            <span>Academic Standing</span>
+                          </span>
+                          <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 normal-case tracking-normal">
+                            <Check className="w-3 h-3 text-emerald-600" /> Verified Record
+                          </span>
+                        </div>
+
+                        {/* 3 Metric Cards */}
+                        <div className="grid grid-cols-3 gap-2 text-center pt-0.5">
+                          <div className="bg-white rounded-lg p-2 border border-slate-200/80">
+                            <span className="text-[10px] text-slate-400 font-medium block">CGPA</span>
+                            <span className="text-sm font-bold text-slate-900">{stu.cgpa}</span>
+                            <span className="text-[10px] text-emerald-600 font-semibold block">Distinction</span>
+                          </div>
+                          <div className="bg-white rounded-lg p-2 border border-slate-200/80">
+                            <span className="text-[10px] text-slate-400 font-medium block">Attendance</span>
+                            <span className="text-sm font-bold text-slate-900">{stu.attendance}</span>
+                            <span className="text-[10px] text-emerald-600 font-semibold block">{stu.clinicalHours}</span>
+                          </div>
+                          <div className="bg-white rounded-lg p-2 border border-slate-200/80">
+                            <span className="text-[10px] text-slate-400 font-medium block">Backlogs</span>
+                            <span className="text-sm font-bold text-slate-900">0</span>
+                            <span className="text-[10px] text-emerald-600 font-semibold block">Clean</span>
+                          </div>
+                        </div>
+
+                        <p className="text-[11px] text-slate-500 leading-snug">
+                          Statutory clinical postings cleared · Theory: {stu.theoryMarks} · Practical: {stu.practicalMarks}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Actions & Reference Row */}
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pt-2 border-t border-slate-100">
+                      <div className="text-xs text-slate-500 font-mono">
+                        NCISM: <span className="font-semibold text-slate-700">{stu.ncismReg}</span> · ABHA: <span className="text-slate-600">{stu.abhaId}</span>
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => setSelectedStudentDossier(stu)}
+                          className="px-4 py-2 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-white text-xs font-bold shadow-xs hover:shadow-sm transition-all flex items-center gap-1.5 cursor-pointer"
+                        >
+                          <FileText className="w-3.5 h-3.5 text-emerald-300" />
+                          <span>View Full Dossier</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
-            </div>
+            ) : (
+              /* TABLE VIEW (ACCESSIBLE VIA VIEW MODE TOGGLE) */
+              <div className="bg-white rounded-2xl border border-slate-200/80 shadow-soft overflow-hidden">
+                <div className="w-full">
+                  <table className="w-full text-left border-collapse table-auto">
+                    <thead>
+                      <tr className="bg-slate-50/90 border-b border-slate-200 text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                        <th
+                          onClick={() => handleSort('name')}
+                          className="py-3 px-4 sm:px-5 cursor-pointer select-none hover:bg-slate-100 transition-colors group w-[26%]"
+                          title="Click to sort by Name"
+                        >
+                          <div className="flex items-center gap-1.5">
+                            <span>Student &amp; Identity</span>
+                            {sortField === 'name' ? (
+                              sortDirection === 'asc' ? (
+                                <ArrowUp className="w-3.5 h-3.5 text-emerald-700 stroke-[2.5]" />
+                              ) : (
+                                <ArrowDown className="w-3.5 h-3.5 text-emerald-700 stroke-[2.5]" />
+                              )
+                            ) : (
+                              <ArrowUpDown className="w-3 h-3 text-slate-300 group-hover:text-slate-500 transition-colors" />
+                            )}
+                          </div>
+                        </th>
+
+                        <th
+                          onClick={() => handleSort('program')}
+                          className="py-3 px-4 cursor-pointer select-none hover:bg-slate-100 transition-colors group w-[18%]"
+                          title="Click to sort by Program"
+                        >
+                          <div className="flex items-center gap-1.5">
+                            <span>Program &amp; Mentor</span>
+                            {sortField === 'program' ? (
+                              sortDirection === 'asc' ? (
+                                <ArrowUp className="w-3.5 h-3.5 text-emerald-700 stroke-[2.5]" />
+                              ) : (
+                                <ArrowDown className="w-3.5 h-3.5 text-emerald-700 stroke-[2.5]" />
+                              )
+                            ) : (
+                              <ArrowUpDown className="w-3 h-3 text-slate-300 group-hover:text-slate-500 transition-colors" />
+                            )}
+                          </div>
+                        </th>
+
+                        <th
+                          onClick={() => handleSort('cgpa')}
+                          className="py-3 px-4 cursor-pointer select-none hover:bg-slate-100 transition-colors group w-[16%]"
+                          title="Click to sort by CGPA"
+                        >
+                          <div className="flex items-center gap-1.5">
+                            <span>Academic &amp; Attendance</span>
+                            {sortField === 'cgpa' ? (
+                              sortDirection === 'asc' ? (
+                                <ArrowUp className="w-3.5 h-3.5 text-emerald-700 stroke-[2.5]" />
+                              ) : (
+                                <ArrowDown className="w-3.5 h-3.5 text-emerald-700 stroke-[2.5]" />
+                              )
+                            ) : sortField === 'attendance' ? (
+                              sortDirection === 'asc' ? (
+                                <ArrowUp className="w-3.5 h-3.5 text-emerald-700 stroke-[2.5]" />
+                              ) : (
+                                <ArrowDown className="w-3.5 h-3.5 text-emerald-700 stroke-[2.5]" />
+                              )
+                            ) : (
+                              <ArrowUpDown className="w-3 h-3 text-slate-300 group-hover:text-slate-500 transition-colors" />
+                            )}
+                          </div>
+                        </th>
+
+                        <th
+                          onClick={() => handleSort('placementStatus')}
+                          className="py-3 px-4 cursor-pointer select-none hover:bg-slate-100 transition-colors group w-[18%]"
+                          title="Click to sort by Placement Status"
+                        >
+                          <div className="flex items-center gap-1.5">
+                            <span>Placement Status</span>
+                            {sortField === 'placementStatus' ? (
+                              sortDirection === 'asc' ? (
+                                <ArrowUp className="w-3.5 h-3.5 text-emerald-700 stroke-[2.5]" />
+                              ) : (
+                                <ArrowDown className="w-3.5 h-3.5 text-emerald-700 stroke-[2.5]" />
+                              )
+                            ) : (
+                              <ArrowUpDown className="w-3 h-3 text-slate-300 group-hover:text-slate-500 transition-colors" />
+                            )}
+                          </div>
+                        </th>
+
+                        <th className="py-3 px-4 w-[12%]">
+                          <span>Key Competencies</span>
+                        </th>
+
+                        <th className="py-3 px-4 sm:px-5 text-right w-[10%]">
+                          <span>Action</span>
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100 text-xs">
+                      {sortedStudents.map((stu) => (
+                        <tr
+                          key={stu.id}
+                          className="hover:bg-slate-50/80 transition-colors cursor-pointer group"
+                          onClick={() => setSelectedStudentDossier(stu)}
+                        >
+                          <td className="py-2.5 px-4 sm:px-5">
+                            <div className="flex items-center gap-2.5">
+                              <div className="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-900 font-bold text-xs flex items-center justify-center shrink-0">
+                                {stu.avatar}
+                              </div>
+                              <div className="min-w-0">
+                                <div className="flex items-center gap-1.5 flex-wrap">
+                                  <span className="font-bold text-slate-900 text-xs sm:text-sm group-hover:text-emerald-800 transition-colors">
+                                    {stu.name}
+                                  </span>
+                                  <span className="font-mono text-[10px] text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded font-medium">
+                                    {stu.rollNumber}
+                                  </span>
+                                </div>
+                                <div className="text-[10px] text-slate-400 mt-0.5">
+                                  {stu.ncismReg} · <span className="text-slate-500">{stu.gender}</span>
+                                </div>
+                              </div>
+                            </div>
+                          </td>
+
+                          <td className="py-2.5 px-4">
+                            <div className="font-semibold text-slate-800 text-xs">
+                              {stu.program}{' '}
+                              <span className="text-slate-400 font-normal text-[11px]">
+                                · {stu.semester.split('(')[0].trim()}
+                              </span>
+                            </div>
+                            <div className="text-[10px] text-slate-400 mt-0.5 truncate max-w-[170px]">
+                              {stu.preceptor}
+                            </div>
+                          </td>
+
+                          <td className="py-2.5 px-4">
+                            <div className="flex items-center gap-1.5">
+                              <span className="text-xs font-black text-slate-900">{stu.cgpa} CGPA</span>
+                              <span className="px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
+                                {stu.attendance}
+                              </span>
+                            </div>
+                            <div className="text-[10px] text-slate-400 mt-0.5">
+                              {stu.clinicalHours} clinical
+                            </div>
+                          </td>
+
+                          <td className="py-2.5 px-4">
+                            <div className="flex items-center gap-1.5 flex-wrap">
+                              {stu.placementStatus === 'Placed' && (
+                                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
+                                  <Check className="w-3 h-3 text-emerald-600" />
+                                  <span>Placed</span>
+                                </span>
+                              )}
+                              {stu.placementStatus === 'Internship' && (
+                                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold bg-blue-50 text-blue-800 border border-blue-200">
+                                  <Clock className="w-3 h-3 text-blue-600" />
+                                  <span>Intern</span>
+                                </span>
+                              )}
+                              {stu.placementStatus === 'Seeking' && (
+                                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold bg-amber-50 text-amber-800 border border-amber-200">
+                                  <span>Pipeline</span>
+                                </span>
+                              )}
+                              <span className="text-xs font-semibold text-slate-800">
+                                {stu.company}
+                              </span>
+                            </div>
+                            <div className="text-[10px] text-emerald-700 font-bold mt-0.5">
+                              {stu.package}
+                            </div>
+                          </td>
+
+                          <td className="py-2.5 px-4">
+                            <div className="flex items-center gap-1">
+                              {stu.skills.slice(0, 2).map((skill, i) => (
+                                <span
+                                  key={i}
+                                  className="px-2 py-0.5 rounded-md text-[10px] bg-slate-100 text-slate-700 font-medium whitespace-nowrap"
+                                >
+                                  {skill}
+                                </span>
+                              ))}
+                              {stu.skills.length > 2 && (
+                                <span className="px-1.5 py-0.5 rounded text-[10px] bg-emerald-50 text-emerald-800 font-bold border border-emerald-200/60 whitespace-nowrap">
+                                  +{stu.skills.length - 2}
+                                </span>
+                              )}
+                            </div>
+                          </td>
+
+                          <td className="py-2.5 px-4 sm:px-5 text-right">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedStudentDossier(stu);
+                              }}
+                              className="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-emerald-800 hover:text-white text-slate-700 text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ml-auto shadow-2xs group-hover:bg-emerald-800 group-hover:text-white whitespace-nowrap"
+                            >
+                              <FileText className="w-3.5 h-3.5" />
+                              <span>Basic Data</span>
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )
           ) : (
             <div className="bg-white rounded-2xl p-8 border border-slate-200 text-center">
               <p className="text-xs text-slate-500">No students found matching your filter criteria.</p>

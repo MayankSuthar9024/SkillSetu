@@ -38,6 +38,7 @@ import { CompanyPage } from './CompanyPage';
 import { MinistryPage } from './MinistryPage';
 import { CoursesPage } from './CoursesPage';
 import { JobsPage } from './JobsPage';
+import { AssessmentPage } from './AssessmentPage';
 import { ComingSoonView } from '../components/ComingSoonView';
 
 export const StakeholderDashboard = ({
@@ -52,16 +53,18 @@ export const StakeholderDashboard = ({
   const [activeTab, setActiveTab] = useState(() => {
     if (typeof window !== 'undefined') {
       const hash = window.location.hash.replace('#', '');
-      if (['feed', 'courses', 'console', 'jobs', 'skills', 'network', 'profile', 'messages', 'students'].includes(hash)) {
+      if (['feed', 'courses', 'console', 'jobs', 'skills', 'network', 'profile', 'messages', 'students', 'accreditation', 'assessment'].includes(hash)) {
         return hash;
       }
+      if (hash === 'diagnostic') return 'assessment';
       if (hash === 'skill') return 'skills';
       if (hash === 'opportunities') return 'jobs';
       if (hash === 'industry') return 'network';
       if (hash === 'placement' || hash === 'placements' || hash === 'student' || hash === 'students') return 'students';
+      if (hash === 'compliance' || hash === 'accreditation' || hash === 'reporting' || hash === 'nirf' || hash === 'naac') return 'accreditation';
     }
     return activePortalId === 'student' || activePortalId === 'faculty' || activePortalId === 'college' ? 'feed' : 'console';
-  }); // 'feed' | 'messages' | 'jobs' | 'skills' | 'network' | 'console' | 'profile' | 'courses' | 'students'
+  }); // 'feed' | 'messages' | 'jobs' | 'skills' | 'network' | 'console' | 'profile' | 'courses' | 'students' | 'accreditation' | 'assessment'
   const [viewingUser, setViewingUser] = useState(null);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
@@ -71,8 +74,10 @@ export const StakeholderDashboard = ({
   React.useEffect(() => {
     const handleHash = () => {
       const hash = window.location.hash.replace('#', '');
-      if (['feed', 'courses', 'console', 'jobs', 'skills', 'network', 'profile', 'messages', 'students'].includes(hash)) {
+      if (['feed', 'courses', 'console', 'jobs', 'skills', 'network', 'profile', 'messages', 'students', 'accreditation', 'assessment'].includes(hash)) {
         setActiveTab(hash);
+      } else if (hash === 'diagnostic') {
+        setActiveTab('assessment');
       } else if (hash === 'skill') {
         setActiveTab('skills');
       } else if (hash === 'opportunities') {
@@ -81,6 +86,8 @@ export const StakeholderDashboard = ({
         setActiveTab('network');
       } else if (hash === 'placement' || hash === 'placements' || hash === 'student' || hash === 'students') {
         setActiveTab('students');
+      } else if (hash === 'compliance' || hash === 'accreditation' || hash === 'reporting' || hash === 'nirf' || hash === 'naac') {
+        setActiveTab('accreditation');
       }
     };
     window.addEventListener('hashchange', handleHash);
@@ -130,6 +137,7 @@ export const StakeholderDashboard = ({
               else if (page === 'industry') setActiveTab('network');
             }}
             currentUser={user}
+            activePortalId={activePortalId}
             openCreatePostModal={openCreatePostModal}
           />
         );
@@ -210,8 +218,22 @@ export const StakeholderDashboard = ({
             onNavigate={(page) => {
               if (page === 'opportunities') setActiveTab('jobs');
               else if (page === 'feed') setActiveTab('feed');
+              else if (page === 'assessment') setActiveTab('assessment');
             }}
             onOpenReadinessModal={() => alert('Launching Skill Readiness Diagnostic Engine...')}
+          />
+        );
+      case 'assessment':
+      case 'diagnostic':
+        return (
+          <AssessmentPage
+            currentUser={user}
+            onNavigate={(page) => {
+              if (page === 'profile') setActiveTab('profile');
+              else if (page === 'skills') setActiveTab('skills');
+              else if (page === 'feed') setActiveTab('feed');
+              else setActiveTab(page);
+            }}
           />
         );
       case 'network':
@@ -232,6 +254,19 @@ export const StakeholderDashboard = ({
         );
       case 'students':
         return <CollegeStudentsView user={user} />;
+      case 'accreditation':
+      case 'compliance':
+        return (
+          <CollegePortalView 
+            user={user} 
+            initialTab="compliance" 
+            isComplianceOnly={true}
+            onNavigateToAccreditation={() => {
+              setActiveTab('accreditation');
+              window.location.hash = 'accreditation';
+            }}
+          />
+        );
       case 'console':
         return (
           <div className="space-y-6">
@@ -249,17 +284,29 @@ export const StakeholderDashboard = ({
             {activePortalId === 'faculty' && (
               <ComingSoonView onBack={() => setActiveTab('feed')} />
             )}
-            {activePortalId === 'college' && <CollegePortalView user={user} />}
+            {activePortalId === 'college' && (
+              <CollegePortalView 
+                user={user} 
+                initialTab="queue" 
+                isComplianceOnly={false}
+                onNavigateToAccreditation={() => {
+                  setActiveTab('accreditation');
+                  window.location.hash = 'accreditation';
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+              />
+            )}
             {activePortalId === 'admin' && <MinistryPage currentUser={user} />}
           </div>
         );
       default:
-        return <FeedPage onNavigate={() => {}} currentUser={user} />;
+        return <FeedPage onNavigate={() => {}} currentUser={user} activePortalId={activePortalId} />;
     }
   };
 
   const studentNavItems = [
     { id: 'feed', label: 'Home', icon: Home },
+    { id: 'console', label: 'Student Portal', icon: Layers },
     { id: 'skills', label: 'Skills', icon: BarChart3 },
     { id: 'messages', label: 'Messages', icon: MessageSquare },
     { id: 'jobs', label: 'Jobs', icon: Briefcase }
@@ -290,7 +337,8 @@ export const StakeholderDashboard = ({
   const collegeNavItems = [
     { id: 'feed', label: 'Feed', icon: Home },
     { id: 'console', label: 'Verification', icon: ShieldCheck },
-    { id: 'students', label: 'Student', icon: Users }
+    { id: 'students', label: 'Student', icon: Users },
+    { id: 'accreditation', label: 'Accreditation', icon: Award }
   ];
 
   let navItems = studentNavItems;
@@ -337,7 +385,7 @@ export const StakeholderDashboard = ({
           </div>
 
           {/* Desktop Center Nav Tabs */}
-          <nav className="hidden md:flex items-center gap-1 sm:gap-1.5">
+          <nav className="hidden md:flex items-center gap-1 sm:gap-2">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = activeTab === item.id;
@@ -348,14 +396,15 @@ export const StakeholderDashboard = ({
                     setViewingUser(null);
                     setActiveTab(item.id);
                   }}
-                  className={`flex flex-col items-center justify-center px-3 lg:px-4 py-1.5 rounded-xl text-xs transition-all cursor-pointer relative ${
+                  className={`flex flex-col items-center justify-center px-3 py-1.5 rounded-xl text-xs transition-all cursor-pointer relative ${
                     isActive
                       ? 'text-emerald-800 font-extrabold bg-emerald-50/80 border border-emerald-200/80'
                       : 'text-slate-600 hover:text-emerald-800 hover:bg-slate-100 font-semibold'
                   }`}
+                  title={item.label}
                 >
                   <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-emerald-800' : 'text-slate-500'}`} />
-                  <span className="text-[10px] mt-0.5">{item.label}</span>
+                  <span className="text-[10px] mt-0.5 whitespace-nowrap">{item.label}</span>
                 </button>
               );
             })}
@@ -619,19 +668,19 @@ export const StakeholderDashboard = ({
                 <span className="text-[10px] mt-0.5 font-bold">Student</span>
               </button>
 
-              {/* 5. Profile */}
+              {/* 5. Accreditation */}
               <button
                 onClick={() => {
                   setViewingUser(null);
-                  setActiveTab('profile');
+                  setActiveTab('accreditation');
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
                 className={`flex flex-col items-center justify-center py-1 w-full text-xs transition-all cursor-pointer ${
-                  activeTab === 'profile' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-medium'
+                  activeTab === 'accreditation' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-medium'
                 }`}
               >
-                <User className={`w-5 h-5 shrink-0 ${activeTab === 'profile' ? 'text-emerald-700' : 'text-slate-500'}`} />
-                <span className="text-[10px] mt-0.5 font-bold">Profile</span>
+                <Award className={`w-5 h-5 shrink-0 ${activeTab === 'accreditation' ? 'text-emerald-700' : 'text-slate-500'}`} />
+                <span className="text-[10px] mt-0.5 font-bold">Accreditation</span>
               </button>
 
             </div>
@@ -649,15 +698,15 @@ export const StakeholderDashboard = ({
                 <span className="text-[10px] mt-0.5 font-bold">Home</span>
               </button>
 
-              {/* 2. Skills */}
+              {/* 2. Portal */}
               <button
-                onClick={() => { setActiveTab('skills'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                onClick={() => { setActiveTab('console'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
                 className={`flex flex-col items-center justify-center py-1 w-full text-xs transition-all cursor-pointer ${
-                  activeTab === 'skills' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-medium'
+                  activeTab === 'console' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-medium'
                 }`}
               >
-                <BarChart3 className={`w-5 h-5 shrink-0 ${activeTab === 'skills' ? 'text-emerald-700' : 'text-slate-500'}`} />
-                <span className="text-[10px] mt-0.5 font-bold">Skills</span>
+                <Layers className={`w-5 h-5 shrink-0 ${activeTab === 'console' ? 'text-emerald-700' : 'text-slate-500'}`} />
+                <span className="text-[10px] mt-0.5 font-bold">Portal</span>
               </button>
 
               {/* 3. Center Elevated Floating Green (+) Button */}
@@ -673,15 +722,15 @@ export const StakeholderDashboard = ({
                 </div>
               </div>
 
-              {/* 4. Messages */}
+              {/* 4. Skills */}
               <button
-                onClick={() => { setActiveTab('messages'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                onClick={() => { setActiveTab('skills'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
                 className={`flex flex-col items-center justify-center py-1 w-full text-xs transition-all cursor-pointer ${
-                  activeTab === 'messages' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-medium'
+                  activeTab === 'skills' ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-900 font-medium'
                 }`}
               >
-                <MessageSquare className={`w-5 h-5 shrink-0 ${activeTab === 'messages' ? 'text-emerald-700' : 'text-slate-500'}`} />
-                <span className="text-[10px] mt-0.5 font-bold">Messages</span>
+                <BarChart3 className={`w-5 h-5 shrink-0 ${activeTab === 'skills' ? 'text-emerald-700' : 'text-slate-500'}`} />
+                <span className="text-[10px] mt-0.5 font-bold">Skills</span>
               </button>
 
               {/* 5. Jobs */}

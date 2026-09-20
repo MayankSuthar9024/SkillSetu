@@ -1,7 +1,21 @@
 import React, { useState } from 'react';
 import { Award, ShieldCheck, Sparkles, TrendingUp, Info } from 'lucide-react';
 
-export const AyushSixAxisRadarChart = ({ skillMatrix, plain = false }) => {
+/**
+ * AyushSixAxisRadarChart
+ * Generalized 6-Axis Competency Radar Chart.
+ * Accepts dynamic branch competencies, calculates polygon geometries,
+ * renders tooltips and decile rankings, and includes accessible SVG metadata & table fallback.
+ */
+export const AyushSixAxisRadarChart = ({
+  skillMatrix,
+  plain = false,
+  branchTitle = '6-Axis Competency Radar',
+  subtitle = null,
+  benchmarkLabel = 'National Cohort Baseline (68%)',
+  benchmarkValue = 0.68,
+  accentColor = 'emerald'
+}) => {
   const [activeHoverAxis, setActiveHoverAxis] = useState(null);
 
   const defaultAxes = [
@@ -13,14 +27,19 @@ export const AyushSixAxisRadarChart = ({ skillMatrix, plain = false }) => {
     { name: 'Rasa Shastra QC', fullName: 'Rasa Shastra Quality Testing', score: 86, percentile: '93rd', status: 'Verified', desc: 'Herbomineral Bhasma purification & ICP-MS safety limits' },
   ];
 
+  // Dynamic mapping with guaranteed backward compatibility
   const axesData = (skillMatrix && skillMatrix.length === 6) ? skillMatrix.map((item, idx) => ({
-    name: defaultAxes[idx]?.name || item.name.split(' ')[0],
-    fullName: item.name,
-    score: item.score,
+    name: item.name || defaultAxes[idx]?.name,
+    fullName: item.fullName || item.name || defaultAxes[idx]?.fullName,
+    score: typeof item.score === 'number' ? item.score : defaultAxes[idx]?.score,
     percentile: item.percentile || defaultAxes[idx]?.percentile || '90th',
     status: item.status || defaultAxes[idx]?.status || 'Verified',
-    desc: defaultAxes[idx]?.desc || ''
+    desc: item.desc || defaultAxes[idx]?.desc || ''
   })) : defaultAxes;
+
+  const averageScore = Math.round(
+    axesData.reduce((sum, a) => sum + a.score, 0) / axesData.length
+  );
 
   // Radar chart mathematical geometry
   const cx = 200;
@@ -33,7 +52,7 @@ export const AyushSixAxisRadarChart = ({ skillMatrix, plain = false }) => {
 
   const levels = [0.2, 0.4, 0.6, 0.8, 1.0];
 
-  // Helper to calculate vertex coordinate
+  // Calculate vertex coordinate
   const getCoordinates = (index, valueRatio) => {
     const angle = startAngle + index * angleStep;
     const x = cx + radius * valueRatio * Math.cos(angle);
@@ -52,268 +71,314 @@ export const AyushSixAxisRadarChart = ({ skillMatrix, plain = false }) => {
   };
 
   // Student actual scores polygon
-  const scholarRatios = axesData.map(a => a.score / 100);
+  const scholarRatios = axesData.map(a => Math.max(0.1, Math.min(1.0, a.score / 100)));
   const scholarPolygonPoints = createPolygonPoints(scholarRatios);
 
-  // National average benchmark polygon (68% across all 6 axes)
-  const benchmarkRatios = [0.68, 0.65, 0.70, 0.64, 0.67, 0.66];
+  // National average benchmark polygon
+  const benchmarkRatios = new Array(6).fill(benchmarkValue);
   const benchmarkPolygonPoints = createPolygonPoints(benchmarkRatios);
 
   const radarContent = (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
         
-        {/* SVG Radar Chart Column */}
-        <div className="lg:col-span-7 flex flex-col items-center justify-center relative">
-          
-          <div className="w-full max-w-md aspect-square relative flex items-center justify-center">
-            <svg 
-              viewBox="0 0 400 370" 
-              className="w-full h-full overflow-visible select-none drop-shadow-xs"
-            >
-              <defs>
-                {/* Emerald Gradient Fill */}
-                <radialGradient id="radarFillGradient" cx="50%" cy="50%" r="50%">
-                  <stop offset="0%" stopColor="#10b981" stopOpacity="0.45" />
-                  <stop offset="70%" stopColor="#059669" stopOpacity="0.30" />
-                  <stop offset="100%" stopColor="#047857" stopOpacity="0.15" />
-                </radialGradient>
+      {/* SVG Radar Chart Column */}
+      <div className="lg:col-span-7 flex flex-col items-center justify-center relative">
+        
+        <div className="w-full max-w-md aspect-square relative flex items-center justify-center">
+          <svg 
+            viewBox="0 0 400 370" 
+            className="w-full h-full overflow-visible select-none drop-shadow-xs"
+            role="img"
+            aria-labelledby="radar-chart-title radar-chart-desc"
+          >
+            <title id="radar-chart-title">{branchTitle}</title>
+            <desc id="radar-chart-desc">
+              Hexagonal 6-axis competency radar graph plotting scores across: {axesData.map(a => `${a.name} (${a.score}%)`).join(', ')}. Average score is {averageScore}%.
+            </desc>
 
-                <linearGradient id="benchmarkGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#94a3b8" stopOpacity="0.15" />
-                  <stop offset="100%" stopColor="#cbd5e1" stopOpacity="0.05" />
-                </linearGradient>
+            <defs>
+              {/* Emerald Gradient Fill */}
+              <radialGradient id="radarFillGradient" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stopColor="#10b981" stopOpacity="0.45" />
+                <stop offset="70%" stopColor="#059669" stopOpacity="0.30" />
+                <stop offset="100%" stopColor="#047857" stopOpacity="0.15" />
+              </radialGradient>
 
-                {/* Glow Filter */}
-                <filter id="emeraldGlow" x="-20%" y="-20%" width="140%" height="140%">
-                  <feGaussianBlur stdDeviation="3" result="blur" />
-                  <feComposite in="SourceGraphic" in2="blur" operator="over" />
-                </filter>
-              </defs>
+              <linearGradient id="benchmarkGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#94a3b8" stopOpacity="0.15" />
+                <stop offset="100%" stopColor="#cbd5e1" stopOpacity="0.05" />
+              </linearGradient>
 
-              {/* Concentric Polygons (Web rings: 20%, 40%, 60%, 80%, 100%) */}
-              {levels.map((level, lIdx) => {
-                const ringPoints = createPolygonPoints(new Array(6).fill(level));
-                return (
-                  <g key={lIdx}>
-                    <polygon
-                      points={ringPoints}
-                      fill={lIdx === levels.length - 1 ? '#f8fafc' : 'none'}
-                      stroke="#e2e8f0"
-                      strokeWidth={lIdx === levels.length - 1 ? '1.5' : '1'}
-                      strokeDasharray={lIdx < levels.length - 1 ? '3 3' : 'none'}
-                    />
-                  </g>
-                );
-              })}
+              {/* Glow Filter */}
+              <filter id="emeraldGlow" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="3" result="blur" />
+                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+              </filter>
+            </defs>
 
-              {/* 6 Radial Spoke Lines from Center */}
-              {axesData.map((_, i) => {
-                const { x, y } = getCoordinates(i, 1.0);
-                return (
-                  <line
-                    key={i}
-                    x1={cx}
-                    y1={cy}
-                    x2={x}
-                    y2={y}
-                    stroke="#cbd5e1"
-                    strokeWidth="1.2"
+            {/* Concentric Polygons (Web rings: 20%, 40%, 60%, 80%, 100%) */}
+            {levels.map((level, lIdx) => {
+              const ringPoints = createPolygonPoints(new Array(6).fill(level));
+              return (
+                <g key={lIdx}>
+                  <polygon
+                    points={ringPoints}
+                    fill={lIdx === levels.length - 1 ? '#f8fafc' : 'none'}
+                    stroke="#e2e8f0"
+                    strokeWidth={lIdx === levels.length - 1 ? '1.5' : '1'}
+                    strokeDasharray={lIdx < levels.length - 1 ? '3 3' : 'none'}
                   />
-                );
-              })}
-
-              {/* Benchmark Layer: National Average (68%) */}
-              <polygon
-                points={benchmarkPolygonPoints}
-                fill="url(#benchmarkGradient)"
-                stroke="#94a3b8"
-                strokeWidth="1.5"
-                strokeDasharray="4 3"
-                opacity="0.8"
-              />
-
-              {/* Scholar Actual Competency Polygon */}
-              <polygon
-                points={scholarPolygonPoints}
-                fill="url(#radarFillGradient)"
-                stroke="#059669"
-                strokeWidth="2.5"
-                filter="url(#emeraldGlow)"
-                className="transition-all duration-500 ease-out"
-              />
-
-              {/* Vertex Data Points & Tooltips */}
-              {axesData.map((axis, i) => {
-                const ratio = axis.score / 100;
-                const { x, y } = getCoordinates(i, ratio);
-                const isHovered = activeHoverAxis === i;
-
-                return (
-                  <g 
-                    key={i} 
-                    className="cursor-pointer group"
-                    onMouseEnter={() => setActiveHoverAxis(i)}
-                    onMouseLeave={() => setActiveHoverAxis(null)}
+                  {/* Axis scale watermark */}
+                  <text
+                    x={cx + 4}
+                    y={cy - radius * level - 2}
+                    fontSize="8"
+                    fill="#94a3b8"
+                    fontWeight="600"
                   >
-                    {/* Pulse ring on hover */}
-                    {isHovered && (
-                      <circle
-                        cx={x}
-                        cy={y}
-                        r="11"
-                        fill="#10b981"
-                        opacity="0.3"
-                        className="animate-ping"
-                      />
-                    )}
+                    {Math.round(level * 100)}%
+                  </text>
+                </g>
+              );
+            })}
 
-                    {/* Outer vertex circle */}
+            {/* 6 Radial Spoke Lines from Center */}
+            {axesData.map((_, i) => {
+              const { x, y } = getCoordinates(i, 1.0);
+              return (
+                <line
+                  key={i}
+                  x1={cx}
+                  y1={cy}
+                  x2={x}
+                  y2={y}
+                  stroke="#cbd5e1"
+                  strokeWidth="1.2"
+                />
+              );
+            })}
+
+            {/* Benchmark Layer: Baseline (68%) */}
+            <polygon
+              points={benchmarkPolygonPoints}
+              fill="url(#benchmarkGradient)"
+              stroke="#94a3b8"
+              strokeWidth="1.5"
+              strokeDasharray="4 3"
+              opacity="0.8"
+            />
+
+            {/* Scholar Actual Competency Polygon */}
+            <polygon
+              points={scholarPolygonPoints}
+              fill="url(#radarFillGradient)"
+              stroke="#059669"
+              strokeWidth="2.5"
+              filter="url(#emeraldGlow)"
+              className="transition-all duration-500 ease-out"
+            />
+
+            {/* Vertex Data Points & Interactive Tooltips */}
+            {axesData.map((axis, i) => {
+              const ratio = Math.max(0.1, Math.min(1.0, axis.score / 100));
+              const { x, y } = getCoordinates(i, ratio);
+              const isHovered = activeHoverAxis === i;
+
+              return (
+                <g 
+                  key={i} 
+                  className="cursor-pointer group"
+                  onMouseEnter={() => setActiveHoverAxis(i)}
+                  onMouseLeave={() => setActiveHoverAxis(null)}
+                  onFocus={() => setActiveHoverAxis(i)}
+                  onBlur={() => setActiveHoverAxis(null)}
+                  tabIndex={0}
+                  aria-label={`${axis.name}: ${axis.score} percent`}
+                >
+                  {/* Pulse ring on hover */}
+                  {isHovered && (
                     <circle
                       cx={x}
                       cy={y}
-                      r={isHovered ? '7' : '5'}
-                      fill="#065f46"
-                      stroke="#ffffff"
-                      strokeWidth="2"
-                      className="transition-all duration-200"
+                      r="11"
+                      fill="#10b981"
+                      opacity="0.3"
+                      className="animate-ping"
                     />
+                  )}
 
-                    {/* Floating score badge shown only on hover to prevent overlapping */}
-                    {isHovered && (
-                      <g>
-                        <rect
-                          x={x - 18}
-                          y={y - 24}
-                          width="36"
-                          height="18"
-                          rx="6"
-                          fill="#065f46"
-                        />
-                        <text
-                          x={x}
-                          y={y - 12}
-                          textAnchor="middle"
-                          fontSize="10"
-                          fontWeight="bold"
-                          fill="#ffffff"
-                        >
-                          {axis.score}%
-                        </text>
-                      </g>
-                    )}
-                  </g>
-                );
-              })}
+                  {/* Outer vertex circle */}
+                  <circle
+                    cx={x}
+                    cy={y}
+                    r={isHovered ? '7' : '5'}
+                    fill="#065f46"
+                    stroke="#ffffff"
+                    strokeWidth="2"
+                    className="transition-all duration-200"
+                  />
 
-              {/* Axis Labels positioned at spoke tips */}
-              {axesData.map((axis, i) => {
-                const labelCoord = getCoordinates(i, 1.22);
-                let textAnchor = 'middle';
-                if (i === 1 || i === 2) textAnchor = 'start';
-                if (i === 4 || i === 5) textAnchor = 'end';
+                  {/* Floating score badge on hover */}
+                  {isHovered && (
+                    <g>
+                      <rect
+                        x={x - 22}
+                        y={y - 26}
+                        width="44"
+                        height="20"
+                        rx="6"
+                        fill="#065f46"
+                      />
+                      <text
+                        x={x}
+                        y={y - 12}
+                        textAnchor="middle"
+                        fontSize="10"
+                        fontWeight="bold"
+                        fill="#ffffff"
+                      >
+                        {axis.score}%
+                      </text>
+                    </g>
+                  )}
+                </g>
+              );
+            })}
 
-                const isHovered = activeHoverAxis === i;
+            {/* Axis Labels positioned at spoke tips */}
+            {axesData.map((axis, i) => {
+              const labelCoord = getCoordinates(i, 1.24);
+              let textAnchor = 'middle';
+              if (i === 1 || i === 2) textAnchor = 'start';
+              if (i === 4 || i === 5) textAnchor = 'end';
 
-                return (
-                  <g 
-                    key={i} 
-                    className="cursor-pointer"
-                    onMouseEnter={() => setActiveHoverAxis(i)}
-                    onMouseLeave={() => setActiveHoverAxis(null)}
+              const isHovered = activeHoverAxis === i;
+
+              return (
+                <g 
+                  key={i} 
+                  className="cursor-pointer"
+                  onMouseEnter={() => setActiveHoverAxis(i)}
+                  onMouseLeave={() => setActiveHoverAxis(null)}
+                >
+                  <text
+                    x={labelCoord.x}
+                    y={labelCoord.y}
+                    textAnchor={textAnchor}
+                    fontSize="10"
+                    fontWeight={isHovered ? '800' : '700'}
+                    fill={isHovered ? '#047857' : '#1e293b'}
+                    className="transition-colors duration-150"
                   >
-                    <text
-                      x={labelCoord.x}
-                      y={labelCoord.y}
-                      textAnchor={textAnchor}
-                      fontSize="10.5"
-                      fontWeight={isHovered ? '800' : '700'}
-                      fill={isHovered ? '#047857' : '#1e293b'}
-                      className="transition-colors duration-150"
-                    >
-                      {axis.name}
-                    </text>
-                    <text
-                      x={labelCoord.x}
-                      y={labelCoord.y + 12}
-                      textAnchor={textAnchor}
-                      fontSize="9"
-                      fontWeight="600"
-                      fill={isHovered ? '#059669' : '#64748b'}
-                    >
-                      {axis.score}% • {axis.percentile}
-                    </text>
-                  </g>
-                );
-              })}
-            </svg>
-          </div>
-
-          {/* Chart Legend */}
-          <div className="flex items-center gap-6 mt-3 text-xs font-semibold text-slate-600">
-            <div className="flex items-center gap-2">
-              <span className="w-3.5 h-3.5 rounded-md bg-emerald-600 border border-emerald-700 shadow-2xs"></span>
-              <span className="text-slate-800 font-bold">Scholar Diagnostic (88% Avg)</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="w-3.5 h-0.5 border-t-2 border-dashed border-slate-400"></span>
-              <span className="text-slate-500">National Cohort Baseline (68%)</span>
-            </div>
-          </div>
-
+                    {axis.name}
+                  </text>
+                  <text
+                    x={labelCoord.x}
+                    y={labelCoord.y + 12}
+                    textAnchor={textAnchor}
+                    fontSize="9"
+                    fontWeight="600"
+                    fill={isHovered ? '#059669' : '#64748b'}
+                  >
+                    {axis.score}% • {axis.percentile}
+                  </text>
+                </g>
+              );
+            })}
+          </svg>
         </div>
 
-        {/* 6 Axis Breakdown Metrics Column */}
-        <div className="lg:col-span-5 space-y-3">
-          <div className="bg-slate-50/80 p-4 rounded-2xl border border-slate-200/80 space-y-2.5">
-            <div className="flex justify-between items-center text-xs pb-2 border-b border-slate-200/60">
-              <span className="font-extrabold uppercase text-slate-600 tracking-wider text-[11px]">
-                Competency Axis
-              </span>
-              <span className="font-extrabold uppercase text-slate-600 tracking-wider text-[11px]">
-                Score &amp; Decile
-              </span>
-            </div>
+        {/* Accessibility Screen Reader Table Fallback (Gap #6) */}
+        <table className="sr-only">
+          <caption>{branchTitle} Competency Breakdown</caption>
+          <thead>
+            <tr>
+              <th scope="col">Competency Axis</th>
+              <th scope="col">Score</th>
+              <th scope="col">Percentile</th>
+              <th scope="col">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {axesData.map((a, idx) => (
+              <tr key={idx}>
+                <td>{a.fullName || a.name}</td>
+                <td>{a.score}%</td>
+                <td>{a.percentile}</td>
+                <td>{a.status}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
 
-            <div className="space-y-2">
-              {axesData.map((axis, idx) => {
-                const isHovered = activeHoverAxis === idx;
-                return (
-                  <div 
-                    key={idx}
-                    onMouseEnter={() => setActiveHoverAxis(idx)}
-                    onMouseLeave={() => setActiveHoverAxis(null)}
-                    className={`p-2 rounded-xl transition-all cursor-pointer flex items-center justify-between text-xs ${
-                      isHovered 
-                        ? 'bg-emerald-100/70 border border-emerald-300 shadow-2xs' 
-                        : 'bg-white border border-slate-200/60 hover:border-emerald-200'
-                    }`}
-                  >
-                    <div className="min-w-0 pr-2">
-                      <div className="flex items-center gap-1.5">
-                        <span className={`w-2 h-2 rounded-full shrink-0 ${axis.score >= 90 ? 'bg-emerald-600' : 'bg-teal-500'}`}></span>
-                        <strong className="text-slate-800 font-bold truncate block">{axis.name}</strong>
-                      </div>
-                      <span className="text-[10px] text-slate-500 block truncate pl-3.5 mt-0.5">{axis.desc}</span>
-                    </div>
-
-                    <div className="text-right shrink-0">
-                      <div className="flex items-center gap-1 justify-end">
-                        <span className="text-[10px] font-bold text-emerald-800 bg-emerald-50 px-1.5 py-0.5 rounded">
-                          {axis.percentile}
-                        </span>
-                        <span className="text-xs font-extrabold text-slate-900">{axis.score}%</span>
-                      </div>
-                      <span className="text-[9px] font-bold text-slate-400 block">{axis.status}</span>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
+        {/* Chart Legend */}
+        <div className="flex items-center gap-6 mt-3 text-xs font-semibold text-slate-600">
+          <div className="flex items-center gap-2">
+            <span className="w-3.5 h-3.5 rounded-md bg-emerald-600 border border-emerald-700 shadow-2xs"></span>
+            <span className="text-slate-800 font-bold">Candidate Score ({averageScore}% Avg)</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="w-3.5 h-0.5 border-t-2 border-dashed border-slate-400"></span>
+            <span className="text-slate-500">{benchmarkLabel}</span>
           </div>
         </div>
 
       </div>
+
+      {/* 6 Axis Breakdown Metrics Column */}
+      <div className="lg:col-span-5 space-y-3">
+        <div className="bg-slate-50/80 p-4 rounded-2xl border border-slate-200/80 space-y-2.5">
+          <div className="flex justify-between items-center text-xs pb-2 border-b border-slate-200/60">
+            <span className="font-extrabold uppercase text-slate-600 tracking-wider text-[11px]">
+              Competency Axis
+            </span>
+            <span className="font-extrabold uppercase text-slate-600 tracking-wider text-[11px]">
+              Score &amp; Decile
+            </span>
+          </div>
+
+          <div className="space-y-2">
+            {axesData.map((axis, idx) => {
+              const isHovered = activeHoverAxis === idx;
+              return (
+                <div 
+                  key={idx}
+                  onMouseEnter={() => setActiveHoverAxis(idx)}
+                  onMouseLeave={() => setActiveHoverAxis(null)}
+                  className={`p-2.5 rounded-xl transition-all cursor-pointer flex items-center justify-between text-xs ${
+                    isHovered 
+                      ? 'bg-emerald-100/70 border border-emerald-300 shadow-2xs' 
+                      : 'bg-white border border-slate-200/60 hover:border-emerald-200'
+                  }`}
+                >
+                  <div className="min-w-0 pr-2">
+                    <div className="flex items-center gap-1.5">
+                      <span className={`w-2 h-2 rounded-full shrink-0 ${axis.score >= 85 ? 'bg-emerald-600' : axis.score >= 70 ? 'bg-teal-500' : 'bg-amber-500'}`}></span>
+                      <strong className="text-slate-800 font-bold truncate block">{axis.name}</strong>
+                    </div>
+                    {axis.desc && (
+                      <span className="text-[10px] text-slate-500 block truncate pl-3.5 mt-0.5">{axis.desc}</span>
+                    )}
+                  </div>
+
+                  <div className="text-right shrink-0">
+                    <div className="flex items-center gap-1 justify-end">
+                      <span className="text-[10px] font-bold text-emerald-800 bg-emerald-50 px-1.5 py-0.5 rounded">
+                        {axis.percentile}
+                      </span>
+                      <span className="text-xs font-extrabold text-slate-900">{axis.score}%</span>
+                    </div>
+                    <span className="text-[9px] font-bold text-slate-400 block">{axis.status}</span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+        </div>
+      </div>
+
+    </div>
   );
 
   if (plain) {
@@ -322,14 +387,25 @@ export const AyushSixAxisRadarChart = ({ skillMatrix, plain = false }) => {
 
   return (
     <div className="bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-7 shadow-xs space-y-6">
-      <div className="flex items-center justify-between gap-2 pb-4 border-b border-slate-100">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-slate-100">
+        <div className="flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0">
             <Award className="w-4 h-4" />
           </div>
-          <h3 className="font-extrabold text-base sm:text-lg text-slate-900 tracking-tight">
-            6-Axis Ayush Competency Radar
-          </h3>
+          <div>
+            <h3 className="font-extrabold text-base sm:text-lg text-slate-900 tracking-tight">
+              {branchTitle}
+            </h3>
+            {subtitle && (
+              <p className="text-xs text-slate-500 mt-0.5">{subtitle}</p>
+            )}
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2 text-xs">
+          <span className="px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 font-bold">
+            Verified Diagnostic Matrix
+          </span>
         </div>
       </div>
       {radarContent}
