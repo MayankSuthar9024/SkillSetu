@@ -20,12 +20,9 @@ import { MessagePage } from './pages/MessagePage';
 import { CoursesPage } from './pages/CoursesPage';
 import { JobsPage } from './pages/JobsPage';
 import { AssessmentPage } from './pages/AssessmentPage';
-<<<<<<< HEAD
 import { CompanyPage } from './pages/CompanyPage';
-=======
 import { NotificationProvider } from './context/NotificationContext';
 import CredentialVerifierModal from './components/CredentialVerifierModal';
->>>>>>> 9ca885b29da6fb0a6f09eeb45d273158f00dcd7b
 
 export function App() {
   const [activePage, setActivePage] = useState('home'); // 'home' | 'features' | 'about' | 'opportunities' | 'skill' | 'industry' | 'courses' | 'feed' | 'profile' | 'messages' | 'login' | 'portals' | 'dashboard'
